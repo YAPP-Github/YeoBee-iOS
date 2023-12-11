@@ -1,0 +1,612 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F3E0E9B52B27684800E3204F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E0E9B42B27684800E3204F /* AppDelegate.swift */; };
+		F3E0E9B72B27684800E3204F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E0E9B62B27684800E3204F /* SceneDelegate.swift */; };
+		F3E0E9B92B27684800E3204F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E0E9B82B27684800E3204F /* ViewController.swift */; };
+		F3E0E9BC2B27684800E3204F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3E0E9BA2B27684800E3204F /* Main.storyboard */; };
+		F3E0E9BE2B27684900E3204F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3E0E9BD2B27684900E3204F /* Assets.xcassets */; };
+		F3E0E9C12B27684900E3204F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3E0E9BF2B27684900E3204F /* LaunchScreen.storyboard */; };
+		F3E0E9CC2B27684900E3204F /* YeoBeeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E0E9CB2B27684900E3204F /* YeoBeeTests.swift */; };
+		F3E0E9D62B27684900E3204F /* YeoBeeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E0E9D52B27684900E3204F /* YeoBeeUITests.swift */; };
+		F3E0E9D82B27684900E3204F /* YeoBeeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E0E9D72B27684900E3204F /* YeoBeeUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F3E0E9C82B27684900E3204F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3E0E9A92B27684800E3204F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F3E0E9B02B27684800E3204F;
+			remoteInfo = YeoBee;
+		};
+		F3E0E9D22B27684900E3204F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3E0E9A92B27684800E3204F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F3E0E9B02B27684800E3204F;
+			remoteInfo = YeoBee;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F3E0E9B12B27684800E3204F /* YeoBee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YeoBee.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3E0E9B42B27684800E3204F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F3E0E9B62B27684800E3204F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		F3E0E9B82B27684800E3204F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F3E0E9BB2B27684800E3204F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F3E0E9BD2B27684900E3204F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F3E0E9C02B27684900E3204F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F3E0E9C22B27684900E3204F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F3E0E9C72B27684900E3204F /* YeoBeeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YeoBeeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3E0E9CB2B27684900E3204F /* YeoBeeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YeoBeeTests.swift; sourceTree = "<group>"; };
+		F3E0E9D12B27684900E3204F /* YeoBeeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YeoBeeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3E0E9D52B27684900E3204F /* YeoBeeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YeoBeeUITests.swift; sourceTree = "<group>"; };
+		F3E0E9D72B27684900E3204F /* YeoBeeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YeoBeeUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F3E0E9AE2B27684800E3204F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3E0E9C42B27684900E3204F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3E0E9CE2B27684900E3204F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F3E0E9A82B27684800E3204F = {
+			isa = PBXGroup;
+			children = (
+				F3E0E9B32B27684800E3204F /* YeoBee */,
+				F3E0E9CA2B27684900E3204F /* YeoBeeTests */,
+				F3E0E9D42B27684900E3204F /* YeoBeeUITests */,
+				F3E0E9B22B27684800E3204F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F3E0E9B22B27684800E3204F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F3E0E9B12B27684800E3204F /* YeoBee.app */,
+				F3E0E9C72B27684900E3204F /* YeoBeeTests.xctest */,
+				F3E0E9D12B27684900E3204F /* YeoBeeUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F3E0E9B32B27684800E3204F /* YeoBee */ = {
+			isa = PBXGroup;
+			children = (
+				F3E0E9B42B27684800E3204F /* AppDelegate.swift */,
+				F3E0E9B62B27684800E3204F /* SceneDelegate.swift */,
+				F3E0E9B82B27684800E3204F /* ViewController.swift */,
+				F3E0E9BA2B27684800E3204F /* Main.storyboard */,
+				F3E0E9BD2B27684900E3204F /* Assets.xcassets */,
+				F3E0E9BF2B27684900E3204F /* LaunchScreen.storyboard */,
+				F3E0E9C22B27684900E3204F /* Info.plist */,
+			);
+			path = YeoBee;
+			sourceTree = "<group>";
+		};
+		F3E0E9CA2B27684900E3204F /* YeoBeeTests */ = {
+			isa = PBXGroup;
+			children = (
+				F3E0E9CB2B27684900E3204F /* YeoBeeTests.swift */,
+			);
+			path = YeoBeeTests;
+			sourceTree = "<group>";
+		};
+		F3E0E9D42B27684900E3204F /* YeoBeeUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F3E0E9D52B27684900E3204F /* YeoBeeUITests.swift */,
+				F3E0E9D72B27684900E3204F /* YeoBeeUITestsLaunchTests.swift */,
+			);
+			path = YeoBeeUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F3E0E9B02B27684800E3204F /* YeoBee */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3E0E9DB2B27684900E3204F /* Build configuration list for PBXNativeTarget "YeoBee" */;
+			buildPhases = (
+				F3E0E9AD2B27684800E3204F /* Sources */,
+				F3E0E9AE2B27684800E3204F /* Frameworks */,
+				F3E0E9AF2B27684800E3204F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = YeoBee;
+			productName = YeoBee;
+			productReference = F3E0E9B12B27684800E3204F /* YeoBee.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F3E0E9C62B27684900E3204F /* YeoBeeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3E0E9DE2B27684900E3204F /* Build configuration list for PBXNativeTarget "YeoBeeTests" */;
+			buildPhases = (
+				F3E0E9C32B27684900E3204F /* Sources */,
+				F3E0E9C42B27684900E3204F /* Frameworks */,
+				F3E0E9C52B27684900E3204F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F3E0E9C92B27684900E3204F /* PBXTargetDependency */,
+			);
+			name = YeoBeeTests;
+			productName = YeoBeeTests;
+			productReference = F3E0E9C72B27684900E3204F /* YeoBeeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F3E0E9D02B27684900E3204F /* YeoBeeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3E0E9E12B27684900E3204F /* Build configuration list for PBXNativeTarget "YeoBeeUITests" */;
+			buildPhases = (
+				F3E0E9CD2B27684900E3204F /* Sources */,
+				F3E0E9CE2B27684900E3204F /* Frameworks */,
+				F3E0E9CF2B27684900E3204F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F3E0E9D32B27684900E3204F /* PBXTargetDependency */,
+			);
+			name = YeoBeeUITests;
+			productName = YeoBeeUITests;
+			productReference = F3E0E9D12B27684900E3204F /* YeoBeeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F3E0E9A92B27684800E3204F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					F3E0E9B02B27684800E3204F = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					F3E0E9C62B27684900E3204F = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = F3E0E9B02B27684800E3204F;
+					};
+					F3E0E9D02B27684900E3204F = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = F3E0E9B02B27684800E3204F;
+					};
+				};
+			};
+			buildConfigurationList = F3E0E9AC2B27684800E3204F /* Build configuration list for PBXProject "YeoBee" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F3E0E9A82B27684800E3204F;
+			productRefGroup = F3E0E9B22B27684800E3204F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F3E0E9B02B27684800E3204F /* YeoBee */,
+				F3E0E9C62B27684900E3204F /* YeoBeeTests */,
+				F3E0E9D02B27684900E3204F /* YeoBeeUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F3E0E9AF2B27684800E3204F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3E0E9C12B27684900E3204F /* LaunchScreen.storyboard in Resources */,
+				F3E0E9BE2B27684900E3204F /* Assets.xcassets in Resources */,
+				F3E0E9BC2B27684800E3204F /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3E0E9C52B27684900E3204F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3E0E9CF2B27684900E3204F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F3E0E9AD2B27684800E3204F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3E0E9B92B27684800E3204F /* ViewController.swift in Sources */,
+				F3E0E9B52B27684800E3204F /* AppDelegate.swift in Sources */,
+				F3E0E9B72B27684800E3204F /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3E0E9C32B27684900E3204F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3E0E9CC2B27684900E3204F /* YeoBeeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3E0E9CD2B27684900E3204F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3E0E9D62B27684900E3204F /* YeoBeeUITests.swift in Sources */,
+				F3E0E9D82B27684900E3204F /* YeoBeeUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F3E0E9C92B27684900E3204F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F3E0E9B02B27684800E3204F /* YeoBee */;
+			targetProxy = F3E0E9C82B27684900E3204F /* PBXContainerItemProxy */;
+		};
+		F3E0E9D32B27684900E3204F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F3E0E9B02B27684800E3204F /* YeoBee */;
+			targetProxy = F3E0E9D22B27684900E3204F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F3E0E9BA2B27684800E3204F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F3E0E9BB2B27684800E3204F /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F3E0E9BF2B27684900E3204F /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F3E0E9C02B27684900E3204F /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F3E0E9D92B27684900E3204F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F3E0E9DA2B27684900E3204F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F3E0E9DC2B27684900E3204F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CADXU3X8JU;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = YeoBee/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.YAPP.YeoBee;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F3E0E9DD2B27684900E3204F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CADXU3X8JU;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = YeoBee/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.YAPP.YeoBee;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F3E0E9DF2B27684900E3204F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CADXU3X8JU;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.YAPP.YeoBeeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YeoBee.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/YeoBee";
+			};
+			name = Debug;
+		};
+		F3E0E9E02B27684900E3204F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CADXU3X8JU;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.YAPP.YeoBeeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YeoBee.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/YeoBee";
+			};
+			name = Release;
+		};
+		F3E0E9E22B27684900E3204F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CADXU3X8JU;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.YAPP.YeoBeeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = YeoBee;
+			};
+			name = Debug;
+		};
+		F3E0E9E32B27684900E3204F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CADXU3X8JU;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.YAPP.YeoBeeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = YeoBee;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F3E0E9AC2B27684800E3204F /* Build configuration list for PBXProject "YeoBee" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3E0E9D92B27684900E3204F /* Debug */,
+				F3E0E9DA2B27684900E3204F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F3E0E9DB2B27684900E3204F /* Build configuration list for PBXNativeTarget "YeoBee" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3E0E9DC2B27684900E3204F /* Debug */,
+				F3E0E9DD2B27684900E3204F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F3E0E9DE2B27684900E3204F /* Build configuration list for PBXNativeTarget "YeoBeeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3E0E9DF2B27684900E3204F /* Debug */,
+				F3E0E9E02B27684900E3204F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F3E0E9E12B27684900E3204F /* Build configuration list for PBXNativeTarget "YeoBeeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3E0E9E22B27684900E3204F /* Debug */,
+				F3E0E9E32B27684900E3204F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F3E0E9A92B27684800E3204F /* Project object */;
+}
