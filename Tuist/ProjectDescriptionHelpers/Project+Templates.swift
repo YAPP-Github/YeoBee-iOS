@@ -6,6 +6,30 @@ import ProjectDescription
 /// See https://docs.tuist.io/guides/helpers/
 
 extension Project {
+    
+    /// Helper function to create the Project for this ExampleApp
+    public static func target(
+        name: String,
+        product: Product,
+        infoPlist: InfoPlist = .default,
+        sources: SourceFilesList,
+        resources: ResourceFileElements? = nil,
+        dependencies: [TargetDependency] = []
+    ) -> Target {
+        return Target(
+            name: name,
+            platform: .iOS,
+            product: product,
+            bundleId: "\(name.lowercased()).com",
+            deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
+            infoPlist: infoPlist,
+            sources: sources,
+            resources: resources,
+            dependencies: dependencies
+        )
+    }
+    
+    
     /// Helper function to create the Project for this ExampleApp
     public static func app(name: String, platform: Platform, additionalTargets: [String]) -> Project {
         var targets = makeAppTargets(name: name,

@@ -1,6 +1,5 @@
 import UIKit
-import YeoBeeKit
-import YeoBeeUI
+import DesignSystem
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,8 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         viewController.view.backgroundColor = .white
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
-        YeoBeeKit.hello()
-        YeoBeeUI.hello()
+        DesignSystem.hello()
 
         return true
     }

@@ -1,0 +1,30 @@
+import ProjectDescription
+import ProjectDescriptionHelpers
+
+let project = Project(
+    name: "{{ name }}",
+    organizationName: "YeoBee.com",
+    options: .options(
+        automaticSchemesOptions: .disabled
+    ),
+    packages: [],
+    settings: nil,
+    targets: [
+        Project.target(
+            name: "{{ name }}",
+            product: .staticLibrary,
+            sources: "Sources/**"
+        ),
+        Project.target(
+            name: "{{ name }}Tests",
+            product: .unitTests,
+            sources: "Tests/**",
+            dependencies: [
+                .target(name: "{{ name }}")
+            ]
+        )
+    ],
+    fileHeaderTemplate: nil,
+    additionalFiles: [],
+    resourceSynthesizers: []
+)
