@@ -7,7 +7,8 @@ let project = Project(
     options: .options(
         automaticSchemesOptions: .disabled
     ),
-    packages: [],
+    packages: [
+    ],
     settings: .settings(configurations: [
         .debug(name: .debug),
         .release(name: .release),
@@ -15,17 +16,29 @@ let project = Project(
     targets: [
         Project.target(
             name: "Sign",
-            product: .app,
-            sources: "Sources/**",
+            product: .framework,
+            sources: .sources,
             dependencies: [
+                .reactorKit,
+                .flexLayout,
+                .pinLayout,
+                .designSystem
+            ]
+        ),
+        Project.target(
+            name: "SignDemo",
+            product: .app,
+            sources: .demoSources,
+            dependencies: [
+                .sign
             ]
         ),
         Project.target(
             name: "SignTests",
             product: .unitTests,
-            sources: "Tests/**",
+            sources: .tests,
             dependencies: [
-                .target(name: "Sign")
+                .sign
             ]
         )
     ],
@@ -34,7 +47,7 @@ let project = Project(
             name: "SignDemo",
             shared: true,
             buildAction: BuildAction(
-                targets: ["Sign"]
+                targets: ["SignDemo"]
             ),
             testAction: .targets(["SignTests"]),
             runAction: .runAction(configuration: .debug),
@@ -48,6 +61,7 @@ let project = Project(
             buildAction: BuildAction(
                 targets: ["Sign"]
             ),
+            testAction: .targets(["SignTests"]),
             runAction: .runAction(configuration: .release),
             archiveAction: .archiveAction(configuration: .release),
             profileAction: .profileAction(configuration: .release),

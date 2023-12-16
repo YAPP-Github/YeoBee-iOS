@@ -13,15 +13,15 @@ let project = Project(
         Project.target(
             name: "DesignSystem",
             product: .staticLibrary,
-            sources: "Sources/**",
+            sources: .sources,
             resources: "Resources/**"
         ),
         Project.target(
             name: "DesignSystemTests",
             product: .unitTests,
-            sources: "Tests/**",
+            sources: .tests,
             dependencies: [
-                .target(name: "DesignSystem")
+                .designSystem
             ]
         )
     ],

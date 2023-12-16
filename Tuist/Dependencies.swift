@@ -4,13 +4,10 @@ import ProjectDescriptionHelpers
 let dependencies = Dependencies(
   swiftPackageManager: SwiftPackageManagerDependencies(
     [
-      .remote(
-        url: "https://github.com/airbnb/lottie-ios",
-        requirement: .exact("3.2.3")
-      ),
+        .reactorKit,
     ],
     productTypes: [
-      "Lottie": .framework,
+      "ReactorKit": .framework,
     ],
     baseSettings: .settings(
       configurations: [

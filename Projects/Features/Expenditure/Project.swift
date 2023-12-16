@@ -1,11 +1,8 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
-import MyPlugin
-
-let localHelper = LocalHelper(name: "MyPlugin")
 
 let project = Project(
-    name: "YeoBee",
+    name: "Expenditure",
     organizationName: "YeoBee.com",
     options: .options(
         automaticSchemesOptions: .disabled
@@ -17,43 +14,53 @@ let project = Project(
     ]),
     targets: [
         Project.target(
-            name: "YeoBee",
-            product: .app,
-            sources: "Sources/**",
-            resources: "Resources/**",
+            name: "Expenditure",
+            product: .framework,
+            sources: .sources,
             dependencies: [
-                .sign,
+                .reactorKit,
+                .flexLayout,
+                .pinLayout,
+                .designSystem
+            ]
+        ),
+        Project.target(
+            name: "ExpenditureDemo",
+            product: .app,
+            sources: .demoSources,
+            dependencies: [
                 .expenditure
             ]
         ),
         Project.target(
-            name: "YeoBeeTests",
+            name: "ExpenditureTests",
             product: .unitTests,
-            sources: "Tests/**",
+            sources: .tests,
             dependencies: [
-                .yeoBee
+                .expenditure
             ]
         )
     ],
     schemes: [
         Scheme(
-            name: "YeoBee-Dev",
+            name: "ExpenditureDemo",
             shared: true,
             buildAction: BuildAction(
-                targets: ["YeoBee"]
+                targets: ["ExpenditureDemo"]
             ),
-            testAction: .targets(["YeoBeeTests"]),
+            testAction: .targets(["ExpenditureTests"]),
             runAction: .runAction(configuration: .debug),
             archiveAction: .archiveAction(configuration: .debug),
             profileAction: .profileAction(configuration: .debug),
             analyzeAction: .analyzeAction(configuration: .debug)
         ),
         Scheme(
-            name: "YeoBee-Prod",
+            name: "Expenditure",
             shared: true,
             buildAction: BuildAction(
-                targets: ["YeoBee"]
+                targets: ["Expenditure"]
             ),
+            testAction: .targets(["ExpenditureTests"]),
             runAction: .runAction(configuration: .release),
             archiveAction: .archiveAction(configuration: .release),
             profileAction: .profileAction(configuration: .release),

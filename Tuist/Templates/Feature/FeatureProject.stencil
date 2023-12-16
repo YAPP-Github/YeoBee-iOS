@@ -15,15 +15,27 @@ let project = Project(
     targets: [
         Project.target(
             name: "{{ name }}",
-            product: .app,
-            sources: "Sources/**",
+            product: .framework,
+            sources: .sources,
             dependencies: [
+                .reactorKit,
+                .flexLayout,
+                .pinLayout,
+                .designSystem
+            ]
+        ),
+        Project.target(
+            name: "{{ name }}Demo",
+            product: .app,
+            sources: .demoSources,
+            dependencies: [
+                .target(name: "{{ name }}")
             ]
         ),
         Project.target(
             name: "{{ name }}Tests",
             product: .unitTests,
-            sources: "Tests/**",
+            sources: .tests,
             dependencies: [
                 .target(name: "{{ name }}")
             ]
@@ -34,7 +46,7 @@ let project = Project(
             name: "{{ name }}Demo",
             shared: true,
             buildAction: BuildAction(
-                targets: ["{{ name }}"]
+                targets: ["{{ name }}Demo"]
             ),
             testAction: .targets(["{{ name }}Tests"]),
             runAction: .runAction(configuration: .debug),
@@ -48,6 +60,7 @@ let project = Project(
             buildAction: BuildAction(
                 targets: ["{{ name }}"]
             ),
+            testAction: .targets(["{{ name }}Tests"]),
             runAction: .runAction(configuration: .release),
             archiveAction: .archiveAction(configuration: .release),
             profileAction: .profileAction(configuration: .release),

@@ -13,14 +13,17 @@ let project = Project(
         Project.target(
             name: "Network",
             product: .staticLibrary,
-            sources: "Sources/**"
+            sources: "Sources/**",
+            dependencies: [
+                .moya
+            ]
         ),
         Project.target(
             name: "NetworkTests",
             product: .unitTests,
             sources: "Tests/**",
             dependencies: [
-                .target(name: "Network")
+                .network
             ]
         )
     ],

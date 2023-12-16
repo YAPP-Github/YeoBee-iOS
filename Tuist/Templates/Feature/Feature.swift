@@ -19,6 +19,11 @@ let template = Template(
         .file(
             path: "\(nameAttribute)/Tests/\(nameAttribute)Tests.swift",
             templatePath: "FeatureTests.stencil"
+        ),
+        .file(
+            path: "\(nameAttribute)/DemoApp/Sources/AppDelegate.swift",
+            templatePath: "AppDelegate.stencil"
         )
+        
     ]
 )
