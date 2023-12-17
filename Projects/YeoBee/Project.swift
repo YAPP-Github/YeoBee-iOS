@@ -23,7 +23,10 @@ let project = Project(
             resources: "Resources/**",
             dependencies: [
                 .sign,
-                .expenditure
+                .expenditure,
+                .home,
+                .onboarding,
+                .travleEdit
             ]
         ),
         Project.target(
