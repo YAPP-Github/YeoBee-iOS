@@ -12,10 +12,9 @@ let project = Project(
     targets: [
         Project.target(
             name: "Network",
-            product: .staticLibrary,
+            product: .framework,
             sources: "Sources/**",
             dependencies: [
-                .moya
             ]
         ),
         Project.target(

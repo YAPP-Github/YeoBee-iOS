@@ -12,7 +12,7 @@ let project = Project(
     targets: [
         Project.target(
             name: "DesignSystem",
-            product: .staticLibrary,
+            product: .framework,
             sources: .sources,
             resources: "Resources/**"
         ),
