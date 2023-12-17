@@ -1,11 +1,11 @@
 import ProjectDescription
 
-let nameAttribute: Template.Attribute = .required("name")
+let featureNameAttribute: Template.Attribute = .required("name")
 
-let template = Template(
+let featureTemplate = Template(
     description: "Feature template",
     attributes: [
-        nameAttribute,
+        featureNameAttribute,
     ],
     items: [
         .file(

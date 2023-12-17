@@ -18,9 +18,6 @@ let project = Project(
             product: .framework,
             sources: .sources,
             dependencies: [
-                .reactorKit,
-                .flexLayout,
-                .pinLayout,
                 .designSystem
             ]
         ),

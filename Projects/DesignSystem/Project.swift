@@ -25,6 +25,20 @@ let project = Project(
             ]
         )
     ],
+    schemes: [
+        Scheme(
+            name: "DesignSystem",
+            shared: true,
+            buildAction: BuildAction(
+                targets: ["DesignSystem"]
+            ),
+            testAction: .targets(["NetworkTests"]),
+            runAction: .runAction(configuration: .debug),
+            archiveAction: .archiveAction(configuration: .debug),
+            profileAction: .profileAction(configuration: .debug),
+            analyzeAction: .analyzeAction(configuration: .debug)
+        )
+    ],
     fileHeaderTemplate: nil,
     additionalFiles: [],
     resourceSynthesizers: []

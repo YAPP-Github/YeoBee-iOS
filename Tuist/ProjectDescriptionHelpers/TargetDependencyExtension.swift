@@ -21,17 +21,17 @@ public extension TargetDependency {
 
 // MARK: Package
 public extension TargetDependency {
-    static let moya: TargetDependency = .package(product: "Moya")
-    static let reactorKit: TargetDependency = .package(product: "ReactorKit")
-    static let flexLayout: TargetDependency = .package(product: "FlexLayout")
-    static let pinLayout: TargetDependency = .package(product: "PinLayout")
+    static let moya: TargetDependency = .external(name: "Moya")
+    static let reactorKit: TargetDependency = .external(name: "ReactorKit")
+    static let flexLayout: TargetDependency = .external(name: "FlexLayout")
+    static let pinLayout: TargetDependency = .external(name: "PinLayout")
 }
 
 public extension Package {
-    static let moya: Package = .package(url: "https://github.com/Moya/Moya", .branch("master"))
-    static let reactorKit: Package = .package(url: "https://github.com/ReactorKit/ReactorKit.git", .branch("master"))
-    static let flexLayout: Package = .package(url: "https://github.com/layoutBox/FlexLayout.git", .branch("master"))
-    static let pinLayout: Package = .package(url: "https://github.com/layoutBox/PinLayout.git", .branch("master"))
+    static let moya: Package = .remote(url: "https://github.com/Moya/Moya.git", requirement: .upToNextMajor(from: "15.0.0"))
+    static let reactorKit: Package = .remote(url: "https://github.com/ReactorKit/ReactorKit.git", requirement: .upToNextMinor(from: "3.2.0"))
+    static let flexLayout: Package = .remote(url: "https://github.com/layoutBox/FlexLayout.git", requirement: .branch("master"))
+    static let pinLayout: Package = .remote(url: "https://github.com/layoutBox/PinLayout.git", requirement: .branch("master"))
 }
 
 // MARK: SourceFile

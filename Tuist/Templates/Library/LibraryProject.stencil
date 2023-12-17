@@ -24,6 +24,20 @@ let project = Project(
             ]
         )
     ],
+    schemes: [
+        Scheme(
+            name: "{{ name }}",
+            shared: true,
+            buildAction: BuildAction(
+                targets: ["{{ name }}"]
+            ),
+            testAction: .targets(["{{ name }}Tests"]),
+            runAction: .runAction(configuration: .debug),
+            archiveAction: .archiveAction(configuration: .debug),
+            profileAction: .profileAction(configuration: .debug),
+            analyzeAction: .analyzeAction(configuration: .debug)
+        )
+    ],
     fileHeaderTemplate: nil,
     additionalFiles: [],
     resourceSynthesizers: []
