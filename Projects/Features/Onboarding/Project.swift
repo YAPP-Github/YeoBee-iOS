@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "{{ name }}",
+    name: "Onboarding",
     organizationName: "YeoBee.com",
     options: .options(
         automaticSchemesOptions: .disabled
@@ -14,7 +14,7 @@ let project = Project(
     ]),
     targets: [
         Project.target(
-            name: "{{ name }}",
+            name: "Onboarding",
             product: .framework,
             sources: .sources,
             dependencies: [
@@ -22,42 +22,42 @@ let project = Project(
             ]
         ),
         Project.target(
-            name: "{{ name }}Demo",
+            name: "OnboardingDemo",
             product: .app,
             sources: .demoSources,
             dependencies: [
-                .target(name: "{{ name }}")
+                .target(name: "Onboarding")
             ]
         ),
         Project.target(
-            name: "{{ name }}Tests",
+            name: "OnboardingTests",
             product: .unitTests,
             sources: .tests,
             dependencies: [
-                .target(name: "{{ name }}")
+                .target(name: "Onboarding")
             ]
         )
     ],
     schemes: [
         Scheme(
-            name: "{{ name }}Demo",
+            name: "OnboardingDemo",
             shared: true,
             buildAction: BuildAction(
-                targets: ["{{ name }}Demo"]
+                targets: ["OnboardingDemo"]
             ),
-            testAction: .targets(["{{ name }}Tests"]),
+            testAction: .targets(["OnboardingTests"]),
             runAction: .runAction(configuration: .debug),
             archiveAction: .archiveAction(configuration: .debug),
             profileAction: .profileAction(configuration: .debug),
             analyzeAction: .analyzeAction(configuration: .debug)
         ),
         Scheme(
-            name: "{{ name }}",
+            name: "Onboarding",
             shared: true,
             buildAction: BuildAction(
-                targets: ["{{ name }}"]
+                targets: ["Onboarding"]
             ),
-            testAction: .targets(["{{ name }}Tests"]),
+            testAction: .targets(["OnboardingTests"]),
             runAction: .runAction(configuration: .release),
             archiveAction: .archiveAction(configuration: .release),
             profileAction: .profileAction(configuration: .release),

@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "{{ name }}",
+    name: "Home",
     organizationName: "YeoBee.com",
     options: .options(
         automaticSchemesOptions: .disabled
@@ -14,7 +14,7 @@ let project = Project(
     ]),
     targets: [
         Project.target(
-            name: "{{ name }}",
+            name: "Home",
             product: .framework,
             sources: .sources,
             dependencies: [
@@ -22,42 +22,42 @@ let project = Project(
             ]
         ),
         Project.target(
-            name: "{{ name }}Demo",
+            name: "HomeDemo",
             product: .app,
             sources: .demoSources,
             dependencies: [
-                .target(name: "{{ name }}")
+                .target(name: "Home")
             ]
         ),
         Project.target(
-            name: "{{ name }}Tests",
+            name: "HomeTests",
             product: .unitTests,
             sources: .tests,
             dependencies: [
-                .target(name: "{{ name }}")
+                .target(name: "Home")
             ]
         )
     ],
     schemes: [
         Scheme(
-            name: "{{ name }}Demo",
+            name: "HomeDemo",
             shared: true,
             buildAction: BuildAction(
-                targets: ["{{ name }}Demo"]
+                targets: ["HomeDemo"]
             ),
-            testAction: .targets(["{{ name }}Tests"]),
+            testAction: .targets(["HomeTests"]),
             runAction: .runAction(configuration: .debug),
             archiveAction: .archiveAction(configuration: .debug),
             profileAction: .profileAction(configuration: .debug),
             analyzeAction: .analyzeAction(configuration: .debug)
         ),
         Scheme(
-            name: "{{ name }}",
+            name: "Home",
             shared: true,
             buildAction: BuildAction(
-                targets: ["{{ name }}"]
+                targets: ["Home"]
             ),
-            testAction: .targets(["{{ name }}Tests"]),
+            testAction: .targets(["HomeTests"]),
             runAction: .runAction(configuration: .release),
             archiveAction: .archiveAction(configuration: .release),
             profileAction: .profileAction(configuration: .release),

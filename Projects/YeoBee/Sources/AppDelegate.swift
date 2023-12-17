@@ -1,5 +1,5 @@
 import UIKit
-import DesignSystem
+import Expenditure
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         viewController.view.backgroundColor = .white
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
-        DesignSystem.hello()
 
         return true
     }

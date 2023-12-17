@@ -1,0 +1,17 @@
+//
+//  {{ name }}ViewController.swift
+//  {{ name }}
+//
+//  Created by {{ author }} {{ currentDate }}
+//
+
+import UIKit
+
+public class {{ name }}ViewController: UIViewController {
+
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        print("👋 hello {{ name }} Scene")
+    }
+}

@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "{{ name }}",
+    name: "TravelEdit",
     organizationName: "YeoBee.com",
     options: .options(
         automaticSchemesOptions: .disabled
@@ -14,7 +14,7 @@ let project = Project(
     ]),
     targets: [
         Project.target(
-            name: "{{ name }}",
+            name: "TravelEdit",
             product: .framework,
             sources: .sources,
             dependencies: [
@@ -22,42 +22,42 @@ let project = Project(
             ]
         ),
         Project.target(
-            name: "{{ name }}Demo",
+            name: "TravelEditDemo",
             product: .app,
             sources: .demoSources,
             dependencies: [
-                .target(name: "{{ name }}")
+                .target(name: "TravelEdit")
             ]
         ),
         Project.target(
-            name: "{{ name }}Tests",
+            name: "TravelEditTests",
             product: .unitTests,
             sources: .tests,
             dependencies: [
-                .target(name: "{{ name }}")
+                .target(name: "TravelEdit")
             ]
         )
     ],
     schemes: [
         Scheme(
-            name: "{{ name }}Demo",
+            name: "TravelEditDemo",
             shared: true,
             buildAction: BuildAction(
-                targets: ["{{ name }}Demo"]
+                targets: ["TravelEditDemo"]
             ),
-            testAction: .targets(["{{ name }}Tests"]),
+            testAction: .targets(["TravelEditTests"]),
             runAction: .runAction(configuration: .debug),
             archiveAction: .archiveAction(configuration: .debug),
             profileAction: .profileAction(configuration: .debug),
             analyzeAction: .analyzeAction(configuration: .debug)
         ),
         Scheme(
-            name: "{{ name }}",
+            name: "TravelEdit",
             shared: true,
             buildAction: BuildAction(
-                targets: ["{{ name }}"]
+                targets: ["TravelEdit"]
             ),
-            testAction: .targets(["{{ name }}Tests"]),
+            testAction: .targets(["TravelEditTests"]),
             runAction: .runAction(configuration: .release),
             archiveAction: .archiveAction(configuration: .release),
             profileAction: .profileAction(configuration: .release),
