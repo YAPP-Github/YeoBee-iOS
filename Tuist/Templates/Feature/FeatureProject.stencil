@@ -1,0 +1,70 @@
+import ProjectDescription
+import ProjectDescriptionHelpers
+
+let project = Project(
+    name: "{{ name }}",
+    organizationName: "YeoBee.com",
+    options: .options(
+        automaticSchemesOptions: .disabled
+    ),
+    packages: [],
+    settings: .settings(configurations: [
+        .debug(name: .debug),
+        .release(name: .release),
+    ]),
+    targets: [
+        Project.target(
+            name: "{{ name }}",
+            product: .framework,
+            sources: .sources,
+            dependencies: [
+                .designSystem
+            ]
+        ),
+        Project.target(
+            name: "{{ name }}Demo",
+            product: .app,
+            sources: .demoSources,
+            dependencies: [
+                .target(name: "{{ name }}")
+            ]
+        ),
+        Project.target(
+            name: "{{ name }}Tests",
+            product: .unitTests,
+            sources: .tests,
+            dependencies: [
+                .target(name: "{{ name }}")
+            ]
+        )
+    ],
+    schemes: [
+        Scheme(
+            name: "{{ name }}Demo",
+            shared: true,
+            buildAction: BuildAction(
+                targets: ["{{ name }}Demo"]
+            ),
+            testAction: .targets(["{{ name }}Tests"]),
+            runAction: .runAction(configuration: .debug),
+            archiveAction: .archiveAction(configuration: .debug),
+            profileAction: .profileAction(configuration: .debug),
+            analyzeAction: .analyzeAction(configuration: .debug)
+        ),
+        Scheme(
+            name: "{{ name }}",
+            shared: true,
+            buildAction: BuildAction(
+                targets: ["{{ name }}"]
+            ),
+            testAction: .targets(["{{ name }}Tests"]),
+            runAction: .runAction(configuration: .release),
+            archiveAction: .archiveAction(configuration: .release),
+            profileAction: .profileAction(configuration: .release),
+            analyzeAction: .analyzeAction(configuration: .release)
+        )
+    ],
+    fileHeaderTemplate: nil,
+    additionalFiles: [],
+    resourceSynthesizers: []
+)

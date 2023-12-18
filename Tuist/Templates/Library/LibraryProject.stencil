@@ -1,0 +1,44 @@
+import ProjectDescription
+import ProjectDescriptionHelpers
+
+let project = Project(
+    name: "{{ name }}",
+    organizationName: "YeoBee.com",
+    options: .options(
+        automaticSchemesOptions: .disabled
+    ),
+    packages: [],
+    settings: nil,
+    targets: [
+        Project.target(
+            name: "{{ name }}",
+            product: .framework,
+            sources: "Sources/**"
+        ),
+        Project.target(
+            name: "{{ name }}Tests",
+            product: .unitTests,
+            sources: "Tests/**",
+            dependencies: [
+                .target(name: "{{ name }}")
+            ]
+        )
+    ],
+    schemes: [
+        Scheme(
+            name: "{{ name }}",
+            shared: true,
+            buildAction: BuildAction(
+                targets: ["{{ name }}"]
+            ),
+            testAction: .targets(["{{ name }}Tests"]),
+            runAction: .runAction(configuration: .debug),
+            archiveAction: .archiveAction(configuration: .debug),
+            profileAction: .profileAction(configuration: .debug),
+            analyzeAction: .analyzeAction(configuration: .debug)
+        )
+    ],
+    fileHeaderTemplate: nil,
+    additionalFiles: [],
+    resourceSynthesizers: []
+)
