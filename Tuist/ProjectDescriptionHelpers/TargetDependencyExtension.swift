@@ -37,8 +37,8 @@ public extension TargetDependency {
 }
 
 public extension Package {
-    static let moya: Package = .remote(url: "https://github.com/Moya/Moya.git", requirement: .upToNextMajor(from: "15.0.0"))
-    static let reactorKit: Package = .remote(url: "https://github.com/ReactorKit/ReactorKit.git", requirement: .upToNextMinor(from: "3.2.0"))
+    static let moya: Package = .remote(url: "https://github.com/Moya/Moya.git", requirement: .branch("master"))
+    static let reactorKit: Package = .remote(url: "https://github.com/ReactorKit/ReactorKit.git", requirement: .branch("master"))
     static let flexLayout: Package = .remote(url: "https://github.com/layoutBox/FlexLayout.git", requirement: .branch("master"))
     static let pinLayout: Package = .remote(url: "https://github.com/layoutBox/PinLayout.git", requirement: .branch("master"))
 }
