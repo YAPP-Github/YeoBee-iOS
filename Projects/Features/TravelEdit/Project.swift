@@ -21,7 +21,8 @@ let project = Project(
                 .designSystem,
                 .reactorKit,
                 .flexLayout,
-                .pinLayout
+                .pinLayout,
+                .fscalendar
             ]
         ),
         Project.target(

@@ -34,6 +34,7 @@ public extension TargetDependency {
     static let reactorKit: TargetDependency = .external(name: "ReactorKit")
     static let flexLayout: TargetDependency = .external(name: "FlexLayout")
     static let pinLayout: TargetDependency = .external(name: "PinLayout")
+    static let fscalendar: TargetDependency = .external(name: "FSCalendar")
 }
 
 public extension Package {
@@ -41,6 +42,7 @@ public extension Package {
     static let reactorKit: Package = .remote(url: "https://github.com/ReactorKit/ReactorKit.git", requirement: .branch("master"))
     static let flexLayout: Package = .remote(url: "https://github.com/layoutBox/FlexLayout.git", requirement: .branch("master"))
     static let pinLayout: Package = .remote(url: "https://github.com/layoutBox/PinLayout.git", requirement: .branch("master"))
+    static let fscalendar: Package = .remote(url: "https://github.com/WenchaoD/FSCalendar.git", requirement: .branch("master"))
 }
 
 // MARK: SourceFile
