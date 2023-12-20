@@ -7,13 +7,15 @@ let dependencies = Dependencies(
         .moya,
         .reactorKit,
         .pinLayout,
-        .flexLayout
+        .flexLayout,
+        .fscalendar
     ],
     productTypes: [
       "Moya": .framework,
       "ReactorKit": .framework,
       "FlexLayout": .framework,
       "PinLayout": .framework,
+      "FSCalendar": .framework
     ],
     baseSettings: .settings(
       configurations: [

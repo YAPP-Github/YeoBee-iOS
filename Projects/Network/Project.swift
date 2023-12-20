@@ -15,6 +15,7 @@ let project = Project(
             product: .framework,
             sources: "Sources/**",
             dependencies: [
+                .moya
             ]
         ),
         Project.target(

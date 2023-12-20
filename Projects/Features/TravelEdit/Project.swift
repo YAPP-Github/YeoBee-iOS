@@ -18,7 +18,11 @@ let project = Project(
             product: .framework,
             sources: .sources,
             dependencies: [
-                .designSystem
+                .designSystem,
+                .reactorKit,
+                .flexLayout,
+                .pinLayout,
+                .fscalendar
             ]
         ),
         Project.target(
