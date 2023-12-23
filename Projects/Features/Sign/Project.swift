@@ -20,6 +20,8 @@ let project = Project(
             sources: .sources,
             dependencies: [
                 .designSystem,
+                .RxSwift,
+                .RxCocoa,
                 .reactorKit,
                 .flexLayout,
                 .pinLayout
