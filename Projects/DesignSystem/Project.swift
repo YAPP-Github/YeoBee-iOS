@@ -14,7 +14,12 @@ let project = Project(
             name: "DesignSystem",
             product: .framework,
             sources: .sources,
-            resources: "Resources/**"
+            resources: ResourceFileElements(
+                resources: [
+                  .glob(pattern: .relativeToRoot("Projects/DesignSystem/Resources/**")),
+                  .glob(pattern: .relativeToRoot("Projects/DesignSystem/Resources/Font/**"))
+                ]
+              )
         ),
         Project.target(
             name: "DesignSystemTests",
@@ -41,5 +46,9 @@ let project = Project(
     ],
     fileHeaderTemplate: nil,
     additionalFiles: [],
-    resourceSynthesizers: []
+    resourceSynthesizers: [
+      .strings(),
+      .assets(),
+      .fonts()
+    ]
 )
