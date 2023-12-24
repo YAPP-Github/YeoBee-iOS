@@ -19,16 +19,18 @@ let project = Project(
                   .glob(pattern: .relativeToRoot("Projects/DesignSystem/Resources/**")),
                   .glob(pattern: .relativeToRoot("Projects/DesignSystem/Resources/Font/**"))
                 ]
-              )
+              ),
+            dependencies: [
+                .flexLayout,
+                .pinLayout
+            ]
         ),
         Project.target(
             name: "DesignSystemDemo",
             product: .app,
             sources: .demoSources,
             dependencies: [
-                .designSystem,
-                .flexLayout,
-                .pinLayout
+                .designSystem
             ]
         ),
         Project.target(
