@@ -22,6 +22,14 @@ let project = Project(
               )
         ),
         Project.target(
+            name: "DesignSystemDemo",
+            product: .app,
+            sources: .demoSources,
+            dependencies: [
+                .designSystem
+            ]
+        ),
+        Project.target(
             name: "DesignSystemTests",
             product: .unitTests,
             sources: .tests,
@@ -32,16 +40,28 @@ let project = Project(
     ],
     schemes: [
         Scheme(
+            name: "DesignSystemDemo",
+            shared: true,
+            buildAction: BuildAction(
+                targets: ["DesignSystemDemo"]
+            ),
+            testAction: .targets(["DesignSystemTests"]),
+            runAction: .runAction(configuration: .debug),
+            archiveAction: .archiveAction(configuration: .debug),
+            profileAction: .profileAction(configuration: .debug),
+            analyzeAction: .analyzeAction(configuration: .debug)
+        ),
+        Scheme(
             name: "DesignSystem",
             shared: true,
             buildAction: BuildAction(
                 targets: ["DesignSystem"]
             ),
-            testAction: .targets(["NetworkTests"]),
-            runAction: .runAction(configuration: .debug),
-            archiveAction: .archiveAction(configuration: .debug),
-            profileAction: .profileAction(configuration: .debug),
-            analyzeAction: .analyzeAction(configuration: .debug)
+            testAction: .targets(["DesignSystemTests"]),
+            runAction: .runAction(configuration: .release),
+            archiveAction: .archiveAction(configuration: .release),
+            profileAction: .profileAction(configuration: .release),
+            analyzeAction: .analyzeAction(configuration: .release)
         )
     ],
     fileHeaderTemplate: nil,
@@ -52,3 +72,4 @@ let project = Project(
       .fonts()
     ]
 )
+

@@ -7,11 +7,19 @@ import ProjectDescription
 
 extension Project {
     
+    public static var infoPlist: [String: InfoPlist.Value] {
+        [
+            "CFBundleShortVersionString": "1.0",
+            "CFBundleVersion": "1",
+            "UIMainStoryboardFile": "",
+            "UILaunchStoryboardName": "LaunchScreen"
+        ]
+    }
+    
     /// Helper function to create the Project for this ExampleApp
     public static func target(
         name: String,
         product: Product,
-        infoPlist: InfoPlist = .default,
         sources: SourceFilesList,
         resources: ResourceFileElements? = nil,
         dependencies: [TargetDependency] = []
@@ -22,7 +30,7 @@ extension Project {
             product: product,
             bundleId: "\(name.lowercased()).com",
             deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
-            infoPlist: infoPlist,
+            infoPlist: .extendingDefault(with: infoPlist),
             sources: sources,
             resources: resources,
             dependencies: dependencies
@@ -49,7 +57,7 @@ extension Project {
                 platform: platform,
                 product: .framework,
                 bundleId: "io.tuist.\(name)",
-                infoPlist: .default,
+                infoPlist: .extendingDefault(with: infoPlist),
                 sources: ["Targets/\(name)/Sources/**"],
                 resources: [],
                 dependencies: [])
@@ -57,7 +65,7 @@ extension Project {
                 platform: platform,
                 product: .unitTests,
                 bundleId: "io.tuist.\(name)Tests",
-                infoPlist: .default,
+                infoPlist: .extendingDefault(with: infoPlist),
                 sources: ["Targets/\(name)/Tests/**"],
                 resources: [],
                 dependencies: [.target(name: name)])
@@ -97,4 +105,6 @@ extension Project {
         ])
         return [mainTarget, testTarget]
     }
+    
+    
 }
