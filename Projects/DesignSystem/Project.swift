@@ -26,7 +26,9 @@ let project = Project(
             product: .app,
             sources: .demoSources,
             dependencies: [
-                .designSystem
+                .designSystem,
+                .flexLayout,
+                .pinLayout
             ]
         ),
         Project.target(
