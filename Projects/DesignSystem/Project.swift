@@ -21,8 +21,8 @@ let project = Project(
                 ]
               ),
             dependencies: [
-                .flexLayout,
-                .pinLayout
+                .package(product: "FlexLayout"),
+                .package(product: "PinLayout")
             ]
         ),
         Project.target(

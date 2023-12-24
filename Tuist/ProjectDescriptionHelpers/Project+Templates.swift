@@ -33,10 +33,18 @@ extension Project {
             infoPlist: .extendingDefault(with: infoPlist),
             sources: sources,
             resources: resources,
-            dependencies: dependencies
+            dependencies: dependencies,
+            settings: .settings(configurations: [
+                .debug(name: "Debug", settings: [
+                    "GCC_PREPROCESSOR_DEFINITIONS": ["DEBUG=1", "OTHER_MACRO=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"],
+                ]),
+                .release(name: "Release", settings: [
+                    "GCC_PREPROCESSOR_DEFINITIONS": ["RELEASE=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"],
+                ])
+            
+            ])
         )
     }
-    
     
     /// Helper function to create the Project for this ExampleApp
     public static func app(name: String, platform: Platform, additionalTargets: [String]) -> Project {

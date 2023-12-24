@@ -7,8 +7,6 @@ let dependencies = Dependencies(
             .RxSwift,
             .moya,
             .reactorKit,
-            .pinLayout,
-            .flexLayout,
             .fscalendar
         ],
         productTypes: [
@@ -16,8 +14,6 @@ let dependencies = Dependencies(
             "RxCocoa": .framework,
             "Moya": .framework,
             "ReactorKit": .framework,
-            "FlexLayout": .framework,
-            "PinLayout": .framework,
             "FSCalendar": .framework
         ],
         baseSettings: .settings(
