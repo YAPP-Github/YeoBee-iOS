@@ -19,9 +19,9 @@ let project = Project(
             sources: .sources,
             dependencies: [
                 .designSystem,
-                .reactorKit,
-                .flexLayout,
-                .pinLayout
+                .RxSwift,
+                .RxCocoa,
+                .reactorKit
             ]
         ),
         Project.target(

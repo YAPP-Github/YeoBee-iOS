@@ -22,8 +22,6 @@ let project = Project(
                 .RxSwift,
                 .RxCocoa,
                 .reactorKit,
-                .flexLayout,
-                .pinLayout,
                 .fscalendar
             ]
         ),
