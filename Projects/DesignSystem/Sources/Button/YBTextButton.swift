@@ -10,15 +10,19 @@ import UIKit
 
 public final class YBTextButton: UIButton {
     
+    let size: Size
+    var appearance: Appearance
+    
     public init(text: String, appearance: Appearance, size: Size) {
+        self.size = size
+        self.appearance = appearance
         super.init(frame: .zero)
         
         translatesAutoresizingMaskIntoConstraints = false
         self.heightAnchor.constraint(equalToConstant: size.height).isActive = true
         
         setTitle(text, for: .normal)
-        
-        configuration = configureConfiguration(appearance: appearance, size: size)
+        configureConfiguration()
     }
     
     required init?(coder: NSCoder) {
@@ -28,20 +32,28 @@ public final class YBTextButton: UIButton {
 
 private extension YBTextButton {
     
-    func configureConfiguration(appearance: Appearance, size: Size) -> Configuration {
-        var configuration: UIButton.Configuration = .filled()
-        configuration.baseBackgroundColor = appearance.backgroundColor.color
-        configuration.baseForegroundColor = appearance.textColor.color
-        configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer (
-            { incoming in
+    func configureConfiguration() {
+        var ybConfiguration: UIButton.Configuration = .filled()
+        ybConfiguration.baseBackgroundColor = appearance.backgroundColor.color
+        ybConfiguration.baseForegroundColor = appearance.textColor.color
+        ybConfiguration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer (
+            { [weak self] incoming in
                 var outgoing = incoming
-                outgoing.font = size.font.font
+                outgoing.font = self?.size.font.font
                 return outgoing
             }
         )
-        configuration.background.cornerRadius = size.cornerRadius
-        configuration.background.strokeWidth = 1.0
-        return configuration
+        ybConfiguration.background.cornerRadius = size.cornerRadius
+        ybConfiguration.background.strokeWidth = 1.0
+        configuration = ybConfiguration
+    }
+}
+
+public extension YBTextButton {
+    
+    func setAppearance(appearance: Appearance) {
+        self.appearance = appearance
+        configureConfiguration()
     }
 }
 

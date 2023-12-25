@@ -39,6 +39,8 @@ extension DesignSystemViewController {
         switch components[indexPath.row] {
         case .textField:
             self.navigationController?.pushViewController(TextFieldViewController(), animated: true)
+        case .button:
+            self.navigationController?.pushViewController(ButtonViewController(), animated: true)
         }
     }
 }
