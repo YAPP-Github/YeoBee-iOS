@@ -21,8 +21,7 @@ let project = Project(
                 ]
               ),
             dependencies: [
-                .package(product: "FlexLayout"),
-                .package(product: "PinLayout")
+                .SnapKit
             ]
         ),
         Project.target(

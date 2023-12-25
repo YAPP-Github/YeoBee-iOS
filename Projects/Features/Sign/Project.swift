@@ -7,8 +7,7 @@ let project = Project(
     options: .options(
         automaticSchemesOptions: .disabled
     ),
-    packages: [
-    ],
+    packages: [],
     settings: .settings(configurations: [
         .debug(name: .debug),
         .release(name: .release),

@@ -1,21 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "flexlayout",
+      "identity" : "snapkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/layoutBox/FlexLayout.git",
+      "location" : "https://github.com/SnapKit/SnapKit",
       "state" : {
-        "branch" : "master",
-        "revision" : "c564935d2a24da7bd0b426132d0727cf20c8ecfe"
-      }
-    },
-    {
-      "identity" : "pinlayout",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/layoutBox/PinLayout.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "8eaa3a15e4dcabaca4c95aea4c0ff0c9b4a67213"
+        "revision" : "f222cbdf325885926566172f6f5f06af95473158",
+        "version" : "5.6.0"
       }
     }
   ],
