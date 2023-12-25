@@ -41,7 +41,7 @@ public class BottomSheetViewController: DesignSystemBaseViewController {
     }
     @objc
     func buttonTapped() {
-        let vc = BottomSheetPresentationController()
-        presentDimmed(popupViewController: vc, height: 300)
+        let vc = TestBottomSheetViewController()
+        presentBottomSheet(presentedViewController: vc, height: 300)
     }
 }

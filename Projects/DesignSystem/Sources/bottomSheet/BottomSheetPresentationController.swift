@@ -10,9 +10,8 @@ import Foundation
 import UIKit
 import SnapKit
 
-public class BottomSheetPresentationController: UIViewController {
+public class YBBottomSheetViewController: UIViewController {
     
-    fileprivate let rootFlexContainer = UIView()
     fileprivate let sheetContentView = UIView()
     fileprivate let indicatorView: UIView = {
         let view = UIView()
@@ -25,8 +24,29 @@ public class BottomSheetPresentationController: UIViewController {
         super.viewDidLoad()
         
         setViews()
-        view.addSubview(rootFlexContainer)
+        view.addSubview(sheetContentView)
+        sheetContentView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.trailing.equalToSuperview().offset(-24)
+            make.leading.equalToSuperview().offset(24)
+            make.bottom.equalToSuperview().offset(-50)
+        }
         
+        sheetContentView.addSubview(indicatorView)
+        sheetContentView.addSubview(containerView)
+        indicatorView.snp.makeConstraints { make in
+            make.width.equalTo(60)
+            make.height.equalTo(4)
+            make.top.equalToSuperview().offset(14)
+            make.centerX.equalToSuperview()
+        }
+        
+        containerView.snp.makeConstraints { make in
+            make.top.equalTo(indicatorView).offset(28)
+            make.trailing.equalToSuperview().offset(-24)
+            make.leading.equalToSuperview().offset(24)
+            make.bottom.equalToSuperview().offset(-50)
+        }
     }
     
     init() {
@@ -39,17 +59,16 @@ public class BottomSheetPresentationController: UIViewController {
     
     public func setViews() {
         view.backgroundColor = .clear
-        rootFlexContainer.backgroundColor = .clear
+        
         sheetContentView.backgroundColor = .white
-        containerView.backgroundColor = .orange
+        sheetContentView.layer.cornerRadius = 20
     }
-    
 }
 
 import Foundation
 import UIKit
 
-class DimmedPresentationController: UIPresentationController {
+class BottomPresentationController: UIPresentationController {
 
     private let dimmedBackgroundView = UIView()
     private let dimmedMaxAlpha: CGFloat = 0.2
@@ -58,7 +77,10 @@ class DimmedPresentationController: UIPresentationController {
     private var hasSetPointOrigin = false
     private var pointOrigin: CGPoint?
     
-    override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
+    override init(
+        presentedViewController: UIViewController,
+        presenting presentingViewController: UIViewController?
+    ) {
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(backgroundTapped))
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerAction))
@@ -85,7 +107,8 @@ class DimmedPresentationController: UIPresentationController {
     }
 
     override func presentationTransitionWillBegin() {
-        if let containerView = self.containerView, let coordinator = presentingViewController.transitionCoordinator {
+        if let containerView = self.containerView,
+            let coordinator = presentingViewController.transitionCoordinator {
             containerView.addSubview(dimmedBackgroundView)
             dimmedBackgroundView.backgroundColor = isShowDimmedView ? .black : .clear
             dimmedBackgroundView.frame = containerView.bounds
@@ -114,9 +137,7 @@ class DimmedPresentationController: UIPresentationController {
     
     @objc func panGestureRecognizerAction(sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: presentedView)
-        
         guard translation.y >= 0 else { return }
-        
         presentedView?.frame.origin = CGPoint(x: 0, y: self.pointOrigin!.y + translation.y)
         
         self.dimmedBackgroundView.alpha = min(1.0, 1.0 - (translation.y / (presentedView?.frame.height ?? 0))) * dimmedMaxAlpha
@@ -140,23 +161,26 @@ class DimmedPresentationController: UIPresentationController {
     }
 }
 
-class DimmedTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
+class BottomSheetTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     
     var height: CGFloat = 0
     
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        let overlay = DimmedPresentationController(presentedViewController: presented, presenting: presenting)
+    func presentationController(
+        forPresented presented: UIViewController,
+        presenting: UIViewController?, source: UIViewController
+    ) -> UIPresentationController? {
+        let overlay = BottomPresentationController(presentedViewController: presented, presenting: presenting)
         overlay.height = self.height
         return overlay
     }
 }
 
 extension UIViewController {
-    func presentDimmed(popupViewController: UIViewController, height: CGFloat) {
-        let overlayTransitioningDelegate = DimmedTransitioningDelegate()
+    func presentBottomSheet(presentedViewController: UIViewController, height: CGFloat) {
+        let overlayTransitioningDelegate = BottomSheetTransitioningDelegate()
         overlayTransitioningDelegate.height = height
-        popupViewController.transitioningDelegate = overlayTransitioningDelegate
-        popupViewController.modalPresentationStyle = .custom
-        present(popupViewController, animated: true, completion: nil)
+        presentedViewController.transitioningDelegate = overlayTransitioningDelegate
+        presentedViewController.modalPresentationStyle = .custom
+        present(presentedViewController, animated: true, completion: nil)
     }
 }
