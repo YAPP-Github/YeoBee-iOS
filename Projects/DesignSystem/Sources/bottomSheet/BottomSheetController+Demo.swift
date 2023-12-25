@@ -16,7 +16,7 @@ public class BottomSheetViewController: DesignSystemBaseViewController {
         button.setTitle("bottomSheet", for: .normal)
         button.backgroundColor = .lightGray
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        button.addTarget(BottomSheetViewController.self, action: #selector(buttonTapped), for: .touchUpInside)
         return button
     }()
     
