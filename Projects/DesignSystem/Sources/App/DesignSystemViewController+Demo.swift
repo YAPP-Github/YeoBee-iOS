@@ -3,6 +3,7 @@ import UIKit
 
 enum Component: String, CaseIterable {
     case textField = "textField"
+    case button = "button"
 }
 
 public class DesignSystemViewController: UITableViewController {

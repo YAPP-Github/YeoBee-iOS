@@ -16,6 +16,7 @@ open class DesignSystemBaseViewController: UIViewController {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .fill
+        stackView.spacing = 10
         return stackView
     }()
     
