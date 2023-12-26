@@ -1,5 +1,5 @@
 //
-//  ExpenditureListReactorView.swift
+//  TotalPriceViewReactorView.swift
 //  Expenditure
 //
 //  Created by Hoyoung Lee on 12/26/23.
@@ -11,9 +11,9 @@ import ReactorKit
 import RxSwift
 
 import DesignSystem
-import Snapkit
+import SnapKit
 
-class ExpenditureListReactorView: Reactor {
+class TotalPriceReactor: Reactor {
     
     enum Action {
         // actiom cases
@@ -30,7 +30,7 @@ class ExpenditureListReactorView: Reactor {
     let initialState: State
     
     init() {
-        // init state initialState = State(...)
+        self.initialState = .init()
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
