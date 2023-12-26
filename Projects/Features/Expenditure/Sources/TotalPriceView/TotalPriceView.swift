@@ -95,6 +95,20 @@ final class TotalPriceView: UIView, View {
             )
             stackView.isHidden = true
         }
+        
+        totalExpandPriceSubView.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { _ in
+                print("tap totalExpandPriceSubView")
+            })
+            .disposed(by: disposeBag)
+        
+        totalBudgetPriceSubView.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { _ in
+                print("tap totalExpandPriceSubView")
+            })
+            .disposed(by: disposeBag)
     }
 }
 

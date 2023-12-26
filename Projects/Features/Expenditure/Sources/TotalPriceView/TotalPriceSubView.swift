@@ -20,31 +20,26 @@ final class TotalPriceSubView: UIView {
     // MARK: label
 
     let titleLabel = YBLabel(font: .body3, textColor: .gray4)
-    let priceLabel = YBLabel(font: .body3, textColor: .gray6)
+    let priceLabel = YBDecimalLabel(unit: .krw, font: .body3, textColor: .gray6)
     let verticalDivider = YBDivider(.verticalLine, height: 1, color: .gray3)
+    let stackView = UIStackView()
 
     init(isDivider: Bool = false) {
         
         super.init(frame: .zero)
         
         verticalDivider.isHidden = isDivider == false
+        stackView.axis = .horizontal
+        stackView.spacing = 6
 
-        addSubview(titleLabel)
-        addSubview(priceLabel)
-        addSubview(verticalDivider)
-
-        titleLabel.snp.makeConstraints { make in
-            make.leading.verticalEdges.equalToSuperview()
-        }
-
-        priceLabel.snp.makeConstraints { make in
-            make.leading.equalTo(titleLabel.snp.trailing).offset(6).priority(.high)
-            make.verticalEdges.equalToSuperview().priority(.low)
-        }
+        addSubview(stackView)
         
-        verticalDivider.snp.makeConstraints { make in
-            make.leading.equalTo(priceLabel.snp.trailing).offset(6).priority(.low)
-            make.verticalEdges.trailing.equalToSuperview()
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(priceLabel)
+        stackView.addArrangedSubview(verticalDivider)
+
+        stackView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
     }
 
@@ -54,6 +49,6 @@ final class TotalPriceSubView: UIView {
     
     func setData(text: String, price: Int) {
         titleLabel.text = text
-        priceLabel.text = "\(price)원"
+        priceLabel.setPrice(price)
     }
 }

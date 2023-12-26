@@ -16,11 +16,9 @@ import SnapKit
 public class TotalPriceReactor: Reactor {
 
     public enum Action {
-        // actiom cases
     }
     
     public enum Mutation {
-        // mutation cases
     }
     
     public struct State {
@@ -43,16 +41,8 @@ public class TotalPriceReactor: Reactor {
         )
     }
     
-    public func mutate(action: Action) -> Observable<Mutation> {
-        // switch action {
-        // }
-    }
-    
     public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
-        // switch mutation {
-        // }
         return newState
     }
-    
 }
