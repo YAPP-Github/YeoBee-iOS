@@ -13,32 +13,32 @@ import RxSwift
 import DesignSystem
 import SnapKit
 
-class TotalPriceReactor: Reactor {
-    
-    enum Action {
+public class TotalPriceReactor: Reactor {
+
+    public enum Action {
         // actiom cases
     }
     
-    enum Mutation {
+    public enum Mutation {
         // mutation cases
     }
     
-    struct State {
-        //state
+    public struct State {
+        let budget: Int
     }
     
-    let initialState: State
-    
-    init() {
-        self.initialState = .init()
+    public let initialState: State
+
+    public init(budget: Int) {
+        self.initialState = .init(budget: budget)
     }
     
-    func mutate(action: Action) -> Observable<Mutation> {
+    public func mutate(action: Action) -> Observable<Mutation> {
         // switch action {
         // }
     }
     
-    func reduce(state: State, mutation: Mutation) -> State {
+    public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         // switch mutation {
         // }

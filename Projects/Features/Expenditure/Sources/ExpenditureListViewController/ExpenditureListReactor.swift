@@ -23,12 +23,13 @@ public final class ExpenditureListReactor: Reactor {
     }
     
     public struct State {
-        //state
     }
     
     public let initialState: State
+    public let totalPriceReactorFactory: TotalPriceReactor
 
-    public init() {
+    public init(totalPriceReactorFactory: @escaping (Int) -> TotalPriceReactor) {
+        self.totalPriceReactorFactory = totalPriceReactorFactory(0)
         self.initialState = .init()
     }
     
