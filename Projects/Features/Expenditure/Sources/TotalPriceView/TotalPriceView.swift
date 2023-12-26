@@ -19,12 +19,13 @@ final class TotalPriceView: UIView, View {
 
     // MARK: label
 
-    let titleLabel = YBLabel(text: "", font: .body3, textColor: .gray6)
-    let priceLabel = YBLabel(text: "", font: .header1, textColor: .gray6)
+    let titleLabel = YBLabel(font: .body3, textColor: .gray6)
+    let priceLabel = YBLabel(font: .header1, textColor: .gray6)
     let divider = YBDivider(height: 1, color: .gray3)
     let stackView = UIStackView()
+    let totalExpandPriceSubView = TotalPriceSubView()
+    let totalBudgetPriceSubView = TotalPriceSubView(isDivider: true)
     let secondDivider = YBDivider(height: 1, color: .gray3)
-    let totalPriceSubView = TotalPriceSubView(text: "", price: 0)
 
     init() {
         super.init(frame: .zero)
@@ -33,6 +34,7 @@ final class TotalPriceView: UIView, View {
         addSubview(priceLabel)
         addSubview(divider)
         addSubview(stackView)
+        addSubview(secondDivider)
 
         titleLabel.snp.makeConstraints { make in
             make.top.horizontalEdges.equalToSuperview()
@@ -44,12 +46,24 @@ final class TotalPriceView: UIView, View {
 
         divider.snp.makeConstraints { make in
             make.top.equalTo(priceLabel.snp.bottom).offset(8)
-            make.bottom.horizontalEdges.equalToSuperview()
+            make.horizontalEdges.equalToSuperview()
         }
 
         stackView.axis = .horizontal
         stackView.snp.makeConstraints { make in
             make.top.equalTo(divider.snp.bottom).offset(8)
+            make.horizontalEdges.equalToSuperview()
+        }
+        
+        stackView.spacing = 5
+        stackView.distribution = .fillEqually
+        
+        stackView.addArrangedSubview(totalBudgetPriceSubView)
+        stackView.addArrangedSubview(totalExpandPriceSubView)
+        
+        secondDivider.snp.makeConstraints { make in
+            make.top.equalTo(stackView.snp.bottom).offset(8)
+            make.horizontalEdges.equalToSuperview()
             make.bottom.horizontalEdges.equalToSuperview()
         }
     }
@@ -59,23 +73,28 @@ final class TotalPriceView: UIView, View {
     }
 
     func bind(reactor: TotalPriceReactor) {
-        let hasBudget: Bool = reactor.currentState.budget > 0
+        let hasBudget: Bool = reactor.currentState.totalBudget > 0
 
         if hasBudget {
-            setTitleLabel(text: "예산 잔액", price: 1000)
+            setTitleLabel(
+                text: "예산 잔액",
+                price: reactor.currentState.remainBudget
+            )
+            totalExpandPriceSubView.setData(
+                text: "총쓴돈",
+                price: reactor.currentState.totalExpandPrice
+            )
+            totalBudgetPriceSubView.setData(
+                text: "총예산",
+                price: reactor.currentState.totalBudget
+            )
         } else {
-            setTitleLabel(text: "총 쓴돈", price: 50000)
+            setTitleLabel(
+                text: "총 쓴돈",
+                price: reactor.currentState.totalExpandPrice
+            )
+            stackView.isHidden = true
         }
-
-        self.rx.tapGesture().when(.recognized)
-            .subscribe(onNext: { gesture in
-                if hasBudget {
-                    print("모인 돈 내역")
-                } else {
-                    print("총 쓴돈 내역")
-                }
-            })
-            .disposed(by: disposeBag)
     }
 }
 

@@ -28,8 +28,8 @@ public final class ExpenditureListReactor: Reactor {
     public let initialState: State
     public let totalPriceReactorFactory: TotalPriceReactor
 
-    public init(totalPriceReactorFactory: @escaping (Int) -> TotalPriceReactor) {
-        self.totalPriceReactorFactory = totalPriceReactorFactory(0)
+    public init(totalPriceReactorFactory: @escaping (Int, Int, Int) -> TotalPriceReactor) {
+        self.totalPriceReactorFactory = totalPriceReactorFactory(100000, 500000, 30000)
         self.initialState = .init()
     }
     

@@ -24,13 +24,23 @@ public class TotalPriceReactor: Reactor {
     }
     
     public struct State {
-        let budget: Int
+        let totalBudget: Int
+        let totalExpandPrice: Int
+        let remainBudget: Int
     }
     
     public let initialState: State
 
-    public init(budget: Int) {
-        self.initialState = .init(budget: budget)
+    public init(
+        totalBudget: Int,
+        totalExpandPrice: Int,
+        remainBudget: Int
+    ) {
+        self.initialState = .init(
+            totalBudget: totalBudget,
+            totalExpandPrice: totalExpandPrice,
+            remainBudget: remainBudget
+        )
     }
     
     public func mutate(action: Action) -> Observable<Mutation> {

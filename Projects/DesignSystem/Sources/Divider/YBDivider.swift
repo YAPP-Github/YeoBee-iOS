@@ -15,13 +15,19 @@ public final class YBDivider: UIView {
     public enum DividerType {
         case line
         case dotLine
+        case verticalLine
     }
     
     public init(_ type: DividerType = .line, height: CGFloat, color: YBColor) {
         super.init(frame: .zero)
         
-        translatesAutoresizingMaskIntoConstraints = false
-        self.heightAnchor.constraint(equalToConstant: height).isActive = true
+        if case type = .verticalLine {
+            translatesAutoresizingMaskIntoConstraints = false
+            self.widthAnchor.constraint(equalToConstant: height).isActive = true
+        } else {
+            translatesAutoresizingMaskIntoConstraints = false
+            self.heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
         
         if case type = .dotLine {
             borderLayer.strokeColor = color.color.cgColor
