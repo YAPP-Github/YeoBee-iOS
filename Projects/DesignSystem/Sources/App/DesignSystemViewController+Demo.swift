@@ -3,6 +3,9 @@ import UIKit
 
 enum Component: String, CaseIterable {
     case textField = "textField"
+    case button = "button"
+    case divider = "divider"
+    case segmentControl = "segmentControl"
 }
 
 public class DesignSystemViewController: UITableViewController {
@@ -38,6 +41,12 @@ extension DesignSystemViewController {
         switch components[indexPath.row] {
         case .textField:
             self.navigationController?.pushViewController(TextFieldViewController(), animated: true)
+        case .button:
+            self.navigationController?.pushViewController(ButtonViewController(), animated: true)
+        case .divider:
+            self.navigationController?.pushViewController(DividerViewController(), animated: true)
+        case .segmentControl:
+            self.navigationController?.pushViewController(SegmentControlViewController(), animated: true)
         }
     }
 }
