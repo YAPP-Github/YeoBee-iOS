@@ -104,7 +104,7 @@ final class TotalPriceView: UIView, View {
 extension TotalPriceView {
     func setTitleLabel(text: String, price: Int) {
         titleLabel.text = text
-        priceLabel.text = "\(price)원"
+        priceLabel.setPrice(price)
     }
 }
 
