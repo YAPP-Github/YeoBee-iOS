@@ -21,7 +21,7 @@ final class TotalPriceView: UIView, View {
     // MARK: label
 
     let titleLabel = YBLabel(font: .body3, textColor: .gray6)
-    let priceLabel = YBLabel(font: .header1, textColor: .gray6)
+    let priceLabel = YBDecimalLabel(font: .header1, textColor: .gray6)
     let divider = YBDivider(height: 1, color: .gray3)
     let stackView = UIStackView()
     let totalExpandPriceSubView = TotalPriceSubView()

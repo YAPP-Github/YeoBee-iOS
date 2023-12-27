@@ -37,8 +37,6 @@ public final class YBDecimalLabel: UILabel {
         self.textColor = textColor.color
         self.text = unit == .krw ? price.formattedWithSeparator + "원" : String(price) + unitString
         self.textAlignment = textAlignment
-        
-        
     }
     
     required init?(coder: NSCoder) {
