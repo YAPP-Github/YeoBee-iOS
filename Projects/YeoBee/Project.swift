@@ -11,8 +11,7 @@ let project = Project(
         automaticSchemesOptions: .disabled
     ),
     packages: [
-        .pinLayout,
-        .flexLayout,
+        .SnapKit
     ],
     settings: .settings(configurations: [
         .debug(name: .debug),

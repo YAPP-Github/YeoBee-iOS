@@ -34,8 +34,7 @@ public extension TargetDependency {
     static let RxCocoa: TargetDependency = .external(name: "RxCocoa")
     static let moya: TargetDependency = .external(name: "Moya")
     static let reactorKit: TargetDependency = .external(name: "ReactorKit")
-    static let flexLayout: TargetDependency = .external(name: "FlexLayout")
-    static let pinLayout: TargetDependency = .external(name: "PinLayout")
+    static let SnapKit: TargetDependency = .package(product: "SnapKit")
     static let fscalendar: TargetDependency = .external(name: "FSCalendar")
 }
 
@@ -43,8 +42,7 @@ public extension Package {
     static let RxSwift = Package.remote(url: "https://github.com/ReactiveX/RxSwift", requirement: .upToNextMajor(from: "6.2.0"))
     static let moya: Package = .remote(url: "https://github.com/Moya/Moya.git", requirement: .branch("master"))
     static let reactorKit: Package = .remote(url: "https://github.com/ReactorKit/ReactorKit.git", requirement: .branch("master"))
-    static let flexLayout: Package = .remote(url: "https://github.com/layoutBox/FlexLayout.git", requirement: .branch("master"))
-    static let pinLayout: Package = .remote(url: "https://github.com/layoutBox/PinLayout.git", requirement: .branch("master"))
+    static let SnapKit: Package = .remote(url: "https://github.com/SnapKit/SnapKit.git", requirement: .upToNextMajor(from: "5.0.1"))
     static let fscalendar: Package = .remote(url: "https://github.com/WenchaoD/FSCalendar.git", requirement: .branch("master"))
 }
 
