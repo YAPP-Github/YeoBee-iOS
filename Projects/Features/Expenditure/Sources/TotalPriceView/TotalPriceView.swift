@@ -9,6 +9,7 @@
 import UIKit
 import ReactorKit
 import RxSwift
+import RxCocoa
 
 import DesignSystem
 import RxGesture
@@ -95,20 +96,6 @@ final class TotalPriceView: UIView, View {
             )
             stackView.isHidden = true
         }
-        
-        totalExpandPriceSubView.rx.tapGesture()
-            .when(.recognized)
-            .subscribe(onNext: { _ in
-                print("tap totalExpandPriceSubView")
-            })
-            .disposed(by: disposeBag)
-        
-        totalBudgetPriceSubView.rx.tapGesture()
-            .when(.recognized)
-            .subscribe(onNext: { _ in
-                print("tap totalExpandPriceSubView")
-            })
-            .disposed(by: disposeBag)
     }
 }
 
@@ -118,5 +105,15 @@ extension TotalPriceView {
     func setTitleLabel(text: String, price: Int) {
         titleLabel.text = text
         priceLabel.text = "\(price)원"
+    }
+}
+
+extension Reactive where Base: TotalPriceView {
+    var tappedTotalExpandView: Observable<UITapGestureRecognizer> {
+        return base.totalExpandPriceSubView.rx.tapGesture().asObservable()
+    }
+
+    var tappedBudgetPriceView: Observable<UITapGestureRecognizer> {
+        return base.totalBudgetPriceSubView.rx.tapGesture().asObservable()
     }
 }

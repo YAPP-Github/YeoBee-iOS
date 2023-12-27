@@ -37,6 +37,18 @@ public final class ExpenditureListViewController: UIViewController, View {
 
     public func bind(reactor: ExpenditureListReactor) {
         totalPriceView.reactor = reactor.totalPriceReactorFactory
+
+        totalPriceView.rx.tappedTotalExpandView
+            .subscribe(onNext: { _ in
+                print("tappedTotalExpandView")
+            })
+            .disposed(by: disposeBag)
+
+        totalPriceView.rx.tappedBudgetPriceView
+            .subscribe(onNext: { _ in
+                print("tappedBudgetPriceView")
+            })
+            .disposed(by: disposeBag)
     }
 
     func setupViews() {

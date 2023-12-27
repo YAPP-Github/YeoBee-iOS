@@ -14,12 +14,7 @@ import DesignSystem
 import SnapKit
 
 public class TotalPriceReactor: Reactor {
-
-    public enum Action {
-    }
-    
-    public enum Mutation {
-    }
+    public typealias Action = NoAction
     
     public struct State {
         let totalBudget: Int
