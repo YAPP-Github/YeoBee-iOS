@@ -15,7 +15,7 @@ import SnapKit
 
 public class TotalPriceReactor: Reactor {
     public typealias Action = NoAction
-    
+
     public struct State {
         let totalBudget: Int
         let totalExpandPrice: Int
@@ -34,10 +34,5 @@ public class TotalPriceReactor: Reactor {
             totalExpandPrice: totalExpandPrice,
             remainBudget: remainBudget
         )
-    }
-    
-    public func reduce(state: State, mutation: Mutation) -> State {
-        var newState = state
-        return newState
     }
 }
