@@ -94,7 +94,13 @@ final class TotalPriceView: UIView, View {
                 text: "총 쓴돈",
                 price: reactor.currentState.totalExpandPrice
             )
-            stackView.isHidden = true
+            stackView.removeFromSuperview()
+            secondDivider.removeFromSuperview()
+
+            divider.snp.makeConstraints { make in
+                make.top.equalTo(priceLabel.snp.bottom).offset(8)
+                make.horizontalEdges.bottom.equalToSuperview()
+            }
         }
     }
 }
