@@ -11,8 +11,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = ExpenditureViewController()
-        window?.rootViewController = viewController
+        let reactor = ExpenditureListReactor(totalPriceReactorFactory: TotalPriceReactor.init)
+        let viewController = ExpenditureListViewController()
+        viewController.reactor = reactor
+        let navigationController = UINavigationController(rootViewController: viewController)
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
 
         return true

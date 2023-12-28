@@ -7,14 +7,16 @@ let dependencies = Dependencies(
             .RxSwift,
             .moya,
             .reactorKit,
-            .fscalendar
+            .fscalendar,
+            .RxGesture
         ],
         productTypes: [
             "RxSwift": .framework,
             "RxCocoa": .framework,
             "Moya": .framework,
             "ReactorKit": .framework,
-            "FSCalendar": .framework
+            "FSCalendar": .framework,
+            "RxGesture": .framework
         ],
         baseSettings: .settings(
             configurations: [

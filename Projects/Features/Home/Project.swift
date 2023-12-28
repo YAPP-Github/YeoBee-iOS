@@ -21,6 +21,7 @@ let project = Project(
                 .designSystem,
                 .RxSwift,
                 .RxCocoa,
+                .RxGesture,
                 .reactorKit,
                 .fscalendar
             ]

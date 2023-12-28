@@ -11,6 +11,7 @@ import ReactorKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import RxGesture
 
 enum HomeSection: CaseIterable {
     case main
@@ -75,12 +76,24 @@ public class HomeViewController: UIViewController {
             return cell
         }
         
-        reactor.dataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+        reactor.dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath -> UICollectionReusableView? in
             if kind == UICollectionView.elementKindSectionHeader {
-                guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomeCollectionHeaderView.identifier, for: indexPath) as? HomeCollectionHeaderView else {
+                guard let self = self,
+                      let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomeCollectionHeaderView.identifier, for: indexPath) as? HomeCollectionHeaderView else {
                     return HomeCollectionHeaderView()
                 }
-                header.backgroundColor = .clear
+                // MARK: [TODO] 헤더뷰 안에 프로필 데이터 넣기
+                header.chevronButton.rx.tap
+                    .bind { _ in
+                        print("move to profile")
+                    }.disposed(by: disposeBag)
+                
+                header.addTripView.rx.tapGesture()
+                    .when(.recognized)
+                    .bind { _ in
+                        print("make new trip")
+                    }.disposed(by: self.disposeBag)
+                
                 return header
             } else {
                 return nil

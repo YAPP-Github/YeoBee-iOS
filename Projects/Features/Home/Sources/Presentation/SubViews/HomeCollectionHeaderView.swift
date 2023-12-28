@@ -29,7 +29,7 @@ class HomeCollectionHeaderView: UICollectionReusableView {
         return $0
     }(UILabel())
     
-    private let chevronButton: UIButton = {
+    let chevronButton: UIButton = {
         $0.setImage(UIImage(systemName: "chevron.right")?
             .withTintColor(YBColor.gray4.color, renderingMode: .alwaysOriginal) , for: .normal)
         return $0
