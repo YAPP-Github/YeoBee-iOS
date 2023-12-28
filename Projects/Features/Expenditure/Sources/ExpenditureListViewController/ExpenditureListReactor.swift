@@ -6,43 +6,57 @@
 //  Copyright © 2023 YeoBee.com. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import ReactorKit
 import RxSwift
 
 import DesignSystem
 
 public final class ExpenditureListReactor: Reactor {
-    
+
     public enum Action {
-        // actiom cases
+        case setTripDateLoad
     }
     
     public enum Mutation {
-        // mutation cases
+        case setDiffableDatasourceSanpshot(NSDiffableDataSourceSnapshot<Expenditure, String>)
     }
     
     public struct State {
+        var snapshot: NSDiffableDataSourceSnapshot<Expenditure, String>
     }
-    
+
     public let initialState: State
     public let totalPriceReactorFactory: TotalPriceReactor
 
     public init(totalPriceReactorFactory: @escaping (Int, Int, Int) -> TotalPriceReactor) {
         self.totalPriceReactorFactory = totalPriceReactorFactory(0, 100000, 0)
-        self.initialState = .init()
+        self.initialState = .init(snapshot: .init())
     }
     
     public func mutate(action: Action) -> Observable<Mutation> {
-        // switch action {
-        // }
+         switch action {
+         case .setTripDateLoad:
+             let snapshot = configureSnapshot(data: ["11", "22"])
+             return .just(.setDiffableDatasourceSanpshot(snapshot))
+         }
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
-        // switch mutation {
-        // }
+         switch mutation {
+         case let .setDiffableDatasourceSanpshot(snapshot):
+             newState.snapshot = snapshot
+         }
         return newState
     }
-    
+}
+
+extension ExpenditureListReactor {
+    func configureSnapshot(data: [String]) ->  NSDiffableDataSourceSnapshot<Expenditure, String> {
+        var snapshot = NSDiffableDataSourceSnapshot<Expenditure, String>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(data, toSection: .main)
+        return snapshot
+    }
 }

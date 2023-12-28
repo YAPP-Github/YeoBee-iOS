@@ -13,16 +13,35 @@ import RxSwift
 import DesignSystem
 import SnapKit
 
-public final class ExpenditureListViewController: UIViewController, View {
+public final class ExpenditureListViewController: UIViewController, View, UICollectionViewDelegate {
 
     public var disposeBag: DisposeBag = DisposeBag()
 
     // MARK: View
 
-    let scrollView = UIScrollView()
-    let scrollContentView = UIView()
-    let containerStackView = UIStackView()
-    let totalPriceView = TotalPriceView()
+    private let scrollView = UIScrollView()
+    private let scrollContentView = UIView()
+    private let containerStackView = UIStackView()
+    private let totalPriceView = TotalPriceView()
+    private let tripDateCollectionView = TripDateCollectionView()
+
+    // MARK: DataSources
+
+    private let tripDateDataSource: TripDateDataSource
+
+    public init() {
+        tripDateDataSource = TripDateDataSource(
+            collectionView: tripDateCollectionView,
+            cellProvider: { collectionView, indexPath, itemIdentifier in
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: TripDateCell.reuseIdentifier,
+                for: indexPath
+            ) as? TripDateCell
+            cell?.setupCell("금", "11")
+            return cell
+        })
+        super.init(nibName: nil, bundle: nil)
+    }
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +56,13 @@ public final class ExpenditureListViewController: UIViewController, View {
 
     public func bind(reactor: ExpenditureListReactor) {
         totalPriceView.reactor = reactor.totalPriceReactorFactory
+
+        reactor.state.map { $0.snapshot }
+            .subscribe(onNext: { [weak self] snapshot in
+                print(snapshot)
+                self?.tripDateDataSource.apply(snapshot)
+            })
+            .disposed(by: disposeBag)
 
         totalPriceView.rx.tappedTotalExpandView
             .subscribe(onNext: { _ in
@@ -62,6 +88,8 @@ public final class ExpenditureListViewController: UIViewController, View {
 
         containerStackView.axis = .vertical
         containerStackView.alignment = .fill
+
+        tripDateCollectionView.rx.setDelegate(self)
     }
 
     func setLayouts() {
