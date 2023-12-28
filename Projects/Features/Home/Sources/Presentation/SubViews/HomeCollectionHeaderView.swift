@@ -30,8 +30,7 @@ class HomeCollectionHeaderView: UICollectionReusableView {
     }(UILabel())
     
     let chevronButton: UIButton = {
-        $0.setImage(UIImage(systemName: "chevron.right")?
-            .withTintColor(YBColor.gray4.color, renderingMode: .alwaysOriginal) , for: .normal)
+        $0.setImage(DesignSystemAsset.Icons.rightChevron.image , for: .normal)
         return $0
     }(UIButton())
     
@@ -72,12 +71,12 @@ class HomeCollectionHeaderView: UICollectionReusableView {
             make.leading.top.equalToSuperview().inset(20)
         }
         profileNameLabel.snp.makeConstraints { make in
-            make.leading.equalTo(profileImageView.snp.trailing).inset(-10)
+            make.leading.equalTo(profileImageView.snp.trailing).inset(-12)
             make.centerY.equalTo(profileImageView.snp.centerY)
         }
         chevronButton.snp.makeConstraints { make in
             make.size.equalTo(30)
-            make.leading.equalTo(profileNameLabel.snp.trailing).inset(-10)
+            make.leading.equalTo(profileNameLabel.snp.trailing).inset(-6)
             make.centerY.equalTo(profileImageView.snp.centerY)
         }
         addTripView.snp.makeConstraints { make in

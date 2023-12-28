@@ -48,7 +48,7 @@ class HomeAddTripView: UIView {
     // MARK: - Set UI
     private func setView() {
         backgroundColor = .white
-        layer.cornerRadius = 10
+        layer.cornerRadius = 12
         clipsToBounds = true
     }
     

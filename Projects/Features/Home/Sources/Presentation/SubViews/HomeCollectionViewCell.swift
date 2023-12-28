@@ -119,7 +119,7 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         }
         stackView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(15)
-            make.leading.equalToSuperview().inset(20)
+            make.leading.equalToSuperview().inset(22)
             make.height.equalTo(50)
             make.width.equalToSuperview().multipliedBy(0.5)
         }
