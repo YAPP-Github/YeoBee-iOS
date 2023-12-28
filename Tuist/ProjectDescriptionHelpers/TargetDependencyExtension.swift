@@ -31,6 +31,7 @@ public extension TargetDependency {
 // MARK: Package
 public extension TargetDependency {
     static let RxSwift: TargetDependency = .external(name: "RxSwift")
+    static let RxGesture: TargetDependency = .external(name: "RxGesture")
     static let RxCocoa: TargetDependency = .external(name: "RxCocoa")
     static let moya: TargetDependency = .external(name: "Moya")
     static let reactorKit: TargetDependency = .external(name: "ReactorKit")
@@ -40,6 +41,7 @@ public extension TargetDependency {
 
 public extension Package {
     static let RxSwift = Package.remote(url: "https://github.com/ReactiveX/RxSwift", requirement: .upToNextMajor(from: "6.2.0"))
+    static let RxGesture = Package.remote(url: "https://github.com/RxSwiftCommunity/RxGesture.git", requirement: .upToNextMajor(from: "4.0.3"))
     static let moya: Package = .remote(url: "https://github.com/Moya/Moya.git", requirement: .branch("master"))
     static let reactorKit: Package = .remote(url: "https://github.com/ReactorKit/ReactorKit.git", requirement: .branch("master"))
     static let SnapKit: Package = .remote(url: "https://github.com/SnapKit/SnapKit.git", requirement: .upToNextMajor(from: "5.0.1"))

@@ -18,10 +18,11 @@ let project = Project(
             product: .framework,
             sources: .sources,
             dependencies: [
+                .RxGesture,
                 .designSystem,
                 .RxSwift,
                 .RxCocoa,
-                .reactorKit,
+                .reactorKit
             ]
         ),
         Project.target(

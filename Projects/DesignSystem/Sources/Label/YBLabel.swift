@@ -10,7 +10,7 @@ import UIKit
 
 public final class YBLabel: UILabel {
     
-    public init(text: String,
+    public init(text: String = "",
                 font: YBFont,
                 textColor: YBColor = .black,
                 textAlignment: NSTextAlignment = .left
