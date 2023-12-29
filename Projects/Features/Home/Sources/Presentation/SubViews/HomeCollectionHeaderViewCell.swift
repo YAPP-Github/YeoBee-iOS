@@ -1,5 +1,5 @@
 //
-//  HomeCollectionHeaderView.swift
+//  HomeCollectionHeaderViewCell.swift
 //  Home
 //
 //  Created by 박현준 on 12/27/23.
@@ -10,8 +10,8 @@ import UIKit
 import DesignSystem
 import SnapKit
 
-class HomeCollectionHeaderView: UICollectionReusableView {
-    static let identifier = "HomeCollectionHeaderView"
+class HomeCollectionHeaderViewCell: UICollectionViewCell {
+    static let identifier = "HomeCollectionHeaderViewCell"
     
     // MARK: - Properties
     private let profileImageView: UIImageView = {
@@ -49,6 +49,11 @@ class HomeCollectionHeaderView: UICollectionReusableView {
         fatalError("Not implemented xib init")
     }
     
+    override func prepareForReuse() {
+        profileImageView.image = nil
+        profileNameLabel.text = ""
+    }
+    
     // MARK: - Set UI
     private func setView() {
         backgroundColor = .clear
@@ -68,21 +73,23 @@ class HomeCollectionHeaderView: UICollectionReusableView {
     private func setLayouts() {
         profileImageView.snp.makeConstraints { make in
             make.size.equalTo(30)
-            make.leading.top.equalToSuperview().inset(20)
+            make.top.equalToSuperview().inset(20)
+            make.leading.equalToSuperview()
         }
         profileNameLabel.snp.makeConstraints { make in
-            make.leading.equalTo(profileImageView.snp.trailing).inset(-12)
+            make.leading.equalTo(profileImageView.snp.trailing).offset(12)
             make.centerY.equalTo(profileImageView.snp.centerY)
         }
         chevronButton.snp.makeConstraints { make in
             make.size.equalTo(30)
-            make.leading.equalTo(profileNameLabel.snp.trailing).inset(-6)
+            make.leading.equalTo(profileNameLabel.snp.trailing).offset(6)
             make.centerY.equalTo(profileImageView.snp.centerY)
         }
         addTripView.snp.makeConstraints { make in
+            make.top.equalTo(profileImageView.snp.bottom).offset(24)
             make.bottom.equalToSuperview().inset(10)
-            make.leading.trailing.equalToSuperview().inset(20)
-            make.height.equalTo(95)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(95).priority(.low)
         }
     }
     

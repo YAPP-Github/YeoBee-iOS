@@ -13,7 +13,6 @@ import SnapKit
 final class HomeCollectionViewCell: UICollectionViewCell {
     static let identifier = "HomeCollectionViewCell"
     // MARK: - Properties
-    
     private let backgroundImageView: UIImageView = {
         $0.backgroundColor = .systemPink
         $0.contentMode = .scaleAspectFit
@@ -125,11 +124,11 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configure() {
-        titleLabel.text = "유럽 여행 고고링"
-        dateLabel.text = "2023년 12월 18일 - 2023년 12월 31일"
-        countryLabel.text = "프랑스"
+    func configure(trip: Trip) {
+        titleLabel.text = trip.title
+        dateLabel.text = "\(trip.startDate) - \(trip.endDate)"
+        countryLabel.text = trip.countries.first
         countryImageView.image = UIImage(systemName: "xmark")
-        otherCountryLabel.text = "외 2개국"
+        otherCountryLabel.text = "외 \(trip.countries.count-1)개국"
     }
 }
