@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 public enum YBFont {
     case header1
@@ -50,6 +51,18 @@ extension YBFont {
             return .init(
                 font: DesignSystemFontFamily.Pretendard.medium, size: 13
             ) ?? .systemFont(ofSize: 13, weight: .medium)
+        }
+    }
+
+    public var swiftUIfont: Font {
+        switch self {
+        case .header1: return .custom(DesignSystemFontFamily.Pretendard.bold.name, size: 22)
+        case .header2: return .custom(DesignSystemFontFamily.Pretendard.bold.name, size: 20)
+        case .title1: return .custom(DesignSystemFontFamily.Pretendard.bold.name, size: 17)
+        case .body1: return .custom(DesignSystemFontFamily.Pretendard.bold.name, size: 16)
+        case .body2: return .custom(DesignSystemFontFamily.Pretendard.bold.name, size: 15)
+        case .body3: return .custom(DesignSystemFontFamily.Pretendard.semiBold.name, size: 14)
+        case .body4: return .custom(DesignSystemFontFamily.Pretendard.medium.name, size: 20)
         }
     }
 }
