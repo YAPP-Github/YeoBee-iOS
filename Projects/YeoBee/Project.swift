@@ -11,7 +11,8 @@ let project = Project(
         automaticSchemesOptions: .disabled
     ),
     packages: [
-        .SnapKit
+        .SnapKit,
+        .composableArchitecture
     ],
     settings: .settings(configurations: [
         .debug(name: .debug),
