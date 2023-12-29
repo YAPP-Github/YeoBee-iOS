@@ -1,5 +1,5 @@
 //
-//  ExpenditureListReducer.swift
+//  TotalPriceReducer.swift
 //  Expenditure
 //
 //  Created Hoyoung Lee on 12/29/23.
@@ -8,24 +8,21 @@
 import Combine
 import ComposableArchitecture
 
-public struct ExpenditureListReducer: Reducer {
+public struct TotalPriceReducer: Reducer {
     public struct State: Equatable {
-        var totalPrice = TotalPriceReducer.State()
+        var totalExpandPrice: Int = 1000
+        var totalBudgetPrice: Int = 100000000000000
+        var remainBudgetPrice: Int = 1000000000
     }
 
     public enum Action {
-        case totalPrice(TotalPriceReducer.Action)
     }
 
-    public var body: some ReducerOf<ExpenditureListReducer> {
+    public var body: some ReducerOf<TotalPriceReducer> {
         Reduce { _, action in
             switch action {
                 default: return .none
             }
-        }
-
-        Scope(state: \.totalPrice, action: /Action.totalPrice) {
-            TotalPriceReducer()
         }
     }
 }

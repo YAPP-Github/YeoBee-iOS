@@ -29,10 +29,18 @@ extension ExpenditureListView {
     var containerView: some View {
         ScrollView(showsIndicators: false) {
             VStack {
-                
+                TotalPriceView(
+                    store: store.scope(
+                        state: \.totalPrice,
+                        action: ExpenditureListReducer.Action.totalPrice
+                    )
+                )
+                .padding(20)
             }
             .background(YBColor.white.swiftUIColor)
             .cornerRadius(10)
+            .padding(18)
         }
+        .background(YBColor.gray1.swiftUIColor)
     }
 }

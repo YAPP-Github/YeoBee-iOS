@@ -52,6 +52,7 @@ public final class ExpenditureListViewController: UIViewController {
 
     func setupViews() {
         title = "일본 여행"
+        view.backgroundColor = .ybColor(.gray1)
     }
 
     func setLayouts() {
