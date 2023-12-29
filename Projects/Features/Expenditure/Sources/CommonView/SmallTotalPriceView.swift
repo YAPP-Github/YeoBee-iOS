@@ -26,13 +26,16 @@ struct SmallTotalPriceView: View {
                 .foregroundColor(titleColor.swiftUIColor)
                 .font(.ybfont(.body3))
             Spacer()
-            Text(price)
-                .foregroundColor(.ybColor(.gray6))
-                .font(.ybfont(.body3))
-                .lineLimit(1)
-            Text("원")
-                .foregroundColor(.ybColor(.gray6))
-                .font(.ybfont(.body3))
+            HStack(spacing: 0) {
+                Text(price)
+                    .foregroundColor(.ybColor(.gray6))
+                    .font(.ybfont(.body3))
+                    .lineLimit(1)
+                Text("원")
+                    .foregroundColor(.ybColor(.gray6))
+                    .font(.ybfont(.body3))
+            }
+
         }
     }
 }

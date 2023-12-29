@@ -50,11 +50,11 @@ extension TotalPriceView {
             LargeTotalPriceView(title: "예산 잔액", price: "\(remainBudgetPrice)원")
             YBDividerView()
             HStack(spacing: 8) {
-                SmallTotalPriceView(title: "총예산", price: "\(totalBudgetPrice)원")
+                SmallTotalPriceView(title: "총예산", price: "\(totalBudgetPrice)")
                 verticalDividerView
-                SmallTotalPriceView(title: "총쓴돈", titleColor: .mainRed, price: "\(totalExpandPrice)원")
-                YBDividerView()
+                SmallTotalPriceView(title: "총쓴돈", titleColor: .mainRed, price: "\(totalExpandPrice)")
             }
+            YBDividerView()
         }
     }
 
