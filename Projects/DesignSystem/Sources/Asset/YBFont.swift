@@ -68,7 +68,13 @@ extension YBFont {
 }
 
 extension UIFont {
-    static func ybfont(_ ybfont: YBFont) -> UIFont {
+    public static func ybfont(_ ybfont: YBFont) -> UIFont {
         return ybfont.font
+    }
+}
+
+extension Font {
+    public static func ybfont(_ ybfont: YBFont) -> Font {
+        return ybfont.swiftUIfont
     }
 }
