@@ -29,12 +29,7 @@ public class HomeViewController: UIViewController {
     private let reactor = HomeReactor()
     
     // MARK: - Properties
-    lazy var homeCollectionView: UICollectionView = {
-        $0.showsVerticalScrollIndicator = false
-        $0.backgroundColor = .clear
-        $0.delegate = self
-        return $0
-    }(UICollectionView(frame: .zero, collectionViewLayout: setCollectionViewFlowLayout()))
+    lazy var homeCollectionView = HomeCollectionView()
     
     // MARK: - Life Cycles
     public override func viewDidLoad() {
@@ -42,6 +37,7 @@ public class HomeViewController: UIViewController {
         view.backgroundColor = YBColor.gray2.color
         addViews()
         setDataSource()
+        setCollectionViewDelegate()
         setNavBar()
         bind(reactor: reactor)
         // 초기 더미 데이터
@@ -58,23 +54,7 @@ public class HomeViewController: UIViewController {
         view.addSubview(homeCollectionView)
     }
     
-    private func setCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 20
-        layout.minimumInteritemSpacing = 20
-        layout.sectionInset = .init(top: 20, left: 0, bottom: 30, right: 0)
-        return layout
-    }
-    
     private func setDataSource() {
-        homeCollectionView.register(
-            HomeSectionHeaderView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: HomeSectionHeaderView.identifier)
-        homeCollectionView.register(HomeCollectionHeaderViewCell.self, forCellWithReuseIdentifier: HomeCollectionHeaderViewCell.identifier)
-        homeCollectionView.register(HomeCollectionViewCell.self, forCellWithReuseIdentifier: HomeCollectionViewCell.identifier)
-        
         reactor.dataSource = UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>(collectionView: homeCollectionView) { (collectionView, indexPath, homeItem) -> UICollectionViewCell? in
             switch homeItem {
             case .header:
@@ -101,7 +81,7 @@ public class HomeViewController: UIViewController {
                 if let snapshot = self?.reactor.snapshot {
                     if indexPath.section == snapshot.indexOfSection(.coming) {
 //                        let items = snapshot.itemIdentifiers(inSection: .coming)
-                        // [TODO] 다가오는 가장 빠른 여행의 D-day 인지, 삭제할건지
+                        // [TODO] 다가오는 가장 빠른 여행 출발일 기준 D-day로 설정
                         header.sectionTitleLabel.text = "다가오는 여행"
                     } else if indexPath.section == snapshot.indexOfSection(.passed) {
                         let items = snapshot.itemIdentifiers(inSection: .passed)
@@ -116,6 +96,10 @@ public class HomeViewController: UIViewController {
         }
         
         homeCollectionView.dataSource = reactor.dataSource
+    }
+    
+    private func setCollectionViewDelegate() {
+        homeCollectionView.delegate = self
     }
     
     private func setNavBar() {
