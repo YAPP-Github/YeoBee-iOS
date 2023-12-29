@@ -53,6 +53,7 @@ extension TotalPriceView {
                 SmallTotalPriceView(title: "총예산", price: "\(totalBudgetPrice)원")
                 verticalDividerView
                 SmallTotalPriceView(title: "총쓴돈", titleColor: .mainRed, price: "\(totalExpandPrice)원")
+                YBDividerView()
             }
         }
     }
