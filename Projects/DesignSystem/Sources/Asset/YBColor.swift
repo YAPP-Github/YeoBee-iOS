@@ -65,13 +65,13 @@ public extension YBColor {
 }
 
 extension UIColor {
-    static func ybColor(_ ybColor: YBColor) -> UIColor {
+    public static func ybColor(_ ybColor: YBColor) -> UIColor {
         return ybColor.color
     }
 }
 
 extension Color {
-    static func ybColor(_ ybColor: YBColor) -> Color {
+    public static func ybColor(_ ybColor: YBColor) -> Color {
         return ybColor.swiftUIColor
     }
 }

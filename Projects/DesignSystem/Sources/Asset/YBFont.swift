@@ -56,13 +56,13 @@ extension YBFont {
 
     public var swiftUIfont: Font {
         switch self {
-        case .header1: return .custom(DesignSystemFontFamily.Pretendard.bold.name, size: 22)
-        case .header2: return .custom(DesignSystemFontFamily.Pretendard.bold.name, size: 20)
-        case .title1: return .custom(DesignSystemFontFamily.Pretendard.bold.name, size: 17)
-        case .body1: return .custom(DesignSystemFontFamily.Pretendard.bold.name, size: 16)
-        case .body2: return .custom(DesignSystemFontFamily.Pretendard.bold.name, size: 15)
-        case .body3: return .custom(DesignSystemFontFamily.Pretendard.semiBold.name, size: 14)
-        case .body4: return .custom(DesignSystemFontFamily.Pretendard.medium.name, size: 20)
+        case .header1: return .system(size: 22, weight: .bold)
+        case .header2: return .system(size: 20, weight: .bold)
+        case .title1: return .system(size: 17, weight: .bold)
+        case .body1: return .system(size: 16, weight: .bold)
+        case .body2: return .system(size: 15, weight: .bold)
+        case .body3: return .system(size: 14, weight: .semibold)
+        case .body4: return .system(size: 20, weight: .medium)
         }
     }
 }
