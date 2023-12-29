@@ -8,10 +8,8 @@
 import UIKit
 import DesignSystem
 import ReactorKit
-import SnapKit
 import RxSwift
 import RxCocoa
-import RxGesture
 
 enum HomeSection: CaseIterable {
     case header
@@ -28,7 +26,7 @@ enum HomeDataItem: Hashable {
 public class HomeViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
-    let reactor = HomeReactor()
+    private let reactor = HomeReactor()
     
     // MARK: - Properties
     lazy var homeCollectionView: UICollectionView = {
@@ -65,7 +63,7 @@ public class HomeViewController: UIViewController {
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 20
         layout.minimumInteritemSpacing = 20
-        layout.sectionInset = .init(top: 10, left: 0, bottom: 30, right: 0)
+        layout.sectionInset = .init(top: 20, left: 0, bottom: 30, right: 0)
         return layout
     }
     
@@ -81,6 +79,7 @@ public class HomeViewController: UIViewController {
             switch homeItem {
             case .header:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionHeaderViewCell.identifier, for: indexPath) as? HomeCollectionHeaderViewCell else { return UICollectionViewCell() }
+                cell.delegate = self
                 return cell
             case .coming(let comingTrip):
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath) as? HomeCollectionViewCell else { return UICollectionViewCell() }
@@ -128,9 +127,9 @@ public class HomeViewController: UIViewController {
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.section == 0 {
-            return CGSize(width: UIScreen.main.bounds.width-40, height: 180)
+            return CGSize(width: UIScreen.main.bounds.width-48, height: 150)
         } else {
-            return CGSize(width: UIScreen.main.bounds.width-40, height: 230)
+            return CGSize(width: UIScreen.main.bounds.width-48, height: 230)
         }
     }
     
@@ -139,6 +138,24 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
             return CGSize.zero
         } else {
             return CGSize(width: collectionView.bounds.width, height: 30)
+        }
+    }
+}
+
+// MARK: - UICollectionViewDelegate
+extension HomeViewController: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let section = reactor.snapshot.sectionIdentifiers[indexPath.section]
+        
+        switch section {
+        case .coming:
+            let comingTrip = reactor.snapshot.itemIdentifiers(inSection: .coming)[indexPath.item]
+            print("Selected Coming Trip: \(comingTrip) \(indexPath.row)")
+        case .passed:
+            let passedTrip = reactor.snapshot.itemIdentifiers(inSection: .passed)[indexPath.item]
+            print("Selected Passed Trip: \(passedTrip) \(indexPath.row)")
+        case .header:
+            break
         }
     }
 }
@@ -156,5 +173,16 @@ extension HomeViewController: View {
 
     func bindState(reactor: HomeReactor) {
 
+    }
+}
+
+// MARK: - 프로필 & 여행 등록하기
+extension HomeViewController: HomeCollectionHeaderViewCellDelegate {
+    func chevronButtonTapped() {
+        print("프로필로 이동")
+    }
+    
+    func addTripViewTapped() {
+        print("여행 등록하기로 이동")
     }
 }

@@ -39,7 +39,7 @@ class HomeSectionHeaderView: UICollectionReusableView {
     private func setLayout() {
         sectionTitleLabel.snp.makeConstraints {
             $0.top.trailing.bottom.equalToSuperview()
-            $0.leading.equalToSuperview().inset(20)
+            $0.leading.equalToSuperview().inset(26)
         }
     }
 }

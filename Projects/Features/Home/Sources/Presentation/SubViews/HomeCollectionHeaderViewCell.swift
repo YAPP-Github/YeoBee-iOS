@@ -9,10 +9,19 @@
 import UIKit
 import DesignSystem
 import SnapKit
+import RxSwift
+import RxCocoa
+import RxGesture
+
+protocol HomeCollectionHeaderViewCellDelegate: AnyObject {
+    func chevronButtonTapped()
+    func addTripViewTapped()
+}
 
 class HomeCollectionHeaderViewCell: UICollectionViewCell {
     static let identifier = "HomeCollectionHeaderViewCell"
-    
+    var disposeBag = DisposeBag()
+    weak var delegate: HomeCollectionHeaderViewCellDelegate?
     // MARK: - Properties
     private let profileImageView: UIImageView = {
         $0.image = UIImage(systemName: "circle")
@@ -42,6 +51,7 @@ class HomeCollectionHeaderViewCell: UICollectionViewCell {
         setView()
         addViews()
         setLayouts()
+        bind()
     }
     
     @available(*, unavailable)
@@ -68,7 +78,7 @@ class HomeCollectionHeaderViewCell: UICollectionViewCell {
     private func setLayouts() {
         profileImageView.snp.makeConstraints { make in
             make.size.equalTo(30)
-            make.top.equalToSuperview().inset(20)
+            make.top.equalToSuperview()
             make.leading.equalToSuperview()
         }
         profileNameLabel.snp.makeConstraints { make in
@@ -81,11 +91,21 @@ class HomeCollectionHeaderViewCell: UICollectionViewCell {
             make.centerY.equalTo(profileImageView.snp.centerY)
         }
         addTripView.snp.makeConstraints { make in
-            make.top.equalTo(profileImageView.snp.bottom).offset(24)
-            make.bottom.equalToSuperview().inset(10)
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(95).priority(.low)
         }
     }
     
+    private func bind() {
+        chevronButton.rx.tap
+            .bind { [weak self] _ in
+                self?.delegate?.chevronButtonTapped()
+            }.disposed(by: disposeBag)
+        
+        addTripView.rx.tapGesture()
+            .when(.recognized)
+            .bind { [weak self] _ in
+                self?.delegate?.addTripViewTapped()
+            }.disposed(by: disposeBag)
+    }
 }
