@@ -23,15 +23,23 @@ class HomeSectionHeaderView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
-        addSubview(sectionTitleLabel)
-        
-        sectionTitleLabel.snp.makeConstraints {
-            $0.top.trailing.bottom.equalToSuperview()
-            $0.leading.equalToSuperview().inset(20)
-        }
+        addView()
+        setLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Set UI
+    private func addView() {
+        addSubview(sectionTitleLabel)
+    }
+    
+    private func setLayout() {
+        sectionTitleLabel.snp.makeConstraints {
+            $0.top.trailing.bottom.equalToSuperview()
+            $0.leading.equalToSuperview().inset(20)
+        }
     }
 }

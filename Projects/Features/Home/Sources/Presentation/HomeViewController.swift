@@ -21,14 +21,15 @@ enum HomeSection: CaseIterable {
 
 enum HomeDataItem: Hashable {
     case header
-    case coming([Trip])
-    case passed([Trip])
+    case coming(Trip)
+    case passed(Trip)
 }
 
 public class HomeViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
     let reactor = HomeReactor()
+    
     // MARK: - Properties
     lazy var homeCollectionView: UICollectionView = {
         $0.showsVerticalScrollIndicator = false
@@ -46,7 +47,7 @@ public class HomeViewController: UIViewController {
         setNavBar()
         bind(reactor: reactor)
         // 초기 더미 데이터
-        reactor.configureSnapshot(data: TripDummy.home.getTrips())
+        reactor.configureSnapshot(comingData: TripDummy.coming.getTrips(), passedData: TripDummy.passed.getTrips())
     }
     
     public override func viewDidLayoutSubviews() {
@@ -64,7 +65,7 @@ public class HomeViewController: UIViewController {
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 20
         layout.minimumInteritemSpacing = 20
-        layout.sectionInset = .init(top: 10, left: 0, bottom: 10, right: 0)
+        layout.sectionInset = .init(top: 10, left: 0, bottom: 30, right: 0)
         return layout
     }
     
@@ -76,44 +77,37 @@ public class HomeViewController: UIViewController {
         homeCollectionView.register(HomeCollectionHeaderViewCell.self, forCellWithReuseIdentifier: HomeCollectionHeaderViewCell.identifier)
         homeCollectionView.register(HomeCollectionViewCell.self, forCellWithReuseIdentifier: HomeCollectionViewCell.identifier)
         
-        let comingCellRegistration = UICollectionView.CellRegistration<HomeCollectionViewCell, [Trip]> { cell, indexPath, trips in
-            let trip = trips[indexPath.row]
-            print("com = \(trips.count)")
-            cell.configure(trip: trip)
-        }
-        let passedCellRegistration = UICollectionView.CellRegistration<HomeCollectionViewCell, [Trip]> { cell, indexPath, trips in
-            let trip = trips[indexPath.row]
-            print("pass = \(trips.count)")
-            cell.configure(trip: trip)
-        }
-        
         reactor.dataSource = UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>(collectionView: homeCollectionView) { (collectionView, indexPath, homeItem) -> UICollectionViewCell? in
             switch homeItem {
             case .header:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionHeaderViewCell.identifier, for: indexPath) as? HomeCollectionHeaderViewCell else { return UICollectionViewCell() }
                 return cell
             case .coming(let comingTrip):
-                let cell = collectionView.dequeueConfiguredReusableCell(using: comingCellRegistration, for: indexPath, item: comingTrip)
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath) as? HomeCollectionViewCell else { return UICollectionViewCell() }
+                cell.configure(trip: comingTrip)
                 return cell
             case .passed(let passedTrip):
-                let cell = collectionView.dequeueConfiguredReusableCell(using: passedCellRegistration, for: indexPath, item: passedTrip)
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath) as? HomeCollectionViewCell else { return UICollectionViewCell() }
+                cell.configure(trip: passedTrip)
                 return cell
             }
         }
-        
-        reactor.dataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+
+        reactor.dataSource.supplementaryViewProvider = {[weak self] (collectionView: UICollectionView, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
             if kind == UICollectionView.elementKindSectionHeader {
                 guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomeSectionHeaderView.identifier, for: indexPath) as? HomeSectionHeaderView else {
                     return UICollectionReusableView()
                 }
                 
-                if indexPath.section == 1 {
-                    header.sectionTitleLabel.text = "다가오는 여행"
-                    return header
-                }
-                if indexPath.section == 2 {
-                    header.sectionTitleLabel.text = "지난 여행"
-                    return header
+                if let snapshot = self?.reactor.snapshot {
+                    if indexPath.section == snapshot.indexOfSection(.coming) {
+//                        let items = snapshot.itemIdentifiers(inSection: .coming)
+                        // [TODO] 다가오는 가장 빠른 여행의 D-day 인지, 삭제할건지
+                        header.sectionTitleLabel.text = "다가오는 여행"
+                    } else if indexPath.section == snapshot.indexOfSection(.passed) {
+                        let items = snapshot.itemIdentifiers(inSection: .passed)
+                        header.sectionTitleLabel.text = "지난 여행 (\(items.count))"
+                    }
                 }
                 
                 return header
@@ -130,6 +124,7 @@ public class HomeViewController: UIViewController {
     }
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.section == 0 {

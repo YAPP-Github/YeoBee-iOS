@@ -49,11 +49,6 @@ class HomeCollectionHeaderViewCell: UICollectionViewCell {
         fatalError("Not implemented xib init")
     }
     
-    override func prepareForReuse() {
-        profileImageView.image = nil
-        profileNameLabel.text = ""
-    }
-    
     // MARK: - Set UI
     private func setView() {
         backgroundColor = .clear

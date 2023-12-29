@@ -14,6 +14,7 @@ import RxCocoa
 public class HomeReactor: Reactor {
     
     var dataSource: UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>!
+    var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeDataItem>()
     
     public enum Action {
         
@@ -42,14 +43,12 @@ public class HomeReactor: Reactor {
         return newState
     }
     
-    func configureSnapshot(data: [Trip]) {
-        var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeDataItem>()
+    func configureSnapshot(comingData: [Trip], passedData: [Trip]) {
         snapshot.appendSections([.header, .coming, .passed])
         // [TODO] 헤더 데이터 값 추가
         snapshot.appendItems([.header], toSection: .header)
-        snapshot.appendItems([.coming(data)], toSection: .coming)
-        snapshot.appendItems([.passed(data)], toSection: .passed)
-        
+        snapshot.appendItems(comingData.map { .coming($0) }, toSection: .coming)
+        snapshot.appendItems(passedData.map { .passed($0) }, toSection: .passed)
         dataSource.apply(snapshot, animatingDifferences: false)
     }
 }

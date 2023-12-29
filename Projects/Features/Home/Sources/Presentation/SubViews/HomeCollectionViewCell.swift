@@ -34,6 +34,7 @@ final class HomeCollectionViewCell: UICollectionViewCell {
     private let countryImageView: UIImageView = {
         $0.layer.cornerRadius = 4
         $0.contentMode = .scaleAspectFit
+        $0.clipsToBounds = true
         return $0
     }(UIImageView())
     
@@ -53,6 +54,7 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         $0.axis = .horizontal
         $0.spacing = 10
         $0.distribution = .fill
+        $0.alignment = .center
         return $0
     }(UIStackView())
     
@@ -104,6 +106,10 @@ final class HomeCollectionViewCell: UICollectionViewCell {
     }
     
     private func setLayout() {
+        countryImageView.snp.makeConstraints { make in
+            make.height.equalTo(18)
+            make.width.equalTo(25)
+        }
         backgroundImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(0.61)
@@ -119,8 +125,6 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         stackView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(15)
             make.leading.equalToSuperview().inset(22)
-            make.height.equalTo(50)
-            make.width.equalToSuperview().multipliedBy(0.5)
         }
     }
     
@@ -129,6 +133,10 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         dateLabel.text = "\(trip.startDate) - \(trip.endDate)"
         countryLabel.text = trip.countries.first
         countryImageView.image = UIImage(systemName: "xmark")
-        otherCountryLabel.text = "외 \(trip.countries.count-1)개국"
+        if trip.countries.count-1 > 0 {
+            otherCountryLabel.text = "외 \(trip.countries.count-1)개국"
+        } else {
+            otherCountryLabel.text = ""
+        }
     }
 }
