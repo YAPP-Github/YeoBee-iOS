@@ -8,14 +8,13 @@
 
 
 import UIKit
-import ReactorKit
 import RxSwift
 
 import DesignSystem
 import SnapKit
 import ComposableArchitecture
 
-public final class ExpenditureListViewController: UIViewController, View {
+public final class ExpenditureListViewController: UIViewController {
 
     public var disposeBag: DisposeBag = DisposeBag()
 
@@ -49,9 +48,6 @@ public final class ExpenditureListViewController: UIViewController, View {
 
     required convenience init?(coder aDecoder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
-    }
-
-    public func bind(reactor: ExpenditureListReactor) {
     }
 
     func setupViews() {
