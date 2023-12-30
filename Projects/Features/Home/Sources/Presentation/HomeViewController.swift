@@ -7,6 +7,7 @@
 
 import UIKit
 import DesignSystem
+import SnapKit
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -36,6 +37,7 @@ public class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = YBColor.gray2.color
         addViews()
+        setLayout()
         setDataSource()
         setCollectionViewDelegate()
         setNavBar()
@@ -43,15 +45,17 @@ public class HomeViewController: UIViewController {
         // 초기 더미 데이터
         reactor.configureSnapshot(comingData: TripDummy.coming.getTrips(), passedData: TripDummy.passed.getTrips())
     }
-    
-    public override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        homeCollectionView.frame = view.bounds
-    }
-    
+
     // MARK: - Set UI
     private func addViews() {
         view.addSubview(homeCollectionView)
+    }
+    
+    private func setLayout() {
+        homeCollectionView.snp.makeConstraints { make in
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview()
+        }
     }
     
     private func setDataSource() {
