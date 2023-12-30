@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 public enum YBFont {
     case header1
@@ -52,10 +53,28 @@ extension YBFont {
             ) ?? .systemFont(ofSize: 13, weight: .medium)
         }
     }
+
+    public var swiftUIfont: Font {
+        switch self {
+        case .header1: return .system(size: 22, weight: .bold)
+        case .header2: return .system(size: 20, weight: .bold)
+        case .title1: return .system(size: 17, weight: .bold)
+        case .body1: return .system(size: 16, weight: .bold)
+        case .body2: return .system(size: 15, weight: .bold)
+        case .body3: return .system(size: 14, weight: .semibold)
+        case .body4: return .system(size: 20, weight: .medium)
+        }
+    }
 }
 
 extension UIFont {
-    static func ybfont(_ ybfont: YBFont) -> UIFont {
+    public static func ybfont(_ ybfont: YBFont) -> UIFont {
         return ybfont.font
+    }
+}
+
+extension Font {
+    public static func ybfont(_ ybfont: YBFont) -> Font {
+        return ybfont.swiftUIfont
     }
 }

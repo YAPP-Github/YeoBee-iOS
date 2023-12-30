@@ -37,6 +37,7 @@ public extension TargetDependency {
     static let reactorKit: TargetDependency = .external(name: "ReactorKit")
     static let SnapKit: TargetDependency = .package(product: "SnapKit")
     static let fscalendar: TargetDependency = .external(name: "FSCalendar")
+    static let composableArchitecture: TargetDependency = .package(product: "ComposableArchitecture")
 }
 
 public extension Package {
@@ -46,6 +47,7 @@ public extension Package {
     static let reactorKit: Package = .remote(url: "https://github.com/ReactorKit/ReactorKit.git", requirement: .branch("master"))
     static let SnapKit: Package = .remote(url: "https://github.com/SnapKit/SnapKit.git", requirement: .upToNextMajor(from: "5.0.1"))
     static let fscalendar: Package = .remote(url: "https://github.com/WenchaoD/FSCalendar.git", requirement: .branch("master"))
+    static let composableArchitecture: Package = .remote(url: "https://github.com/pointfreeco/swift-composable-architecture", requirement: .exact("1.0.0"))
 }
 
 // MARK: SourceFile

@@ -16,6 +16,7 @@ library:
 	@tuist edit
 
 generate:
+	defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
 	tuist clean
 	tuist fetch
 	tuist generate

@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 public enum YBColor: Equatable, Hashable {
     case black
@@ -43,10 +44,34 @@ public extension YBColor {
         case .white: return DesignSystemAsset.Colors.white.color
         }
     }
+
+    var swiftUIColor: Color {
+        switch self {
+        case .black: return DesignSystemAsset.Colors.black.swiftUIColor
+        case .brightGreen: return DesignSystemAsset.Colors.brightGreen.swiftUIColor
+        case .brightRed: return DesignSystemAsset.Colors.brightRed.swiftUIColor
+        case .gray1: return DesignSystemAsset.Colors.gray1.swiftUIColor
+        case .gray2: return DesignSystemAsset.Colors.gray2.swiftUIColor
+        case .gray3: return DesignSystemAsset.Colors.gray3.swiftUIColor
+        case .gray4: return DesignSystemAsset.Colors.gray4.swiftUIColor
+        case .gray5: return DesignSystemAsset.Colors.gray5.swiftUIColor
+        case .gray6: return DesignSystemAsset.Colors.gray6.swiftUIColor
+        case .mainGreen: return DesignSystemAsset.Colors.maingreen.swiftUIColor
+        case .mainRed: return DesignSystemAsset.Colors.mainRed.swiftUIColor
+        case .mediumGreen: return DesignSystemAsset.Colors.mediumGreen.swiftUIColor
+        case .white: return DesignSystemAsset.Colors.white.swiftUIColor
+        }
+    }
 }
 
 extension UIColor {
-    static func ybColor(_ ybColor: YBColor) -> UIColor {
+    public static func ybColor(_ ybColor: YBColor) -> UIColor {
         return ybColor.color
+    }
+}
+
+extension Color {
+    public static func ybColor(_ ybColor: YBColor) -> Color {
+        return ybColor.swiftUIColor
     }
 }

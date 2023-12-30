@@ -6,23 +6,38 @@
 //  Copyright © 2023 YeoBee.com. All rights reserved.
 //
 
+
 import UIKit
-import ReactorKit
 import RxSwift
 
 import DesignSystem
 import SnapKit
+import ComposableArchitecture
 
-public final class ExpenditureListViewController: UIViewController, View {
+public final class ExpenditureListViewController: UIViewController {
 
     public var disposeBag: DisposeBag = DisposeBag()
 
     // MARK: View
 
-    let scrollView = UIScrollView()
-    let scrollContentView = UIView()
-    let containerStackView = UIStackView()
-    let totalPriceView = TotalPriceView()
+    private let expenditureListHostingController = ExpenditureListHostingController(
+        rootView: ExpenditureListView(
+            store: .init(
+                initialState: .init(),
+                reducer: {
+                    ExpenditureListReducer()
+                }
+            )
+        )
+    )
+
+//    // MARK: DataSources
+//
+//    private let tripDateDataSource: TripDateDataSource
+
+    public init() {
+        super.init(nibName: nil, bundle: nil)
+    }
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,62 +50,16 @@ public final class ExpenditureListViewController: UIViewController, View {
       fatalError("init(coder:) has not been implemented")
     }
 
-    public func bind(reactor: ExpenditureListReactor) {
-        totalPriceView.reactor = reactor.totalPriceReactorFactory
-
-        totalPriceView.rx.tappedTotalExpandView
-            .subscribe(onNext: { _ in
-                print("tappedTotalExpandView")
-            })
-            .disposed(by: disposeBag)
-
-        totalPriceView.rx.tappedBudgetPriceView
-            .subscribe(onNext: { _ in
-                print("tappedBudgetPriceView")
-            })
-            .disposed(by: disposeBag)
-    }
-
     func setupViews() {
         title = "일본 여행"
-
-        scrollView.showsVerticalScrollIndicator = false
-
-        view.backgroundColor = YBColor.gray2.color
-        scrollContentView.backgroundColor = YBColor.white.color
-        scrollContentView.layer.cornerRadius = 10
-
-        containerStackView.axis = .vertical
-        containerStackView.alignment = .fill
     }
 
     func setLayouts() {
-        view.addSubview(scrollView)
+        view.addSubview(expenditureListHostingController.view)
 
-        scrollView.snp.makeConstraints { make in
+        expenditureListHostingController.view.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.bottom.horizontalEdges.equalToSuperview()
         }
-
-        scrollView.addSubview(scrollContentView)
-
-        scrollContentView.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().offset(20)
-            make.leading.equalToSuperview().offset(18)
-            make.trailing.equalToSuperview().offset(-18)
-            make.bottom.equalToSuperview().offset(-20)
-            make.centerX.equalToSuperview()
-        }
-
-        scrollContentView.addSubview(containerStackView)
-
-        containerStackView.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
-            make.bottom.equalToSuperview().offset(-20)
-        }
-
-        containerStackView.addArrangedSubview(totalPriceView)
     }
 }
