@@ -1,66 +1,67 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
-import MyPlugin
-
-let localHelper = LocalHelper(name: "MyPlugin")
 
 let project = Project(
-    name: "YeoBee",
+    name: "TravelRegistration",
     organizationName: "YeoBee.com",
     options: .options(
         automaticSchemesOptions: .disabled
     ),
-    packages: [
-        .SnapKit,
-        .composableArchitecture
-    ],
+    packages: [],
     settings: .settings(configurations: [
         .debug(name: .debug),
         .release(name: .release),
     ]),
     targets: [
         Project.target(
-            name: "YeoBee",
-            product: .app,
-            sources: "Sources/**",
-            resources: "Resources/**",
+            name: "TravelRegistration",
+            product: .framework,
+            sources: .sources,
             dependencies: [
-                .sign,
-                .expenditure,
-                .home,
-                .travelRegistration,
-                .onboarding,
-                .travleEdit
+                .designSystem,
+                .RxSwift,
+                .RxCocoa,
+                .RxGesture,
+                .reactorKit
             ]
         ),
         Project.target(
-            name: "YeoBeeTests",
-            product: .unitTests,
-            sources: "Tests/**",
+            name: "TravelRegistrationDemo",
+            product: .app,
+            sources: .demoSources,
             dependencies: [
-                .yeoBee
+                .target(name: "TravelRegistration")
+            ]
+        ),
+        Project.target(
+            name: "TravelRegistrationTests",
+            product: .unitTests,
+            sources: .tests,
+            dependencies: [
+                .target(name: "TravelRegistration")
             ]
         )
     ],
     schemes: [
         Scheme(
-            name: "YeoBee-Dev",
+            name: "TravelRegistrationDemo",
             shared: true,
             buildAction: BuildAction(
-                targets: ["YeoBee"]
+                targets: ["TravelRegistrationDemo"]
             ),
-            testAction: .targets(["YeoBeeTests"]),
+            testAction: .targets(["TravelRegistrationTests"]),
             runAction: .runAction(configuration: .debug),
             archiveAction: .archiveAction(configuration: .debug),
             profileAction: .profileAction(configuration: .debug),
             analyzeAction: .analyzeAction(configuration: .debug)
         ),
         Scheme(
-            name: "YeoBee-Prod",
+            name: "TravelRegistration",
             shared: true,
             buildAction: BuildAction(
-                targets: ["YeoBee"]
+                targets: ["TravelRegistration"]
             ),
+            testAction: .targets(["TravelRegistrationTests"]),
             runAction: .runAction(configuration: .release),
             archiveAction: .archiveAction(configuration: .release),
             profileAction: .profileAction(configuration: .release),
