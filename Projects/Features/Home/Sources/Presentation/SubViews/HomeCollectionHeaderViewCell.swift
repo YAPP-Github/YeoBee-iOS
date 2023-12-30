@@ -14,7 +14,7 @@ import RxCocoa
 import RxGesture
 
 protocol HomeCollectionHeaderViewCellDelegate: AnyObject {
-    func chevronButtonTapped()
+    func profileButtonTapped()
     func addTripViewTapped()
 }
 
@@ -23,25 +23,8 @@ class HomeCollectionHeaderViewCell: UICollectionViewCell {
     var disposeBag = DisposeBag()
     weak var delegate: HomeCollectionHeaderViewCellDelegate?
     // MARK: - Properties
-    private let profileImageView: UIImageView = {
-        $0.image = UIImage(systemName: "circle")
-        $0.contentMode = .scaleAspectFit
-        $0.layer.cornerRadius = 30 / 2
-        $0.clipsToBounds = true
-        return $0
-    }(UIImageView())
     
-    private let profileNameLabel: UILabel = {
-        $0.text = "양송이"
-        $0.font = YBFont.body2.font
-        $0.textColor = .black
-        return $0
-    }(UILabel())
-    
-    let chevronButton: UIButton = {
-        $0.setImage(DesignSystemAsset.Icons.rightChevron.image , for: .normal)
-        return $0
-    }(UIButton())
+    let profileButton = HomeProfileButton()
     
     let addTripView = HomeAddTripView()
     
@@ -66,9 +49,7 @@ class HomeCollectionHeaderViewCell: UICollectionViewCell {
     
     private func addViews() {
         [
-            profileImageView,
-            profileNameLabel,
-            chevronButton,
+            profileButton,
             addTripView
         ].forEach {
             addSubview($0)
@@ -76,19 +57,9 @@ class HomeCollectionHeaderViewCell: UICollectionViewCell {
     }
     
     private func setLayouts() {
-        profileImageView.snp.makeConstraints { make in
-            make.size.equalTo(30)
-            make.top.equalToSuperview()
-            make.leading.equalToSuperview()
-        }
-        profileNameLabel.snp.makeConstraints { make in
-            make.leading.equalTo(profileImageView.snp.trailing).offset(12)
-            make.centerY.equalTo(profileImageView.snp.centerY)
-        }
-        chevronButton.snp.makeConstraints { make in
-            make.size.equalTo(30)
-            make.leading.equalTo(profileNameLabel.snp.trailing).offset(6)
-            make.centerY.equalTo(profileImageView.snp.centerY)
+        profileButton.snp.makeConstraints { make in
+            make.top.leading.equalToSuperview()
+            make.height.equalTo(32)
         }
         addTripView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
@@ -97,9 +68,10 @@ class HomeCollectionHeaderViewCell: UICollectionViewCell {
     }
     
     private func bind() {
-        chevronButton.rx.tap
+        profileButton.profileStackView.rx.tapGesture()
+            .when(.recognized)
             .bind { [weak self] _ in
-                self?.delegate?.chevronButtonTapped()
+                self?.delegate?.profileButtonTapped()
             }.disposed(by: disposeBag)
         
         addTripView.rx.tapGesture()

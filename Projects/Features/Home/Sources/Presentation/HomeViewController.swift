@@ -162,7 +162,7 @@ extension HomeViewController: View {
 
 // MARK: - 프로필 & 여행 등록하기
 extension HomeViewController: HomeCollectionHeaderViewCellDelegate {
-    func chevronButtonTapped() {
+    func profileButtonTapped() {
         print("프로필로 이동")
     }
     
