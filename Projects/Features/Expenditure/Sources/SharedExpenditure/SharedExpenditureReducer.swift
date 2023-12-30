@@ -8,7 +8,7 @@
 import Combine
 import ComposableArchitecture
 
-public enum ExpenditureTab {
+public enum ExpenditureTab: Equatable {
     case shared
     case individual
 }
@@ -17,8 +17,8 @@ public struct SharedExpenditureReducer: Reducer {
 
     public struct State: Equatable {
         @BindingState var selectedTab: ExpenditureTab = .shared
-        var sharedExpenditure = ExpenditureReducer.State()
-        var individualExpenditure = ExpenditureReducer.State()
+        var sharedExpenditure = ExpenditureReducer.State(type: .shared)
+        var individualExpenditure = ExpenditureReducer.State(type: .individual)
     }
 
     public enum Action: BindableAction {

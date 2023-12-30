@@ -10,9 +10,15 @@ import ComposableArchitecture
 
 public struct ExpenditureReducer: Reducer {
     public struct State: Equatable {
-        var totalPrice = TotalPriceReducer.State()
+        var type: ExpenditureTab
+        var totalPrice: TotalPriceReducer.State
         var tripDate = TripDateReducer.State()
         var expenditureList = ExpenditureListReducer.State()
+
+        init(type: ExpenditureTab) {
+            self.type = type
+            self.totalPrice = .init(type: type)
+        }
     }
 
     public enum Action {

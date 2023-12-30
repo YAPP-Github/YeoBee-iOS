@@ -46,16 +46,24 @@ extension TotalPriceView {
         totalBudgetPrice: Int,
         remainBudgetPrice: Int
     ) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            LargeTotalPriceView(title: "예산 잔액", price: "\(remainBudgetPrice)원")
-            YBDividerView()
-            HStack(spacing: 8) {
-                SmallTotalPriceView(title: "총예산", price: "\(totalBudgetPrice)")
-                verticalDividerView
-                SmallTotalPriceView(title: "총쓴돈", titleColor: .mainRed, price: "\(totalExpandPrice)")
+        WithViewStore(store, observe: \.type) { viewStore in
+            VStack(alignment: .leading, spacing: 8) {
+                LargeTotalPriceView(
+                    title: viewStore.state == .individual ? "예산 잔액" : "공동경비 잔액",
+                    price: "\(remainBudgetPrice)원"
+                )
+                YBDividerView()
+                HStack(spacing: 8) {
+                    SmallTotalPriceView(
+                        title: viewStore.state == .individual ? "총예산" : "모인돈",
+                        price: "\(totalBudgetPrice)"
+                    )
+                    verticalDividerView
+                    SmallTotalPriceView(title: "총쓴돈", titleColor: .mainRed, price: "\(totalExpandPrice)")
+                }
+                .frame(height: 24)
+                YBDividerView()
             }
-            .frame(height: 24)
-            YBDividerView()
         }
     }
 

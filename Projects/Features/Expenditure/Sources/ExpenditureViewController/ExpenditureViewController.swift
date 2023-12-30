@@ -22,7 +22,7 @@ public final class ExpenditureViewController: UIViewController {
     private let expenditureHostingController = ExpenditureHostingController(
         rootView: ExpenditureView(
             store: .init(
-                initialState: .init(),
+                initialState: .init(type: .individual),
                 reducer: {
                     ExpenditureReducer()
                 }
