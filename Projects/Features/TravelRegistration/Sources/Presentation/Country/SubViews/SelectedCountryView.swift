@@ -25,6 +25,7 @@ class SelectedCountryView: UIScrollView {
     }
     weak var selectedCountryViewDelegate: SelectedCountryViewDelegate?
     
+    private let dividerView = YBDivider(height: 0.6, color: .gray3)
     lazy var countryCollectionView = CountryCollectionView()
     // MARK: - Init
     override init(frame: CGRect) {
@@ -40,10 +41,15 @@ class SelectedCountryView: UIScrollView {
     }
 
     private func addViews() {
+        addSubview(dividerView)
         addSubview(countryCollectionView)
     }
     
     private func setLayouts() {
+        dividerView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+        }
         countryCollectionView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.trailing.equalToSuperview()

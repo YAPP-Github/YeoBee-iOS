@@ -16,7 +16,7 @@ enum CountrySection: CaseIterable {
     case main
 }
 
-public final class CountryViewController: UIViewController {
+public final class CountryViewController: TravelRegistrationController {
     
     public var disposeBag = DisposeBag()
     private let reactor = CountryReactor()
@@ -25,12 +25,10 @@ public final class CountryViewController: UIViewController {
     let horizontalContryView = HorizontalContryView()
     let selectedCountryView = SelectedCountryView()
     let dividerView = YBDivider(height: 0.6, color: .gray3)
-    let secondDividerView = YBDivider(height: 0.6, color: .gray3)
     let nextButton = YBTextButton(text: "다음으로", appearance: .defaultDisable, size: .medium)
     // MARK: - Life Cycles
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         setNavSearchBar()
         addViews()
         setLayouts()
@@ -48,7 +46,6 @@ public final class CountryViewController: UIViewController {
             countryTableView,
             selectedCountryView,
             dividerView,
-            secondDividerView,
             nextButton
         ].forEach {
             view.addSubview($0)
@@ -74,14 +71,28 @@ public final class CountryViewController: UIViewController {
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(111)
         }
-        secondDividerView.snp.makeConstraints { make in
-            make.bottom.equalTo(selectedCountryView.snp.top)
-            make.leading.trailing.equalToSuperview()
-        }
         countryTableView.snp.makeConstraints { make in
             make.top.equalTo(horizontalContryView.snp.bottom)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(secondDividerView.snp.top)
+            make.bottom.equalTo(dividerView.snp.top)
+        }
+    }
+    
+    private func setSelectedCountryViewLayout(isEmpty: Bool) {
+        if isEmpty {
+            selectedCountryView.alpha = 0
+            countryTableView.snp.remakeConstraints { make in
+                make.top.equalTo(horizontalContryView.snp.bottom)
+                make.leading.trailing.equalToSuperview()
+                make.bottom.equalTo(dividerView.snp.top)
+            }
+        } else {
+            selectedCountryView.alpha = 1
+            countryTableView.snp.remakeConstraints { make in
+                make.top.equalTo(horizontalContryView.snp.bottom)
+                make.leading.trailing.equalToSuperview()
+                make.bottom.equalTo(selectedCountryView.snp.top)
+            }
         }
     }
     
@@ -161,10 +172,12 @@ extension CountryViewController: View {
                     self?.nextButton.setTitle("다음으로", for: .normal)
                     self?.nextButton.setAppearance(appearance: .defaultDisable)
                     self?.nextButton.isEnabled = false
+                    self?.setSelectedCountryViewLayout(isEmpty: true)
                 } else {
                     self?.nextButton.setTitle("다음으로", for: .normal)
                     self?.nextButton.setAppearance(appearance: .default)
                     self?.nextButton.isEnabled = true
+                    self?.setSelectedCountryViewLayout(isEmpty: false)
                 }
             }
             .disposed(by: disposeBag)
