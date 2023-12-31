@@ -8,7 +8,6 @@ let dependencies = Dependencies(
             .moya,
             .reactorKit,
             .fscalendar,
-            .snapkit
             .RxGesture
         ],
         productTypes: [

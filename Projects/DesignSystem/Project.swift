@@ -7,10 +7,7 @@ let project = Project(
     options: .options(
         automaticSchemesOptions: .disabled
     ),
-    packages: [
-        .flexLayout,
-        .pinLayout
-    ],
+    packages: [],
     settings: nil,
     targets: [
         Project.target(
