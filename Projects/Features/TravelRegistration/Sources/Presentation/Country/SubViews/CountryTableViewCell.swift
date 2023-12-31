@@ -45,10 +45,8 @@ class CountryTableViewCell: UITableViewCell {
     }(UILabel())
     
     private let checkedButton: UIButton = {
-        $0.setTitle("체크", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.setTitle("체크됨", for: .selected)
-        $0.setTitleColor(.red, for: .selected)
+        $0.setImage(DesignSystemAsset.Icons.disableCheck.image, for: .normal)
+        $0.setImage(DesignSystemAsset.Icons.check.image, for: .selected)
         return $0
     }(UIButton())
     
@@ -58,7 +56,8 @@ class CountryTableViewCell: UITableViewCell {
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        addView()
+        setView()
+        addViews()
         setLayout()
         bind()
     }
@@ -74,7 +73,11 @@ class CountryTableViewCell: UITableViewCell {
     }
     
     // MARK: - Set UI
-    private func addView() {
+    private func setView() {
+        backgroundColor = YBColor.gray1.color
+    }
+    
+    private func addViews() {
         [
             countryImageView,
             countryNameLabel,

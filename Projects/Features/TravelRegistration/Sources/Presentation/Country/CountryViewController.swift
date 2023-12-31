@@ -22,8 +22,10 @@ public final class CountryViewController: UIViewController {
     private let reactor = CountryReactor()
     // MARK: - Properties
     let countryTableView: UITableView = {
+        $0.backgroundColor = YBColor.gray1.color
         $0.separatorInset.left = 0
         $0.rowHeight = 50
+        $0.separatorStyle = .none
         return $0
     }(UITableView())
     let horizontalContryView = HorizontalContryView()
@@ -178,23 +180,6 @@ extension CountryViewController: View {
                     }
                 }
             }.disposed(by: disposeBag)
-    }
-    
-    private func getSectionIndex(for type: CountryType) -> Int {
-        switch type {
-        case .total:
-            return 0
-        case .europe:
-            return 1
-        case .asia:
-            return 2
-        case .northAmerica:
-            return 3
-        case .southAmerica:
-            return 4
-        case .africa:
-            return 5
-        }
     }
 }
 

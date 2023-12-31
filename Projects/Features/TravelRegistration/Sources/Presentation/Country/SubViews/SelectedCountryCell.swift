@@ -45,14 +45,14 @@ class SelectedCountryCell: UICollectionViewCell {
     }(UIImageView())
     
     private let deleteButton: UIButton =  {
-        $0.setImage(UIImage(systemName: "circle"), for: .normal)
+        $0.setImage(DesignSystemAsset.Icons.circleDeleteButton.image, for: .normal)
         return $0
     }(UIButton())
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addView()
+        addViews()
         setLayout()
         bind()
     }
@@ -67,7 +67,7 @@ class SelectedCountryCell: UICollectionViewCell {
     }
     
     // MARK: - Set UI
-    private func addView() {
+    private func addViews() {
         [
             countryImageView,
             countryNameLabel,
@@ -79,16 +79,17 @@ class SelectedCountryCell: UICollectionViewCell {
     private func setLayout() {
         countryImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(4)
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.85)
-            make.height.equalToSuperview().multipliedBy(0.5)
+            make.centerX.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.75)
+            make.height.equalToSuperview().multipliedBy(0.6)
         }
         countryNameLabel.snp.makeConstraints { make in
             make.top.equalTo(countryImageView.snp.bottom).offset(6)
             make.centerX.equalToSuperview()
         }
         deleteButton.snp.makeConstraints { make in
-            make.top.trailing.equalToSuperview()
+            make.top.equalToSuperview()
+            make.trailing.equalToSuperview().inset(5)
             make.size.equalTo(24)
         }
     }

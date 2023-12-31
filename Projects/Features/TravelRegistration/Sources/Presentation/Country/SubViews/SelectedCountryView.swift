@@ -49,7 +49,7 @@ class SelectedCountryView: UIScrollView {
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 15
         layout.minimumInteritemSpacing = 15
-        layout.itemSize = CGSize(width: 80, height: 80)
+        layout.itemSize = CGSize(width: 80, height: 65)
         return layout
     }
 
