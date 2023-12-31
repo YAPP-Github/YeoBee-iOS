@@ -75,6 +75,7 @@ class CountryTableViewCell: UITableViewCell {
     // MARK: - Set UI
     private func setView() {
         backgroundColor = YBColor.gray1.color
+        selectionStyle = .none
     }
     
     private func addViews() {

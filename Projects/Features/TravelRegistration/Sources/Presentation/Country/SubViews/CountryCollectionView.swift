@@ -25,6 +25,7 @@ final class CountryCollectionView: UICollectionView {
     }
     
     private func setupView() {
+        backgroundColor = .white
         showsHorizontalScrollIndicator = false
         contentInset = .init(top: 0, left: 15, bottom: 0, right: 15)
         register(SelectedCountryCell.self, forCellWithReuseIdentifier: SelectedCountryCell.identifier)

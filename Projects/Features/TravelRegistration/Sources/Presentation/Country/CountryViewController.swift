@@ -119,7 +119,6 @@ public final class CountryViewController: TravelRegistrationController {
     private func setDataSource() {
         reactor.dataSource = UITableViewDiffableDataSource<CountrySection, Country>(tableView: self.countryTableView) { (tableView: UITableView, indexPath: IndexPath, country: Country) -> UITableViewCell? in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CountryTableViewCell.identifier, for: indexPath) as? CountryTableViewCell else { return UITableViewCell() }
-            cell.selectionStyle = .none
             cell.delegate = self
             cell.country = country
             
