@@ -162,7 +162,18 @@ extension CountryViewController: View {
         reactor.state
             .map { $0.selectedCountries }
             .observe(on: MainScheduler.instance)
-            .bind(to: selectedCountryView.rx.selectedCountries)
+            .bind { [weak self] selectedCountries in
+                self?.selectedCountryView.selectedCountries = selectedCountries
+                if selectedCountries.isEmpty {
+                    self?.nextButton.setTitle("다음으로", for: .normal)
+                    self?.nextButton.setAppearance(appearance: .defaultDisable)
+                    self?.nextButton.isEnabled = false
+                } else {
+                    self?.nextButton.setTitle("다음으로", for: .normal)
+                    self?.nextButton.setAppearance(appearance: .default)
+                    self?.nextButton.isEnabled = true
+                }
+            }
             .disposed(by: disposeBag)
         
         reactor.state

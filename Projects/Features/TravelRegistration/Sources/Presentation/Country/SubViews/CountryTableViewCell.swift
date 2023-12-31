@@ -89,7 +89,7 @@ class CountryTableViewCell: UITableViewCell {
     private func setLayout() {
         countryImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalToSuperview().inset(15)
+            make.leading.equalToSuperview().inset(24)
             make.width.equalTo(42)
             make.height.equalTo(30)
         }
