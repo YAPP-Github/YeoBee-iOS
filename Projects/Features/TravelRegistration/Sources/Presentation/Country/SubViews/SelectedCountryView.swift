@@ -19,6 +19,8 @@ class SelectedCountryView: UIScrollView {
     var selectedCountries: [Country] = [] {
         didSet {
             countryCollectionView.reloadData()
+            let lastIndexPath = IndexPath(item: selectedCountries.count - 1, section: 0)
+            countryCollectionView.scrollToItem(at: lastIndexPath, at: .right, animated: true)
         }
     }
     weak var selectedCountryViewDelegate: SelectedCountryViewDelegate?
