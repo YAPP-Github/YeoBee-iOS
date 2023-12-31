@@ -19,38 +19,22 @@ class SelectedCountryView: UIScrollView {
     var selectedCountries: [Country] = [] {
         didSet {
             countryCollectionView.reloadData()
-//            checkedNextButtonVaild()
         }
     }
     weak var selectedCountryViewDelegate: SelectedCountryViewDelegate?
     
-    lazy var countryCollectionView: UICollectionView = {
-        $0.showsHorizontalScrollIndicator = false
-        $0.contentInset = .init(top: 0, left: 15, bottom: 0, right: 15)
-        $0.dataSource = self
-        $0.register(SelectedCountryCell.self, forCellWithReuseIdentifier: SelectedCountryCell.identifier)
-        return $0
-    }(UICollectionView(frame: .zero, collectionViewLayout: setCollectionViewFlowLayout()))
-    
+    lazy var countryCollectionView = CountryCollectionView()
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         addViews()
         setLayouts()
+        setCollectionViewDataSource()
     }
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("Not implemented xib init")
-    }
-    
-    private func setCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 15
-        layout.minimumInteritemSpacing = 15
-        layout.itemSize = CGSize(width: 80, height: 65)
-        return layout
     }
 
     private func addViews() {
@@ -66,17 +50,9 @@ class SelectedCountryView: UIScrollView {
         }
     }
     
-//    private func checkedNextButtonVaild() {
-//        if selectedCountries.isEmpty {
-//            nextButton.backgroundColor = .systemGray4
-//            nextButton.setTitleColor(.darkGray, for: .normal)
-//            nextButton.isEnabled = false
-//        } else {
-//            nextButton.backgroundColor = .black
-//            nextButton.setTitleColor(.white, for: .normal)
-//            nextButton.isEnabled = true
-//        }
-//    }
+    private func setCollectionViewDataSource() {
+        countryCollectionView.dataSource = self
+    }
 }
 
 // MARK: - CollectionView DataSource

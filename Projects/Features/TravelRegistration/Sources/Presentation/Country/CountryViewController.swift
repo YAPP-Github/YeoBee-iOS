@@ -21,13 +21,7 @@ public final class CountryViewController: UIViewController {
     public var disposeBag = DisposeBag()
     private let reactor = CountryReactor()
     // MARK: - Properties
-    let countryTableView: UITableView = {
-        $0.backgroundColor = YBColor.gray1.color
-        $0.separatorInset.left = 0
-        $0.rowHeight = 50
-        $0.separatorStyle = .none
-        return $0
-    }(UITableView())
+    let countryTableView = CountryTableView()
     let horizontalContryView = HorizontalContryView()
     let selectedCountryView = SelectedCountryView()
     let dividerView = YBDivider(height: 0.6, color: .gray3)
@@ -112,7 +106,6 @@ public final class CountryViewController: UIViewController {
     }
     
     private func setDataSource() {
-        countryTableView.register(CountryTableViewCell.self, forCellReuseIdentifier: CountryTableViewCell.identifier)
         reactor.dataSource = UITableViewDiffableDataSource<CountrySection, Country>(tableView: self.countryTableView) { (tableView: UITableView, indexPath: IndexPath, country: Country) -> UITableViewCell? in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CountryTableViewCell.identifier, for: indexPath) as? CountryTableViewCell else { return UITableViewCell() }
             cell.selectionStyle = .none
