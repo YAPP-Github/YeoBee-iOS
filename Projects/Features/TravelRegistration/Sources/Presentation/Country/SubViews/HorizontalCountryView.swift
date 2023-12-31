@@ -17,10 +17,11 @@ class HorizontalContryView: UIScrollView {
         $0.axis = .horizontal
         $0.alignment = .center
         $0.distribution = .equalSpacing
-        $0.spacing = 15
+        $0.spacing = 10
         $0.backgroundColor = .clear
         return $0
     }(UIStackView())
+    private let dividerView = YBDivider(height: 0.6, color: .gray3)
     
     var selectedButton: UIButton?
     var disposeBag = DisposeBag()
@@ -53,16 +54,20 @@ class HorizontalContryView: UIScrollView {
     
     private func configure() {
         addSubview(stackView)
+        addSubview(dividerView)
         
         stackView.snp.makeConstraints { make in
             make.top.bottom.centerY.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(20)
         }
+        dividerView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+        }
     }
     
     func bind() {
         CountryType.allCases.forEach { type in
-            let btn = YBPaddingButton(text: type.rawValue, padding: .medium)
+            let btn = YBPaddingButton(text: type.rawValue, padding: .small)
             
             btn.rx.tap
                 .subscribe(onNext: { [weak self] in

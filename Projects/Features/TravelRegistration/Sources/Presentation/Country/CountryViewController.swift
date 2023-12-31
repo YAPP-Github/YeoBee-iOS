@@ -56,7 +56,7 @@ public final class CountryViewController: TravelRegistrationController {
         horizontalContryView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(50)
+            make.height.equalTo(76)
         }
         nextButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(4)
@@ -104,13 +104,13 @@ public final class CountryViewController: TravelRegistrationController {
         let sc = UIScreen.main.bounds.width
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: sc, height: 0))
         searchBar.searchTextField.textColor = YBColor.black.color
-        searchBar.searchTextField.font = YBFont.body2.font
+        searchBar.searchTextField.font = YBFont.body1.font
         searchBar.searchTextField.backgroundColor  = YBColor.gray2.color
         searchBar.searchTextField.attributedPlaceholder = NSAttributedString(
             string: "찾으시는 국가명을 입력해주세요.",
             attributes: [
                 NSAttributedString.Key.foregroundColor: YBColor.gray5.color,
-                NSAttributedString.Key.font: YBFont.body2.font
+                NSAttributedString.Key.font: YBFont.body1.font
             ]
         )
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchBar)
