@@ -20,6 +20,7 @@ public final class CountryViewController: TravelRegistrationController {
     
     public var disposeBag = DisposeBag()
     private let reactor = CountryReactor()
+    var dataSource: UITableViewDiffableDataSource<CountrySection, Country>!
     // MARK: - Properties
     let countryTableView = CountryTableView()
     let horizontalContryView = HorizontalContryView()
@@ -35,8 +36,7 @@ public final class CountryViewController: TravelRegistrationController {
         setDelegate()
         setDataSource()
         bind(reactor: reactor)
-        // 초기 데이터 임시
-        reactor.configureSnapshot(type: .total, data: CountryType.total.getCountries())
+        reactor.viewDidLoad()
     }
     
     // MARK: - Set UI
@@ -117,7 +117,7 @@ public final class CountryViewController: TravelRegistrationController {
     }
     
     private func setDataSource() {
-        reactor.dataSource = UITableViewDiffableDataSource<CountrySection, Country>(tableView: self.countryTableView) { (tableView: UITableView, indexPath: IndexPath, country: Country) -> UITableViewCell? in
+        dataSource = UITableViewDiffableDataSource<CountrySection, Country>(tableView: self.countryTableView) { (tableView: UITableView, indexPath: IndexPath, country: Country) -> UITableViewCell? in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CountryTableViewCell.identifier, for: indexPath) as? CountryTableViewCell else { return UITableViewCell() }
             cell.delegate = self
             cell.country = country
@@ -127,7 +127,14 @@ public final class CountryViewController: TravelRegistrationController {
             }
             return cell
         }
-        countryTableView.dataSource = reactor.dataSource
+        countryTableView.dataSource = dataSource
+    }
+    
+    func configureSnapshot(data: [Country]) {
+        var snapshot = NSDiffableDataSourceSnapshot<CountrySection, Country>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(data, toSection: .main)
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
 
@@ -163,10 +170,26 @@ extension CountryViewController: View {
     
     func bindState(reactor: CountryReactor) {
         reactor.state
+            .map { $0.countries }
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] countries in
+                self?.configureSnapshot(data: countries)
+            }.disposed(by: disposeBag)
+        
+        reactor.state
             .map { $0.selectedCountries }
             .observe(on: MainScheduler.instance)
             .bind { [weak self] selectedCountries in
                 self?.selectedCountryView.selectedCountries = selectedCountries
+                // 선택 해제 시 테이블 뷰 셀도 선택 해제
+                if let cells = self?.countryTableView.visibleCells as? [CountryTableViewCell] {
+                    for cell in cells {
+                        if let country = cell.country, !selectedCountries.contains(country) {
+                            cell.checkedButtonSelected = false
+                        }
+                    }
+                }
+                
                 if selectedCountries.isEmpty {
                     self?.nextButton.setTitle("다음으로", for: .normal)
                     self?.nextButton.setAppearance(appearance: .defaultDisable)
@@ -180,22 +203,6 @@ extension CountryViewController: View {
                 }
             }
             .disposed(by: disposeBag)
-        
-        reactor.state
-            .map { $0.deletedCountry }
-            .observe(on: MainScheduler.instance)
-            .bind { [weak self] country in
-                guard let country = country,
-                      let self = self else { return }
-                
-                if let visibleCells = self.countryTableView.visibleCells as? [CountryTableViewCell] {
-                    for cell in visibleCells {
-                        if cell.country == country {
-                            cell.checkedButtonSelected = false
-                        }
-                    }
-                }
-            }.disposed(by: disposeBag)
     }
 }
 

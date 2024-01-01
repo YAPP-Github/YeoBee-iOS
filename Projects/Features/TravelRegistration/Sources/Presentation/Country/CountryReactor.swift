@@ -13,8 +13,6 @@ import RxCocoa
 
 public final class CountryReactor: Reactor {
     
-    var dataSource: UITableViewDiffableDataSource<CountrySection, Country>!
-    
     public enum Action {
         case searchBarText(text: String)
         case typeButtonTapped(title: String)
@@ -32,11 +30,16 @@ public final class CountryReactor: Reactor {
     }
     
     public struct State {
+        var countries: [Country] = []
         var selectedCountries: [Country] = []
         var deletedCountry: Country?
     }
     
     public var initialState: State = State()
+    
+    func viewDidLoad() {
+        action.onNext(.typeButtonTapped(title: CountryType.total.rawValue))
+    }
     
     // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {
@@ -64,10 +67,21 @@ public final class CountryReactor: Reactor {
             print(text)
         case .typeButtonTapped(title: let title):
             // 데이터 api 받기
-            CountryType.allCases.forEach {
-                if title == $0.rawValue {
-                    configureSnapshot(type: $0, data: $0.getCountries())
-                }
+            switch title {
+            case CountryType.total.rawValue:
+                newState.countries = CountryType.total.getCountries()
+            case CountryType.europe.rawValue:
+                newState.countries = CountryType.europe.getCountries()
+            case CountryType.asia.rawValue:
+                newState.countries = CountryType.asia.getCountries()
+            case CountryType.northAmerica.rawValue:
+                newState.countries = CountryType.northAmerica.getCountries()
+            case CountryType.southAmerica.rawValue:
+                newState.countries = CountryType.southAmerica.getCountries()
+            case CountryType.africa.rawValue:
+                newState.countries = CountryType.africa.getCountries()
+            default:
+                break
             }
         case .checkedButtonTapped(country: let country):
             if let selectedCountryIndex = newState.selectedCountries.firstIndex(where: { $0.name == country.name }) {
@@ -78,20 +92,12 @@ public final class CountryReactor: Reactor {
         case .deletedCountry(country: let country):
             if let selectedCountryIndex = newState.selectedCountries.firstIndex(where: { $0.name == country.name }) {
                 newState.selectedCountries.remove(at: selectedCountryIndex)
-                newState.deletedCountry = country
             }
         case .nextButtonTapped:
             print("next 찍힘")
             break
         }
         return newState
-    }
-    
-    func configureSnapshot(type: CountryType = .total, data: [Country]) {
-        var snapshot = NSDiffableDataSourceSnapshot<CountrySection, Country>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(data, toSection: .main)
-        dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     func unSelectedCountry(country: Country) {
