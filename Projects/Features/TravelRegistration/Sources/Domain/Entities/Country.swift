@@ -19,7 +19,7 @@ public enum CountryType: String, CaseIterable {
     func getCountries() -> [Country] {
         switch self {
         case .total:
-            return Self.totalCountries
+            return []
         case .europe:
             return Self.europeCountries
         case .asia:
@@ -32,16 +32,6 @@ public enum CountryType: String, CaseIterable {
             return Self.africaCountries
         }
     }
-    
-    private static let totalCountries: [Country] = [Country(name: "국가1", imageURL: "이미지URL1"),
-                                                    Country(name: "국가2", imageURL: "이미지URL2"),
-                                                    Country(name: "국가3", imageURL: "이미지URL3"),
-                                                    Country(name: "아시아국가1", imageURL: "이미지URL1"),
-                                                    Country(name: "아시아국가2", imageURL: "이미지URL2"),
-                                                    Country(name: "아시아국가3", imageURL: "이미지URL3"),
-                                                    Country(name: "유럽국가1", imageURL: "이미지URL1"),
-                                                    Country(name: "유럽국가2", imageURL: "이미지URL2"),
-                                                    Country(name: "유럽국가3", imageURL: "이미지URL3")]
     
     private static let europeCountries: [Country] = [Country(name: "유럽국가1", imageURL: "이미지URL1"),
                                                      Country(name: "유럽국가2", imageURL: "이미지URL2"),
@@ -89,4 +79,12 @@ public struct Country: Hashable, Equatable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
     }
+}
+
+public struct DataCountry {
+    let europe: [Country]
+    let asia: [Country]
+    let northAmerica: [Country]
+    let southAmerica: [Country]
+    let africa: [Country]
 }

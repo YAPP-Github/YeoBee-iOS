@@ -12,15 +12,27 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-enum CountrySection: CaseIterable {
-    case main
+enum CountrySection: String, CaseIterable {
+    case europe = "유럽"
+    case asia = "아시아"
+    case northAmerica = "북아메리카"
+    case southAmerica = "남아메리카"
+    case africa = "아프리카"
+}
+
+enum CountryDataItem: Hashable {
+    case europe(Country)
+    case asia(Country)
+    case northAmerica(Country)
+    case southAmerica(Country)
+    case africa(Country)
 }
 
 public final class CountryViewController: TravelRegistrationController {
     
     public var disposeBag = DisposeBag()
     private let reactor = CountryReactor()
-    var dataSource: UITableViewDiffableDataSource<CountrySection, Country>!
+    var dataSource: UITableViewDiffableDataSource<CountrySection, CountryDataItem>!
     // MARK: - Properties
     let countryTableView = CountryTableView()
     let horizontalContryView = HorizontalContryView()
@@ -97,6 +109,7 @@ public final class CountryViewController: TravelRegistrationController {
     }
     
     private func setDelegate() {
+        countryTableView.delegate = self
         selectedCountryView.selectedCountryViewDelegate = self
     }
     
@@ -117,7 +130,20 @@ public final class CountryViewController: TravelRegistrationController {
     }
     
     private func setDataSource() {
-        dataSource = UITableViewDiffableDataSource<CountrySection, Country>(tableView: self.countryTableView) { (tableView: UITableView, indexPath: IndexPath, country: Country) -> UITableViewCell? in
+        dataSource = UITableViewDiffableDataSource<CountrySection, CountryDataItem>(tableView: self.countryTableView) { (tableView, indexPath, countryDataItem) -> UITableViewCell? in
+            var country: Country
+            switch countryDataItem {
+            case .europe(let europeCountry):
+                country = europeCountry
+            case .asia(let asiaCountry):
+                country = asiaCountry
+            case .northAmerica(let naCountry):
+                country = naCountry
+            case .southAmerica(let saCountry):
+                country = saCountry
+            case .africa(let africaCountry):
+                country = africaCountry
+            }
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CountryTableViewCell.identifier, for: indexPath) as? CountryTableViewCell else { return UITableViewCell() }
             cell.delegate = self
             cell.country = country
@@ -127,15 +153,45 @@ public final class CountryViewController: TravelRegistrationController {
             }
             return cell
         }
+
         countryTableView.dataSource = dataSource
     }
     
-    func configureSnapshot(data: [Country]) {
-        var snapshot = NSDiffableDataSourceSnapshot<CountrySection, Country>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(data, toSection: .main)
+    func configureSnapshot(dc: DataCountry) {
+        var snapshot = NSDiffableDataSourceSnapshot<CountrySection, CountryDataItem>()
+        snapshot.appendSections([.europe, .asia, .northAmerica, .southAmerica, .africa])
+        snapshot.appendItems(dc.europe.map { .europe($0) }, toSection: .europe)
+        snapshot.appendItems(dc.asia.map { .asia($0) }, toSection: .asia)
+        snapshot.appendItems(dc.northAmerica.map { .northAmerica($0) }, toSection: .northAmerica)
+        snapshot.appendItems(dc.southAmerica.map { .southAmerica($0) }, toSection: .southAmerica)
+        snapshot.appendItems(dc.africa.map { .africa($0) }, toSection: .africa)
         dataSource.apply(snapshot, animatingDifferences: false)
     }
+}
+
+// MARK: - UITableViewDelegate
+extension CountryViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let countrySection = CountrySection.allCases[section]
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CountrySectionHeaderView.identifier) as? CountrySectionHeaderView else { return nil }
+        headerView.sectionTitleLabel.text = countrySection.rawValue
+        
+        return headerView
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let dataCountry = self.reactor.currentState.countries
+        let sectionArray = [
+            dataCountry.europe,
+            dataCountry.asia,
+            dataCountry.northAmerica,
+            dataCountry.southAmerica,
+            dataCountry.africa
+        ]
+        
+        return sectionArray[section].isEmpty ? CGFloat.leastNormalMagnitude : 60
+    }
+
 }
 
 extension CountryViewController: View {
@@ -172,8 +228,8 @@ extension CountryViewController: View {
         reactor.state
             .map { $0.countries }
             .observe(on: MainScheduler.instance)
-            .bind { [weak self] countries in
-                self?.configureSnapshot(data: countries)
+            .bind { [weak self] dc in
+                self?.configureSnapshot(dc: dc)
             }.disposed(by: disposeBag)
         
         reactor.state

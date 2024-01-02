@@ -21,9 +21,11 @@ final class CountryTableView: UITableView {
     }
     
     private func setView() {
+        register(CountrySectionHeaderView.self, forHeaderFooterViewReuseIdentifier: CountrySectionHeaderView.identifier)
         register(CountryTableViewCell.self, forCellReuseIdentifier: CountryTableViewCell.identifier)
         backgroundColor = YBColor.gray1.color
         separatorInset.left = 0
+        sectionHeaderTopPadding = 0
         rowHeight = 50
         separatorStyle = .none
     }

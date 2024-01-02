@@ -30,7 +30,7 @@ public final class CountryReactor: Reactor {
     }
     
     public struct State {
-        var countries: [Country] = []
+        var countries: DataCountry = DataCountry(europe: [], asia: [], northAmerica: [], southAmerica: [], africa: [])
         var selectedCountries: [Country] = []
         var deletedCountry: Country?
     }
@@ -69,17 +69,47 @@ public final class CountryReactor: Reactor {
             // 데이터 api 받기
             switch title {
             case CountryType.total.rawValue:
-                newState.countries = CountryType.total.getCountries()
+                newState.countries = DataCountry(
+                    europe: CountryType.europe.getCountries(),
+                    asia: CountryType.asia.getCountries(),
+                    northAmerica: CountryType.northAmerica.getCountries(),
+                    southAmerica: CountryType.southAmerica.getCountries(),
+                    africa: CountryType.africa.getCountries())
             case CountryType.europe.rawValue:
-                newState.countries = CountryType.europe.getCountries()
+                newState.countries = DataCountry(
+                    europe: CountryType.europe.getCountries(),
+                    asia: [],
+                    northAmerica: [],
+                    southAmerica: [],
+                    africa: [])
             case CountryType.asia.rawValue:
-                newState.countries = CountryType.asia.getCountries()
+                newState.countries = DataCountry(
+                    europe: [],
+                    asia: CountryType.asia.getCountries(),
+                    northAmerica: [],
+                    southAmerica: [],
+                    africa: [])
             case CountryType.northAmerica.rawValue:
-                newState.countries = CountryType.northAmerica.getCountries()
+                newState.countries = DataCountry(
+                    europe: [],
+                    asia: [],
+                    northAmerica: CountryType.northAmerica.getCountries(),
+                    southAmerica: [],
+                    africa: [])
             case CountryType.southAmerica.rawValue:
-                newState.countries = CountryType.southAmerica.getCountries()
+                newState.countries = DataCountry(
+                    europe: [],
+                    asia: [],
+                    northAmerica: [],
+                    southAmerica: CountryType.southAmerica.getCountries(),
+                    africa: [])
             case CountryType.africa.rawValue:
-                newState.countries = CountryType.africa.getCountries()
+                newState.countries = DataCountry(
+                    europe: [],
+                    asia: [],
+                    northAmerica: [],
+                    southAmerica: [],
+                    africa: CountryType.africa.getCountries())
             default:
                 break
             }
