@@ -32,7 +32,6 @@ public final class CountryReactor: Reactor {
     public struct State {
         var countries: DataCountry = DataCountry(europe: [], asia: [], northAmerica: [], southAmerica: [], africa: [])
         var selectedCountries: [Country] = []
-        var deletedCountry: Country?
     }
     
     public var initialState: State = State()
