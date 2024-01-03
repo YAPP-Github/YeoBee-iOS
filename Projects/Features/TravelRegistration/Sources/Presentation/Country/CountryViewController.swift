@@ -71,7 +71,7 @@ public final class CountryViewController: TravelRegistrationController {
             make.height.equalTo(76)
         }
         nextButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(4)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
             make.leading.trailing.equalToSuperview().inset(24)
         }
         dividerView.snp.makeConstraints { make in

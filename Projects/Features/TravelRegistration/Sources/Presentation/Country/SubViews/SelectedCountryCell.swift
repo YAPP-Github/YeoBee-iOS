@@ -32,7 +32,6 @@ class SelectedCountryCell: UICollectionViewCell {
     
     private let countryNameLabel: UILabel = {
         $0.textAlignment = .center
-        $0.numberOfLines = 1
         $0.font = YBFont.body3.font
         $0.textColor = YBColor.black.color
         return $0
@@ -79,14 +78,14 @@ class SelectedCountryCell: UICollectionViewCell {
     }
     private func setLayout() {
         countryImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(4)
+            make.top.equalToSuperview().inset(10)
             make.centerX.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.75)
-            make.height.equalToSuperview().multipliedBy(0.6)
+            make.width.equalTo(42)
+            make.height.equalTo(30)
         }
         countryNameLabel.snp.makeConstraints { make in
             make.top.equalTo(countryImageView.snp.bottom).offset(6)
-            make.leading.trailing.equalToSuperview().inset(5)
+            make.leading.trailing.equalToSuperview().inset(6)
             make.centerX.equalToSuperview()
         }
         deleteButton.snp.makeConstraints { make in
