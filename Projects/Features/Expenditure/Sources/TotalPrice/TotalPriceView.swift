@@ -54,6 +54,7 @@ extension TotalPriceView {
                 verticalDividerView
                 SmallTotalPriceView(title: "총쓴돈", titleColor: .mainRed, price: "\(totalExpandPrice)")
             }
+            .frame(height: 24)
             YBDividerView()
         }
     }

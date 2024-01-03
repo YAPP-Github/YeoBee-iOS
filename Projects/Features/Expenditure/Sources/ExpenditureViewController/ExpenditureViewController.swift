@@ -14,18 +14,18 @@ import DesignSystem
 import SnapKit
 import ComposableArchitecture
 
-public final class ExpenditureListViewController: UIViewController {
+public final class ExpenditureViewController: UIViewController {
 
     public var disposeBag: DisposeBag = DisposeBag()
 
     // MARK: View
 
-    private let expenditureListHostingController = ExpenditureListHostingController(
-        rootView: ExpenditureListView(
+    private let expenditureHostingController = ExpenditureHostingController(
+        rootView: ExpenditureView(
             store: .init(
                 initialState: .init(),
                 reducer: {
-                    ExpenditureListReducer()
+                    ExpenditureReducer()
                 }
             )
         )
@@ -56,11 +56,12 @@ public final class ExpenditureListViewController: UIViewController {
     }
 
     func setLayouts() {
-        view.addSubview(expenditureListHostingController.view)
+        view.addSubview(expenditureHostingController.view)
 
-        expenditureListHostingController.view.snp.makeConstraints { make in
+        expenditureHostingController.view.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.bottom.horizontalEdges.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.horizontalEdges.equalToSuperview()
         }
     }
 }
