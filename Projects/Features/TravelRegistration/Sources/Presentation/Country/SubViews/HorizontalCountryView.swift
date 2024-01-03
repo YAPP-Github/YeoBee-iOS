@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-class HorizontalContryView: UIScrollView {
+class HorizontalCountryView: UIScrollView {
     lazy var stackView: UIStackView = {
         $0.axis = .horizontal
         $0.alignment = .center
@@ -84,6 +84,19 @@ class HorizontalContryView: UIScrollView {
                 btn.isSelected = true
                 selectedButton = btn
             }
+        }
+    }
+    
+    func totalButtonTapped() {
+        if let totalButton = stackView.arrangedSubviews.first(where: { ($0 as? UIButton)?.title(for: .normal) == CountryType.total.rawValue }) as? UIButton {
+            totalButton.rx.tap
+                .subscribe(onNext: { [weak self] in
+                    self?.selectedButton?.isSelected = false
+                    self?.selectedButton = totalButton
+                    totalButton.isSelected.toggle()
+                })
+                .disposed(by: disposeBag)
+            totalButton.sendActions(for: .touchUpInside)
         }
     }
 }

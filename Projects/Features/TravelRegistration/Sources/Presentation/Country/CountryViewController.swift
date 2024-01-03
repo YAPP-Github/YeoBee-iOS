@@ -35,7 +35,7 @@ public final class CountryViewController: TravelRegistrationController {
     var dataSource: UITableViewDiffableDataSource<CountrySection, CountryDataItem>!
     // MARK: - Properties
     let countryTableView = CountryTableView()
-    let horizontalContryView = HorizontalContryView()
+    let horizontalCountryView = HorizontalCountryView()
     let selectedCountryView = SelectedCountryView()
     let dividerView = YBDivider(height: 0.6, color: .gray3)
     let nextButton = YBTextButton(text: "다음으로", appearance: .defaultDisable, size: .medium)
@@ -54,7 +54,7 @@ public final class CountryViewController: TravelRegistrationController {
     // MARK: - Set UI
     private func addViews() {
         [
-            horizontalContryView,
+            horizontalCountryView,
             countryTableView,
             selectedCountryView,
             dividerView,
@@ -65,7 +65,7 @@ public final class CountryViewController: TravelRegistrationController {
     }
     
     private func setLayouts() {
-        horizontalContryView.snp.makeConstraints { make in
+        horizontalCountryView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(76)
@@ -84,7 +84,7 @@ public final class CountryViewController: TravelRegistrationController {
             make.height.equalTo(111)
         }
         countryTableView.snp.makeConstraints { make in
-            make.top.equalTo(horizontalContryView.snp.bottom)
+            make.top.equalTo(horizontalCountryView.snp.bottom)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(dividerView.snp.top)
         }
@@ -94,14 +94,14 @@ public final class CountryViewController: TravelRegistrationController {
         if isEmpty {
             selectedCountryView.alpha = 0
             countryTableView.snp.remakeConstraints { make in
-                make.top.equalTo(horizontalContryView.snp.bottom)
+                make.top.equalTo(horizontalCountryView.snp.bottom)
                 make.leading.trailing.equalToSuperview()
                 make.bottom.equalTo(dividerView.snp.top)
             }
         } else {
             selectedCountryView.alpha = 1
             countryTableView.snp.remakeConstraints { make in
-                make.top.equalTo(horizontalContryView.snp.bottom)
+                make.top.equalTo(horizontalCountryView.snp.bottom)
                 make.leading.trailing.equalToSuperview()
                 make.bottom.equalTo(selectedCountryView.snp.top)
             }
@@ -116,6 +116,7 @@ public final class CountryViewController: TravelRegistrationController {
     private func setNavSearchBar() {
         let sc = UIScreen.main.bounds.width
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: sc, height: 0))
+        searchBar.delegate = self
         searchBar.searchTextField.textColor = YBColor.black.color
         searchBar.searchTextField.font = YBFont.body1.font
         searchBar.searchTextField.backgroundColor  = YBColor.gray2.color
@@ -191,7 +192,18 @@ extension CountryViewController: UITableViewDelegate {
         
         return sectionArray[section].isEmpty ? CGFloat.leastNormalMagnitude : 60
     }
+}
 
+// MARK: - UISearchBarDelegate
+extension CountryViewController: UISearchBarDelegate {
+    public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        // 다른 카테고리였다가 searchBar 타겟 시 전체 버튼 탭
+        if horizontalCountryView.selectedButton?.titleLabel?.text == CountryType.total.rawValue {
+            return
+        } else {
+            horizontalCountryView.totalButtonTapped()
+        }
+    }
 }
 
 extension CountryViewController: View {
@@ -209,7 +221,7 @@ extension CountryViewController: View {
                 .disposed(by: disposeBag)
         }
         
-        for button in horizontalContryView.stackView.arrangedSubviews {
+        for button in horizontalCountryView.stackView.arrangedSubviews {
             if let button = button as? UIButton {
                 button.rx.tap
                     .map { Reactor.Action.typeButtonTapped(title: button.title(for: .normal) ?? "") }
