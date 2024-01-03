@@ -20,27 +20,35 @@ struct ExpenditureListView: View {
     let store: StoreOf<ExpenditureListReducer>
 
     var body: some View {
-        containerView
-    }
-}
-
-extension ExpenditureListView {
-
-    var containerView: some View {
         ScrollView(showsIndicators: false) {
             VStack {
-                TotalPriceView(
-                    store: store.scope(
-                        state: \.totalPrice,
-                        action: ExpenditureListReducer.Action.totalPrice
-                    )
-                )
-                .padding(20)
+                containerView
             }
             .background(YBColor.white.swiftUIColor)
             .cornerRadius(10)
             .padding(18)
         }
         .background(YBColor.gray1.swiftUIColor)
+    }
+}
+
+extension ExpenditureListView {
+
+    var containerView: some View {
+        VStack {
+            TotalPriceView(
+                store: store.scope(
+                    state: \.totalPrice,
+                    action: ExpenditureListReducer.Action.totalPrice
+                )
+            )
+            TripDateView(
+                store: store.scope(
+                    state: \.tripDate,
+                    action: ExpenditureListReducer.Action.tripDate
+                )
+            )
+        }
+        .padding(20)
     }
 }

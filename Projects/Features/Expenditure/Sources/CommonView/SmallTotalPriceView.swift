@@ -35,7 +35,6 @@ struct SmallTotalPriceView: View {
                     .foregroundColor(.ybColor(.gray6))
                     .font(.ybfont(.body3))
             }
-
         }
     }
 }
