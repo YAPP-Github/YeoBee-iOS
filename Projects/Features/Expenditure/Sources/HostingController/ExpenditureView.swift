@@ -27,7 +27,9 @@ struct ExpenditureView: View {
                 }
                 .background(YBColor.white.swiftUIColor)
                 .cornerRadius(10)
-                .padding(18)
+                .padding(.top, 10)
+                .padding(.horizontal, 18)
+                .padding(.bottom, 18)
                 .frame(minHeight: proxy.frame(in: .global).height)
             }
             .background(YBColor.gray1.swiftUIColor)

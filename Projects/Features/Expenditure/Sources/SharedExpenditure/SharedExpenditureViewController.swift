@@ -1,8 +1,8 @@
 //
-//  ExpenditureListViewController.swift
+//  SharedExpenditure.swift
 //  Expenditure
 //
-//  Created by Hoyoung Lee on 12/26/23.
+//  Created by Hoyoung Lee on 12/30/23.
 //  Copyright © 2023 YeoBee.com. All rights reserved.
 //
 
@@ -13,18 +13,18 @@ import DesignSystem
 import SnapKit
 import ComposableArchitecture
 
-public final class ExpenditureViewController: UIViewController {
+public final class SharedExpenditureViewController: UIViewController {
 
     public var disposeBag: DisposeBag = DisposeBag()
 
     // MARK: View
 
-    private let expenditureHostingController = ExpenditureHostingController(
-        rootView: ExpenditureView(
+    private let sharedExpenditureHostingController = SharedExpenditureHostingController(
+        rootView: SharedExpenditureView(
             store: .init(
-                initialState: .init(type: .individual),
+                initialState: .init(),
                 reducer: {
-                    ExpenditureReducer()
+                    SharedExpenditureReducer()
                 }
             )
         )
@@ -55,12 +55,13 @@ public final class ExpenditureViewController: UIViewController {
     }
 
     func setLayouts() {
-        view.addSubview(expenditureHostingController.view)
+        view.addSubview(sharedExpenditureHostingController.view)
 
-        expenditureHostingController.view.snp.makeConstraints { make in
+        sharedExpenditureHostingController.view.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.horizontalEdges.equalToSuperview()
         }
     }
 }
+
