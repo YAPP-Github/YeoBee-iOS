@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct FetchUserResponse: Codable{
+struct FetchUserResponse: Codable {
     var nickname: String
     var profileImage: String
     var loginProvider: LoginType
