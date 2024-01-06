@@ -20,6 +20,9 @@ public extension TargetDependency {
     static let home: TargetDependency = .project(
         target: "Home",
         path: .relativeToRoot("Projects/Features/Home"))
+    static let travelRegistration: TargetDependency = .project(
+        target: "TravelRegistration",
+        path: .relativeToRoot("Projects/Features/TravelRegistration"))
     static let travleEdit: TargetDependency = .project(
         target: "TravelEdit",
         path: .relativeToRoot("Projects/Features/TravelEdit"))
