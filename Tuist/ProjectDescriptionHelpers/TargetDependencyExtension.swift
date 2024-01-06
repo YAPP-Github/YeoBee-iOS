@@ -11,6 +11,9 @@ public extension TargetDependency {
     static let network: TargetDependency = .project(
         target: "Network",
         path: .relativeToRoot("Projects/Network"))
+    static let entity: TargetDependency = .project(
+        target: "Entity",
+        path: .relativeToRoot("Projects/Entity"))
     static let sign: TargetDependency = .project(
         target: "Sign",
         path: .relativeToRoot("Projects/Features/Sign"))
