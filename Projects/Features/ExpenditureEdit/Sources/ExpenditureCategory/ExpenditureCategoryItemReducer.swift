@@ -16,8 +16,10 @@ public struct ExpenditureCategoryItemReducer: Reducer {
     public struct State: Equatable, Identifiable {
         public var id: String { return category.text }
         var category: Category
-        init(category: Category) {
+        var isSelected: Bool
+        init(category: Category, isSelected: Bool = false) {
             self.category = category
+            self.isSelected = isSelected
         }
     }
 

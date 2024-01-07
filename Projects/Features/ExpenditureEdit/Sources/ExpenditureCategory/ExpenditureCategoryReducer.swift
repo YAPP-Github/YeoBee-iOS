@@ -33,7 +33,11 @@ public struct ExpenditureCategoryReducer: Reducer {
         Reduce { state, action in
             switch action {
             case let .category(id, .tappedCategory):
-                state.text = state.categoryItems[id: id]?.category.text ?? ""
+                let selectedCategory = state.categoryItems[id: id]?.category
+                Category.allCases.forEach { category in
+                    state.categoryItems.updateOrAppend(.init(category: category, isSelected: category == selectedCategory))
+                }
+                state.text = selectedCategory?.text ?? ""
                 return .none
                 
             case .binding(\.$text):

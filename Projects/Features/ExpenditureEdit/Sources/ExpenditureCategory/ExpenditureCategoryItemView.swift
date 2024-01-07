@@ -21,18 +21,39 @@ struct ExpenditureCategoryItemView: View {
 }
 
 extension ExpenditureCategoryItemView {
+
+    struct CategoryViewState: Equatable {
+        let category: Category
+        let isSelected: Bool
+
+        init(state: State) {
+            self.category = state.category
+            self.isSelected = state.isSelected
+        }
+    }
+
     var containerView: some View {
-        WithViewStore(store, observe: \.category) { viewStore in
+        WithViewStore(store, observe: CategoryViewState.init) { viewStore in
             Button(action: {
                 viewStore.send(.tappedCategory)
             }, label: {
                 VStack(alignment: .center) {
-                    viewStore.state.image
-                        .resizable()
-                        .frame(width: 41, height: 41)
-                    Text(viewStore.state.text)
-                        .foregroundColor(.ybColor(.gray4))
-                        .font(.ybfont(.body2))
+                    if viewStore.isSelected {
+                        viewStore.category.image
+                            .resizable()
+                            .frame(width: 41, height: 41)
+                        Text(viewStore.category.text)
+                            .foregroundColor(.ybColor(.black))
+                            .font(.ybfont(.body2))
+                    } else {
+                        viewStore.category.image
+                            .renderingMode(.template)
+                            .foregroundColor(YBColor.gray2.swiftUIColor)
+                            .frame(width: 41, height: 41)
+                        Text(viewStore.category.text)
+                            .foregroundColor(.ybColor(.gray4))
+                            .font(.ybfont(.body2))
+                    }
                 }
             })
         }
