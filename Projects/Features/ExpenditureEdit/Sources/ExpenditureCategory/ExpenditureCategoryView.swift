@@ -15,6 +15,8 @@ struct ExpenditureCategoryView: View {
 
     let store: StoreOf<ExpenditureCategoryReducer>
 
+    @FocusState var focus: Bool
+
     var body: some View {
         containerView
     }
@@ -55,13 +57,16 @@ extension ExpenditureCategoryView {
                         .padding(.top, 12)
                     Spacer()
                     VStack(alignment: .leading) {
-                        ExpenditureTextFieldView(text: viewStore.$text, placeholder: "내용을 입력해주세요.")
+                        ExpenditureTextFieldView(text: viewStore.$text, focused: $focus, placeholder: "내용을 입력해주세요.")
                         if viewStore.isInvaildText {
                             Text("한글, 영어 포함 10자 이내로 입력해주세요.")
                                 .foregroundColor(.ybColor(.mainRed))
                                 .font(.ybfont(.body4))
                         }
                     }
+                    .onChange(of: focus, perform: { value in
+                        viewStore.send(.setFocusState(value))
+                    })
                 }
                 .padding(.horizontal, 24)
             }

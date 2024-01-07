@@ -39,7 +39,7 @@ struct ExpenditureToggleView: View {
                             expenditureTab.toggle()
                         }
                     } label: {
-                        Text("공동")
+                        Text("지출 추가")
                             .foregroundColor(.ybColor(.gray6))
                             .font(.ybfont(.body3))
                             .frame(maxWidth: .infinity, alignment: .center)
@@ -49,7 +49,7 @@ struct ExpenditureToggleView: View {
                             expenditureTab.toggle()
                         }
                     } label: {
-                        Text("개인")
+                        Text("내예산 추가")
                             .foregroundColor(.ybColor(.gray6))
                             .font(.ybfont(.body3))
                             .frame(maxWidth: .infinity, alignment: .center)

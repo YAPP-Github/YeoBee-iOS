@@ -16,13 +16,41 @@ struct ExpendpenditureEditView: View {
     let store: StoreOf<ExpendpenditureEditReducer>
 
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack {
-                containerView
+        ZStack(alignment: .bottom) {
+                ScrollViewReader { reader in
+                    WithViewStore(store, observe: \.isFocused) { viewstore in
+                    ScrollView(showsIndicators: false) {
+                        containerView
+                        .padding(.top, 10)
+                    }
+                    .ignoresSafeArea(.keyboard)
+                    .onChange(of: viewstore.state, perform: { newValue in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
+                            withAnimation {
+                                reader.scrollTo("expenditureCategoryType", anchor: .center)
+                            }
+                        }
+                    })
+                }
             }
-            .padding(.top, 10)
-            .keyboardAdaptive()
+            Button {
+
+            } label: {
+                Text("등록하기")
+                    .foregroundColor(.ybColor(.gray5))
+                    .font(.ybfont(.title1))
+                    .frame(height: 54)
+                    .frame(maxWidth: .infinity)
+            }
+            .background(YBColor.gray3.swiftUIColor)
+            .cornerRadius(10)
+            .padding(.horizontal, 24)
+            .padding(.top, 16)
+            .padding(.bottom, 4)
+            .background(YBColor.white.swiftUIColor)
+            .ignoresSafeArea(.keyboard)
         }
+        .keyboardAdaptive()
     }
 }
 
@@ -47,6 +75,9 @@ extension ExpendpenditureEditView {
                     action: Action.expenditureCategory
                 )
             )
+            Color.clear
+                .frame(height: 200)
+
             Spacer()
         }
         .frame(maxWidth: .infinity)

@@ -13,6 +13,9 @@ public struct ExpendpenditureEditReducer: Reducer {
         var expenditureInput = ExpenditureInputReducer.State()
         var expenditurePayment = ExpenditurePaymentReducer.State()
         var expenditureCategory = ExpenditureCategoryReducer.State()
+
+        var isFocused: Bool = false
+        var scrollItem: String = ""
     }
 
     public enum Action: Equatable {
@@ -22,8 +25,12 @@ public struct ExpendpenditureEditReducer: Reducer {
     }
 
     public var body: some ReducerOf<ExpendpenditureEditReducer> {
-        Reduce { _, action in
+        Reduce { state, action in
             switch action {
+            case let .expenditureCategory(.setFocusState(isFocused)):
+                state.isFocused = isFocused
+                state.scrollItem = "expenditureCategoryType"
+                return .none
                 default: return .none
             }
         }

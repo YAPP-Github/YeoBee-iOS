@@ -25,6 +25,7 @@ public struct ExpenditureCategoryReducer: Reducer {
         case category(ExpenditureCategoryItemReducer.State.ID, ExpenditureCategoryItemReducer.Action)
         case setTextField(String)
         case binding(BindingAction<State>)
+        case setFocusState(Bool)
     }
 
     public var body: some ReducerOf<ExpenditureCategoryReducer> {

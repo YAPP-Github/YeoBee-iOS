@@ -10,22 +10,24 @@ import SwiftUI
 import DesignSystem
 
 struct ExpenditureTextFieldView: View {
-    @FocusState private var isFocused: Bool
+    var focus: FocusState<Bool>.Binding
     @Binding var text: String
     private let placeholder: String
 
     public init(
         text: Binding<String>,
+        focused: FocusState<Bool>.Binding,
         placeholder: String
     ) {
         self._text = text
+        self.focus = focused
         self.placeholder = placeholder
     }
 
     var body: some View {
         VStack {
             TextField("", text: $text)
-                .focused($isFocused)
+                .focused(focus)
                 .foregroundColor(.ybColor(.black))
                 .font(.ybfont(.body1))
                 .overlay(alignment: .leading) {
@@ -36,6 +38,7 @@ struct ExpenditureTextFieldView: View {
         }
         .background(YBColor.white.swiftUIColor)
         .cornerRadius(10)
+        .id("expenditureCategoryType")
     }
 }
 
