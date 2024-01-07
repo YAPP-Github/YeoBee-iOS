@@ -58,7 +58,7 @@ public final class ExpenditureEditViewController: UIViewController {
 
         expenditureHostingController.view.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.bottom.equalTo(view.snp.bottom)
             make.horizontalEdges.equalToSuperview()
         }
     }

@@ -17,11 +17,11 @@ struct ExpendpenditureEditView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-                ScrollViewReader { reader in
-                    WithViewStore(store, observe: \.isFocused) { viewstore in
+            ScrollViewReader { reader in
+                WithViewStore(store, observe: \.isFocused) { viewstore in
                     ScrollView(showsIndicators: false) {
                         containerView
-                        .padding(.top, 10)
+                            .padding(.top, 10)
                     }
                     .ignoresSafeArea(.keyboard)
                     .onChange(of: viewstore.state, perform: { newValue in
@@ -33,6 +33,7 @@ struct ExpendpenditureEditView: View {
                     })
                 }
             }
+            .keyboardAdaptive()
             Button {
 
             } label: {
@@ -48,9 +49,9 @@ struct ExpendpenditureEditView: View {
             .padding(.top, 16)
             .padding(.bottom, 4)
             .background(YBColor.white.swiftUIColor)
+            .ignoresSafeArea()
             .ignoresSafeArea(.keyboard)
         }
-        .keyboardAdaptive()
     }
 }
 

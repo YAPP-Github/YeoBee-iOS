@@ -51,7 +51,7 @@ extension ExpenditureView {
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
             }
-            .background(YBColor.gray1.swiftUIColor)
+            .background(YBColor.gray1.swiftUIColor, ignoresSafeAreaEdges: [.all])
         }
     }
 }
