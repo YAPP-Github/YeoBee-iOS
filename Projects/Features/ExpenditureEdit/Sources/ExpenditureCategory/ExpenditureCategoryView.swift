@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import DesignSystem
 
 struct ExpenditureCategoryView: View {
     typealias State = ExpenditureCategoryReducer.State
@@ -47,12 +48,20 @@ extension ExpenditureCategoryView {
             }
             .padding(.leading, 24)
             WithViewStore(store, observe: { $0 }) { viewStore in
-                HStack(alignment: .center, spacing: 10) {
+                HStack(alignment: .top, spacing: 10) {
                     Text("지출항목")
                         .foregroundColor(.ybColor(.black))
                         .font(.ybfont(.title1))
+                        .padding(.top, 12)
                     Spacer()
-                    ExpenditureTextFieldView(text: viewStore.$text, placeholder: "내용을 입력해주세요.")
+                    VStack(alignment: .leading) {
+                        ExpenditureTextFieldView(text: viewStore.$text, placeholder: "내용을 입력해주세요.")
+                        if viewStore.isInvaildText {
+                            Text("한글, 영어 포함 10자 이내로 입력해주세요.")
+                                .foregroundColor(.ybColor(.mainRed))
+                                .font(.ybfont(.body4))
+                        }
+                    }
                 }
                 .padding(.horizontal, 24)
             }

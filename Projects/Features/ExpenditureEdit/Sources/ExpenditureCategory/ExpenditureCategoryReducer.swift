@@ -12,6 +12,7 @@ public struct ExpenditureCategoryReducer: Reducer {
     public struct State: Equatable {
         var categoryItems: IdentifiedArrayOf<ExpenditureCategoryItemReducer.State> = []
         @BindingState var text: String = ""
+        var isInvaildText: Bool = false
 
         init() {
             Category.allCases.forEach {
@@ -27,11 +28,17 @@ public struct ExpenditureCategoryReducer: Reducer {
     }
 
     public var body: some ReducerOf<ExpenditureCategoryReducer> {
+        BindingReducer()
         Reduce { state, action in
             switch action {
             case let .category(id, .tappedCategory):
                 state.text = state.categoryItems[id: id]?.category.text ?? ""
                 return .none
+                
+            case .binding(\.$text):
+                state.isInvaildText = vaildText(state.text)
+                return .none
+
             default:
                 return .none
             }
@@ -39,5 +46,9 @@ public struct ExpenditureCategoryReducer: Reducer {
         .forEach(\.categoryItems, action: /Action.category) {
             ExpenditureCategoryItemReducer()
         }
+    }
+
+    func vaildText(_ text: String) -> Bool {
+        return text.count > 10
     }
 }
