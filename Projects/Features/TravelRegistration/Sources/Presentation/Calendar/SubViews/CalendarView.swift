@@ -19,7 +19,7 @@ class CalendarView: UIView {
     private let dividerView = YBDivider(height: 0.6, color: .gray3)
     lazy var monthHeaderLabel = YBLabel(text: dateformatter.string(from: Date()), font: .body1, textColor: .black)
     
-    lazy var prevMonthButton: UIButton = {
+    lazy var previousMonthButton: UIButton = {
         let image = UIImage(systemName:"chevron.backward")?.withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
         $0.setImage(image, for: .normal)
         return $0
@@ -76,7 +76,7 @@ class CalendarView: UIView {
     private func addViews() {
         [
             dividerView,
-            prevMonthButton,
+            previousMonthButton,
             monthHeaderLabel,
             nextMonthButton,
             calendar
@@ -93,7 +93,7 @@ class CalendarView: UIView {
             make.top.equalTo(dividerView.snp.bottom).inset(-26)
             make.centerX.equalToSuperview()
         }
-        prevMonthButton.snp.makeConstraints { make in
+        previousMonthButton.snp.makeConstraints { make in
             make.centerY.equalTo(monthHeaderLabel.snp.centerY)
             make.leading.equalToSuperview().inset(22)
             make.size.equalTo(30)
@@ -111,7 +111,7 @@ class CalendarView: UIView {
     }
     
     private func bind() {
-        prevMonthButton.rx.tap
+        previousMonthButton.rx.tap
             .bind { [weak self] _ in
                 guard let self = self else { return }
                 let currentMonth = self.calendar.currentPage

@@ -109,20 +109,28 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCa
         // 시작 날짜만 선택된 경우
         if reactor.currentState.startDate != nil && reactor.currentState.endDate == nil {
             // 마지막 날짜가 시작날짜보다 작을 경우
-            if date <= reactor.currentState.startDate ?? Date() {
-                reactor.action.onNext(.startDate(date: date))
-                configureVisibleCells()
-                return
+            if let currentStartDate = reactor.currentState.startDate {
+                if date <= currentStartDate {
+                    calendarView.calendar.deselect(currentStartDate)
+                    reactor.action.onNext(.startDate(date: date))
+                    configureVisibleCells()
+                    return
+                }
+                
+                let range = datesRange(from: currentStartDate, to: date)
+                
+                if let currentLastDate = range.last {
+                    reactor.action.onNext(.endDate(date: currentLastDate))
+                    
+                    for selectedDate in range {
+                        calendar.select(selectedDate)
+                    }
+                    
+                    reactor.action.onNext(.selectedDate(dates: range))
+                    configureVisibleCells()
+                    return
+                }
             }
-            
-            let range = datesRange(from: reactor.currentState.startDate ?? Date(), to: date)
-            reactor.action.onNext(.endDate(date: range.last ?? Date()))
-            for d in range {
-                calendar.select(d)
-            }
-            reactor.action.onNext(.selectedDate(dates: range))
-            configureVisibleCells()
-            return
         }
         
         // 시작, 마지막 날짜 모두 선택된 경우
