@@ -20,8 +20,9 @@ struct ExpenditureCategoryView: View {
 }
 
 extension ExpenditureCategoryView {
-    var containerView: some View {
 
+    @MainActor
+    var containerView: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 0) {
                 Text("카테고리")
@@ -31,6 +32,7 @@ extension ExpenditureCategoryView {
                     .foregroundColor(.ybColor(.mainGreen))
                     .font(.ybfont(.body3))
             }
+            .padding(.leading, 24)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 20) {
                     ForEachStore(
@@ -43,14 +45,18 @@ extension ExpenditureCategoryView {
                     }
                 }
             }
-            HStack(alignment: .center, spacing: 10) {
-                Text("지출항목")
-                    .foregroundColor(.ybColor(.black))
-                    .font(.ybfont(.title1))
-                Spacer()
-                ExpenditureTextFieldView(text: .constant("123"), placeholder: "내용을 입력해주세요.")
+            .padding(.leading, 24)
+            WithViewStore(store, observe: { $0 }) { viewStore in
+                HStack(alignment: .center, spacing: 10) {
+                    Text("지출항목")
+                        .foregroundColor(.ybColor(.black))
+                        .font(.ybfont(.title1))
+                    Spacer()
+                    ExpenditureTextFieldView(text: viewStore.$text, placeholder: "내용을 입력해주세요.")
+                }
+                .padding(.horizontal, 24)
             }
         }
-        .padding(.horizontal, 24)
+
     }
 }

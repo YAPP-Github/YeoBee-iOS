@@ -9,7 +9,7 @@ import Combine
 import ComposableArchitecture
 
 enum Category: CaseIterable {
-    case activity, air, eating, etc, shopping, stay, transition, travel
+    case transition, eating, stay, travel, activity, shopping, air, etc
 }
 
 public struct ExpenditureCategoryItemReducer: Reducer {
