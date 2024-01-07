@@ -7,10 +7,13 @@
 
 import Combine
 import ComposableArchitecture
+import DesignSystem
 
 public struct ExpenditureInputReducer: Reducer {
     public struct State: Equatable {
         @BindingState var text: String = ""
+        var currency: Double = 0.05
+        var currencyText: String = "= 0원"
     }
 
     public enum Action: BindableAction, Equatable {
@@ -19,10 +22,21 @@ public struct ExpenditureInputReducer: Reducer {
     public var body: some ReducerOf<ExpenditureInputReducer> {
         BindingReducer()
 
-        Reduce { _, action in
+        Reduce { state, action in
             switch action {
-                default: return .none
+            case .binding(\.$text):
+                if state.text.count < 10 {
+                    let convertedCurrency = Int((Double(state.text) ?? 0.0) * state.currency)
+                    let formattedText = convertedCurrency.formattedWithSeparator
+                    state.currencyText = "= \(formattedText)원"
+                } else {
+                    state.currencyText = "나타낼 수 없습니다."
+                }
+                return .none
+            default:
+                return .none
             }
         }
     }
 }
+

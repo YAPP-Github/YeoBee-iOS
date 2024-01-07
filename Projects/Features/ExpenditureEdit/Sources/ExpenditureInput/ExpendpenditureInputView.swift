@@ -25,12 +25,16 @@ extension ExpenditureInputView {
     var containerView: some View {
         WithViewStore(store, observe: { $0 }) { viewstore in
             VStack(alignment: .leading, spacing: 10) {
-                Text("유로")
-                    .foregroundColor(.ybColor(.gray6))
-                    .font(.ybfont(.body3))
+                Button {
+                    // tapp
+                } label: {
+                    Text("유로")
+                        .foregroundColor(.ybColor(.gray6))
+                        .font(.ybfont(.body3))
+                }
                 VStack(alignment: .leading, spacing: 0) {
                     CurrencyTextFieldView(text: viewstore[keyPath: \.$text], placeholder: "0 $")
-                    Text("= 1000원")
+                    Text(viewstore.currencyText)
                         .foregroundColor(.ybColor(.gray3))
                         .font(.ybfont(.body2))
                 }

@@ -21,6 +21,7 @@ struct ExpendpenditureEditView: View {
                 containerView
             }
             .padding(.top, 10)
+            .keyboardAdaptive()
         }
     }
 }

@@ -32,6 +32,9 @@ public extension TargetDependency {
     static let onboarding: TargetDependency = .project(
         target: "Onboarding",
         path: .relativeToRoot("Projects/Features/Onboarding"))
+    static let expenditureEdit: TargetDependency = .project(
+        target: "ExpenditureEdit",
+        path: .relativeToRoot("Projects/Features/ExpenditureEdit"))
 }
 
 // MARK: Package

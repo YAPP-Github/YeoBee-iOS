@@ -31,7 +31,7 @@ let project = Project(
             product: .app,
             sources: .demoSources,
             dependencies: [
-                .target(name: "ExpenditureEdit")
+                .expenditureEdit
             ]
         ),
         Project.target(
