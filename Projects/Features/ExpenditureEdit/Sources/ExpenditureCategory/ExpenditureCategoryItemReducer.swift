@@ -1,0 +1,35 @@
+//
+//  ExpenditureCategoryItemReducer.swift
+//  Expenditure
+//
+//  Created Hoyoung Lee on 1/6/24.
+//  Copyright © 2024 YeoBee.com. All rights reserved.
+
+import Combine
+import ComposableArchitecture
+
+enum Category: CaseIterable {
+    case activity, air, eating, etc, shopping, stay, transition, travel
+}
+
+public struct ExpenditureCategoryItemReducer: Reducer {
+    public struct State: Equatable, Identifiable {
+        public var id: String { return category.text }
+        var category: Category
+        init(category: Category) {
+            self.category = category
+        }
+    }
+
+    public enum Action: Equatable {
+        case tappedCategory
+    }
+
+    public var body: some ReducerOf<ExpenditureCategoryItemReducer> {
+        Reduce { _, action in
+            switch action {
+                default: return .none
+            }
+        }
+    }
+}
