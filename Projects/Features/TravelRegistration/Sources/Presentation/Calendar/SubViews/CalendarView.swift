@@ -18,18 +18,8 @@ class CalendarView: UIView {
     
     private let dividerView = YBDivider(height: 0.6, color: .gray3)
     lazy var monthHeaderLabel = YBLabel(text: dateformatter.string(from: Date()), font: .body1, textColor: .black)
-    
-    lazy var previousMonthButton: UIButton = {
-        let image = UIImage(systemName:"chevron.backward")?.withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
-        $0.setImage(image, for: .normal)
-        return $0
-    }(UIButton())
-    
-    lazy var nextMonthButton: UIButton = {
-        let image = UIImage(systemName:"chevron.forward")?.withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
-        $0.setImage(image, for: .normal)
-        return $0
-    }(UIButton())
+    private let previousMonthButton = YBIconButton(image: UIImage(systemName:"chevron.backward"), tintColor: .black)
+    private let nextMonthButton = YBIconButton(image: UIImage(systemName:"chevron.forward"), tintColor: .black)
     
     lazy var calendar: FSCalendar = {
         $0.locale = Locale(identifier: "ko_KR")
