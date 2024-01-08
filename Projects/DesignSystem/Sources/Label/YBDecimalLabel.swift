@@ -50,7 +50,7 @@ public extension YBDecimalLabel {
     }
 }
 
-private extension Formatter {
+public extension Formatter {
     static let withSeparator: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.groupingSeparator = ","
@@ -59,7 +59,7 @@ private extension Formatter {
     }()
 }
 
-extension Numeric {
+public extension Numeric {
     var formattedWithSeparator: String {
         return Formatter.withSeparator.string(for: self) ?? ""
     }

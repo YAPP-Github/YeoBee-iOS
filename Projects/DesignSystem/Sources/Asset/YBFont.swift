@@ -62,7 +62,7 @@ extension YBFont {
         case .body1: return .system(size: 16, weight: .bold)
         case .body2: return .system(size: 15, weight: .bold)
         case .body3: return .system(size: 14, weight: .semibold)
-        case .body4: return .system(size: 20, weight: .medium)
+        case .body4: return .system(size: 13, weight: .medium)
         }
     }
 }
