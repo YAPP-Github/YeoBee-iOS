@@ -11,12 +11,30 @@ import UIKit
 public final class YBPaddingButton: UIButton {
     
     private let padding: UIEdgeInsets
+    private var gradientLayer: CAGradientLayer?
     
-    public init(text: String, padding: Padding = .medium) {
+    public init(text: String,
+                font: YBFont = .body2,
+                titleColor: YBColor = .gray4,
+                selectedTitleColor: YBColor = .white,
+                backgroundColor: YBColor = .gray2,
+                selectedBgColor: YBColor = .black,
+                gradient: Bool,
+                padding: Padding = .medium) {
         self.padding = padding.insets
         super.init(frame: .zero)
         setTitle(text, for: .normal)
-        configure(padding: padding)
+        if gradient {
+            configureGradient(ft: font, padding: padding)
+        } else {
+            configure(ft: font,
+                      titleColor: titleColor,
+                      selectedTitleColor: selectedTitleColor,
+                      bgColor: backgroundColor,
+                      selectedBgColor: selectedBgColor,
+                      padding: padding)
+        }
+        clipsToBounds = true
     }
     
     @available(*, unavailable)
@@ -26,6 +44,9 @@ public final class YBPaddingButton: UIButton {
     
     public override func draw(_ rect: CGRect) {
         super.draw(rect.inset(by: padding))
+        if let gradientLayer = gradientLayer {
+            gradientLayer.frame = bounds
+        }
     }
     
     public override var intrinsicContentSize: CGSize {
@@ -36,27 +57,58 @@ public final class YBPaddingButton: UIButton {
         return contentSize
     }
     
-    func configure(padding: Padding) {
-        titleLabel?.font = YBFont.body2.font
-        setTitleColor(YBColor.gray4.color, for: .normal)
-        setBackgroundColor(YBColor.gray2.color, for: .normal)
-        setTitleColor(YBColor.white.color, for: .highlighted)
-        setBackgroundColor(YBColor.black.color, for: .highlighted)
-        setTitleColor(YBColor.white.color, for: .selected)
-        setBackgroundColor(YBColor.black.color, for: .selected)
+    
+    
+    func configureGradient(ft: YBFont, padding: Padding) {
+        setTitleColor(YBColor.white.color, for: .normal)
+        titleLabel?.font = ft.font
+        let gradientColors = [YBColor.mediumGreen.color, YBColor.mainGreen.color]
+        let startPoint = CGPoint(x: 0, y: 0)
+        let endPoint = CGPoint(x: 1, y: 1)
+        
+        gradientLayer = CAGradientLayer()
+        gradientLayer?.frame = bounds
+        gradientLayer?.colors = gradientColors.map { $0.cgColor }
+        gradientLayer?.startPoint = startPoint
+        gradientLayer?.endPoint = endPoint
+        paddingForRadius(padding: padding)
+        if let gradientLayer = gradientLayer {
+            layer.insertSublayer(gradientLayer, at: 0)
+        }
+    }
+    
+    func configure(ft: YBFont,
+                   titleColor: YBColor,
+                   selectedTitleColor: YBColor,
+                   bgColor: YBColor,
+                   selectedBgColor: YBColor,
+                   padding: Padding) {
+        titleLabel?.font = ft.font
+        setTitleColor(titleColor.color, for: .normal)
+        setBackgroundColor(bgColor.color, for: .normal)
+        setTitleColor(selectedTitleColor.color, for: .highlighted)
+        setBackgroundColor(selectedBgColor.color, for: .highlighted)
+        setTitleColor(selectedTitleColor.color, for: .selected)
+        setBackgroundColor(selectedBgColor.color, for: .selected)
+        paddingForRadius(padding: padding)
+        
+    }
+    
+    private func paddingForRadius(padding: Padding) {
         switch padding {
         case .small:
-            layer.cornerRadius = 14
+            return layer.cornerRadius = 14
         case .medium:
-            layer.cornerRadius = 16
+            return layer.cornerRadius = 16
         case .large:
-            layer.cornerRadius = 18
+            return layer.cornerRadius = 18
         case .calendarDate:
-            layer.cornerRadius = 16
+            return layer.cornerRadius = 20
+        case .gradient:
+            return layer.cornerRadius = 20
         case .custom:
-            layer.cornerRadius = 15
+            return layer.cornerRadius = 15
         }
-        clipsToBounds = true
     }
     
     func setBackgroundColor(_ color: UIColor, for state: UIControl.State) {
@@ -75,6 +127,7 @@ public enum Padding {
     case medium
     case large
     case calendarDate
+    case gradient
     case custom(top: CGFloat, left: CGFloat, bottom: CGFloat, right: CGFloat)
     
     var insets: UIEdgeInsets {
@@ -87,6 +140,8 @@ public enum Padding {
             return UIEdgeInsets(top: 12, left: 24, bottom: 12, right: 24)
         case .calendarDate:
             return UIEdgeInsets(top: 7.5, left: 14, bottom: 7.5, right: 14)
+        case .gradient:
+            return UIEdgeInsets(top: 6.5, left: 14, bottom: 6.5, right: 14)
         case .custom(let top, let left, let bottom, let right):
             return UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
         }

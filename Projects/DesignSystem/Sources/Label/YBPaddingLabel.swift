@@ -60,7 +60,9 @@ public final class YBPaddingLabel: UILabel {
         case .large:
             layer.cornerRadius = 18
         case .calendarDate:
-            layer.cornerRadius = 16
+            layer.cornerRadius = 20
+        case .gradient:
+            layer.cornerRadius = 20
         case .custom:
             layer.cornerRadius = 15
         }
