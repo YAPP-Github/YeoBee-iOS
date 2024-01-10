@@ -21,7 +21,7 @@ public final class YBPaddingLabel: UILabel {
         configure(bgColor: backgroundColor,
                   txtColor: textColor,
                   brdColor: borderColor,
-                  ft: font,
+                  font: font,
                   padding: padding)
     }
     
@@ -42,10 +42,10 @@ public final class YBPaddingLabel: UILabel {
         return contentSize
     }
     
-    func configure(bgColor: YBColor, txtColor: YBColor, brdColor: YBColor? = nil, ft: YBFont, padding: Padding) {
+    func configure(bgColor: YBColor, txtColor: YBColor, brdColor: YBColor? = nil, font: YBFont, padding: Padding) {
         self.backgroundColor = bgColor.color
         self.textColor = txtColor.color
-        self.font = ft.font
+        self.font = font.font
         
         if brdColor != nil {
             self.layer.borderColor = brdColor?.color.cgColor

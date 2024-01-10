@@ -19,15 +19,15 @@ public final class YBPaddingButton: UIButton {
                 selectedTitleColor: YBColor = .white,
                 backgroundColor: YBColor = .gray2,
                 selectedBgColor: YBColor = .black,
-                gradient: Bool,
+                isGradient: Bool,
                 padding: Padding = .medium) {
         self.padding = padding.insets
         super.init(frame: .zero)
         setTitle(text, for: .normal)
-        if gradient {
-            configureGradient(ft: font, padding: padding)
+        if isGradient {
+            configureGradient(font: font, padding: padding)
         } else {
-            configure(ft: font,
+            configure(font: font,
                       titleColor: titleColor,
                       selectedTitleColor: selectedTitleColor,
                       bgColor: backgroundColor,
@@ -59,9 +59,9 @@ public final class YBPaddingButton: UIButton {
     
     
     
-    func configureGradient(ft: YBFont, padding: Padding) {
+    func configureGradient(font: YBFont, padding: Padding) {
         setTitleColor(YBColor.white.color, for: .normal)
-        titleLabel?.font = ft.font
+        titleLabel?.font = font.font
         let gradientColors = [YBColor.mediumGreen.color, YBColor.mainGreen.color]
         let startPoint = CGPoint(x: 0, y: 0)
         let endPoint = CGPoint(x: 1, y: 1)
@@ -77,13 +77,13 @@ public final class YBPaddingButton: UIButton {
         }
     }
     
-    func configure(ft: YBFont,
+    func configure(font: YBFont,
                    titleColor: YBColor,
                    selectedTitleColor: YBColor,
                    bgColor: YBColor,
                    selectedBgColor: YBColor,
                    padding: Padding) {
-        titleLabel?.font = ft.font
+        titleLabel?.font = font.font
         setTitleColor(titleColor.color, for: .normal)
         setBackgroundColor(bgColor.color, for: .normal)
         setTitleColor(selectedTitleColor.color, for: .highlighted)
