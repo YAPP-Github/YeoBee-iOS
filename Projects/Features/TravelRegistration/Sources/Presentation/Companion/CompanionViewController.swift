@@ -102,7 +102,7 @@ public final class CompanionViewController: TravelRegistrationController {
         addCompanionView.snp.makeConstraints { make in
             make.top.equalTo(buttonStackView.snp.bottom).inset(-30)
             make.leading.trailing.equalToSuperview().inset(24)
-            make.height.equalTo(100)
+            make.height.equalTo(105)
         }
         nextButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
