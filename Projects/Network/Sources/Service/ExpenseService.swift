@@ -73,10 +73,10 @@ extension ExpenseService: TargetType {
                 "pageIndex": pageIndex,
                 "pageSize": pageSize
             ]
-            if let type = type { params["type"] = type.rawValue }
-            if let date = date { params["date"] = ISO8601DateFormatter().string(from: date) }
-            if let method = method { params["method"] = method.rawValue }
-            if let unitId = unitId { params["unitId"] = unitId }
+            if let type { params["type"] = type.rawValue }
+            if let date { params["date"] = ISO8601DateFormatter().string(from: date) }
+            if let method { params["method"] = method.rawValue }
+            if let unitId { params["unitId"] = unitId }
             return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
             //        case .fetchDetail:
             //
@@ -87,9 +87,7 @@ extension ExpenseService: TargetType {
         }
     }
     
-    var headers: [String : String]? {
+    var headers: [String: String]? {
         return ["Content-type": "application/json"]
     }
-    
 }
-

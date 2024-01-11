@@ -15,7 +15,7 @@ protocol AuthRepositoryInterface {
     func logout()
 }
 
-class AuthRepository: AuthRepositoryInterface {
+final class AuthRepository: AuthRepositoryInterface {
     let provider = MoyaProvider<AuthService>()
     
     func loginWithKakao(token: String) {
