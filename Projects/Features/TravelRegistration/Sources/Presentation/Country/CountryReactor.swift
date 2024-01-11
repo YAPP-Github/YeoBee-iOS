@@ -18,7 +18,6 @@ public final class CountryReactor: Reactor {
         case typeButtonTapped(title: String)
         case checkedButtonTapped(country: Country)
         case deletedCountry(country: Country)
-        case nextButtonTapped
     }
     
     public enum Mutation {
@@ -26,7 +25,6 @@ public final class CountryReactor: Reactor {
         case typeButtonTapped(title: String)
         case checkedButtonTapped(country: Country)
         case deletedCountry(country: Country)
-        case nextButtonTapped
     }
     
     public struct State {
@@ -51,8 +49,6 @@ public final class CountryReactor: Reactor {
             return .just(Mutation.checkedButtonTapped(country: country))
         case .deletedCountry(country: let country):
             return .just(Mutation.deletedCountry(country: country))
-        case .nextButtonTapped:
-            return .just(Mutation.nextButtonTapped)
         }
     }
     
@@ -122,9 +118,6 @@ public final class CountryReactor: Reactor {
             if let selectedCountryIndex = newState.selectedCountries.firstIndex(where: { $0.name == country.name }) {
                 newState.selectedCountries.remove(at: selectedCountryIndex)
             }
-        case .nextButtonTapped:
-            print("next 찍힘")
-            break
         }
         return newState
     }

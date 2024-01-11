@@ -51,6 +51,8 @@ public final class YBPaddingButton: UIButton {
             layer.cornerRadius = 16
         case .large:
             layer.cornerRadius = 18
+        case .calendarDate:
+            layer.cornerRadius = 16
         case .custom:
             layer.cornerRadius = 15
         }
@@ -72,6 +74,7 @@ public enum Padding {
     case small
     case medium
     case large
+    case calendarDate
     case custom(top: CGFloat, left: CGFloat, bottom: CGFloat, right: CGFloat)
     
     var insets: UIEdgeInsets {
@@ -82,6 +85,8 @@ public enum Padding {
             return UIEdgeInsets(top: 7, left: 20, bottom: 7, right: 20)
         case .large:
             return UIEdgeInsets(top: 12, left: 24, bottom: 12, right: 24)
+        case .calendarDate:
+            return UIEdgeInsets(top: 7.5, left: 14, bottom: 7.5, right: 14)
         case .custom(let top, let left, let bottom, let right):
             return UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
         }

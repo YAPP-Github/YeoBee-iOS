@@ -231,8 +231,9 @@ extension CountryViewController: View {
         }
         
         nextButton.rx.tap
-            .bind { _ in
-                reactor.action.onNext(Reactor.Action.nextButtonTapped)
+            .bind { [weak self] _ in
+                let calendarVC = CalendarViewController()
+                self?.navigationController?.pushViewController(calendarVC, animated: true)
             }.disposed(by: disposeBag)
     }
     
