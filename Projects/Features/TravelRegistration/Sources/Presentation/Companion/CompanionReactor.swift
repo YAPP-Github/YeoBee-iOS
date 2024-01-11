@@ -32,7 +32,6 @@ public final class CompanionReactor: Reactor {
     
     public var initialState: State = State()
     
-    
     // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {

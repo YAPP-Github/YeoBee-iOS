@@ -44,7 +44,7 @@ public final class YBPaddingButton: UIButton {
     
     public override func draw(_ rect: CGRect) {
         super.draw(rect.inset(by: padding))
-        if let gradientLayer = gradientLayer {
+        if let gradientLayer {
             gradientLayer.frame = bounds
         }
     }
@@ -56,8 +56,6 @@ public final class YBPaddingButton: UIButton {
         contentSize.width += padding.left + padding.right
         return contentSize
     }
-    
-    
     
     func configureGradient(font: YBFont, padding: Padding) {
         setTitleColor(YBColor.white.color, for: .normal)

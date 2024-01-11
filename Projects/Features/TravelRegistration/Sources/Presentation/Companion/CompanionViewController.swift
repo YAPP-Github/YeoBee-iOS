@@ -120,13 +120,16 @@ public final class CompanionViewController: TravelRegistrationController {
     }
     
     private func setDataSource() {
-        dataSource = UITableViewDiffableDataSource<CompanionSection, CompanionDataItem>(tableView: self.companionTableView) { (tableView, indexPath, companionDataItem) -> UITableViewCell? in
+        dataSource = UITableViewDiffableDataSource<CompanionSection, CompanionDataItem>(tableView: self.companionTableView) 
+        { (tableView, indexPath, companionDataItem) -> UITableViewCell? in
             var companion: Companion
             switch companionDataItem {
             case .main(let mainCompanion):
                 companion = mainCompanion
             }
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: CompanionTableViewCell.identifier, for: indexPath) as? CompanionTableViewCell else { return UITableViewCell() }
+            
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: CompanionTableViewCell.identifier,
+                                                           for: indexPath) as? CompanionTableViewCell else { return UITableViewCell() }
             cell.delegate = self
             cell.companion = companion
             return cell
