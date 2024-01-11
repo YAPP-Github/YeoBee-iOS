@@ -57,7 +57,6 @@ public extension Package {
     static let SnapKit: Package = .remote(url: "https://github.com/SnapKit/SnapKit.git", requirement: .upToNextMajor(from: "5.0.1"))
     static let fscalendar: Package = .remote(url: "https://github.com/WenchaoD/FSCalendar.git", requirement: .branch("master"))
     static let composableArchitecture: Package = .remote(url: "https://github.com/pointfreeco/swift-composable-architecture", requirement: .exact("1.0.0"))
-    static let snapkit: Package = .remote(url: "https://github.com/SnapKit/SnapKit.git", requirement: .branch("main"))
 }
 
 // MARK: SourceFile
