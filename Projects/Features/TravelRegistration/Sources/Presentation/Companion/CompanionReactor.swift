@@ -59,7 +59,7 @@ public final class CompanionReactor: Reactor {
             }
             newState.companions.append(.init(name: "사용자\(state.companions.count+1)", imageURL: ""))
         case .deleteCompanion(let companion):
-            if let companionsIndex = newState.companions.firstIndex(where: { $0.name == companion.name }) {
+            if let companionsIndex = newState.companions.firstIndex(where: { $0 == companion }) {
                 newState.companions.remove(at: companionsIndex)
             }
         }

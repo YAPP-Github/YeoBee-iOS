@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Companion: Hashable, Equatable {
+public struct Companion: Hashable {
     var name: String
     var imageURL: String
     
