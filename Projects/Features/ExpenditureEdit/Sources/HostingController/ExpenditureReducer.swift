@@ -5,7 +5,7 @@
 //  Created Hoyoung Lee on 1/6/24.
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 
-import Combine
+import Foundation
 import ComposableArchitecture
 
 public enum ExpenditureTab: Equatable {

@@ -36,9 +36,9 @@ extension UIApplication {
   func removeTapGestureRecognizer() {
     guard let window = windows.first else { return }
 
-    window.gestureRecognizers?.forEach { gr in
-      if gr.name == "KeyboardDismissGesture" {
-        window.removeGestureRecognizer(gr)
+    window.gestureRecognizers?.forEach { gesture in
+      if gesture.name == "KeyboardDismissGesture" {
+        window.removeGestureRecognizer(gesture)
       }
 
     }

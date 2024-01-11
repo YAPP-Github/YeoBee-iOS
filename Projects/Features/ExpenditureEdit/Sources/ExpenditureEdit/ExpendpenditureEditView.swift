@@ -33,7 +33,6 @@ struct ExpendpenditureEditView: View {
                     })
                 }
             }
-            .keyboardAdaptive()
             Button {
 
             } label: {

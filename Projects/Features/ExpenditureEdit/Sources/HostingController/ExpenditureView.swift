@@ -50,6 +50,7 @@ extension ExpenditureView {
                     .tag(ExpenditureTab.individual)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
+                .keyboardAdaptive()
             }
             .background(YBColor.gray1.swiftUIColor, ignoresSafeAreaEdges: [.all])
         }

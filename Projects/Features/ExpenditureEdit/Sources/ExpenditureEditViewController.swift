@@ -6,15 +6,11 @@
 //
 
 import UIKit
-import RxSwift
-
 import DesignSystem
 import SnapKit
 import ComposableArchitecture
 
 public final class ExpenditureEditViewController: UIViewController {
-
-    public var disposeBag: DisposeBag = DisposeBag()
 
     // MARK: View
 
@@ -28,10 +24,6 @@ public final class ExpenditureEditViewController: UIViewController {
             )
         )
     )
-
-//    // MARK: DataSources
-//
-//    private let tripDateDataSource: TripDateDataSource
 
     public init() {
         super.init(nibName: nil, bundle: nil)

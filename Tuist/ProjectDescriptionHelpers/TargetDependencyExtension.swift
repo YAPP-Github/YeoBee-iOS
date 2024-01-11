@@ -46,7 +46,8 @@ public extension TargetDependency {
     static let reactorKit: TargetDependency = .external(name: "ReactorKit")
     static let SnapKit: TargetDependency = .package(product: "SnapKit")
     static let fscalendar: TargetDependency = .external(name: "FSCalendar")
-    static let composableArchitecture: TargetDependency = .package(product: "ComposableArchitecture")
+    static let composableArchitecture: TargetDependency = .external(name: "ComposableArchitecture")
+    static let snapkit: TargetDependency = .external(name: "SnapKit")
 }
 
 public extension Package {
