@@ -68,13 +68,9 @@ public enum CountryType: String, CaseIterable {
                                                      Country(name: "아프리카국가3", imageURL: "이미지URL3")]
 }
 
-public struct Country: Hashable, Equatable {
+public struct Country: Hashable {
     var name: String
     var imageURL: String
-    
-    public static func  == (lhs: Country, rhs: Country) -> Bool {
-        lhs.name == rhs.name
-    }
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(name)

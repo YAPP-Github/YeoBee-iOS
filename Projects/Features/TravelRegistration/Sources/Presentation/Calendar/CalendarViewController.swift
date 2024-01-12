@@ -279,8 +279,9 @@ extension CalendarViewController: View {
     func bindAction(reactor: CalendarReactor) {
         nextButton.rx.tap
             .observe(on: MainScheduler.instance)
-            .bind { _ in
-                print("nextButton Tap")
+            .bind { [weak self] _ in
+                let companionVC = CompanionViewController()
+                self?.navigationController?.pushViewController(companionVC, animated: true)
             }.disposed(by: disposeBag)
     }
     
