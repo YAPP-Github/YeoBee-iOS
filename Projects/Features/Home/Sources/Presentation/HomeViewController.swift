@@ -11,6 +11,7 @@ import SnapKit
 import ReactorKit
 import RxSwift
 import RxCocoa
+import Coordinator
 
 enum HomeSection: CaseIterable {
     case header
@@ -29,6 +30,8 @@ public class HomeViewController: UIViewController {
     public var disposeBag = DisposeBag()
     private let reactor = HomeReactor()
     
+    public var coordinator: HomeCoordinator?
+
     // MARK: - Properties
     lazy var homeCollectionView = HomeCollectionView()
     
@@ -40,7 +43,7 @@ public class HomeViewController: UIViewController {
         setLayout()
         setDataSource()
         setCollectionViewDelegate()
-        setNavBar()
+//        setNavBar()
         bind(reactor: reactor)
         // 초기 더미 데이터
         reactor.configureSnapshot(comingData: TripDummy.coming.getTrips(), passedData: TripDummy.passed.getTrips())
@@ -171,6 +174,6 @@ extension HomeViewController: HomeCollectionHeaderViewCellDelegate {
     }
     
     func addTripViewTapped() {
-        print("여행 등록하기로 이동")
+        coordinator?.travelRegister()
     }
 }

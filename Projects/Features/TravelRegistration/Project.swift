@@ -23,7 +23,8 @@ let project = Project(
                 .RxCocoa,
                 .RxGesture,
                 .reactorKit,
-                .fscalendar
+                .fscalendar,
+                .coordinator
             ]
         ),
         Project.target(

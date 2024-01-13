@@ -28,11 +28,12 @@ enum CountryDataItem: Hashable {
     case africa(Country)
 }
 
-public final class CountryViewController: TravelRegistrationController {
+public final class CountryViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
     private let reactor = CountryReactor()
     var dataSource: UITableViewDiffableDataSource<CountrySection, CountryDataItem>!
+    public weak var coordinator: TravelRegistrationCoordinator?
     // MARK: - Properties
     let countryTableView = CountryTableView()
     let horizontalCountryView = HorizontalCountryView()
@@ -42,7 +43,9 @@ public final class CountryViewController: TravelRegistrationController {
     // MARK: - Life Cycles
     public override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         setNavSearchBar()
+        configureBar()
         addViews()
         setLayouts()
         setDelegate()
@@ -50,7 +53,7 @@ public final class CountryViewController: TravelRegistrationController {
         bind(reactor: reactor)
         reactor.viewDidLoad()
     }
-    
+
     // MARK: - Set UI
     private func addViews() {
         [
@@ -63,7 +66,17 @@ public final class CountryViewController: TravelRegistrationController {
             view.addSubview($0)
         }
     }
-    
+
+    func configureBar() {
+        let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+
+    @objc func backButtonTapped() {
+        coordinator?.coordinatorDidFinish()
+    }
+
     private func setLayouts() {
         horizontalCountryView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
@@ -131,7 +144,7 @@ public final class CountryViewController: TravelRegistrationController {
     }
     
     private func setDataSource() {
-        dataSource = UITableViewDiffableDataSource<CountrySection, CountryDataItem>(tableView: self.countryTableView) { (tableView, indexPath, countryDataItem) -> UITableViewCell? in
+        dataSource = UITableViewDiffableDataSource<CountrySection, CountryDataItem>(tableView: self.countryTableView) { [weak self] (tableView, indexPath, countryDataItem) -> UITableViewCell? in
             var country: Country
             switch countryDataItem {
             case .europe(let europeCountry):
@@ -149,7 +162,8 @@ public final class CountryViewController: TravelRegistrationController {
             cell.delegate = self
             cell.country = country
             
-            if self.reactor.currentState.selectedCountries.contains(where: { $0.name == country.name }) {
+            if let reactor = self?.reactor,
+               reactor.currentState.selectedCountries.contains(where: { $0.name == country.name }) {
                 cell.checkedButtonSelected = true
             }
             return cell
@@ -167,6 +181,11 @@ public final class CountryViewController: TravelRegistrationController {
         snapshot.appendItems(dc.southAmerica.map { .southAmerica($0) }, toSection: .southAmerica)
         snapshot.appendItems(dc.africa.map { .africa($0) }, toSection: .africa)
         dataSource.apply(snapshot, animatingDifferences: false)
+    }
+
+    deinit {
+        print("deinit CountryViewController")
+        coordinator?.coordinatorDidFinish()
     }
 }
 

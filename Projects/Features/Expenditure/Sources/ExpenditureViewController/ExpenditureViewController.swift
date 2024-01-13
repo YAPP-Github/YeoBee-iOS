@@ -12,10 +12,11 @@ import RxSwift
 import DesignSystem
 import SnapKit
 import ComposableArchitecture
+import Coordinator
 
 public final class ExpenditureViewController: UIViewController {
 
-    public var disposeBag: DisposeBag = DisposeBag()
+    weak var coordinator: ExpenditureCoordinator?
 
     // MARK: View
 

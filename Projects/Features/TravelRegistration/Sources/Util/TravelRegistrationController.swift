@@ -9,8 +9,12 @@
 import UIKit
 import DesignSystem
 
+import Coordinator
+
 public class TravelRegistrationController: UIViewController {
-    
+
+    public weak var coordinator: TravelRegistrationCoordinator?
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         setView()
@@ -39,6 +43,10 @@ public class TravelRegistrationController: UIViewController {
     }
     
     @objc func backButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
+        coordinator?.coordinatorDidFinish()
+    }
+
+    deinit {
+        print("TravelRegistrationController is de-initialized.")
     }
 }

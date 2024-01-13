@@ -14,8 +14,8 @@ import RxCocoa
 import SnapKit
 import FSCalendar
 
-public final class CalendarViewController: TravelRegistrationController {
-    
+public final class CalendarViewController: UIViewController {
+
     public var disposeBag = DisposeBag()
     private let reactor = CalendarReactor()
     
@@ -44,6 +44,7 @@ public final class CalendarViewController: TravelRegistrationController {
     // MARK: - Life Cycles
     public override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         addViews()
         setLayouts()
         setDelegate()
@@ -90,6 +91,10 @@ public final class CalendarViewController: TravelRegistrationController {
     private func setDelegate() {
         calendarView.calendar.delegate = self
         calendarView.calendar.dataSource = self
+    }
+
+    deinit {
+        print("deinit CalendarViewController")
     }
 }
 
