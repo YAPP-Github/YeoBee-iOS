@@ -26,7 +26,7 @@ final public class TravelRegistrationCoordinator: TravelRegistrationCoordinatorI
         travelRegistrationNavigationController = UINavigationController(rootViewController: travelRegistrationController)
         travelRegistrationController.coordinator = self
         travelRegistrationNavigationController?.modalPresentationStyle = .overFullScreen
-        navigationController.present(travelRegistrationNavigationController!, animated: true)
+        navigationController.present(travelRegistrationNavigationController!, animated: animated)
     }
 
 

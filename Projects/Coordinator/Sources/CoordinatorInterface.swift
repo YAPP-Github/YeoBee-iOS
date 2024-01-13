@@ -11,8 +11,8 @@ import UIKit
 public protocol SignCoordinatorInterface: ParentCoordinator, Coordinator { }
 
 public protocol HomeCoordinatorInterface: ParentCoordinator, Coordinator {
-    func travelRegister()
-    func travelRegister(navigationController: UINavigationController, animated: Bool)
+    func travelRegisteration()
+    func trip()
 }
 
 public protocol TravelRegistrationCoordinatorInterface: ParentCoordinator, ChildCoordinator {

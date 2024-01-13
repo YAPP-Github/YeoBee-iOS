@@ -43,7 +43,6 @@ public class HomeViewController: UIViewController {
         setLayout()
         setDataSource()
         setCollectionViewDelegate()
-//        setNavBar()
         bind(reactor: reactor)
         // 초기 더미 데이터
         reactor.configureSnapshot(comingData: TripDummy.coming.getTrips(), passedData: TripDummy.passed.getTrips())
@@ -108,10 +107,6 @@ public class HomeViewController: UIViewController {
     private func setCollectionViewDelegate() {
         homeCollectionView.delegate = self
     }
-    
-    private func setNavBar() {
-        navigationController?.isNavigationBarHidden = true
-    }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
@@ -174,6 +169,6 @@ extension HomeViewController: HomeCollectionHeaderViewCellDelegate {
     }
     
     func addTripViewTapped() {
-        coordinator?.travelRegister()
+        coordinator?.travelRegisteration()
     }
 }

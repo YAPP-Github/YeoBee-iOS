@@ -23,20 +23,20 @@ final public class HomeCoordinator: HomeCoordinatorInterface {
     public func start(animated: Bool = false) {
         let homeViewController = HomeViewController()
         homeViewController.coordinator = self
+        navigationController.isNavigationBarHidden = true
         navigationController.pushViewController(homeViewController, animated: animated)
     }
 }
 
 extension HomeCoordinator {
 
-    public func travelRegister() {
-        self.travelRegister(navigationController: navigationController, animated: true)
-    }
-
-    public func travelRegister(navigationController: UINavigationController, animated: Bool) {
+    public func travelRegisteration() {
         let productsCoordinator = TravelRegistrationCoordinator(navigationController: navigationController)
         productsCoordinator.parent = self
         addChild(productsCoordinator)
-        productsCoordinator.start(animated: animated)
+        productsCoordinator.start(animated: true)
+    }
+
+    public func trip() {
     }
 }
