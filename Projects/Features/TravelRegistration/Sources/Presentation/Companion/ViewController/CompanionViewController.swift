@@ -159,6 +159,12 @@ public final class CompanionViewController: UIViewController {
 
 // MARK: - CompanionTableViewCellDelegate
 extension CompanionViewController: CompanionTableViewCellDelegate {
+    func changeCompanionName(companion: Companion) {
+        let changeCompanionNameReactor = ChangeCompanionNameReactor(companion: companion)
+        let changeCompanionNameVC = ChangeCompanionNameViewController(reactor: changeCompanionNameReactor)
+        self.navigationController?.pushViewController(changeCompanionNameVC, animated: true)
+    }
+    
     func deleteCompanion(companion: Companion) {
         Observable.just(companion)
             .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
