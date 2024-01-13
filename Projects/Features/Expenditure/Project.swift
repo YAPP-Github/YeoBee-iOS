@@ -7,7 +7,9 @@ let project = Project(
     options: .options(
         automaticSchemesOptions: .disabled
     ),
-    packages: [],
+    packages: [
+        .composableArchitecture
+    ],
     settings: .settings(configurations: [
         .debug(name: .debug),
         .release(name: .release),

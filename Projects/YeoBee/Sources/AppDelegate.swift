@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         let viewController = UIViewController()
         viewController.view.backgroundColor = .white
-        window?.rootViewController = viewController
+        window?.rootViewController = ExpenditureViewController()
         window?.makeKeyAndVisible()
 
         return true
