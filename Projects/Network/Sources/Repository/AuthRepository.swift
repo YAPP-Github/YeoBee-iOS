@@ -31,6 +31,4 @@ final class AuthRepository: AuthRepositoryInterface {
     func logout() {
         // logout 기능
     }
-    
-    
 }

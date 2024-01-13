@@ -24,20 +24,22 @@ enum PaymentMethod: String {
 }
 
 enum ExpenseService {
-    case fetchList(tripId: String,
-                   pageIndex: Int,
-                   pageSize: Int,
-                   type: ExpenseType? = nil,
-                   date: Date? = nil,
-                   paymentMethods: PaymentMethod? = nil,
-                   unitId: Int? = nil)
+    case fetchList(
+        tripId: String,
+        pageIndex: Int,
+        pageSize: Int,
+        type: ExpenseType? = nil,
+        date: Date? = nil,
+        paymentMethod: PaymentMethod? = nil,
+        unitId: Int? = nil
+    )
     //    case fetchDetail
     //    case create
     //    case delete
 }
 
 extension ExpenseService: TargetType {
-    var baseURL: URL { return URL(string: "https://api.yeobee.me")!}
+    var baseURL: URL { return URL(string: BaseURL.string)!}
     
     var path: String {
         switch self {
