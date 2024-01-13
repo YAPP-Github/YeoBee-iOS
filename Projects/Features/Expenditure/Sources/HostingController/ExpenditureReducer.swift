@@ -9,6 +9,13 @@ import Combine
 import ComposableArchitecture
 
 public struct ExpenditureReducer: Reducer {
+
+    let cooridinator: ExpenditureCoordinator
+
+    init(cooridinator: ExpenditureCoordinator) {
+        self.cooridinator = cooridinator
+    }
+
     public struct State: Equatable {
         var type: ExpenditureTab
         var totalPrice: TotalPriceReducer.State
@@ -30,7 +37,11 @@ public struct ExpenditureReducer: Reducer {
     public var body: some ReducerOf<ExpenditureReducer> {
         Reduce { _, action in
             switch action {
-                default: return .none
+            case .tripDate(.tappedTripReadyButton):
+                cooridinator.test()
+                return .none
+            default:
+                return .none
             }
         }
 

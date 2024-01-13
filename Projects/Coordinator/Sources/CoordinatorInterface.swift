@@ -17,3 +17,11 @@ public protocol HomeCoordinatorInterface: ParentCoordinator, Coordinator {
 
 public protocol TravelRegistrationCoordinatorInterface: ParentCoordinator, ChildCoordinator {
 }
+
+public protocol TripCoordinatorInterface: ParentCoordinator, ChildCoordinator {
+}
+
+public protocol ExpenditureCoordinatorInterface: ParentCoordinator, ChildCoordinator {
+    func test()
+}
+

@@ -10,6 +10,7 @@ import UIKit
 
 import Coordinator
 import TravelRegistration
+import Trip
 
 final public class HomeCoordinator: HomeCoordinatorInterface {
     public var navigationController: UINavigationController
@@ -31,12 +32,16 @@ final public class HomeCoordinator: HomeCoordinatorInterface {
 extension HomeCoordinator {
 
     public func travelRegisteration() {
-        let productsCoordinator = TravelRegistrationCoordinator(navigationController: navigationController)
-        productsCoordinator.parent = self
-        addChild(productsCoordinator)
-        productsCoordinator.start(animated: true)
+        let travelRegistrationCoordinator = TravelRegistrationCoordinator(navigationController: navigationController)
+        travelRegistrationCoordinator.parent = self
+        addChild(travelRegistrationCoordinator)
+        travelRegistrationCoordinator.start(animated: true)
     }
 
     public func trip() {
+        let tripCoordinator = TripCoordinator(navigationController: navigationController)
+        tripCoordinator.parent = self
+        addChild(tripCoordinator)
+        tripCoordinator.start(animated: true)
     }
 }

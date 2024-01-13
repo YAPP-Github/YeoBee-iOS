@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "Home",
+    name: "Trip",
     organizationName: "YeoBee.com",
     options: .options(
         automaticSchemesOptions: .disabled
@@ -14,56 +14,55 @@ let project = Project(
     ]),
     targets: [
         Project.target(
-            name: "Home",
+            name: "Trip",
             product: .framework,
             sources: .sources,
             dependencies: [
                 .designSystem,
                 .RxSwift,
                 .RxCocoa,
-                .RxGesture,
                 .reactorKit,
-                .travelRegistration,
+                .coordinator,
+                .expenditure
+            ]
+        ),
+        Project.target(
+            name: "TripDemo",
+            product: .app,
+            sources: .demoSources,
+            dependencies: [
                 .trip
             ]
         ),
         Project.target(
-            name: "HomeDemo",
-            product: .app,
-            sources: .demoSources,
-            dependencies: [
-                .target(name: "Home")
-            ]
-        ),
-        Project.target(
-            name: "HomeTests",
+            name: "TripTests",
             product: .unitTests,
             sources: .tests,
             dependencies: [
-                .target(name: "Home")
+                .trip
             ]
         )
     ],
     schemes: [
         Scheme(
-            name: "HomeDemo",
+            name: "TripDemo",
             shared: true,
             buildAction: BuildAction(
-                targets: ["HomeDemo"]
+                targets: ["TripDemo"]
             ),
-            testAction: .targets(["HomeTests"]),
+            testAction: .targets(["TripTests"]),
             runAction: .runAction(configuration: .debug),
             archiveAction: .archiveAction(configuration: .debug),
             profileAction: .profileAction(configuration: .debug),
             analyzeAction: .analyzeAction(configuration: .debug)
         ),
         Scheme(
-            name: "Home",
+            name: "Trip",
             shared: true,
             buildAction: BuildAction(
-                targets: ["Home"]
+                targets: ["Trip"]
             ),
-            testAction: .targets(["HomeTests"]),
+            testAction: .targets(["TripTests"]),
             runAction: .runAction(configuration: .release),
             archiveAction: .archiveAction(configuration: .release),
             profileAction: .profileAction(configuration: .release),

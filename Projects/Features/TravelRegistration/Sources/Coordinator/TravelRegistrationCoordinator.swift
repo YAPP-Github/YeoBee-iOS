@@ -29,8 +29,6 @@ final public class TravelRegistrationCoordinator: TravelRegistrationCoordinatorI
         navigationController.present(travelRegistrationNavigationController!, animated: animated)
     }
 
-
-
     public func popDidFinish() {
         navigationController.popViewController(animated: true)
     }

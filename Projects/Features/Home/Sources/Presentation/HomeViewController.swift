@@ -136,9 +136,11 @@ extension HomeViewController: UICollectionViewDelegate {
         switch section {
         case .coming:
             let comingTrip = reactor.snapshot.itemIdentifiers(inSection: .coming)[indexPath.item]
+            self.coordinator?.trip()
             print("Selected Coming Trip: \(comingTrip) \(indexPath.row)")
         case .passed:
             let passedTrip = reactor.snapshot.itemIdentifiers(inSection: .passed)[indexPath.item]
+            self.coordinator?.trip()
             print("Selected Passed Trip: \(passedTrip) \(indexPath.row)")
         case .header:
             break
