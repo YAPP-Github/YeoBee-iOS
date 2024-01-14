@@ -11,9 +11,11 @@ import ComposableArchitecture
 public struct ExpenditureListItemReducer: Reducer {
     public struct State: Equatable, Identifiable {
         public var id: UUID { UUID() }
-        var title: String = ""
-        var price: Int = 0
-        var koreanPrice: Int = 0
+        var expendseItem: ExpenseItem
+
+        init(expendseItem: ExpenseItem) {
+            self.expendseItem = expendseItem
+        }
     }
 
     public enum Action {
