@@ -11,7 +11,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = SharedExpenditureViewController()
+        let coordinator = ExpenditureCoordinator(navigationController: UINavigationController())
+        let viewController = ExpenditureViewController(coordinator: coordinator)
         let navigationController = UINavigationController(rootViewController: viewController)
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
