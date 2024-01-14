@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import DesignSystem
 
 struct ExpenditureListView: View {
     typealias State = ExpenditureListReducer.State
@@ -21,17 +22,28 @@ struct ExpenditureListView: View {
 
 extension ExpenditureListView {
     var containerView: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            FilterButtonView(title: "전체보기")
-            VStack(spacing: 14) {
-                ForEachStore(
-                    store.scope(
-                        state: \.expenditureListItems,
-                        action: ExpenditureListReducer.Action.expenditureListItem)
-                ) { store in
-                    ExpenditureListItemView(store: store)
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            if viewStore.isEmpty {
+                VStack(spacing: 20) {
+                    Spacer()
+                    DesignSystemAsset.Icons.emptyImage.swiftUIImage
+                        .frame(width: 95, height: 84)
+                    Text("내역이 없어요.")
+                        .foregroundColor(.ybColor(.black))
+                        .font(.ybfont(.body2))
+                    Spacer()
                 }
-                Spacer()
+            } else {
+                VStack(spacing: 14) {
+                    ForEachStore(
+                        store.scope(
+                            state: \.expenditureListItems,
+                            action: ExpenditureListReducer.Action.expenditureListItem)
+                    ) { store in
+                        ExpenditureListItemView(store: store)
+                    }
+                    Spacer()
+                }
             }
         }
     }

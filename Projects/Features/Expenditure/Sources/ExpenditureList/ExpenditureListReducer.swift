@@ -9,14 +9,18 @@ import Combine
 import ComposableArchitecture
 
 public struct ExpenditureListReducer: Reducer {
+
+    enum LoadStatus { case idle, process, done }
+
     public struct State: Equatable {
-        var expenditureListItems: IdentifiedArrayOf<ExpenditureListItemReducer.State> = [
-            .init(), .init()
-        ]
+        var expenditureListItems: IdentifiedArrayOf<ExpenditureListItemReducer.State> = []
+        var loadStatus: LoadStatus = .done
+        var isEmpty: Bool { expenditureListItems.isEmpty && loadStatus == .done }
     }
 
     public enum Action {
         case expenditureListItem(id: ExpenditureListItemReducer.State.ID, action: ExpenditureListItemReducer.Action)
+        case setExpenditures()
     }
 
     public var body: some ReducerOf<ExpenditureListReducer> {
