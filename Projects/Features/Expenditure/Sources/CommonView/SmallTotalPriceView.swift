@@ -11,10 +11,10 @@ import DesignSystem
 
 struct SmallTotalPriceView: View {
     let title: String
-    let price: String
+    let price: Int
     let titleColor: YBColor
 
-    init(title: String, titleColor: YBColor = .gray4, price: String) {
+    init(title: String, titleColor: YBColor = .gray4, price: Int) {
         self.title = title
         self.price = price
         self.titleColor = titleColor
@@ -27,7 +27,7 @@ struct SmallTotalPriceView: View {
                 .font(.ybfont(.body3))
             Spacer()
             HStack(spacing: 0) {
-                Text(price)
+                Text(price.formattedWithSeparator)
                     .foregroundColor(.ybColor(.gray6))
                     .font(.ybfont(.body3))
                     .lineLimit(1)

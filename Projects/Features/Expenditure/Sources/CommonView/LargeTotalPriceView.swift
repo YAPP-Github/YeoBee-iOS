@@ -11,17 +11,36 @@ import DesignSystem
 
 struct LargeTotalPriceView: View {
     let title: String
-    let price: String
+    let price: Int
+    let action: () -> Void
+
+    init(
+        title: String,
+        price: Int,
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.price = price
+        self.action = action
+    }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(title)
-                .foregroundColor(.ybColor(.gray5))
-                .font(.ybfont(.body3))
-
-            Text(price)
-                .foregroundColor(.ybColor(.black))
-                .font(.ybfont(.header1))
+        Button {
+            action()
+        } label: {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 6) {
+                    Text(title)
+                        .foregroundColor(.ybColor(.gray6))
+                        .font(.ybfont(.body3))
+                    DesignSystemAsset.Icons.next.swiftUIImage
+                        .frame(width: 4, height: 8)
+                }
+                Text(price.formattedWithSeparator + "원")
+                    .foregroundColor(.ybColor(.black))
+                    .font(.ybfont(.header1))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }

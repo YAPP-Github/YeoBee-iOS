@@ -35,8 +35,10 @@ struct TotalPriceView: View {
 
 extension TotalPriceView {
     func totalExpandPriceView(price: Int) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            LargeTotalPriceView(title: "총쓴돈", price: "\(price)원")
+        VStack(alignment: .leading, spacing: 10) {
+            LargeTotalPriceView(title: "총쓴돈", price: price) {
+                store.send(.tappedTotalPrice)
+            }
             YBDividerView()
         }
     }
@@ -50,16 +52,22 @@ extension TotalPriceView {
             VStack(alignment: .leading, spacing: 8) {
                 LargeTotalPriceView(
                     title: viewStore.state == .individual ? "예산 잔액" : "공동경비 잔액",
-                    price: "\(remainBudgetPrice)원"
-                )
+                    price: remainBudgetPrice
+                ) {
+                    store.send(.tappedBubgetPrice)
+                }
                 YBDividerView()
                 HStack(spacing: 8) {
                     SmallTotalPriceView(
                         title: viewStore.state == .individual ? "총예산" : "모인돈",
-                        price: "\(totalBudgetPrice)"
+                        price: totalBudgetPrice
                     )
                     verticalDividerView
-                    SmallTotalPriceView(title: "총쓴돈", titleColor: .mainRed, price: "\(totalExpandPrice)")
+                    SmallTotalPriceView(
+                        title: "총쓴돈",
+                        titleColor: .mainRed,
+                        price: totalExpandPrice
+                    )
                 }
                 .frame(height: 24)
                 YBDividerView()
