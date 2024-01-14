@@ -21,18 +21,21 @@ struct ExpenditureView: View {
 
     var body: some View {
         GeometryReader { proxy in
-            ScrollView(showsIndicators: false) {
-                VStack {
-                    containerView
+            ZStack(alignment: .bottom) {
+                ScrollView(showsIndicators: false) {
+                    VStack {
+                        containerView
+                    }
+                    .background(YBColor.white.swiftUIColor)
+                    .cornerRadius(10)
+                    .padding(.top, 10)
+                    .padding(.horizontal, 18)
+                    .padding(.bottom, 18)
+                    .frame(minHeight: proxy.frame(in: .global).height)
                 }
-                .background(YBColor.white.swiftUIColor)
-                .cornerRadius(10)
-                .padding(.top, 10)
-                .padding(.horizontal, 18)
-                .padding(.bottom, 18)
-                .frame(minHeight: proxy.frame(in: .global).height)
+                .background(YBColor.gray1.swiftUIColor)
+                addButtonView
             }
-            .background(YBColor.gray1.swiftUIColor)
         }
     }
 }
@@ -64,5 +67,19 @@ extension ExpenditureView {
             .padding(.bottom, -20)
         }
         .padding(20)
+    }
+
+    var addButtonView: some View {
+        Button {
+
+        } label: {
+            Text("추가")
+                .foregroundColor(.ybColor(.white))
+                .font(.ybfont(.header2))
+                .frame(width: 100, height: 50)
+        }
+        .background(YBColor.gray6.swiftUIColor)
+        .cornerRadius(30)
+        .padding(.bottom, 33)
     }
 }
