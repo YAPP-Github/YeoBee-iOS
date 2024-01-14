@@ -9,6 +9,7 @@
 import Foundation
 
 public struct ExpenseItem: Equatable {
+    var expenseType: ExpenseType
     var title: String
     var price: Int
     var currency: Currency
@@ -17,14 +18,26 @@ public struct ExpenseItem: Equatable {
 }
 
 public struct Currency: Equatable {
-    var prefix: String
+    var suffix: String
     var exchangeRate: Double
 }
 
+public enum ExpenseType {
+    case expense
+    case income
+
+    var symbol: String {
+        switch self {
+        case .expense: "-"
+        case .income: "+"
+        }
+    }
+}
+
 extension Currency {
-    static let krw: Currency = .init(prefix: "원", exchangeRate: 0)
-    static let usd: Currency = .init(prefix: " USD", exchangeRate: 1315)
-    static let jpy: Currency = .init(prefix: " JPY", exchangeRate: 907.49)
-    static let eur: Currency = .init(prefix: " EUR", exchangeRate: 1440.32)
-    static let cny: Currency = .init(prefix: " CNY", exchangeRate: 182.83)
+    static let krw: Currency = .init(suffix: "원", exchangeRate: 0)
+    static let usd: Currency = .init(suffix: " USD", exchangeRate: 1315)
+    static let jpy: Currency = .init(suffix: " JPY", exchangeRate: 907.49)
+    static let eur: Currency = .init(suffix: " EUR", exchangeRate: 1440.32)
+    static let cny: Currency = .init(suffix: " CNY", exchangeRate: 182.83)
 }

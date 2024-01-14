@@ -61,6 +61,7 @@ extension ExpenditureView {
                     action: ExpenditureReducer.Action.expenditureList
                 )
             )
+            .padding(.bottom, -20)
         }
         .padding(20)
     }

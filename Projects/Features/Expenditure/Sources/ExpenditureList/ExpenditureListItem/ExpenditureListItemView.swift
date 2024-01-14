@@ -23,13 +23,19 @@ struct ExpenditureListItemView: View {
 extension ExpenditureListItemView {
 
     struct ViewState: Equatable {
-        var expenseItem: ExpenseItem
+        let expenseItem: ExpenseItem
         var exchangedPrice: Int? = nil
+        var price: String {
+            return expenseItem.expenseType.symbol
+            + " "
+            + expenseItem.price.formattedWithSeparator
+        }
+
 
         init(state: ExpenditureListItemReducer.State) {
             let expendseItem = state.expendseItem
             self.expenseItem = expendseItem
-            if expendseItem.currency.prefix != "원" {
+            if expendseItem.currency.suffix != "원" {
                 self.exchangedPrice = Int(Double(expendseItem.price) * expendseItem.currency.exchangeRate)
             }
         }
@@ -47,10 +53,23 @@ extension ExpenditureListItemView {
                             .font(.ybfont(.body2))
                             .lineLimit(1)
                         Spacer(minLength: 0)
-                        Text(viewStore.expenseItem.price.formattedWithSeparator + viewStore.expenseItem.currency.prefix)
-                            .foregroundColor(.ybColor(.black))
-                            .font(.ybfont(.body2))
-                            .lineLimit(1)
+                        HStack(spacing: 0) {
+                            Text(viewStore.price)
+                                .foregroundColor(
+                                    viewStore.expenseItem.expenseType == .expense 
+                                    ? .ybColor(.black)
+                                    : .ybColor(.mainGreen)
+                                )
+                                .font(.ybfont(.body2))
+                                .lineLimit(1)
+                            Text(viewStore.expenseItem.currency.suffix)
+                                .foregroundColor(
+                                    viewStore.expenseItem.expenseType == .expense 
+                                    ? .ybColor(.black)
+                                    : .ybColor(.mainGreen)
+                                )
+                                .font(.ybfont(.body2))
+                        }
                     }
                     if let exchangedPrice = viewStore.exchangedPrice {
                         Text(exchangedPrice.formattedWithSeparator + "원")
@@ -60,7 +79,6 @@ extension ExpenditureListItemView {
                     }
                 }
                 .padding(.top, 5)
-
             }
         }
     }
