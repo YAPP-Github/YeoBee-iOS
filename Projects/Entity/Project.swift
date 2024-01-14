@@ -14,9 +14,7 @@ let project = Project(
             name: "Entity",
             product: .framework,
             sources: "Sources/**",
-            dependencies: [
-                .moya
-            ]
+            dependencies: []
         )
     ],
     schemes: [
