@@ -19,7 +19,16 @@ public class BottomSheetViewController: DesignSystemBaseViewController {
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         return button
     }()
-    
+
+    public let toastButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("toast", for: .normal)
+        button.backgroundColor = .lightGray
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(toastButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -38,11 +47,18 @@ public class BottomSheetViewController: DesignSystemBaseViewController {
         super.setupView()
         
         stackView.addArrangedSubview(button)
+        stackView.addArrangedSubview(toastButton)
     }
 
     @objc
     func buttonTapped() {
         let vc = TestBottomSheetViewController()
         presentBottomSheet(presentedViewController: vc, height: 300)
+    }
+
+    @objc
+    func toastButtonTapped() {
+        let toast = Toast.text(icon: .complete, "최대 10명까지 추가할 수 있어요.")
+        toast.show()
     }
 }
