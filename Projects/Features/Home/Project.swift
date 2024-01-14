@@ -22,7 +22,9 @@ let project = Project(
                 .RxSwift,
                 .RxCocoa,
                 .RxGesture,
-                .reactorKit
+                .reactorKit,
+                .travelRegistration,
+                .trip
             ]
         ),
         Project.target(

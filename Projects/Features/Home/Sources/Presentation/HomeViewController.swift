@@ -11,6 +11,7 @@ import SnapKit
 import ReactorKit
 import RxSwift
 import RxCocoa
+import Coordinator
 
 enum HomeSection: CaseIterable {
     case header
@@ -29,6 +30,8 @@ public class HomeViewController: UIViewController {
     public var disposeBag = DisposeBag()
     private let reactor = HomeReactor()
     
+    public var coordinator: HomeCoordinator?
+
     // MARK: - Properties
     lazy var homeCollectionView = HomeCollectionView()
     
@@ -40,7 +43,6 @@ public class HomeViewController: UIViewController {
         setLayout()
         setDataSource()
         setCollectionViewDelegate()
-        setNavBar()
         bind(reactor: reactor)
         // 초기 더미 데이터
         reactor.configureSnapshot(comingData: TripDummy.coming.getTrips(), passedData: TripDummy.passed.getTrips())
@@ -105,10 +107,6 @@ public class HomeViewController: UIViewController {
     private func setCollectionViewDelegate() {
         homeCollectionView.delegate = self
     }
-    
-    private func setNavBar() {
-        navigationController?.isNavigationBarHidden = true
-    }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
@@ -138,9 +136,11 @@ extension HomeViewController: UICollectionViewDelegate {
         switch section {
         case .coming:
             let comingTrip = reactor.snapshot.itemIdentifiers(inSection: .coming)[indexPath.item]
+            self.coordinator?.trip()
             print("Selected Coming Trip: \(comingTrip) \(indexPath.row)")
         case .passed:
             let passedTrip = reactor.snapshot.itemIdentifiers(inSection: .passed)[indexPath.item]
+            self.coordinator?.trip()
             print("Selected Passed Trip: \(passedTrip) \(indexPath.row)")
         case .header:
             break
@@ -171,6 +171,6 @@ extension HomeViewController: HomeCollectionHeaderViewCellDelegate {
     }
     
     func addTripViewTapped() {
-        print("여행 등록하기로 이동")
+        coordinator?.travelRegisteration()
     }
 }

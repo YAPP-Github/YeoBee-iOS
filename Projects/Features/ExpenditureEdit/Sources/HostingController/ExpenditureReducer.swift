@@ -13,6 +13,7 @@ public enum ExpenditureTab: Equatable {
 }
 
 public struct ExpenditureReducer: Reducer {
+
     public struct State: Equatable {
         @BindingState var seletedExpenditureType: ExpenditureTab = .individual
         var expenditureEdit = ExpendpenditureEditReducer.State()

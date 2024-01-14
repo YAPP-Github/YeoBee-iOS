@@ -11,9 +11,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .white
-        window?.rootViewController = ExpenditureViewController()
+        let navigationController = UINavigationController()
+        let coordinator = RootCoordinator(navigationController: navigationController)
+        coordinator.start(animated: false)
+
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
 
         return true

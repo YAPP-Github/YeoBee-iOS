@@ -29,7 +29,9 @@ let project = Project(
                 .home,
                 .travelRegistration,
                 .onboarding,
-                .travleEdit
+                .travleEdit,
+                .expenditureEdit,
+                .trip
             ]
         ),
         Project.target(

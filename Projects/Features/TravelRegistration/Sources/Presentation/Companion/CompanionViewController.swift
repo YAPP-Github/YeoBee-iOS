@@ -27,8 +27,8 @@ public enum CompanionType: CaseIterable {
     case alone
 }
 
-public final class CompanionViewController: TravelRegistrationController {
-    
+public final class CompanionViewController: UIViewController {
+
     public var disposeBag = DisposeBag()
     private let reactor = CompanionReactor()
     var dataSource: UITableViewDiffableDataSource<CompanionSection, CompanionDataItem>!
@@ -56,6 +56,7 @@ public final class CompanionViewController: TravelRegistrationController {
     // MARK: - Life Cycles
     public override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         addViews()
         setLayouts()
         bind(reactor: reactor)
@@ -150,6 +151,10 @@ public final class CompanionViewController: TravelRegistrationController {
             companionTableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: true)
         }
     }
+
+    deinit {
+        print("deinit CompanionViewController")
+    }
 }
 
 // MARK: - CompanionTableViewCellDelegate
@@ -210,6 +215,7 @@ extension CompanionViewController: View {
             .map { $0.companionType }
             .observe(on: MainScheduler.instance)
             .bind { [weak self] companionType in
+
                 switch companionType {
                 case .none:
                     self?.addCompanionView.alpha = 0
@@ -221,7 +227,8 @@ extension CompanionViewController: View {
                     self?.companionButton.setAppearance(appearance: .select)
                     self?.aloneButton.setTitle("혼자가요", for: .normal)
                     self?.aloneButton.setAppearance(appearance: .selectDisable)
-                    if reactor.currentState.companions.isEmpty {
+                    if let reactor = self?.reactor,
+                       reactor.currentState.companions.isEmpty {
                         self?.nextButton.setTitle("다음으로", for: .normal)
                         self?.nextButton.isEnabled = false
                         self?.nextButton.setAppearance(appearance: .defaultDisable)
