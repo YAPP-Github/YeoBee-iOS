@@ -58,6 +58,10 @@ extension ExpenditureView {
                 )
             )
             .padding(.bottom, 26)
+            FilterButtonView(title: "전체내역") {
+                store.send(.tappedFilterButton)
+            }
+            .padding(.bottom, 20)
             ExpenditureListView(
                 store: store.scope(
                     state: \.expenditureList,
@@ -71,7 +75,7 @@ extension ExpenditureView {
 
     var addButtonView: some View {
         Button {
-
+            store.send(.tappedAddButton)
         } label: {
             Text("추가")
                 .foregroundColor(.ybColor(.white))

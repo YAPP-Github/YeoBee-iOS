@@ -11,13 +11,27 @@ import DesignSystem
 
 struct FilterButtonView: View {
     let title: String
+    let action: () -> Void
+
+    init(title: String, action: @escaping () -> Void) {
+        self.title = title
+        self.action = action
+    }
 
     var body: some View {
         HStack {
-            Text(title)
-                .foregroundColor(.ybColor(.gray5))
-                .font(.ybfont(.body3))
-            // TODO: icon
+            Button {
+                action()
+            } label: {
+                HStack(spacing: 6) {
+                    Text(title)
+                        .foregroundColor(.ybColor(.gray5))
+                        .font(.ybfont(.body3))
+                    DesignSystemAsset.Icons.dropdown.swiftUIImage
+                        .frame(width: 3, height: 7)
+                }
+            }
+            Spacer()
         }
     }
 }

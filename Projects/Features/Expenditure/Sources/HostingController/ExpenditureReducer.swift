@@ -33,6 +33,7 @@ public struct ExpenditureReducer: Reducer {
         case tripDate(TripDateReducer.Action)
         case expenditureList(ExpenditureListReducer.Action)
         case tappedAddButton
+        case tappedFilterButton
     }
 
     public var body: some ReducerOf<ExpenditureReducer> {
@@ -54,6 +55,8 @@ public struct ExpenditureReducer: Reducer {
                     .init(expenseType: .expense, title: "여비팀화이팅", price: 87000, currency: .eur, category: .etc),
                 ])))
             case .tappedAddButton:
+                return .none
+            case .tappedFilterButton:
                 return .none
             default:
                 return .none

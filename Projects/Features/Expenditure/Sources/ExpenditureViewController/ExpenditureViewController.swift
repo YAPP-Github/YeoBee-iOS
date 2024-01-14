@@ -57,6 +57,7 @@ public final class ExpenditureViewController: UIViewController {
     func setupViews() {
         title = "일본 여행"
         navigationController?.tabBarItem.title = "가계부"
+        navigationController?.tabBarItem.image = DesignSystemAsset.Icons.accountBook.image
         navigationController?.toolbar.barTintColor = YBColor.black.color
         view.backgroundColor = .ybColor(.gray1)
     }
