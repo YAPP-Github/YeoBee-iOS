@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import ReactorKit
 import SnapKit
 import RxSwift
 import RxCocoa
@@ -16,8 +17,14 @@ public final class ChangeCompanionNameViewController: TravelRegistrationControll
     
     public var disposeBag = DisposeBag()
     private let reactor: ChangeCompanionNameReactor
-    // MARK: - Properties
     
+    // MARK: - Properties
+    private let titleLabel = YBLabel(text: "이름 변경", font: .header2, textColor: .black)
+    private let nameTextField = YBTextField(backgroundColor: .gray1)
+    private let effectivenessLabel = YBLabel(text: "",font: .body4, textColor: .mainRed)
+    private var modifyButton = YBTextButton(text: "수정하기",
+                                          appearance: .defaultDisable,
+                                          size: .medium)
     
     // MARK: - Life Cycles
     init(reactor: ChangeCompanionNameReactor) {
@@ -31,14 +38,24 @@ public final class ChangeCompanionNameViewController: TravelRegistrationControll
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        setView()
         addViews()
         setLayouts()
+        bindKeyboardNotification()
+        bind(reactor: reactor)
     }
     
     // MARK: - Set UI
+    private func setView() {
+        title  = "동행자 이름 수정"
+    }
+    
     private func addViews() {
         [
-            
+            titleLabel,
+            nameTextField,
+            effectivenessLabel,
+            modifyButton
         ].forEach {
             view.addSubview($0)
         }
@@ -46,6 +63,82 @@ public final class ChangeCompanionNameViewController: TravelRegistrationControll
     }
     
     private func setLayouts() {
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(24)
+            make.leading.equalToSuperview().inset(24)
+        }
+        nameTextField.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).inset(-14)
+            make.leading.equalTo(titleLabel.snp.leading)
+            make.trailing.equalToSuperview().inset(24)
+        }
+        effectivenessLabel.snp.makeConstraints { make in
+            make.top.equalTo(nameTextField.snp.bottom).inset(-10)
+            make.leading.equalTo(nameTextField.snp.leading)
+            make.trailing.equalTo(nameTextField.snp.trailing)
+        }
+        modifyButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.leading.trailing.equalToSuperview().inset(24)
+        }
+    }
+    
+    
+}
+
+// MARK: - Bind
+extension ChangeCompanionNameViewController: View {
+    public func bind(reactor: ChangeCompanionNameReactor) {
+        bindAction(reactor: reactor)
+        bindState(reactor: reactor)
+    }
+    
+    func bindAction(reactor: ChangeCompanionNameReactor) {
         
+    }
+    
+    func bindState(reactor: ChangeCompanionNameReactor) {
+        
+    }
+}
+
+// MARK: - Keyboard 처리
+extension ChangeCompanionNameViewController {
+    private func bindKeyboardNotification() {
+        NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillShowNotification)
+            .withUnretained(self)
+            .bind { [weak self] (this, notification) in
+                if let userInfo = notification.userInfo,
+                   let keyboardFrameValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+                    let keyboardFrame = keyboardFrameValue.cgRectValue
+                    let keyboardHeight = keyboardFrame.size.height
+                    self?.changeModifyButtonLayout(keyboardHeight: keyboardHeight)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillHideNotification)
+            .withUnretained(self)
+            .bind { [weak self] _ in
+                self?.changeModifyButtonLayout(keyboardHeight: 0)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func changeModifyButtonLayout(keyboardHeight: CGFloat) {
+        UIView.animate(withDuration: 0) {
+            if keyboardHeight == 0 {
+                self.modifyButton.snp.updateConstraints { make in
+                    make.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(10)
+                }
+            } else {
+                self.modifyButton.snp.updateConstraints { make in
+                    make.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(keyboardHeight)
+                }
+            }
+        }
+        self.view.layoutIfNeeded()
     }
 }
