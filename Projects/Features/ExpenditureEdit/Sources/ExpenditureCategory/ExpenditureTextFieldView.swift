@@ -26,15 +26,15 @@ struct ExpenditureTextFieldView: View {
 
     var body: some View {
         VStack {
-            TextField("", text: $text)
-                .focused(focus)
-                .foregroundColor(.ybColor(.black))
-                .font(.ybfont(.body1))
-                .overlay(alignment: .leading) {
-                    placeholderView
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 13)
+            ZStack(alignment: .leading) {
+                placeholderView
+                TextField("", text: $text)
+                    .focused(focus)
+                    .foregroundColor(.ybColor(.black))
+                    .font(.ybfont(.body1))
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 13)
         }
         .background(YBColor.white.swiftUIColor)
         .cornerRadius(10)

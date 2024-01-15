@@ -55,6 +55,7 @@ public struct ExpenditureReducer: Reducer {
                     .init(expenseType: .expense, title: "여비팀화이팅", price: 87000, currency: .eur, category: .etc),
                 ])))
             case .tappedAddButton:
+                cooridinator.expenditureEdit()
                 return .none
             case .tappedFilterButton:
                 return .none

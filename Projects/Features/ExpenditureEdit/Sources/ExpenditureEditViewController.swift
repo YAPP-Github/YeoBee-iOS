@@ -12,20 +12,25 @@ import ComposableArchitecture
 
 public final class ExpenditureEditViewController: UIViewController {
 
+    let coordinator: ExpenditureEditCoordinator
+
     // MARK: View
 
-    private let expenditureHostingController = ExpenditureHostingController(
-        rootView: ExpenditureView(
-            store: .init(
-                initialState: .init(seletedExpenditureType: .shared),
-                reducer: {
-                    ExpenditureReducer()
-                }
+    private let expenditureHostingController: ExpenditureAddHostingController
+
+    public init(coordinator: ExpenditureEditCoordinator) {
+
+        self.coordinator = coordinator
+        self.expenditureHostingController = ExpenditureAddHostingController(
+            rootView: ExpenditureAddView(
+                store: .init(
+                    initialState: .init(seletedExpenditureType: .shared),
+                    reducer: {
+                        ExpenditureReducer()
+                    }
+                )
             )
         )
-    )
-
-    public init() {
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -34,6 +39,8 @@ public final class ExpenditureEditViewController: UIViewController {
 
         setupViews()
         setLayouts()
+        setNavigationBar()
+        hideKeyboardWhenTappedAround()
     }
 
     required convenience init?(coder aDecoder: NSCoder) {
@@ -50,8 +57,29 @@ public final class ExpenditureEditViewController: UIViewController {
 
         expenditureHostingController.view.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.bottom.equalTo(view.snp.bottom)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.horizontalEdges.equalToSuperview()
         }
+    }
+
+    func setNavigationBar() {
+        let backImage = DesignSystemAsset.Icons.delete.image
+            .withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
+        let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+
+    @objc func backButtonTapped() {
+        coordinator.coordinatorDidFinish()
+    }
+
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc func dismissKeyboard() {
+        navigationController?.view.endEditing(true)
     }
 }

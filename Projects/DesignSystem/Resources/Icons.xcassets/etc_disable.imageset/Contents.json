@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "etc_disable.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

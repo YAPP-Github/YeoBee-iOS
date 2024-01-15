@@ -1,19 +1,19 @@
 //
-//  ExpendpenditureEditView.swift
-//  Expenditure
+//  ExpenditureBudgetEditView.swift
+//  ExpenditureEdit
 //
-//  Created Hoyoung Lee on 1/6/24.
+//  Created Hoyoung Lee on 1/15/24.
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
 
-struct ExpendpenditureEditView: View {
-    typealias State = ExpendpenditureEditReducer.State
-    typealias Action = ExpendpenditureEditReducer.Action
+struct ExpenditureBudgetEditView: View {
+    typealias State = ExpenditureBudgetEditReducer.State
+    typealias Action = ExpenditureBudgetEditReducer.Action
 
-    let store: StoreOf<ExpendpenditureEditReducer>
+    let store: StoreOf<ExpenditureBudgetEditReducer>
 
     var body: some View {
         GeometryReader { proxy in
@@ -30,7 +30,7 @@ struct ExpendpenditureEditView: View {
     }
 }
 
-extension ExpendpenditureEditView {
+extension ExpenditureBudgetEditView {
     var containerView: some View {
         VStack(spacing: 20) {
             ExpenditureInputView(
@@ -45,10 +45,10 @@ extension ExpendpenditureEditView {
                     action: Action.expenditurePayment
                 )
             )
-            ExpenditureCategoryView(
+            ExpenditureBudgetContentView(
                 store: store.scope(
-                    state: \.expenditureCategory,
-                    action: Action.expenditureCategory
+                    state: \.expenditureContent,
+                    action: Action.expenditureContent
                 )
             )
             Spacer()

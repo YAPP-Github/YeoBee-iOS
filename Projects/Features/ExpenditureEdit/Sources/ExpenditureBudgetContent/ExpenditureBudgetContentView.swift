@@ -1,19 +1,19 @@
 //
-//  ExpenditureCategoryView.swift
-//  Expenditure
+//  ExpenditureBudgetContentView.swift
+//  ExpenditureEdit
 //
-//  Created Hoyoung Lee on 1/6/24.
+//  Created Hoyoung Lee on 1/15/24.
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
 
-struct ExpenditureCategoryView: View {
-    typealias State = ExpenditureCategoryReducer.State
-    typealias Action = ExpenditureCategoryReducer.Action
+struct ExpenditureBudgetContentView: View {
+    typealias State = ExpenditureBudgetContentReducer.State
+    typealias Action = ExpenditureBudgetContentReducer.Action
 
-    let store: StoreOf<ExpenditureCategoryReducer>
+    let store: StoreOf<ExpenditureBudgetContentReducer>
 
     @FocusState var focus: Bool
 
@@ -22,37 +22,15 @@ struct ExpenditureCategoryView: View {
     }
 }
 
-extension ExpenditureCategoryView {
+extension ExpenditureBudgetContentView {
 
     @MainActor
     var containerView: some View {
         VStack(alignment: .leading, spacing: 16) {
-            HStack(spacing: 0) {
-                Text("카테고리")
-                    .foregroundColor(.ybColor(.black))
-                    .font(.ybfont(.title1))
-                Text("*")
-                    .foregroundColor(.ybColor(.mainGreen))
-                    .font(.ybfont(.body3))
-            }
-            .padding(.leading, 24)
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 20) {
-                    ForEachStore(
-                        store.scope(
-                            state: \.categoryItems,
-                            action: ExpenditureCategoryReducer.Action.category
-                        )
-                    ) { store in
-                        ExpenditureCategoryItemView(store: store)
-                    }
-                }
-            }
-            .padding(.leading, 24)
             WithViewStore(store, observe: { $0 }) { viewStore in
                 HStack(alignment: .top, spacing: 10) {
                     HStack(spacing: 0) {
-                        Text("지출항목")
+                        Text("항목입력")
                             .foregroundColor(.ybColor(.black))
                             .font(.ybfont(.title1))
                         Text("*")
@@ -79,3 +57,4 @@ extension ExpenditureCategoryView {
 
     }
 }
+
