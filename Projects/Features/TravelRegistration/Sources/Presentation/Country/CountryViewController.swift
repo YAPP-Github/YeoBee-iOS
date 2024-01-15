@@ -50,6 +50,7 @@ public final class CountryViewController: UIViewController {
         setLayouts()
         setDelegate()
         setDataSource()
+        hideKeyboardWhenTappedAround()
         bind(reactor: reactor)
         reactor.viewDidLoad()
     }
@@ -181,6 +182,16 @@ public final class CountryViewController: UIViewController {
         snapshot.appendItems(dc.southAmerica.map { .southAmerica($0) }, toSection: .southAmerica)
         snapshot.appendItems(dc.africa.map { .africa($0) }, toSection: .africa)
         dataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        navigationController?.view.endEditing(true)
     }
 
     deinit {

@@ -13,7 +13,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-public final class ChangeCompanionNameViewController: TravelRegistrationController {
+public final class ChangeCompanionNameViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
     private let reactor: ChangeCompanionNameReactor
@@ -38,6 +38,7 @@ public final class ChangeCompanionNameViewController: TravelRegistrationControll
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         setView()
         addViews()
         setLayouts()
@@ -82,8 +83,6 @@ public final class ChangeCompanionNameViewController: TravelRegistrationControll
             make.leading.trailing.equalToSuperview().inset(24)
         }
     }
-    
-    
 }
 
 // MARK: - Bind
@@ -94,11 +93,44 @@ extension ChangeCompanionNameViewController: View {
     }
     
     func bindAction(reactor: ChangeCompanionNameReactor) {
-        
+        nameTextField.rx.text
+            .map { Reactor.Action.nameTextFieldText(text: $0 ?? "") }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     func bindState(reactor: ChangeCompanionNameReactor) {
+        reactor.state
+            .map { $0.limitedString }
+            .bind(to: nameTextField.rx.text )
+            .disposed(by: disposeBag)
         
+        reactor.state
+            .map { $0.effectivenessType }
+            .bind { [weak self] type in
+                switch type {
+                case .none:
+                    self?.effectivenessLabel.text = ""
+                    self?.modifyButton.isEnabled = false
+                    self?.modifyButton.setTitle("수정하기", for: .normal)
+                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
+                case .notValid:
+                    self?.effectivenessLabel.text = "한글/영문 포함 5자까지 입력 가능해요."
+                    self?.modifyButton.isEnabled = false
+                    self?.modifyButton.setTitle("수정하기", for: .normal)
+                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
+                case .containSpecialCharacters:
+                    self?.effectivenessLabel.text = "특수문자는 사용이 불가해요."
+                    self?.modifyButton.isEnabled = false
+                    self?.modifyButton.setTitle("수정하기", for: .normal)
+                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
+                case .valid:
+                    self?.effectivenessLabel.text = ""
+                    self?.modifyButton.isEnabled = true
+                    self?.modifyButton.setTitle("수정하기", for: .normal)
+                    self?.modifyButton.setAppearance(appearance: .default)
+                }
+            }.disposed(by: disposeBag)
     }
 }
 
@@ -125,6 +157,8 @@ extension ChangeCompanionNameViewController {
                 self?.changeModifyButtonLayout(keyboardHeight: 0)
             }
             .disposed(by: disposeBag)
+        
+        hideKeyboardWhenTappedAround()
     }
     
     private func changeModifyButtonLayout(keyboardHeight: CGFloat) {
@@ -140,5 +174,15 @@ extension ChangeCompanionNameViewController {
             }
         }
         self.view.layoutIfNeeded()
+    }
+    
+    private func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        navigationController?.view.endEditing(true)
     }
 }
