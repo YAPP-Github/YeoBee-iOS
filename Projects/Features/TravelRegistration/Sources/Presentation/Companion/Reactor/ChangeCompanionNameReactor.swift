@@ -23,14 +23,15 @@ public final class ChangeCompanionNameReactor: Reactor {
     
     public struct State {
         var companion: Companion
+        var index: IndexPath
         var effectivenessType: EffectivenessType = .none
         var limitedString: String = ""
     }
     
     public let initialState: State
     
-    init(companion: Companion) {
-        self.initialState = .init(companion: companion)
+    init(companion: Companion, index: IndexPath) {
+        self.initialState = .init(companion: companion, index: index)
     }
     
     // MARK: - Mutate
@@ -50,11 +51,11 @@ public final class ChangeCompanionNameReactor: Reactor {
             let limitedString = textFieldLimitedString(text: text)
             newState.limitedString = limitedString
             
-            if containsSpecialCharacters(text) {
+            if containsSpecialCharacters(limitedString) {
                 newState.effectivenessType = .containSpecialCharacters
-            } else if !isValidName(text) {
+            } else if !isValidName(limitedString) {
                 newState.effectivenessType = .notValid
-            } else if text.isEmpty {
+            } else if limitedString.isEmpty {
                 newState.effectivenessType = .none
             } else {
                 newState.effectivenessType = .valid

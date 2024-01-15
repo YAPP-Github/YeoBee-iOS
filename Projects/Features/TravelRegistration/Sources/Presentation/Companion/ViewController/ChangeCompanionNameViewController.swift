@@ -13,10 +13,15 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
+protocol ChangeCompanionNameViewControllerDelegate: AnyObject {
+    func modifyCompanionName(companion: Companion, index: IndexPath)
+}
+
 public final class ChangeCompanionNameViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
     private let reactor: ChangeCompanionNameReactor
+    weak var delegate: ChangeCompanionNameViewControllerDelegate?
     
     // MARK: - Properties
     private let titleLabel = YBLabel(text: "이름 변경", font: .header2, textColor: .black)
@@ -97,6 +102,16 @@ extension ChangeCompanionNameViewController: View {
             .map { Reactor.Action.nameTextFieldText(text: $0 ?? "") }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        modifyButton.rx.tap
+            .bind { [weak self] _ in
+                if let name = self?.reactor.currentState.limitedString,
+                   let index = self?.reactor.currentState.index {
+                    let modifiedCompanion = Companion(name: name, imageURL: "")
+                    self?.delegate?.modifyCompanionName(companion: modifiedCompanion, index: index)
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            }.disposed(by: disposeBag)
     }
     
     func bindState(reactor: ChangeCompanionNameReactor) {
