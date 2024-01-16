@@ -10,6 +10,7 @@ extension Project {
     public static var infoPlist: [String: InfoPlist.Value] {
         [
             "CFBundleShortVersionString": "1.0",
+            "CFBundleIconName": "AppIcon",
             "CFBundleVersion": "1",
             "UIMainStoryboardFile": "",
             "UILaunchStoryboardName": "LaunchScreen"
@@ -22,7 +23,8 @@ extension Project {
         product: Product,
         sources: SourceFilesList,
         resources: ResourceFileElements? = nil,
-        dependencies: [TargetDependency] = []
+        dependencies: [TargetDependency] = [],
+        settings: Settings? = nil
     ) -> Target {
         return Target(
             name: name,
@@ -34,16 +36,7 @@ extension Project {
             sources: sources,
             resources: resources,
             dependencies: dependencies,
-            settings: .settings(configurations: [
-                .debug(name: "Debug", settings: [
-                    "GCC_PREPROCESSOR_DEFINITIONS": ["DEBUG=1", "OTHER_MACRO=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"],
-                ]),
-                .release(name: "Release", settings: [
-                    "GCC_PREPROCESSOR_DEFINITIONS": ["RELEASE=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"],
-                ])
-            
-            ])
-        )
+            settings: settings)
     }
     
     /// Helper function to create the Project for this ExampleApp
