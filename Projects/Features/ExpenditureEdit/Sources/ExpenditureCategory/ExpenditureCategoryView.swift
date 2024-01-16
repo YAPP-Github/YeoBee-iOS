@@ -51,9 +51,14 @@ extension ExpenditureCategoryView {
             .padding(.leading, 24)
             WithViewStore(store, observe: { $0 }) { viewStore in
                 HStack(alignment: .top, spacing: 10) {
-                    Text("지출항목")
-                        .foregroundColor(.ybColor(.black))
-                        .font(.ybfont(.title1))
+                    HStack(spacing: 0) {
+                        Text("지출항목")
+                            .foregroundColor(.ybColor(.black))
+                            .font(.ybfont(.title1))
+                        Text("*")
+                            .foregroundColor(.ybColor(.mainGreen))
+                            .font(.ybfont(.body3))
+                    }
                         .padding(.top, 12)
                     Spacer()
                     VStack(alignment: .leading) {

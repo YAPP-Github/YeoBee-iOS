@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 
 protocol CompanionTableViewCellDelegate: AnyObject {
+    func changeCompanionName(companion: Companion)
     func deleteCompanion(companion: Companion)
 }
 
@@ -114,6 +115,13 @@ class CompanionTableViewCell: UITableViewCell {
     }
     
     private func bind() {
+        pencilButton.rx.tap
+            .bind { [weak self] _ in
+                if let companion = self?.companion {
+                    self?.delegate?.changeCompanionName(companion: companion)
+                }
+            }.disposed(by: disposeBag)
+        
         deleteButton.rx.tap
             .bind { [weak self] _ in
                 if let companion = self?.companion {

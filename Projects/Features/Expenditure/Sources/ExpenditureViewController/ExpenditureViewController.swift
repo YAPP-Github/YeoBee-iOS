@@ -57,12 +57,14 @@ public final class ExpenditureViewController: UIViewController {
     func setupViews() {
         title = "일본 여행"
         navigationController?.tabBarItem.title = "가계부"
+        navigationController?.tabBarItem.image = DesignSystemAsset.Icons.accountBook.image
         navigationController?.toolbar.barTintColor = YBColor.black.color
         view.backgroundColor = .ybColor(.gray1)
     }
 
     func setNavigationBar() {
-        let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let backImage = DesignSystemAsset.Icons.home.image
+            .withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
     }

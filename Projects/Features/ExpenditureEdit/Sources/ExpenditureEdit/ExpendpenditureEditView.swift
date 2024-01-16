@@ -16,40 +16,16 @@ struct ExpendpenditureEditView: View {
     let store: StoreOf<ExpendpenditureEditReducer>
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            ScrollViewReader { reader in
+        GeometryReader { proxy in
+            ZStack(alignment: .bottom) {
                 WithViewStore(store, observe: \.isFocused) { viewstore in
                     ScrollView(showsIndicators: false) {
                         containerView
                             .padding(.top, 10)
+                            .frame(minHeight: proxy.frame(in: .global).height)
                     }
-                    .ignoresSafeArea(.keyboard)
-                    .onChange(of: viewstore.state, perform: { newValue in
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
-                            withAnimation {
-                                reader.scrollTo("expenditureCategoryType", anchor: .center)
-                            }
-                        }
-                    })
                 }
             }
-            Button {
-
-            } label: {
-                Text("등록하기")
-                    .foregroundColor(.ybColor(.gray5))
-                    .font(.ybfont(.title1))
-                    .frame(height: 54)
-                    .frame(maxWidth: .infinity)
-            }
-            .background(YBColor.gray3.swiftUIColor)
-            .cornerRadius(10)
-            .padding(.horizontal, 24)
-            .padding(.top, 16)
-            .padding(.bottom, 4)
-            .background(YBColor.white.swiftUIColor)
-            .ignoresSafeArea()
-            .ignoresSafeArea(.keyboard)
         }
     }
 }
@@ -75,10 +51,22 @@ extension ExpendpenditureEditView {
                     action: Action.expenditureCategory
                 )
             )
-            Color.clear
-                .frame(height: 200)
-
             Spacer()
+            Button {
+
+            } label: {
+                Text("등록하기")
+                    .foregroundColor(.ybColor(.gray5))
+                    .font(.ybfont(.title1))
+                    .frame(height: 54)
+                    .frame(maxWidth: .infinity)
+            }
+            .background(YBColor.gray3.swiftUIColor)
+            .cornerRadius(10)
+            .padding(.horizontal, 24)
+            .padding(.top, 16)
+            .padding(.bottom, 4)
+            .ignoresSafeArea(.keyboard, edges: .bottom)
         }
         .frame(maxWidth: .infinity)
         .background(YBColor.gray1.swiftUIColor)

@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 import Coordinator
 
+import ExpenditureEdit
+
 final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInterface {
     public var viewControllerRef: UIViewController?
     public var childCoordinators = [Coordinator]()
@@ -40,7 +42,10 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
 
 extension ExpenditureCoordinator {
 
-    public func test() {
-
+    public func expenditureEdit() {
+        let expenditureEditCoordinator = ExpenditureEditCoordinator(navigationController: expenditureNavigationController!)
+        expenditureEditCoordinator.parent = self
+        addChild(expenditureEditCoordinator)
+        expenditureEditCoordinator.start(animated: true)
     }
 }

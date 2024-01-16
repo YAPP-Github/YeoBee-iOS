@@ -32,7 +32,10 @@ let project = Project(
                 .travleEdit,
                 .expenditureEdit,
                 .trip
-            ]
+            ],
+            settings: .settings(base: [
+                "ASSETCATALOG_COMPILER_APPICON_NAME":"AppIcon",
+              ])
         ),
         Project.target(
             name: "YeoBeeTests",

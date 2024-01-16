@@ -32,7 +32,7 @@ struct ExpenditureToggleView: View {
                         Spacer(minLength: 0)
                     }
                 }
-                .animation(.default, value: expenditureTab)
+                .animation(.spring, value: expenditureTab)
                 HStack(spacing: 0) {
                     Button {
                         withAnimation {

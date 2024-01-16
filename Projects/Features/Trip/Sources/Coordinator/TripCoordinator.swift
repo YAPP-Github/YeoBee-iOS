@@ -36,6 +36,7 @@ final public class TripCoordinator: TripCoordinatorInterface {
         tabBarController?.modalPresentationStyle = .overFullScreen
 
         UITabBar.appearance().tintColor = .black
+        UITabBar.appearance().backgroundColor = .white
         navigationController.present(tabBarController!, animated: true)
     }
 

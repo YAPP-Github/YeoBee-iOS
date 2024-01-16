@@ -47,8 +47,7 @@ extension ExpenditureCategoryItemView {
                             .font(.ybfont(.body2))
                     } else {
                         viewStore.category.image
-                            .renderingMode(.template)
-                            .foregroundColor(YBColor.gray2.swiftUIColor)
+                            .resizable()
                             .frame(width: 41, height: 41)
                         Text(viewStore.category.text)
                             .foregroundColor(.ybColor(.gray4))
@@ -84,6 +83,19 @@ extension Category {
         case .stay: return DesignSystemAsset.Icons.stay.swiftUIImage
         case .transition: return DesignSystemAsset.Icons.transition.swiftUIImage
         case .travel: return DesignSystemAsset.Icons.travel.swiftUIImage
+        }
+    }
+
+    var disableImage: Image {
+        switch self {
+        case .activity: return DesignSystemAsset.Icons.activityDisable.swiftUIImage
+        case .air: return DesignSystemAsset.Icons.airDisable.swiftUIImage
+        case .eating: return DesignSystemAsset.Icons.eatingDisable.swiftUIImage
+        case .etc: return DesignSystemAsset.Icons.etcDisable.swiftUIImage
+        case .shopping: return DesignSystemAsset.Icons.shoppingDisable.swiftUIImage
+        case .stay: return DesignSystemAsset.Icons.stayDisable.swiftUIImage
+        case .transition: return DesignSystemAsset.Icons.transitionDisable.swiftUIImage
+        case .travel: return DesignSystemAsset.Icons.travelDisable.swiftUIImage
         }
     }
 }

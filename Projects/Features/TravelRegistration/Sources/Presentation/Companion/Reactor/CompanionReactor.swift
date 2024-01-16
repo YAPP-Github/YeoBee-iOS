@@ -17,12 +17,14 @@ public final class CompanionReactor: Reactor {
         case companionType(CompanionType)
         case addCompanion
         case deleteCompanion(Companion)
+        case updateCompanion(Companion, IndexPath)
     }
     
     public enum Mutation {
         case companionType(CompanionType)
         case addCompanion
         case deleteCompanion(Companion)
+        case updateCompanion(Companion, IndexPath)
     }
     
     public struct State {
@@ -41,6 +43,8 @@ public final class CompanionReactor: Reactor {
             return .just(.addCompanion)
         case .deleteCompanion(let companion):
             return .just(.deleteCompanion(companion))
+        case .updateCompanion(let companion, let index):
+            return .just(.updateCompanion(companion, index))
         }
     }
     
@@ -61,6 +65,8 @@ public final class CompanionReactor: Reactor {
             if let companionsIndex = newState.companions.firstIndex(where: { $0 == companion }) {
                 newState.companions.remove(at: companionsIndex)
             }
+        case .updateCompanion(let companion, let index):
+            newState.companions[index.row] = companion
         }
         
         return newState

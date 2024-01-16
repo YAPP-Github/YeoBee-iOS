@@ -17,6 +17,7 @@ public struct ExpenditureReducer: Reducer {
     public struct State: Equatable {
         @BindingState var seletedExpenditureType: ExpenditureTab = .individual
         var expenditureEdit = ExpendpenditureEditReducer.State()
+        var expenditureBudgetEdit = ExpenditureBudgetEditReducer.State()
 
         public init(seletedExpenditureType: ExpenditureTab) {
             self.seletedExpenditureType = seletedExpenditureType
@@ -26,6 +27,7 @@ public struct ExpenditureReducer: Reducer {
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<ExpenditureReducer.State>)
         case expenditureEdit(ExpendpenditureEditReducer.Action)
+        case expenditureBudgetEdit(ExpenditureBudgetEditReducer.Action)
     }
 
     public var body: some ReducerOf<ExpenditureReducer> {
@@ -39,6 +41,10 @@ public struct ExpenditureReducer: Reducer {
 
         Scope(state: \.expenditureEdit, action: /Action.expenditureEdit) {
             ExpendpenditureEditReducer()
+        }
+
+        Scope(state: \.expenditureBudgetEdit, action: /Action.expenditureBudgetEdit) {
+            ExpenditureBudgetEditReducer()
         }
     }
 }

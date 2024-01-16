@@ -1,9 +1,8 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
-      "platform" : "ios",
-      "size" : "1024x1024"
+      "filename" : "shopping_disable.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {

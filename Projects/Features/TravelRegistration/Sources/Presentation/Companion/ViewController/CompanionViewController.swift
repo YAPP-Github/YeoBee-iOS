@@ -159,6 +159,15 @@ public final class CompanionViewController: UIViewController {
 
 // MARK: - CompanionTableViewCellDelegate
 extension CompanionViewController: CompanionTableViewCellDelegate {
+    func changeCompanionName(companion: Companion) {
+        guard let indexPath = dataSource.indexPath(for: .main(companion)) else { return }
+        
+        let changeCompanionNameReactor = ChangeCompanionNameReactor(companion: companion, index: indexPath)
+        let changeCompanionNameVC = ChangeCompanionNameViewController(reactor: changeCompanionNameReactor)
+        changeCompanionNameVC.delegate = self
+        self.navigationController?.pushViewController(changeCompanionNameVC, animated: true)
+    }
+    
     func deleteCompanion(companion: Companion) {
         Observable.just(companion)
             .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
@@ -245,5 +254,12 @@ extension CompanionViewController: View {
                     self?.nextButton.setAppearance(appearance: .default)
                 }
             }.disposed(by: disposeBag)
+    }
+}
+
+// MARK: - ChangeCompanionNameViewControllerDelegate
+extension CompanionViewController: ChangeCompanionNameViewControllerDelegate {
+    func modifyCompanionName(companion: Companion, index: IndexPath) {
+        reactor.action.onNext(.updateCompanion(companion, index))
     }
 }

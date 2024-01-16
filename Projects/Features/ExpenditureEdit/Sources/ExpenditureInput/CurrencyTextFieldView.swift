@@ -22,14 +22,14 @@ struct CurrencyTextFieldView: View {
     }
 
     var body: some View {
-        TextField("", text: $text)
-            .keyboardType(.decimalPad)
-            .focused($isFocused)
-            .foregroundColor(.ybColor(.black))
-            .font(.ybfont(.header1))
-            .overlay(alignment: .leading) {
-                placeholderView
-            }
+        ZStack(alignment: .leading) {
+            placeholderView
+            TextField("", text: $text)
+                .keyboardType(.decimalPad)
+                .focused($isFocused)
+                .foregroundColor(.ybColor(.black))
+                .font(.ybfont(.header1))
+        }
     }
 }
 

@@ -9,10 +9,11 @@
 import Foundation
 
 public struct Companion: Hashable {
+    var uuid = UUID()
     var name: String
     var imageURL: String
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
+        hasher.combine(uuid)
     }
 }

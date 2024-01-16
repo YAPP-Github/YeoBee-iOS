@@ -10,10 +10,10 @@ import UIKit
 import ComposableArchitecture
 import DesignSystem
 
-final class ExpenditureHostingController: UIHostingController<ExpenditureView> {
+final class ExpenditureAddHostingController: UIHostingController<ExpenditureAddView> {
 }
 
-struct ExpenditureView: View {
+struct ExpenditureAddView: View {
     typealias State = ExpenditureReducer.State
     typealias Action = ExpenditureReducer.Action
 
@@ -24,7 +24,7 @@ struct ExpenditureView: View {
     }
 }
 
-extension ExpenditureView {
+extension ExpenditureAddView {
 
     @MainActor
     var containerView: some View {
@@ -41,16 +41,16 @@ extension ExpenditureView {
                        )
                     )
                     .tag(ExpenditureTab.shared)
-                    ExpendpenditureEditView(
+                    ExpenditureBudgetEditView(
                        store: store.scope(
-                        state: \.expenditureEdit,
-                        action: ExpenditureReducer.Action.expenditureEdit
+                        state: \.expenditureBudgetEdit,
+                        action: ExpenditureReducer.Action.expenditureBudgetEdit
                        )
                     )
                     .tag(ExpenditureTab.individual)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .keyboardAdaptive()
+                .ignoresSafeArea(.keyboard, edges: .bottom)
             }
             .background(YBColor.gray1.swiftUIColor, ignoresSafeAreaEdges: [.all])
         }
