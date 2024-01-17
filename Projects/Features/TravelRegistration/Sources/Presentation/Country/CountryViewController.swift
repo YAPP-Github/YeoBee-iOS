@@ -82,7 +82,7 @@ public final class CountryViewController: UIViewController {
         horizontalCountryView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(76)
+            make.height.equalTo(80)
         }
         nextButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)

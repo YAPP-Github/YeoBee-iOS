@@ -34,7 +34,8 @@ public final class CalendarViewController: UIViewController {
                                                   backgroundColor: .brightGreen,
                                                   textColor: .mainGreen,
                                                   borderColor: .mediumGreen,
-                                                  font: .body2)
+                                                  font: .body2,
+                                                  padding: .small)
     private let calendarView = CalendarView()
     private let dividerView = YBDivider(height: 0.6, 
                                         color: .gray3)

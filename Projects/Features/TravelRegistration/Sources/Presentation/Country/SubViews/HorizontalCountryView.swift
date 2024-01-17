@@ -67,7 +67,7 @@ class HorizontalCountryView: UIScrollView {
     
     func bind() {
         CountryType.allCases.forEach { type in
-            let btn = YBPaddingButton(text: type.rawValue, isGradient: false, padding: .small)
+            let btn = YBPaddingButton(text: type.rawValue, borderColor: .gray3, isGradient: false, padding: .medium)
             
             btn.rx.tap
                 .subscribe(onNext: { [weak self] in

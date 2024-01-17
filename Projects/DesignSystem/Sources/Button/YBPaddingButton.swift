@@ -19,20 +19,21 @@ public final class YBPaddingButton: UIButton {
                 selectedTitleColor: YBColor = .white,
                 backgroundColor: YBColor = .gray2,
                 selectedBgColor: YBColor = .black,
+                borderColor: YBColor? = nil,
                 isGradient: Bool,
                 padding: Padding = .medium) {
         self.padding = padding.insets
         super.init(frame: .zero)
         setTitle(text, for: .normal)
         if isGradient {
-            configureGradient(font: font, padding: padding)
+            configureGradient(font: font)
         } else {
             configure(font: font,
                       titleColor: titleColor,
                       selectedTitleColor: selectedTitleColor,
                       bgColor: backgroundColor,
                       selectedBgColor: selectedBgColor,
-                      padding: padding)
+                      borderColor: borderColor)
         }
         clipsToBounds = true
     }
@@ -57,7 +58,7 @@ public final class YBPaddingButton: UIButton {
         return contentSize
     }
     
-    func configureGradient(font: YBFont, padding: Padding) {
+    func configureGradient(font: YBFont) {
         setTitleColor(YBColor.white.color, for: .normal)
         titleLabel?.font = font.font
         let gradientColors = [YBColor.mediumGreen.color, YBColor.mainGreen.color]
@@ -69,8 +70,8 @@ public final class YBPaddingButton: UIButton {
         gradientLayer?.colors = gradientColors.map { $0.cgColor }
         gradientLayer?.startPoint = startPoint
         gradientLayer?.endPoint = endPoint
-        paddingForRadius(padding: padding)
         if let gradientLayer = gradientLayer {
+            layer.cornerRadius = 20
             layer.insertSublayer(gradientLayer, at: 0)
         }
     }
@@ -80,7 +81,7 @@ public final class YBPaddingButton: UIButton {
                    selectedTitleColor: YBColor,
                    bgColor: YBColor,
                    selectedBgColor: YBColor,
-                   padding: Padding) {
+                   borderColor: YBColor?) {
         titleLabel?.font = font.font
         setTitleColor(titleColor.color, for: .normal)
         setBackgroundColor(bgColor.color, for: .normal)
@@ -88,24 +89,11 @@ public final class YBPaddingButton: UIButton {
         setBackgroundColor(selectedBgColor.color, for: .highlighted)
         setTitleColor(selectedTitleColor.color, for: .selected)
         setBackgroundColor(selectedBgColor.color, for: .selected)
-        paddingForRadius(padding: padding)
+        layer.cornerRadius = 20
         
-    }
-    
-    private func paddingForRadius(padding: Padding) {
-        switch padding {
-        case .small:
-            return layer.cornerRadius = 14
-        case .medium:
-            return layer.cornerRadius = 16
-        case .large:
-            return layer.cornerRadius = 18
-        case .calendarDate:
-            return layer.cornerRadius = 20
-        case .gradient:
-            return layer.cornerRadius = 20
-        case .custom:
-            return layer.cornerRadius = 15
+        if let borderColor = borderColor, state != .selected {
+            self.layer.borderColor = borderColor.color.cgColor
+            self.layer.borderWidth = 0.4
         }
     }
     
@@ -124,22 +112,16 @@ public enum Padding {
     case small
     case medium
     case large
-    case calendarDate
-    case gradient
     case custom(top: CGFloat, left: CGFloat, bottom: CGFloat, right: CGFloat)
     
     var insets: UIEdgeInsets {
         switch self {
         case .small:
-            return UIEdgeInsets(top: 4.5, left: 16, bottom: 4.5, right: 16)
+            return UIEdgeInsets(top: 10, left: 14, bottom: 10, right: 14)
         case .medium:
-            return UIEdgeInsets(top: 7, left: 20, bottom: 7, right: 20)
+            return UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
         case .large:
-            return UIEdgeInsets(top: 12, left: 24, bottom: 12, right: 24)
-        case .calendarDate:
-            return UIEdgeInsets(top: 7.5, left: 14, bottom: 7.5, right: 14)
-        case .gradient:
-            return UIEdgeInsets(top: 6.5, left: 14, bottom: 6.5, right: 14)
+            return UIEdgeInsets(top: 14, left: 14, bottom: 14, right: 14)
         case .custom(let top, let left, let bottom, let right):
             return UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
         }

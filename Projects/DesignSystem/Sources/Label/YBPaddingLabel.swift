@@ -13,16 +13,15 @@ public final class YBPaddingLabel: UILabel {
     private let padding: UIEdgeInsets
     
     public init(text: String, backgroundColor: YBColor, textColor: YBColor, 
-                borderColor: YBColor? = nil, font: YBFont, textAlignment: NSTextAlignment = .center, padding: Padding = .calendarDate) {
+                borderColor: YBColor? = nil, font: YBFont, textAlignment: NSTextAlignment = .center, padding: Padding) {
         self.padding = padding.insets
         super.init(frame: .zero)
         self.text = text
         self.textAlignment = textAlignment
         configure(bgColor: backgroundColor,
-                  txtColor: textColor,
-                  brdColor: borderColor,
-                  font: font,
-                  padding: padding)
+                  textColor: textColor,
+                  borderColor: borderColor,
+                  font: font)
     }
     
     @available(*, unavailable)
@@ -42,30 +41,17 @@ public final class YBPaddingLabel: UILabel {
         return contentSize
     }
     
-    func configure(bgColor: YBColor, txtColor: YBColor, brdColor: YBColor? = nil, font: YBFont, padding: Padding) {
+    func configure(bgColor: YBColor, textColor: YBColor, borderColor: YBColor? = nil, font: YBFont) {
         self.backgroundColor = bgColor.color
-        self.textColor = txtColor.color
+        self.textColor = textColor.color
         self.font = font.font
         
-        if brdColor != nil {
-            self.layer.borderColor = brdColor?.color.cgColor
-            self.layer.borderWidth = 0.6
+        if let borderColor = borderColor {
+            self.layer.borderColor = borderColor.color.cgColor
+            self.layer.borderWidth = 1
         }
         
-        switch padding {
-        case .small:
-            layer.cornerRadius = 14
-        case .medium:
-            layer.cornerRadius = 16
-        case .large:
-            layer.cornerRadius = 18
-        case .calendarDate:
-            layer.cornerRadius = 20
-        case .gradient:
-            layer.cornerRadius = 20
-        case .custom:
-            layer.cornerRadius = 15
-        }
+        layer.cornerRadius = 20
         clipsToBounds = true
     }
 }
