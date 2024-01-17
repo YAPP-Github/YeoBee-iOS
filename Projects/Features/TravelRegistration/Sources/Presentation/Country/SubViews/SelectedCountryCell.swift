@@ -30,12 +30,7 @@ class SelectedCountryCell: UICollectionViewCell {
     
     var disposeBag = DisposeBag()
     
-    private let countryNameLabel: UILabel = {
-        $0.textAlignment = .center
-        $0.font = YBFont.body3.font
-        $0.textColor = YBColor.black.color
-        return $0
-    }(UILabel())
+    private let countryNameLabel = YBLabel(font: .body3, textColor: .black, textAlignment: .center)
     
     private let countryImageView: UIImageView = {
         $0.image = UIImage(systemName: "xmark")
@@ -44,10 +39,7 @@ class SelectedCountryCell: UICollectionViewCell {
         return $0
     }(UIImageView())
     
-    private let deleteButton: UIButton =  {
-        $0.setImage(DesignSystemAsset.Icons.circleDeleteButton.image, for: .normal)
-        return $0
-    }(UIButton())
+    private let deleteButton = YBIconButton(image: DesignSystemAsset.Icons.circleDeleteButton.image)
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -78,19 +70,17 @@ class SelectedCountryCell: UICollectionViewCell {
     }
     private func setLayout() {
         countryImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(10)
-            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(9)
+            make.leading.equalToSuperview().inset(3)
             make.width.equalTo(42)
             make.height.equalTo(30)
         }
         countryNameLabel.snp.makeConstraints { make in
-            make.top.equalTo(countryImageView.snp.bottom).offset(6)
-            make.leading.trailing.equalToSuperview().inset(6)
-            make.centerX.equalToSuperview()
+            make.top.equalTo(countryImageView.snp.bottom).offset(8)
+            make.leading.trailing.equalToSuperview()
         }
         deleteButton.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.trailing.equalToSuperview().inset(5)
+            make.top.trailing.equalToSuperview()
             make.size.equalTo(24)
         }
     }
@@ -108,7 +98,7 @@ class SelectedCountryCell: UICollectionViewCell {
             .bind { [weak self] _ in
                 guard let self = self,
                       let country = country else { return }
-                delegate?.deleteButtonTapped(country: country)
+                self.delegate?.deleteButtonTapped(country: country)
             }.disposed(by: disposeBag)
     }
 }

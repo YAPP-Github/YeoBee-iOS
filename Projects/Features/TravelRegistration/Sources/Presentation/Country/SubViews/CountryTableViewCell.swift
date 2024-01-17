@@ -38,17 +38,9 @@ class CountryTableViewCell: UITableViewCell {
         return $0
     }(UIImageView())
     
-    private let countryNameLabel: UILabel = {
-        $0.font = YBFont.body1.font
-        $0.textColor = YBColor.black.color
-        return $0
-    }(UILabel())
-    
-    private let checkedButton: UIButton = {
-        $0.setImage(DesignSystemAsset.Icons.disableCheck.image, for: .normal)
-        $0.setImage(DesignSystemAsset.Icons.check.image, for: .selected)
-        return $0
-    }(UIButton())
+    private let countryNameLabel = YBLabel(font: .body1, textColor: .black)
+    private let checkedButton = YBIconButton(image: DesignSystemAsset.Icons.disableCheck.image,
+                                             selectedImage: DesignSystemAsset.Icons.check.image)
     
     weak var delegate: CountryTableViewCellDelegate?
     var disposeBag = DisposeBag()
