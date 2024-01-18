@@ -6,12 +6,12 @@
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public struct Companion: Hashable {
     var uuid = UUID()
     var name: String
-    var imageURL: String
+    var image: UIImage
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)

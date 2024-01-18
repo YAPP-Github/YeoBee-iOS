@@ -106,8 +106,9 @@ extension ChangeCompanionNameViewController: View {
         modifyButton.rx.tap
             .bind { [weak self] _ in
                 if let name = self?.reactor.currentState.limitedString,
-                   let index = self?.reactor.currentState.index {
-                    let modifiedCompanion = Companion(name: name, imageURL: "")
+                   let index = self?.reactor.currentState.index,
+                   let image = self?.reactor.currentState.companion.image {
+                    let modifiedCompanion = Companion(name: name, image: image)
                     self?.delegate?.modifyCompanionName(companion: modifiedCompanion, index: index)
                     self?.navigationController?.popViewController(animated: true)
                 }

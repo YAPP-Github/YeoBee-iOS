@@ -200,7 +200,6 @@ extension CompanionViewController: View {
             .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-        
     }
     
     func bindState(reactor: CompanionReactor) {
@@ -259,7 +258,7 @@ extension CompanionViewController: View {
             .map { $0.makeLimitToast }
             .observe(on: MainScheduler.instance)
             .bind { [weak self] makeToast in
-                guard let self = self else { return }
+                guard self != nil else { return }
                 if makeToast {
                     let toast = Toast.text(icon: .warning, "최대 10명까지 추가할 수 있어요.")
                     toast.show()

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import DesignSystem
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -61,7 +62,7 @@ public final class CompanionReactor: Reactor {
                 newState.makeLimitToast = true
                 break
             }
-            newState.companions.append(.init(name: "사용자\(state.companions.count+1)", imageURL: ""))
+            newState.companions.append(.init(name: "사용자\(state.companions.count+1)", image: getRandomFaceIcon()))
         case .deleteCompanion(let companion):
             if let companionsIndex = newState.companions.firstIndex(where: { $0 == companion }) {
                 newState.companions.remove(at: companionsIndex)
@@ -72,5 +73,20 @@ public final class CompanionReactor: Reactor {
         }
         
         return newState
+    }
+    
+    func getRandomFaceIcon() -> UIImage {
+        guard let randomImage = [
+            DesignSystemAsset.Icons.face2.image,
+            DesignSystemAsset.Icons.face3.image,
+            DesignSystemAsset.Icons.face4.image,
+            DesignSystemAsset.Icons.face5.image,
+            DesignSystemAsset.Icons.face6.image,
+            DesignSystemAsset.Icons.face7.image,
+            DesignSystemAsset.Icons.face8.image,
+            DesignSystemAsset.Icons.face9.image
+        ].randomElement() else { return DesignSystemAsset.Icons.face1.image }
+        
+        return randomImage
     }
 }
