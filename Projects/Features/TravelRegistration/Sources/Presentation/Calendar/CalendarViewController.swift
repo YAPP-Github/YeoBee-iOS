@@ -169,9 +169,21 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCa
     }
     
     public func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, titleDefaultColorFor date: Date) -> UIColor? {
-        let day = Calendar.current.component(.weekday, from: date) - 1
+        let koreanHolidays: Set<String> = [
+            "01-01",
+            "03-01",
+            "05-05",
+            "06-06",
+            "08-15",
+            "10-03",
+            "12-25"
+        ]
         
-        if day == 0 {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd"
+        let dateString = dateFormatter.string(from: date)
+        
+        if koreanHolidays.contains(dateString) || Calendar.current.component(.weekday, from: date) == 1 {
             return YBColor.mainRed.color
         } else {
             return YBColor.black.color

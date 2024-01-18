@@ -24,6 +24,7 @@ class CalendarView: UIView {
     lazy var calendar: FSCalendar = {
         $0.locale = Locale(identifier: "ko_KR")
         $0.allowsMultipleSelection = true
+        $0.headerHeight = 0
         $0.appearance.headerTitleColor = .clear
         $0.appearance.headerMinimumDissolvedAlpha = 0
         $0.appearance.subtitleOffset = CGPoint(x: 0, y: 4)
@@ -96,7 +97,7 @@ class CalendarView: UIView {
         calendar.snp.makeConstraints { make in
             make.top.equalTo(monthHeaderLabel.snp.bottom).inset(-30)
             make.leading.trailing.equalToSuperview().inset(22)
-            make.bottom.equalToSuperview().inset(40)
+            make.bottom.equalToSuperview().inset(50)
         }
     }
     

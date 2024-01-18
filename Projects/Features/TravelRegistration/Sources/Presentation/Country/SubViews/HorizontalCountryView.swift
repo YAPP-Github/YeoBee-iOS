@@ -62,7 +62,8 @@ class HorizontalCountryView: UIScrollView {
     }
     private func setLayout() {
         stackView.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.centerY.equalToSuperview()
+            make.top.bottom.centerY.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(24)
         }
         dividerView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
