@@ -30,6 +30,7 @@ public final class CompanionReactor: Reactor {
     public struct State {
         var companionType: CompanionType = .none
         var companions: [Companion] = []
+        var makeLimitToast: Bool = false
     }
     
     public var initialState: State = State()
@@ -57,13 +58,14 @@ public final class CompanionReactor: Reactor {
             newState.companionType = type
         case .addCompanion:
             if newState.companions.count >= 9 {
-                print("9명 이상 안되는 토스트 실행")
+                newState.makeLimitToast = true
                 break
             }
             newState.companions.append(.init(name: "사용자\(state.companions.count+1)", imageURL: ""))
         case .deleteCompanion(let companion):
             if let companionsIndex = newState.companions.firstIndex(where: { $0 == companion }) {
                 newState.companions.remove(at: companionsIndex)
+                newState.makeLimitToast = false
             }
         case .updateCompanion(let companion, let index):
             newState.companions[index.row] = companion

@@ -254,6 +254,18 @@ extension CompanionViewController: View {
                     self?.nextButton.setAppearance(appearance: .default)
                 }
             }.disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.makeLimitToast }
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] makeToast in
+                guard let self = self else { return }
+                if makeToast {
+                    let toast = Toast.text(icon: .warning, "최대 10명까지 추가할 수 있어요.")
+                    toast.show()
+                }
+            }
+            .disposed(by: disposeBag)
     }
 }
 
