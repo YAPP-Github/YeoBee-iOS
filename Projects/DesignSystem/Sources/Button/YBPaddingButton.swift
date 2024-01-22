@@ -45,9 +45,11 @@ public final class YBPaddingButton: UIButton {
     
     public override func draw(_ rect: CGRect) {
         super.draw(rect.inset(by: padding))
-        if let gradientLayer {
-            gradientLayer.frame = bounds
-        }
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer?.frame = bounds
     }
     
     public override var intrinsicContentSize: CGSize {
@@ -71,7 +73,7 @@ public final class YBPaddingButton: UIButton {
         gradientLayer?.startPoint = startPoint
         gradientLayer?.endPoint = endPoint
         if let gradientLayer = gradientLayer {
-            layer.cornerRadius = 20
+            layer.cornerRadius = 18
             layer.insertSublayer(gradientLayer, at: 0)
         }
     }

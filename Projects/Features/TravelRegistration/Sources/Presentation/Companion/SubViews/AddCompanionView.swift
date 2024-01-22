@@ -13,7 +13,10 @@ import SnapKit
 final class AddCompanionView: UIView {
     private let addCompanionLabel = YBLabel(text: "동행을 추가해주세요.", font: .header2, textColor: .black)
     
-    let addCompanionButton = YBPaddingButton(text: "+  추가", isGradient: true, padding: .small)
+    let addCompanionButton = YBPaddingButton(text: "+  추가", isGradient: true, padding: .custom(top: 3.5,
+                                                                                               left: 14,
+                                                                                               bottom: 3.5,
+                                                                                               right: 14))
     
     private let myProfileImageView: UIImageView = {
         $0.layer.cornerRadius = 22
