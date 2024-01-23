@@ -31,6 +31,7 @@ public final class CompanionReactor: Reactor {
     public struct State {
         var companionType: CompanionType = .none
         var companions: [Companion] = []
+        var companionNumber: Int = 0
         var makeLimitToast: Bool = false
     }
     
@@ -62,7 +63,8 @@ public final class CompanionReactor: Reactor {
                 newState.makeLimitToast = true
                 break
             }
-            newState.companions.append(.init(name: "사용자\(state.companions.count+1)", image: getRandomFaceIcon()))
+            newState.companionNumber += 1
+            newState.companions.append(.init(name: "사용자\(newState.companionNumber)", image: getRandomFaceIcon()))
         case .deleteCompanion(let companion):
             if let companionsIndex = newState.companions.firstIndex(where: { $0 == companion }) {
                 newState.companions.remove(at: companionsIndex)
