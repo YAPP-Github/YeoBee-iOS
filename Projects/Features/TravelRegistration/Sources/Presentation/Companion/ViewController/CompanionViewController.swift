@@ -31,14 +31,14 @@ public final class CompanionViewController: UIViewController {
 
     public var disposeBag = DisposeBag()
     private let reactor = CompanionReactor()
-    var dataSource: UITableViewDiffableDataSource<CompanionSection, CompanionDataItem>!
+    private var dataSource: UITableViewDiffableDataSource<CompanionSection, CompanionDataItem>?
     
     // MARK: - Properties
     private let titleLabel = YBLabel(text: "여행을 함께 하는 동행이 있나요?", font: .header2, textColor: .black)
     private let subTitleLabel = YBLabel(text: "나중에 변경이 어려워요.", font: .body2, textColor: .gray5)
     var companionButton = YBTextButton(text: "있어요", appearance: .selectDisable, size: .medium)
     let aloneButton = YBTextButton(text: "혼자가요", appearance: .selectDisable, size: .medium)
-    private lazy var buttonStackView: UIStackView = {
+    private let buttonStackView: UIStackView = {
         $0.axis = .horizontal
         $0.spacing = 15
         $0.alignment = .center
@@ -122,15 +122,17 @@ public final class CompanionViewController: UIViewController {
     
     private func setDataSource() {
         dataSource = UITableViewDiffableDataSource<CompanionSection, CompanionDataItem>(tableView: self.companionTableView) 
-        { (tableView, indexPath, companionDataItem) -> UITableViewCell? in
+        { [weak self] (tableView, indexPath, companionDataItem) -> UITableViewCell? in
+            guard let self = self,
+                  let cell = tableView.dequeueReusableCell(withIdentifier: CompanionTableViewCell.identifier,
+                                                           for: indexPath) as? CompanionTableViewCell else { return UITableViewCell() }
+            
             var companion: Companion
             switch companionDataItem {
             case .main(let mainCompanion):
                 companion = mainCompanion
             }
             
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: CompanionTableViewCell.identifier,
-                                                           for: indexPath) as? CompanionTableViewCell else { return UITableViewCell() }
             cell.delegate = self
             cell.companion = companion
             return cell
@@ -143,7 +145,7 @@ public final class CompanionViewController: UIViewController {
         var snapshot = NSDiffableDataSourceSnapshot<CompanionSection, CompanionDataItem>()
         snapshot.appendSections([.main])
         snapshot.appendItems(companions.map { .main($0) }, toSection: .main)
-        dataSource.apply(snapshot, animatingDifferences: false)
+        dataSource?.apply(snapshot , animatingDifferences: false)
         
         // 테이블 뷰 들어온 셀 자동 스크롤
         if !companions.isEmpty {
@@ -160,7 +162,7 @@ public final class CompanionViewController: UIViewController {
 // MARK: - CompanionTableViewCellDelegate
 extension CompanionViewController: CompanionTableViewCellDelegate {
     func changeCompanionName(companion: Companion) {
-        guard let indexPath = dataSource.indexPath(for: .main(companion)) else { return }
+        guard let indexPath = dataSource?.indexPath(for: .main(companion)) else { return }
         
         let changeCompanionNameReactor = ChangeCompanionNameReactor(companion: companion, index: indexPath)
         let changeCompanionNameVC = ChangeCompanionNameViewController(reactor: changeCompanionNameReactor)
@@ -263,8 +265,7 @@ extension CompanionViewController: View {
                     let toast = Toast.text(icon: .warning, "최대 10명까지 추가할 수 있어요.")
                     toast.show()
                 }
-            }
-            .disposed(by: disposeBag)
+            }.disposed(by: disposeBag)
     }
 }
 
