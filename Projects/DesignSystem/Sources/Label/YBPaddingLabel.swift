@@ -46,7 +46,7 @@ public final class YBPaddingLabel: UILabel {
         self.textColor = textColor.color
         self.font = font.font
         
-        if let borderColor = borderColor {
+        if let borderColor {
             self.layer.borderColor = borderColor.color.cgColor
             self.layer.borderWidth = 1
         }

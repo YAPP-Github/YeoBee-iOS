@@ -27,7 +27,7 @@ public final class YBIconButton: UIButton {
             self.setImage(image, for: .normal)
         }
         
-        if let selectedImage = selectedImage {
+        if let selectedImage {
             self.setImage(selectedImage, for: .selected)
         }
     }

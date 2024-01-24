@@ -163,7 +163,7 @@ public final class CountryViewController: UIViewController {
             cell.delegate = self
             cell.country = country
             
-            if let self = self,
+            if let self,
                self.reactor.currentState.selectedCountries.contains(where: { $0 == country }) {
                 cell.checkedButtonSelected = true
             }

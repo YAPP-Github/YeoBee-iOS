@@ -123,7 +123,7 @@ public final class CompanionViewController: UIViewController {
     private func setDataSource() {
         dataSource = UITableViewDiffableDataSource<CompanionSection, CompanionDataItem>(tableView: self.companionTableView) 
         { [weak self] (tableView, indexPath, companionDataItem) -> UITableViewCell? in
-            guard let self = self,
+            guard let self,
                   let cell = tableView.dequeueReusableCell(withIdentifier: CompanionTableViewCell.identifier,
                                                            for: indexPath) as? CompanionTableViewCell else { return UITableViewCell() }
             
@@ -145,7 +145,7 @@ public final class CompanionViewController: UIViewController {
         var snapshot = NSDiffableDataSourceSnapshot<CompanionSection, CompanionDataItem>()
         snapshot.appendSections([.main])
         snapshot.appendItems(companions.map { .main($0) }, toSection: .main)
-        dataSource?.apply(snapshot , animatingDifferences: false)
+        dataSource?.apply(snapshot, animatingDifferences: false)
         
         // 테이블 뷰 들어온 셀 자동 스크롤
         if !companions.isEmpty {
@@ -259,8 +259,7 @@ extension CompanionViewController: View {
         reactor.state
             .map { $0.makeLimitToast }
             .observe(on: MainScheduler.instance)
-            .bind { [weak self] makeToast in
-                guard self != nil else { return }
+            .bind { makeToast in
                 if makeToast {
                     let toast = Toast.text(icon: .warning, "최대 10명까지 추가할 수 있어요.")
                     toast.show()
