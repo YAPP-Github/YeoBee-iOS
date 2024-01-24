@@ -202,6 +202,13 @@ extension CompanionViewController: View {
             .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        nextButton.rx.tap
+            .bind { [weak self] _ in
+                let travelTitleReactor = TravelTitleReactor()
+                let travelTitleViewController = TravelTitleViewController(reactor: travelTitleReactor)
+                self?.navigationController?.pushViewController(travelTitleViewController, animated: true)
+            }.disposed(by: disposeBag)
     }
     
     func bindState(reactor: CompanionReactor) {
