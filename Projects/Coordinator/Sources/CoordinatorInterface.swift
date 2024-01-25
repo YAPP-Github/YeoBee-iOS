@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Entity
 
 public protocol SignCoordinatorInterface: ParentCoordinator, Coordinator { }
 
@@ -16,10 +17,14 @@ public protocol HomeCoordinatorInterface: ParentCoordinator, Coordinator {
 }
 
 public protocol CountryCoordinatorInterface: ParentCoordinator, ChildCoordinator {
-    func calendar()
+    func calendar(tripRequest: TripRequest)
 }
 
-public protocol CalendarCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
+public protocol CalendarCoordinatorInterface: ParentCoordinator, ChildCoordinator { 
+    func companion(tripRequest: TripRequest)
+}
+
+public protocol CompanionCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 
 public protocol TripCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 

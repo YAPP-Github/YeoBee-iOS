@@ -9,6 +9,7 @@
 import UIKit
 
 import Coordinator
+import Entity
 
 final public class CountryCoordinator: CountryCoordinatorInterface {
     public var navigationController: UINavigationController
@@ -22,7 +23,8 @@ final public class CountryCoordinator: CountryCoordinatorInterface {
     }
 
     public func start(animated: Bool) {
-        let countryViewController = CountryViewController(coordinator: self)
+        let countryReactor = CountryReactor()
+        let countryViewController = CountryViewController(coordinator: self, reactor: countryReactor)
         navigationController.pushViewController(countryViewController, animated: animated)
     }
 
@@ -41,8 +43,9 @@ final public class CountryCoordinator: CountryCoordinatorInterface {
 }
 
 extension CountryCoordinator {
-    public func calendar() {
-        let calendarCoordinator = CalendarCoordinator(navigationController: navigationController)
+    public func calendar(tripRequest: TripRequest) {
+        let calendarCoordinator = CalendarCoordinator(navigationController: navigationController, 
+                                                      tripRequest: tripRequest)
         calendarCoordinator.parent = self
         addChild(calendarCoordinator)
         calendarCoordinator.start(animated: true)
