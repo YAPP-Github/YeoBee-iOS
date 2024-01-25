@@ -15,7 +15,11 @@ public protocol HomeCoordinatorInterface: ParentCoordinator, Coordinator {
     func trip()
 }
 
-public protocol TravelRegistrationCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
+public protocol CountryCoordinatorInterface: ParentCoordinator, ChildCoordinator {
+    func calendar()
+}
+
+public protocol CalendarCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 
 public protocol TripCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 

@@ -10,12 +10,16 @@ import TravelRegistration
 
 @main
 class TravelRegistrationAppDelegate: UIResponder, UIApplicationDelegate {
-  var window: UIWindow?
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-    self.window = UIWindow(frame: UIScreen.main.bounds)
-    self.window?.rootViewController = UINavigationController(rootViewController: CountryViewController())
-    self.window?.makeKeyAndVisible()
-    return true
-  }
+    var window: UIWindow?
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let navigationController = UINavigationController()
+        let coordinator = TravelRegistrationCoordinator(navigationController: navigationController)
+        coordinator.start(animated: false)
+
+        self.window?.rootViewController = navigationController
+        self.window?.makeKeyAndVisible()
+        return true
+    }
 }
 

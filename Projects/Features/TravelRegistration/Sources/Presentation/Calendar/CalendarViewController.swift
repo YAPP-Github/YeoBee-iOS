@@ -18,6 +18,7 @@ public final class CalendarViewController: UIViewController {
 
     public var disposeBag = DisposeBag()
     private let reactor = CalendarReactor()
+    let coordinator: CalendarCoordinator
     
     private var dateformatter: DateFormatter = {
         $0.dateFormat = "MM.dd E"
@@ -43,6 +44,15 @@ public final class CalendarViewController: UIViewController {
                                           appearance: .defaultDisable,
                                           size: .medium)
     // MARK: - Life Cycles
+    init(coordinator: CalendarCoordinator) {
+        self.coordinator = coordinator
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
