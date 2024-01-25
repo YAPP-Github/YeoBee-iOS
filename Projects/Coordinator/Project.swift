@@ -13,7 +13,10 @@ let project = Project(
         Project.target(
             name: "Coordinator",
             product: .framework,
-            sources: "Sources/**"
+            sources: "Sources/**",
+            dependencies: [
+                .entity
+            ]
         ),
         Project.target(
             name: "CoordinatorTests",
