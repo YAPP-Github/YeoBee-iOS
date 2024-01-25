@@ -62,6 +62,7 @@ public final class CalendarViewController: UIViewController {
         addViews()
         setLayouts()
         setDelegate()
+        configureBar()
         bind(reactor: reactor)
     }
     
@@ -105,6 +106,17 @@ public final class CalendarViewController: UIViewController {
     private func setDelegate() {
         calendarView.calendar.delegate = self
         calendarView.calendar.dataSource = self
+    }
+    
+    private func configureBar() {
+        let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    @objc private func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+        coordinator.coordinatorDidFinish()
     }
 
     deinit {
@@ -312,8 +324,8 @@ extension CalendarViewController: View {
         nextButton.rx.tap
             .observe(on: MainScheduler.instance)
             .bind { [weak self] _ in
-                if let self,
-                   let startDate = self.reactor.currentState.startDate,
+                guard let self else { return }
+                   if let startDate = self.reactor.currentState.startDate,
                    let endDate = self.reactor.currentState.endDate {
                     
                     let tripRequest = TripRequest(

@@ -71,6 +71,7 @@ public final class CompanionViewController: UIViewController {
         addViews()
         setLayouts()
         bind(reactor: reactor)
+        configureBar()
         setDataSource()
         addCompanionView.configure() // 임시 내 프로필 데이터 설정
     }
@@ -163,6 +164,17 @@ public final class CompanionViewController: UIViewController {
             let lastIndexPath = IndexPath(row: companions.count - 1, section: 0)
             companionTableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: true)
         }
+    }
+    
+    private func configureBar() {
+        let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    @objc private func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+        coordinator.coordinatorDidFinish()
     }
 
     deinit {

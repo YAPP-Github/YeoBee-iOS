@@ -81,13 +81,14 @@ public final class CountryViewController: UIViewController {
         }
     }
 
-    func configureBar() {
+    private func configureBar() {
         let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
     }
-
-    @objc func backButtonTapped() {
+    
+    @objc private func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
         coordinator.coordinatorDidFinish()
     }
 
