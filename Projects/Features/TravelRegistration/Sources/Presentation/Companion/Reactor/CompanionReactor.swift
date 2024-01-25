@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -33,9 +34,14 @@ public final class CompanionReactor: Reactor {
         var companions: [Companion] = []
         var companionNumber: Int = 0
         var makeLimitToast: Bool = false
+        var tripRequest: TripRequest
     }
     
-    public var initialState: State = State()
+    public var initialState: State
+    
+    init(tripRequest: TripRequest) {
+        self.initialState = State(tripRequest: tripRequest)
+    }
     
     // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {

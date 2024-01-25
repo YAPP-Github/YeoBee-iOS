@@ -30,8 +30,9 @@ public enum CompanionType: CaseIterable {
 public final class CompanionViewController: UIViewController {
 
     public var disposeBag = DisposeBag()
-    private let reactor = CompanionReactor()
+    private let reactor: CompanionReactor
     private var dataSource: UITableViewDiffableDataSource<CompanionSection, CompanionDataItem>?
+    private let coordinator: CompanionCoordinator
     
     // MARK: - Properties
     private let titleLabel = YBLabel(text: "여행을 함께 하는 동행이 있나요?", font: .header2, textColor: .black)
@@ -54,6 +55,16 @@ public final class CompanionViewController: UIViewController {
                                           size: .medium)
     
     // MARK: - Life Cycles
+    public init(coordinator: CompanionCoordinator, reactor: CompanionReactor) {
+        self.coordinator = coordinator
+        self.reactor = reactor
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
