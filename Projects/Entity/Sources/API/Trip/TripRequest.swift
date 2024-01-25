@@ -10,11 +10,11 @@ import Foundation
 
 // 여행 등록, 수정
 public struct TripRequest: Encodable {
-    var title: String
-    var startDate: String
-    var endDate: String
-    var countryList: [CountryAndTripUserItemRequest]
-    var tripUserList: [CountryAndTripUserItemRequest]
+    public var title: String
+    public var startDate: String
+    public var endDate: String
+    public var countryList: [CountryAndTripUserItemRequest]
+    public var tripUserList: [CountryAndTripUserItemRequest]
     
     public init(
         title: String,
@@ -31,7 +31,7 @@ public struct TripRequest: Encodable {
     }
 }
 
-public struct CountryAndTripUserItemRequest: Encodable {
+public struct CountryAndTripUserItemRequest: Encodable, Equatable {
     var name: String
     
     public init(name: String) {
