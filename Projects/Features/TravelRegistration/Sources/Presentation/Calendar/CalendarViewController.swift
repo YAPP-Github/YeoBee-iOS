@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -17,7 +18,7 @@ import FSCalendar
 public final class CalendarViewController: UIViewController {
 
     public var disposeBag = DisposeBag()
-    private let reactor = CalendarReactor()
+    private let reactor: CalendarReactor
     let coordinator: CalendarCoordinator
     
     private var dateformatter: DateFormatter = {
@@ -43,9 +44,11 @@ public final class CalendarViewController: UIViewController {
     private let nextButton = YBTextButton(text: "다음으로", 
                                           appearance: .defaultDisable,
                                           size: .medium)
+    
     // MARK: - Life Cycles
-    init(coordinator: CalendarCoordinator) {
+    init(coordinator: CalendarCoordinator, reactor: CalendarReactor) {
         self.coordinator = coordinator
+        self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -105,6 +108,7 @@ public final class CalendarViewController: UIViewController {
     }
 
     deinit {
+        coordinator.coordinatorDidFinish()
         print("deinit CalendarViewController")
     }
 }
@@ -308,8 +312,18 @@ extension CalendarViewController: View {
         nextButton.rx.tap
             .observe(on: MainScheduler.instance)
             .bind { [weak self] _ in
-                let companionVC = CompanionViewController()
-                self?.navigationController?.pushViewController(companionVC, animated: true)
+                if let self,
+                   let startDate = self.reactor.currentState.startDate,
+                   let endDate = self.reactor.currentState.endDate {
+                    
+                    let tripRequest = TripRequest(
+                        title: "",
+                        startDate: self.reactor.formatDateToString(startDate),
+                        endDate: self.reactor.formatDateToString(endDate),
+                        countryList: self.reactor.currentState.tripRequest.countryList,
+                        tripUserList: [])
+                    self.coordinator.companion(tripRequest: tripRequest)
+                }
             }.disposed(by: disposeBag)
     }
     

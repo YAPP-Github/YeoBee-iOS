@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Entity
 import Coordinator
 
 final public class CalendarCoordinator: NSObject, CalendarCoordinatorInterface {
@@ -16,15 +17,19 @@ final public class CalendarCoordinator: NSObject, CalendarCoordinatorInterface {
     public var calendarNavigationController: UIViewController?
 
     public var parent: CountryCoordinatorInterface?
+    public let tripRequest: TripRequest
 
-    public init(navigationController: UINavigationController) {
+    public init(navigationController: UINavigationController, tripRequest: TripRequest) {
         self.navigationController = navigationController
+        self.tripRequest = tripRequest
     }
 
     public func start(animated: Bool) {
-        let calendarViewController = CalendarViewController(coordinator: self)
+        let calendarReactor = CalendarReactor(tripRequest: tripRequest)
+        let calendarViewController = CalendarViewController(coordinator: self, 
+                                                            reactor: calendarReactor)
         calendarNavigationController = calendarViewController
-        navigationController.pushViewController(calendarViewController, animated: animated)
+        navigationController.pushViewController(calendarNavigationController!, animated: animated)
     }
 
     public func coordinatorDidFinish() {
@@ -39,7 +44,11 @@ final public class CalendarCoordinator: NSObject, CalendarCoordinatorInterface {
 }
 
 extension CalendarCoordinator {
-    public func companion() {
-        
+    public func companion(tripRequest: TripRequest) {
+        let companionCoordinator = CompanionCoordinator(navigationController: navigationController,
+                                                        tripRequest: tripRequest)
+        companionCoordinator.parent = self
+        addChild(companionCoordinator)
+        companionCoordinator.start(animated: true)
     }
 }
