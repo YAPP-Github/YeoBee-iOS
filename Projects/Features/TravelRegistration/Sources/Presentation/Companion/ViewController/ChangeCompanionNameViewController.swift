@@ -14,15 +14,10 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-protocol ChangeCompanionNameViewControllerDelegate: AnyObject {
-    func modifyCompanionName(companion: Companion, index: IndexPath)
-}
-
 public final class ChangeCompanionNameViewController: UIViewController {
-    
+
     public var disposeBag = DisposeBag()
     private let reactor: ChangeCompanionNameReactor
-    weak var delegate: ChangeCompanionNameViewControllerDelegate?
     let coordinator: ChangeCompanionNameCoordinator
     
     // MARK: - Properties
@@ -105,7 +100,7 @@ public final class ChangeCompanionNameViewController: UIViewController {
     }
     
     deinit {
-        print("deinit CompanionViewController")
+        print("deinit ChangeCompanionNameViewController")
     }
 }
 

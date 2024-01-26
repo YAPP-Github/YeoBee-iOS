@@ -38,7 +38,7 @@ final public class CountryCoordinator: CountryCoordinatorInterface {
     }
 
     deinit {
-        print("TravelRegistrationCoordinator is de-initialized.")
+        print("CountryCoordinator is de-initialized.")
     }
 }
 

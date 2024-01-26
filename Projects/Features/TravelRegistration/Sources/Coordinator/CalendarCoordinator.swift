@@ -39,7 +39,7 @@ final public class CalendarCoordinator: NSObject, CalendarCoordinatorInterface {
     }
 
     deinit {
-        print("ExpenditureCoordinator is de-initialized.")
+        print("CalendarCoordinator is de-initialized.")
     }
 }
 
