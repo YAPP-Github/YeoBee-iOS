@@ -232,9 +232,35 @@ extension CompanionViewController: View {
         
         nextButton.rx.tap
             .bind { [weak self] _ in
-                let travelTitleReactor = TravelTitleReactor()
-                let travelTitleViewController = TravelTitleViewController(reactor: travelTitleReactor)
-                self?.navigationController?.pushViewController(travelTitleViewController, animated: true)
+                guard let self = self else { return }
+                
+                switch self.reactor.currentState.companionType {
+                case .none:
+                    break
+                case .companion:
+                    let companions = self.reactor.currentState.companions
+                    let tripUserList = companions.map { TripUserItemRequest(name: $0.name, type: $0.type) }
+                    
+                    let currentTripRequest = self.reactor.currentState.tripRequest
+                    let tripRequest = TripRequest(
+                        title: currentTripRequest.title,
+                        startDate: currentTripRequest.startDate,
+                        endDate: currentTripRequest.endDate,
+                        countryList: currentTripRequest.countryList,
+                        tripUserList: tripUserList
+                    )
+                    self.coordinator.travelTitle(tripRequest: tripRequest)
+                case .alone:
+                    let currentTripRequest = self.reactor.currentState.tripRequest
+                    let tripRequest = TripRequest(
+                        title: currentTripRequest.title,
+                        startDate: currentTripRequest.startDate,
+                        endDate: currentTripRequest.endDate,
+                        countryList: currentTripRequest.countryList,
+                        tripUserList: []
+                    )
+                    self.coordinator.travelTitle(tripRequest: tripRequest)
+                }
             }.disposed(by: disposeBag)
     }
     

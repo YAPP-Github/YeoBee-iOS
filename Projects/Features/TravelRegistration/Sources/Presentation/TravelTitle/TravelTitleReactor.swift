@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -24,9 +25,14 @@ public final class TravelTitleReactor: Reactor {
     
     public struct State {
         var isValidTitleText: Bool = false
+        var tripRequest: TripRequest
     }
     
-    public var initialState: State = State()
+    public var initialState: State
+    
+    init(tripRequest: TripRequest) {
+        self.initialState = State(tripRequest: tripRequest)
+    }
     
     // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {
@@ -50,8 +56,6 @@ public final class TravelTitleReactor: Reactor {
     }
     
     private func isValidTitleText(_ text: String) -> Bool {
-        let regex = try! NSRegularExpression(pattern: "^[a-zA-Z가-힣!@#$%^&*()_-]+${0,15}", options: .caseInsensitive)
-        let range = NSRange(location: 0, length: text.utf16.count)
-        return regex.firstMatch(in: text, options: [], range: range) != nil
+        return text.count <= 15
     }
 }

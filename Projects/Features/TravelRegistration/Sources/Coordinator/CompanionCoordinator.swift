@@ -58,7 +58,11 @@ extension CompanionCoordinator {
     }
     
     public func travelTitle(tripRequest: TripRequest) {
-        
+        let travelTitleCoordinator = TravelTitleCoordinator(navigationController: navigationController,
+                                                            tripRequest: tripRequest)
+        travelTitleCoordinator.parent = self
+        addChild(travelTitleCoordinator)
+        travelTitleCoordinator.start(animated: true)
     }
     
     public func changedComanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest) {

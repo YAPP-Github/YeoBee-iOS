@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import ReactorKit
 import SnapKit
 import RxSwift
@@ -17,6 +18,7 @@ public final class TravelTitleViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
     private let reactor: TravelTitleReactor
+    private let coordinator: TravelTitleCoordinator
     
     // MARK: - Properties
     private let titleLabel = YBLabel(text: "여행 제목을 입력해주세요.", font: .header2, textColor: .black)
@@ -28,7 +30,8 @@ public final class TravelTitleViewController: UIViewController {
                                           size: .medium)
     
     // MARK: - Life Cycles
-    init(reactor: TravelTitleReactor) {
+    init(coordinator: TravelTitleCoordinator, reactor: TravelTitleReactor) {
+        self.coordinator = coordinator
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -42,6 +45,7 @@ public final class TravelTitleViewController: UIViewController {
         view.backgroundColor = .white
         addViews()
         setLayouts()
+        configureBar()
         bindKeyboardNotification()
         bind(reactor: reactor)
     }
@@ -84,6 +88,21 @@ public final class TravelTitleViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(24)
         }
     }
+    
+    private func configureBar() {
+        let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    @objc private func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+        coordinator.coordinatorDidFinish()
+    }
+
+    deinit {
+        print("deinit TravelTitleViewController")
+    }
 }
 
 // MARK: - Bind
@@ -101,8 +120,18 @@ extension TravelTitleViewController: View {
         
         makeTravelButton.rx.tap
             .bind { [weak self] _ in
+                guard let self,
+                      let titleString = self.titleTextField.text else { return }
                 
-
+                let currentTripRequest = self.reactor.currentState.tripRequest
+                let tripRequest = TripRequest(
+                    title: titleString,
+                    startDate: currentTripRequest.startDate,
+                    endDate: currentTripRequest.endDate,
+                    countryList: currentTripRequest.countryList,
+                    tripUserList: currentTripRequest.tripUserList
+                )
+                print("보낼 데이터: \(tripRequest)")
             }.disposed(by: disposeBag)
     }
     
@@ -111,15 +140,15 @@ extension TravelTitleViewController: View {
             .map { $0.isValidTitleText }
             .bind { [weak self] isValid in
                 if isValid {
-                    self?.effectivenessLabel.text = "한글/영문/특수문자 포함 15까지 입력 가능해요."
-                    self?.makeTravelButton.isEnabled = false
-                    self?.makeTravelButton.setTitle("여행 만들기", for: .normal)
-                    self?.makeTravelButton.setAppearance(appearance: .defaultDisable)
-                } else {
                     self?.effectivenessLabel.text = ""
                     self?.makeTravelButton.isEnabled = true
                     self?.makeTravelButton.setTitle("여행 만들기", for: .normal)
                     self?.makeTravelButton.setAppearance(appearance: .default)
+                } else {
+                    self?.effectivenessLabel.text = "한글/영문/특수문자 포함 15까지 입력 가능해요."
+                    self?.makeTravelButton.isEnabled = false
+                    self?.makeTravelButton.setTitle("여행 만들기", for: .normal)
+                    self?.makeTravelButton.setAppearance(appearance: .defaultDisable)
                 }
             }.disposed(by: disposeBag)
     }
@@ -170,10 +199,21 @@ extension TravelTitleViewController {
     private func hideKeyboardWhenTappedAround() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
+        tap.delegate = self
         view.addGestureRecognizer(tap)
     }
     
     @objc func dismissKeyboard() {
         navigationController?.view.endEditing(true)
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension TravelTitleViewController: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view == makeTravelButton {
+            return false
+        }
+        return true
     }
 }

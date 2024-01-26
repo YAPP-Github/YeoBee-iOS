@@ -276,7 +276,8 @@ extension CountryViewController: View {
         
         nextButton.rx.tap
             .bind { [weak self] _ in
-                let selectedCountries = reactor.currentState.selectedCountries
+                guard let self else { return }
+                let selectedCountries = self.reactor.currentState.selectedCountries
                     .map { CountryItemRequest(name: $0.name) }
                 
                 let tripRequest = TripRequest(
@@ -286,7 +287,7 @@ extension CountryViewController: View {
                     countryList: selectedCountries,
                     tripUserList: []
                 )
-                self?.coordinator.calendar(tripRequest: tripRequest)
+                self.coordinator.calendar(tripRequest: tripRequest)
             }.disposed(by: disposeBag)
     }
     

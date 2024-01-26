@@ -34,6 +34,8 @@ public protocol ChangeCompanionNameCoordinatorInterface:ParentCoordinator, Child
     func companion(index: IndexPath, tripUserItemRequest: TripUserItemRequest)
 }
 
+public protocol TravelTitleCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
+
 public protocol TripCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 
 public protocol ExpenditureCoordinatorInterface: ParentCoordinator, ChildCoordinator {
