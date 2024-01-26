@@ -325,8 +325,8 @@ extension CalendarViewController: View {
             .observe(on: MainScheduler.instance)
             .bind { [weak self] _ in
                 guard let self else { return }
-                   if let startDate = self.reactor.currentState.startDate,
-                   let endDate = self.reactor.currentState.endDate {
+                if let startDate = self.reactor.currentState.startDate {
+                    let endDate = self.reactor.currentState.endDate ?? startDate
                     
                     let tripRequest = TripRequest(
                         title: "",
