@@ -13,15 +13,15 @@ public struct TripRequest: Encodable {
     public var title: String
     public var startDate: String
     public var endDate: String
-    public var countryList: [CountryAndTripUserItemRequest]
-    public var tripUserList: [CountryAndTripUserItemRequest]
+    public var countryList: [CountryItemRequest]
+    public var tripUserList: [TripUserItemRequest]
     
     public init(
         title: String,
         startDate: String,
         endDate: String,
-        countryList: [CountryAndTripUserItemRequest],
-        tripUserList: [CountryAndTripUserItemRequest]
+        countryList: [CountryItemRequest],
+        tripUserList: [TripUserItemRequest]
     ) {
         self.title = title
         self.startDate = startDate
@@ -31,10 +31,20 @@ public struct TripRequest: Encodable {
     }
 }
 
-public struct CountryAndTripUserItemRequest: Encodable, Equatable {
-    var name: String
+public struct CountryItemRequest: Encodable, Equatable {
+    public var name: String
     
     public init(name: String) {
         self.name = name
+    }
+}
+
+public struct TripUserItemRequest: Encodable, Equatable {
+    public var name: String
+    public var type: String
+    
+    public init(name: String, type: String) {
+        self.name = name
+        self.type = type
     }
 }

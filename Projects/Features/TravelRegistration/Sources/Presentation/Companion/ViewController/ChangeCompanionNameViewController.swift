@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import ReactorKit
 import SnapKit
 import RxSwift
@@ -22,6 +23,7 @@ public final class ChangeCompanionNameViewController: UIViewController {
     public var disposeBag = DisposeBag()
     private let reactor: ChangeCompanionNameReactor
     weak var delegate: ChangeCompanionNameViewControllerDelegate?
+    let coordinator: ChangeCompanionNameCoordinator
     
     // MARK: - Properties
     private let titleLabel = YBLabel(text: "이름 변경", font: .header2, textColor: .black)
@@ -32,7 +34,8 @@ public final class ChangeCompanionNameViewController: UIViewController {
                                           size: .medium)
     
     // MARK: - Life Cycles
-    init(reactor: ChangeCompanionNameReactor) {
+    public init(coordinator: ChangeCompanionNameCoordinator, reactor: ChangeCompanionNameReactor) {
+        self.coordinator = coordinator
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -47,6 +50,7 @@ public final class ChangeCompanionNameViewController: UIViewController {
         setView()
         addViews()
         setLayouts()
+        configureBar()
         bindKeyboardNotification()
         bind(reactor: reactor)
     }
@@ -88,6 +92,21 @@ public final class ChangeCompanionNameViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(24)
         }
     }
+    
+    private func configureBar() {
+        let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    @objc private func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+        coordinator.coordinatorDidFinish()
+    }
+    
+    deinit {
+        print("deinit CompanionViewController")
+    }
 }
 
 // MARK: - Bind
@@ -107,10 +126,12 @@ extension ChangeCompanionNameViewController: View {
             .bind { [weak self] _ in
                 if let name = self?.reactor.currentState.limitedString,
                    let index = self?.reactor.currentState.index,
-                   let image = self?.reactor.currentState.companion.image {
-                    let modifiedCompanion = Companion(name: name, image: image)
-                    self?.delegate?.modifyCompanionName(companion: modifiedCompanion, index: index)
+                   let type = self?.reactor.currentState.tripUserItemRequest.type {
+                    let tripUserItemRequest = TripUserItemRequest(name: name, type: type)
+                    self?.coordinator.companion(index: index, tripUserItemRequest: tripUserItemRequest)
+                    
                     self?.navigationController?.popViewController(animated: true)
+                    self?.coordinator.coordinatorDidFinish()
                 }
             }.disposed(by: disposeBag)
     }
@@ -195,10 +216,21 @@ extension ChangeCompanionNameViewController {
     private func hideKeyboardWhenTappedAround() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
+        tap.delegate = self
         view.addGestureRecognizer(tap)
     }
     
     @objc func dismissKeyboard() {
         navigationController?.view.endEditing(true)
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension ChangeCompanionNameViewController: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view == modifyButton {
+            return false
+        }
+        return true
     }
 }

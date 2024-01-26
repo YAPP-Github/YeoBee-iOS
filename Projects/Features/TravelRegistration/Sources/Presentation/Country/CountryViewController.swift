@@ -277,7 +277,7 @@ extension CountryViewController: View {
         nextButton.rx.tap
             .bind { [weak self] _ in
                 let selectedCountries = reactor.currentState.selectedCountries
-                    .map { CountryAndTripUserItemRequest(name: $0.name) }
+                    .map { CountryItemRequest(name: $0.name) }
                 
                 let tripRequest = TripRequest(
                     title: "",

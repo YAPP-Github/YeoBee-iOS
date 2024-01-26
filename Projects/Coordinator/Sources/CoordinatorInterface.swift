@@ -24,7 +24,15 @@ public protocol CalendarCoordinatorInterface: ParentCoordinator, ChildCoordinato
     func companion(tripRequest: TripRequest)
 }
 
-public protocol CompanionCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
+public protocol CompanionCoordinatorInterface: ParentCoordinator, ChildCoordinator {
+    func changeCompanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest)
+    func travelTitle(tripRequest: TripRequest)
+    func changedComanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest)
+}
+
+public protocol ChangeCompanionNameCoordinatorInterface:ParentCoordinator, ChildCoordinator {
+    func companion(index: IndexPath, tripUserItemRequest: TripUserItemRequest)
+}
 
 public protocol TripCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 

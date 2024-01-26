@@ -10,6 +10,10 @@ import UIKit
 import Entity
 import Coordinator
 
+protocol CompanionCoordinatorDelegate: AnyObject {
+    func changedComanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest)
+}
+
 final public class CompanionCoordinator: NSObject, CompanionCoordinatorInterface {
     public var viewControllerRef: UIViewController?
     public var childCoordinators = [Coordinator]()
@@ -18,6 +22,7 @@ final public class CompanionCoordinator: NSObject, CompanionCoordinatorInterface
 
     public var parent: CalendarCoordinatorInterface?
     public let tripRequest: TripRequest
+    weak var delegate: CompanionCoordinatorDelegate?
 
     public init(navigationController: UINavigationController, tripRequest: TripRequest) {
         self.navigationController = navigationController
@@ -38,6 +43,26 @@ final public class CompanionCoordinator: NSObject, CompanionCoordinatorInterface
     }
 
     deinit {
-        print("ExpenditureCoordinator is de-initialized.")
+        print("CompanionCoordinator is de-initialized.")
+    }
+}
+
+extension CompanionCoordinator {
+    public func changeCompanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest) {
+        let changeCompanionCoordinator = ChangeCompanionNameCoordinator(navigationController: navigationController,
+                                                         index: index,
+                                                         tripUserItemRequest: tripUserItemRequest)
+        changeCompanionCoordinator.parent = self
+        addChild(changeCompanionCoordinator)
+        changeCompanionCoordinator.start(animated: true)
+    }
+    
+    public func travelTitle(tripRequest: TripRequest) {
+        
+    }
+    
+    public func changedComanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest) {
+        // companion 이름 변경된 데이터 companionViewController로 주입
+        delegate?.changedComanionName(index: index, tripUserItemRequest: tripUserItemRequest)
     }
 }

@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -67,7 +68,7 @@ public final class CompanionViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        setView()
         addViews()
         setLayouts()
         bind(reactor: reactor)
@@ -77,6 +78,11 @@ public final class CompanionViewController: UIViewController {
     }
     
     // MARK: - Set UI
+    private func setView() {
+        view.backgroundColor = .white
+        coordinator.delegate = self
+    }
+    
     private func addViews() {
         [
             titleLabel,
@@ -186,11 +192,9 @@ public final class CompanionViewController: UIViewController {
 extension CompanionViewController: CompanionTableViewCellDelegate {
     func changeCompanionName(companion: Companion) {
         guard let indexPath = dataSource?.indexPath(for: .main(companion)) else { return }
-        
-        let changeCompanionNameReactor = ChangeCompanionNameReactor(companion: companion, index: indexPath)
-        let changeCompanionNameVC = ChangeCompanionNameViewController(reactor: changeCompanionNameReactor)
-        changeCompanionNameVC.delegate = self
-        self.navigationController?.pushViewController(changeCompanionNameVC, animated: true)
+        // 동행자 이미지 타입 api 확인 후 변경
+        let tripUserItemRequest = TripUserItemRequest(name: companion.name, type: companion.type)
+        coordinator.changeCompanionName(index: indexPath, tripUserItemRequest: tripUserItemRequest)
     }
     
     func deleteCompanion(companion: Companion) {
@@ -298,9 +302,10 @@ extension CompanionViewController: View {
     }
 }
 
-// MARK: - ChangeCompanionNameViewControllerDelegate
-extension CompanionViewController: ChangeCompanionNameViewControllerDelegate {
-    func modifyCompanionName(companion: Companion, index: IndexPath) {
+// MARK: - CompanionCoordinatorDelegate
+extension CompanionViewController: CompanionCoordinatorDelegate {
+    func changedComanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest) {
+        let companion = Companion(name: tripUserItemRequest.name, type: tripUserItemRequest.type)
         reactor.action.onNext(.updateCompanion(companion, index))
     }
 }

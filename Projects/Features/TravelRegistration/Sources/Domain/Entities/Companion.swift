@@ -11,7 +11,7 @@ import UIKit
 public struct Companion: Hashable {
     var uuid = UUID()
     var name: String
-    var image: UIImage
+    var type: String
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
