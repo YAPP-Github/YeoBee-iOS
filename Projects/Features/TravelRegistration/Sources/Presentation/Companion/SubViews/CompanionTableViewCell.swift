@@ -28,33 +28,14 @@ class CompanionTableViewCell: UITableViewCell {
     }
     
     private let profileImageView: UIImageView = {
-        $0.backgroundColor = YBColor.brightGreen.color
         $0.layer.cornerRadius = 22
         $0.clipsToBounds = true
         return $0
     }(UIImageView())
     
     private let profileNameLabel = YBLabel(font: .body1, textColor: .black)
-    
-    let pencilButton: UIButton = {
-        $0.backgroundColor = YBColor.brightGreen.color
-        $0.layer.cornerRadius = 21
-        $0.clipsToBounds = true
-        $0.setTitle("추가", for: .normal)
-        $0.setTitleColor(YBColor.mainGreen.color, for: .normal)
-        $0.titleLabel?.font = YBFont.body2.font
-        return $0
-    }(UIButton())
-    
-    let deleteButton: UIButton = {
-        $0.backgroundColor = YBColor.brightRed.color
-        $0.layer.cornerRadius = 21
-        $0.clipsToBounds = true
-        $0.setTitle("삭제", for: .normal)
-        $0.setTitleColor(YBColor.mainRed.color, for: .normal)
-        $0.titleLabel?.font = YBFont.body2.font
-        return $0
-    }(UIButton())
+    let editButton = YBIconButton(image: DesignSystemAsset.Icons.editButton.image)
+    let deleteButton = YBIconButton(image: DesignSystemAsset.Icons.deleteButton.image)
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -77,13 +58,14 @@ class CompanionTableViewCell: UITableViewCell {
     // MARK: - Set UI
     private func setView() {
         selectionStyle = .none
+        backgroundColor = .white
     }
     
     private func addViews() {
         [
             profileImageView,
             profileNameLabel,
-            pencilButton,
+            editButton,
             deleteButton
         ].forEach {
             contentView.addSubview($0)
@@ -102,7 +84,7 @@ class CompanionTableViewCell: UITableViewCell {
             make.trailing.centerY.equalToSuperview()
             make.size.equalTo(42)
         }
-        pencilButton.snp.makeConstraints { make in
+        editButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.trailing.equalTo(deleteButton.snp.leading).inset(-10)
             make.size.equalTo(deleteButton.snp.size)
@@ -112,10 +94,12 @@ class CompanionTableViewCell: UITableViewCell {
     func configure() {
         guard let companion = companion else { return }
         profileNameLabel.text = companion.name
+        profileImageView.image = companion.image
+        
     }
     
     private func bind() {
-        pencilButton.rx.tap
+        editButton.rx.tap
             .bind { [weak self] _ in
                 if let companion = self?.companion {
                     self?.delegate?.changeCompanionName(companion: companion)

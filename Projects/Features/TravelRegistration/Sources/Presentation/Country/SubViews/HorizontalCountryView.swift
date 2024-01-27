@@ -13,6 +13,7 @@ import RxCocoa
 import SnapKit
 
 class HorizontalCountryView: UIScrollView {
+    // MARK: - Properties
     lazy var stackView: UIStackView = {
         $0.axis = .horizontal
         $0.alignment = .center
@@ -26,10 +27,12 @@ class HorizontalCountryView: UIScrollView {
     var selectedButton: UIButton?
     var disposeBag = DisposeBag()
     
+    // MARK: - Life Cycles
     override init(frame: CGRect) {
         super.init(frame: frame)
         setView()
-        configure()
+        addViews()
+        setLayout()
         bind()
     }
     
@@ -46,28 +49,31 @@ class HorizontalCountryView: UIScrollView {
         return super.touchesShouldCancel(in: view)
     }
     
+    //MARK: - Set UI
     private func setView() {
         canCancelContentTouches = true
         showsHorizontalScrollIndicator = false
         bounces = false
     }
     
-    private func configure() {
+    private func addViews() {
         addSubview(stackView)
         addSubview(dividerView)
-        
+    }
+    private func setLayout() {
         stackView.snp.makeConstraints { make in
             make.top.bottom.centerY.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(20)
+            make.leading.trailing.equalToSuperview().inset(24)
         }
         dividerView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
     
+    // MARK: - Bind
     func bind() {
         CountryType.allCases.forEach { type in
-            let btn = YBPaddingButton(text: type.rawValue, isGradient: false, padding: .small)
+            let btn = YBPaddingButton(text: type.rawValue, borderColor: .gray3, isGradient: false, padding: .medium)
             
             btn.rx.tap
                 .subscribe(onNext: { [weak self] in

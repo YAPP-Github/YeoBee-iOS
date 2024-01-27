@@ -82,7 +82,7 @@ public final class CountryViewController: UIViewController {
         horizontalCountryView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(76)
+            make.height.equalTo(80)
         }
         nextButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
@@ -163,8 +163,8 @@ public final class CountryViewController: UIViewController {
             cell.delegate = self
             cell.country = country
             
-            if let reactor = self?.reactor,
-               reactor.currentState.selectedCountries.contains(where: { $0.name == country.name }) {
+            if let self,
+               self.reactor.currentState.selectedCountries.contains(where: { $0 == country }) {
                 cell.checkedButtonSelected = true
             }
             return cell

@@ -22,8 +22,8 @@ final class CountryCollectionViewFlowLayout: UICollectionViewFlowLayout {
 
     private func setupView() {
         scrollDirection = .horizontal
-        minimumLineSpacing = 15
-        minimumInteritemSpacing = 15
-        itemSize = CGSize(width: 70, height: 70)
+        minimumLineSpacing = 20
+        minimumInteritemSpacing = 20
+        itemSize = CGSize(width: 58, height: 68)
     }
 }

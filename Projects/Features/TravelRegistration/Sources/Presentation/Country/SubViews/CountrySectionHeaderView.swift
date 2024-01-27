@@ -13,11 +13,7 @@ import SnapKit
 class CountrySectionHeaderView: UITableViewHeaderFooterView {
     static let identifier = "CountrySectionHeaderView"
     // MARK: - Properties
-    let sectionTitleLabel: UILabel = {
-        $0.font = YBFont.body1.font
-        $0.textColor = YBColor.black.color
-        return $0
-    }(UILabel())
+    let sectionTitleLabel = YBLabel(font: .body1, textColor: .black)
     
     // MARK: -  Life Cycles
     override init(reuseIdentifier: String?) {
