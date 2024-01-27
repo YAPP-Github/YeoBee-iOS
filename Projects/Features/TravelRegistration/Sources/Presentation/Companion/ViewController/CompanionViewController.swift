@@ -232,7 +232,7 @@ extension CompanionViewController: View {
         
         nextButton.rx.tap
             .bind { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 
                 switch self.reactor.currentState.companionType {
                 case .none:

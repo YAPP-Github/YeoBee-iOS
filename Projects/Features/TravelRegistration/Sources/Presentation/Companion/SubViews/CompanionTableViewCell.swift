@@ -95,23 +95,7 @@ class CompanionTableViewCell: UITableViewCell {
         guard let companion = companion else { return }
         
         profileNameLabel.text = companion.name
-        if companion.type == FaceImageType.face2.rawValue {
-            profileImageView.image = DesignSystemAsset.Icons.face2.image
-        } else if companion.type == FaceImageType.face3.rawValue {
-            profileImageView.image = DesignSystemAsset.Icons.face3.image
-        } else if companion.type == FaceImageType.face4.rawValue {
-            profileImageView.image = DesignSystemAsset.Icons.face4.image
-        } else if companion.type == FaceImageType.face5.rawValue {
-            profileImageView.image = DesignSystemAsset.Icons.face5.image
-        } else if companion.type == FaceImageType.face6.rawValue {
-            profileImageView.image = DesignSystemAsset.Icons.face6.image
-        } else if companion.type == FaceImageType.face7.rawValue {
-            profileImageView.image = DesignSystemAsset.Icons.face7.image
-        } else if companion.type == FaceImageType.face8.rawValue {
-            profileImageView.image = DesignSystemAsset.Icons.face8.image
-        } else if companion.type == FaceImageType.face9.rawValue {
-            profileImageView.image = DesignSystemAsset.Icons.face9.image
-        }
+        profileImageView.image = FaceImageType(rawValue: companion.type)?.iconImage()
     }
     
     private func bind() {

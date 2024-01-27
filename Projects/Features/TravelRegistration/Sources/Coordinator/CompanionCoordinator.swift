@@ -65,7 +65,7 @@ extension CompanionCoordinator {
         travelTitleCoordinator.start(animated: true)
     }
     
-    public func changedComanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest) {
+    public func changedCompanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest) {
         // companion 이름 변경된 데이터 companionViewController로 주입
         delegate?.changedComanionName(index: index, tripUserItemRequest: tripUserItemRequest)
     }

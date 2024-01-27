@@ -47,7 +47,7 @@ final public class ChangeCompanionNameCoordinator: NSObject, ChangeCompanionName
 extension ChangeCompanionNameCoordinator {
     public func companion(index: IndexPath, tripUserItemRequest: TripUserItemRequest) {
         // changeCompanionViewController가 dismiss 되면서 기존에 companionCoordinator에 값 전달
-        parent?.changedComanionName(index: index, tripUserItemRequest: tripUserItemRequest)
+        parent?.changedCompanionName(index: index, tripUserItemRequest: tripUserItemRequest)
         coordinatorDidFinish()
     }
 }
