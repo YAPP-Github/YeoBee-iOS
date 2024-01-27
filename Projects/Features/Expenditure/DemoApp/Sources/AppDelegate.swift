@@ -12,9 +12,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         let coordinator = ExpenditureCoordinator(navigationController: UINavigationController())
-        let viewController = ExpenditureViewController(coordinator: coordinator)
-        let navigationController = UINavigationController(rootViewController: viewController)
-        window?.rootViewController = navigationController
+        coordinator.start(animated: false)
+        window?.rootViewController = coordinator.expenditureNavigationController
         window?.makeKeyAndVisible()
 
         return true
