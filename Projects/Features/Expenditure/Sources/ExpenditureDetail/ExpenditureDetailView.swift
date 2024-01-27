@@ -66,7 +66,7 @@ extension ExpenditureDetailView {
                     .foregroundColor(.ybColor(.gray5))
                     .font(.ybfont(.body1))
             }
-            if expenseItem.price < 0 {
+            if expenseItem.expenseType == .expense {
                 HStack {
                     Text("카테고리")
                         .foregroundColor(.ybColor(.gray6))
@@ -78,7 +78,7 @@ extension ExpenditureDetailView {
                 }
             }
             HStack {
-                Text(expenseItem.price > 0 ? "예산 내용" : "지출 항목")
+                Text(expenseItem.expenseType == .expense ? "지출 항목" : "예산 내용")
                     .foregroundColor(.ybColor(.gray6))
                     .font(.ybfont(.body1))
                 Spacer()
