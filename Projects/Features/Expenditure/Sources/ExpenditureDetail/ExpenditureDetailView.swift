@@ -66,17 +66,19 @@ extension ExpenditureDetailView {
                     .foregroundColor(.ybColor(.gray5))
                     .font(.ybfont(.body1))
             }
-            HStack {
-                Text("카테고리")
-                    .foregroundColor(.ybColor(.gray6))
-                    .font(.ybfont(.body1))
-                Spacer()
-                Text(expenseItem.category.text)
-                    .foregroundColor(.ybColor(.gray5))
-                    .font(.ybfont(.body1))
+            if expenseItem.price < 0 {
+                HStack {
+                    Text("카테고리")
+                        .foregroundColor(.ybColor(.gray6))
+                        .font(.ybfont(.body1))
+                    Spacer()
+                    Text(expenseItem.category.text)
+                        .foregroundColor(.ybColor(.gray5))
+                        .font(.ybfont(.body1))
+                }
             }
             HStack {
-                Text("지출 항목")
+                Text(expenseItem.price > 0 ? "예산 내용" : "지출 항목")
                     .foregroundColor(.ybColor(.gray6))
                     .font(.ybfont(.body1))
                 Spacer()
@@ -100,7 +102,6 @@ extension ExpenditureDetailView {
         .background(YBColor.gray3.swiftUIColor)
         .cornerRadius(10)
         .padding(.horizontal, 24)
-        .padding(.top, 16)
-        .padding(.bottom, 54)
+        .padding(.bottom, 5)
     }
 }
