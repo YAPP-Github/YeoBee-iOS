@@ -57,6 +57,9 @@ public struct ExpenditureReducer: Reducer {
             case .tappedAddButton:
                 cooridinator.expenditureEdit()
                 return .none
+            case .totalPrice(.tappedTotalPrice):
+                cooridinator.totalExpenditureList()
+                return .none
             case .tappedFilterButton:
                 return .none
             default:
