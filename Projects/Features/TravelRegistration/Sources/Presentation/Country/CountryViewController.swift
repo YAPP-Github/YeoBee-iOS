@@ -7,6 +7,7 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -31,16 +32,28 @@ enum CountryDataItem: Hashable {
 public final class CountryViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
-    private let reactor = CountryReactor()
-    var dataSource: UITableViewDiffableDataSource<CountrySection, CountryDataItem>!
-    public weak var coordinator: TravelRegistrationCoordinator?
+    private let reactor: CountryReactor
+    private var dataSource: UITableViewDiffableDataSource<CountrySection, CountryDataItem>?
+    private let coordinator: CountryCoordinator
+    
     // MARK: - Properties
-    let countryTableView = CountryTableView()
-    let horizontalCountryView = HorizontalCountryView()
-    let selectedCountryView = SelectedCountryView()
-    let dividerView = YBDivider(height: 0.6, color: .gray3)
-    let nextButton = YBTextButton(text: "다음으로", appearance: .defaultDisable, size: .medium)
+    private let countryTableView = CountryTableView()
+    private let horizontalCountryView = HorizontalCountryView()
+    private let selectedCountryView = SelectedCountryView()
+    private let dividerView = YBDivider(height: 0.6, color: .gray3)
+    private let nextButton = YBTextButton(text: "다음으로", appearance: .defaultDisable, size: .medium)
+    
     // MARK: - Life Cycles
+    public init(coordinator: CountryCoordinator, reactor: CountryReactor) {
+        self.reactor = reactor
+        self.coordinator = coordinator
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -68,14 +81,15 @@ public final class CountryViewController: UIViewController {
         }
     }
 
-    func configureBar() {
+    private func configureBar() {
         let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
     }
-
-    @objc func backButtonTapped() {
-        coordinator?.coordinatorDidFinish()
+    
+    @objc private func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+        coordinator.coordinatorDidFinish()
     }
 
     private func setLayouts() {
@@ -181,7 +195,7 @@ public final class CountryViewController: UIViewController {
         snapshot.appendItems(dc.northAmerica.map { .northAmerica($0) }, toSection: .northAmerica)
         snapshot.appendItems(dc.southAmerica.map { .southAmerica($0) }, toSection: .southAmerica)
         snapshot.appendItems(dc.africa.map { .africa($0) }, toSection: .africa)
-        dataSource.apply(snapshot, animatingDifferences: false)
+        dataSource?.apply(snapshot, animatingDifferences: false)
     }
     
     private func hideKeyboardWhenTappedAround() {
@@ -196,7 +210,7 @@ public final class CountryViewController: UIViewController {
 
     deinit {
         print("deinit CountryViewController")
-        coordinator?.coordinatorDidFinish()
+        coordinator.coordinatorDidFinish()
     }
 }
 
@@ -262,8 +276,18 @@ extension CountryViewController: View {
         
         nextButton.rx.tap
             .bind { [weak self] _ in
-                let calendarVC = CalendarViewController()
-                self?.navigationController?.pushViewController(calendarVC, animated: true)
+                guard let self else { return }
+                let selectedCountries = self.reactor.currentState.selectedCountries
+                    .map { CountryItemRequest(name: $0.name) }
+                
+                let tripRequest = TripRequest(
+                    title: "",
+                    startDate: "",
+                    endDate: "",
+                    countryList: selectedCountries,
+                    tripUserList: []
+                )
+                self.coordinator.calendar(tripRequest: tripRequest)
             }.disposed(by: disposeBag)
     }
     
@@ -271,8 +295,8 @@ extension CountryViewController: View {
         reactor.state
             .map { $0.countries }
             .observe(on: MainScheduler.instance)
-            .bind { [weak self] dc in
-                self?.configureSnapshot(dc: dc)
+            .bind { [weak self] dataCountry in
+                self?.configureSnapshot(dc: dataCountry)
             }.disposed(by: disposeBag)
         
         reactor.state
@@ -300,8 +324,7 @@ extension CountryViewController: View {
                     self?.nextButton.isEnabled = true
                     self?.setSelectedCountryViewLayout(isEmpty: false)
                 }
-            }
-            .disposed(by: disposeBag)
+            }.disposed(by: disposeBag)
     }
 }
 

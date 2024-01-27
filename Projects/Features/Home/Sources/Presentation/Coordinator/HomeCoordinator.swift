@@ -32,10 +32,10 @@ final public class HomeCoordinator: HomeCoordinatorInterface {
 extension HomeCoordinator {
 
     public func travelRegisteration() {
-        let travelRegistrationCoordinator = TravelRegistrationCoordinator(navigationController: navigationController)
-        travelRegistrationCoordinator.parent = self
-        addChild(travelRegistrationCoordinator)
-        travelRegistrationCoordinator.start(animated: true)
+        let countryCoordinator = CountryCoordinator(navigationController: navigationController)
+        countryCoordinator.parent = self
+        addChild(countryCoordinator)
+        countryCoordinator.start(animated: true)
     }
 
     public func trip() {

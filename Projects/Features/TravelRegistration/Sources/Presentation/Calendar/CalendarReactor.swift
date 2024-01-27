@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Entity
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -29,9 +30,14 @@ public final class CalendarReactor: Reactor {
         var startDate: Date? = nil
         var endDate: Date? = nil
         var selectedDate: [Date] = []
+        var tripRequest: TripRequest
     }
     
-    public var initialState: State = State()
+    public var initialState: State
+    
+    init(tripRequest: TripRequest) {
+        self.initialState = State(tripRequest: tripRequest)
+    }
     
     // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {
@@ -64,5 +70,12 @@ public final class CalendarReactor: Reactor {
         }
         
         return newState
+    }
+    
+    func formatDateToString(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        return dateFormatter.string(from: date)
     }
 }

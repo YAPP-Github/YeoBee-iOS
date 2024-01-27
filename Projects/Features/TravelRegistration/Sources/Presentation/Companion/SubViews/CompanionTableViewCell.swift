@@ -93,9 +93,9 @@ class CompanionTableViewCell: UITableViewCell {
     
     func configure() {
         guard let companion = companion else { return }
-        profileNameLabel.text = companion.name
-        profileImageView.image = companion.image
         
+        profileNameLabel.text = companion.name
+        profileImageView.image = FaceImageType(rawValue: companion.type)?.iconImage()
     }
     
     private func bind() {

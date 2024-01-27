@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -30,8 +31,9 @@ public enum CompanionType: CaseIterable {
 public final class CompanionViewController: UIViewController {
 
     public var disposeBag = DisposeBag()
-    private let reactor = CompanionReactor()
+    private let reactor: CompanionReactor
     private var dataSource: UITableViewDiffableDataSource<CompanionSection, CompanionDataItem>?
+    private let coordinator: CompanionCoordinator
     
     // MARK: - Properties
     private let titleLabel = YBLabel(text: "여행을 함께 하는 동행이 있나요?", font: .header2, textColor: .black)
@@ -54,17 +56,33 @@ public final class CompanionViewController: UIViewController {
                                           size: .medium)
     
     // MARK: - Life Cycles
+    public init(coordinator: CompanionCoordinator, reactor: CompanionReactor) {
+        self.coordinator = coordinator
+        self.reactor = reactor
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        setView()
         addViews()
         setLayouts()
         bind(reactor: reactor)
+        configureBar()
         setDataSource()
         addCompanionView.configure() // 임시 내 프로필 데이터 설정
     }
     
     // MARK: - Set UI
+    private func setView() {
+        view.backgroundColor = .white
+        coordinator.delegate = self
+    }
+    
     private func addViews() {
         [
             titleLabel,
@@ -153,6 +171,17 @@ public final class CompanionViewController: UIViewController {
             companionTableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: true)
         }
     }
+    
+    private func configureBar() {
+        let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    @objc private func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+        coordinator.coordinatorDidFinish()
+    }
 
     deinit {
         print("deinit CompanionViewController")
@@ -163,11 +192,9 @@ public final class CompanionViewController: UIViewController {
 extension CompanionViewController: CompanionTableViewCellDelegate {
     func changeCompanionName(companion: Companion) {
         guard let indexPath = dataSource?.indexPath(for: .main(companion)) else { return }
-        
-        let changeCompanionNameReactor = ChangeCompanionNameReactor(companion: companion, index: indexPath)
-        let changeCompanionNameVC = ChangeCompanionNameViewController(reactor: changeCompanionNameReactor)
-        changeCompanionNameVC.delegate = self
-        self.navigationController?.pushViewController(changeCompanionNameVC, animated: true)
+        // 동행자 이미지 타입 api 확인 후 변경
+        let tripUserItemRequest = TripUserItemRequest(name: companion.name, type: companion.type)
+        coordinator.changeCompanionName(index: indexPath, tripUserItemRequest: tripUserItemRequest)
     }
     
     func deleteCompanion(companion: Companion) {
@@ -202,6 +229,39 @@ extension CompanionViewController: View {
             .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        nextButton.rx.tap
+            .bind { [weak self] _ in
+                guard let self else { return }
+                
+                switch self.reactor.currentState.companionType {
+                case .none:
+                    break
+                case .companion:
+                    let companions = self.reactor.currentState.companions
+                    let tripUserList = companions.map { TripUserItemRequest(name: $0.name, type: $0.type) }
+                    
+                    let currentTripRequest = self.reactor.currentState.tripRequest
+                    let tripRequest = TripRequest(
+                        title: currentTripRequest.title,
+                        startDate: currentTripRequest.startDate,
+                        endDate: currentTripRequest.endDate,
+                        countryList: currentTripRequest.countryList,
+                        tripUserList: tripUserList
+                    )
+                    self.coordinator.travelTitle(tripRequest: tripRequest)
+                case .alone:
+                    let currentTripRequest = self.reactor.currentState.tripRequest
+                    let tripRequest = TripRequest(
+                        title: currentTripRequest.title,
+                        startDate: currentTripRequest.startDate,
+                        endDate: currentTripRequest.endDate,
+                        countryList: currentTripRequest.countryList,
+                        tripUserList: []
+                    )
+                    self.coordinator.travelTitle(tripRequest: tripRequest)
+                }
+            }.disposed(by: disposeBag)
     }
     
     func bindState(reactor: CompanionReactor) {
@@ -268,9 +328,10 @@ extension CompanionViewController: View {
     }
 }
 
-// MARK: - ChangeCompanionNameViewControllerDelegate
-extension CompanionViewController: ChangeCompanionNameViewControllerDelegate {
-    func modifyCompanionName(companion: Companion, index: IndexPath) {
+// MARK: - CompanionCoordinatorDelegate
+extension CompanionViewController: CompanionCoordinatorDelegate {
+    func changedComanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest) {
+        let companion = Companion(name: tripUserItemRequest.name, type: tripUserItemRequest.type)
         reactor.action.onNext(.updateCompanion(companion, index))
     }
 }

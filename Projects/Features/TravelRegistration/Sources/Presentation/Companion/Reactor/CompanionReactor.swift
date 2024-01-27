@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -33,9 +34,14 @@ public final class CompanionReactor: Reactor {
         var companions: [Companion] = []
         var companionNumber: Int = 0
         var makeLimitToast: Bool = false
+        var tripRequest: TripRequest
     }
     
-    public var initialState: State = State()
+    public var initialState: State
+    
+    init(tripRequest: TripRequest) {
+        self.initialState = State(tripRequest: tripRequest)
+    }
     
     // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {
@@ -64,7 +70,7 @@ public final class CompanionReactor: Reactor {
                 break
             }
             newState.companionNumber += 1
-            newState.companions.append(.init(name: "사용자\(newState.companionNumber)", image: getRandomFaceIcon()))
+            newState.companions.append(.init(name: "사용자\(newState.companionNumber)", type: getRandomFaceString()))
         case .deleteCompanion(let companion):
             if let companionsIndex = newState.companions.firstIndex(where: { $0 == companion }) {
                 newState.companions.remove(at: companionsIndex)
@@ -77,18 +83,11 @@ public final class CompanionReactor: Reactor {
         return newState
     }
     
-    func getRandomFaceIcon() -> UIImage {
-        guard let randomImage = [
-            DesignSystemAsset.Icons.face2.image,
-            DesignSystemAsset.Icons.face3.image,
-            DesignSystemAsset.Icons.face4.image,
-            DesignSystemAsset.Icons.face5.image,
-            DesignSystemAsset.Icons.face6.image,
-            DesignSystemAsset.Icons.face7.image,
-            DesignSystemAsset.Icons.face8.image,
-            DesignSystemAsset.Icons.face9.image
-        ].randomElement() else { return DesignSystemAsset.Icons.face1.image }
-        
-        return randomImage
+    func getRandomFaceString() -> String {
+        if let randomFaceImageType = FaceImageType.allCases.randomElement() {
+            return randomFaceImageType.rawValue
+        } else {
+            return FaceImageType.face1.rawValue
+        }
     }
 }

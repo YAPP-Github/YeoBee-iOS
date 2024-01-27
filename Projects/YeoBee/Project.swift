@@ -31,7 +31,8 @@ let project = Project(
                 .onboarding,
                 .travleEdit,
                 .expenditureEdit,
-                .trip
+                .trip,
+                .entity
             ],
             settings: .settings(base: [
                 "ASSETCATALOG_COMPILER_APPICON_NAME":"AppIcon",

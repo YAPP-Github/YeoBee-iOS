@@ -24,7 +24,8 @@ let project = Project(
                 .RxGesture,
                 .reactorKit,
                 .fscalendar,
-                .coordinator
+                .coordinator,
+                .entity
             ]
         ),
         Project.target(

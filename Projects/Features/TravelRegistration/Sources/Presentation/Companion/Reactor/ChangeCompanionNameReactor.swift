@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Entity
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -22,7 +23,7 @@ public final class ChangeCompanionNameReactor: Reactor {
     }
     
     public struct State {
-        var companion: Companion
+        var tripUserItemRequest: TripUserItemRequest
         var index: IndexPath
         var effectivenessType: EffectivenessType = .none
         var limitedString: String = ""
@@ -30,8 +31,8 @@ public final class ChangeCompanionNameReactor: Reactor {
     
     public let initialState: State
     
-    init(companion: Companion, index: IndexPath) {
-        self.initialState = .init(companion: companion, index: index)
+    init(tripUserItemRequest: TripUserItemRequest, index: IndexPath) {
+        self.initialState = .init(tripUserItemRequest: tripUserItemRequest, index: index)
     }
     
     // MARK: - Mutate

@@ -1,8 +1,8 @@
 //
-//  ChangeCompanionNameViewController.swift
+//  TravelTitleViewController.swift
 //  TravelRegistration
 //
-//  Created by 박현준 on 1/13/24.
+//  Created by 박현준 on 1/24/24.
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 //
 
@@ -14,22 +14,23 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-public final class ChangeCompanionNameViewController: UIViewController {
-
+public final class TravelTitleViewController: UIViewController {
+    
     public var disposeBag = DisposeBag()
-    private let reactor: ChangeCompanionNameReactor
-    let coordinator: ChangeCompanionNameCoordinator
+    private let reactor: TravelTitleReactor
+    private let coordinator: TravelTitleCoordinator
     
     // MARK: - Properties
-    private let titleLabel = YBLabel(text: "이름 변경", font: .header2, textColor: .black)
-    private let nameTextField = YBTextField(backgroundColor: .gray1)
+    private let titleLabel = YBLabel(text: "여행 제목을 입력해주세요.", font: .header2, textColor: .black)
+    private let optionalLabel = YBLabel(text: "(선택)", font: .header2, textColor: .gray4)
+    private let titleTextField = YBTextField(backgroundColor: .gray1)
     private let effectivenessLabel = YBLabel(text: "",font: .body4, textColor: .mainRed)
-    private var modifyButton = YBTextButton(text: "수정하기",
+    private var makeTravelButton = YBTextButton(text: "여행만들기",
                                           appearance: .defaultDisable,
                                           size: .medium)
     
     // MARK: - Life Cycles
-    public init(coordinator: ChangeCompanionNameCoordinator, reactor: ChangeCompanionNameReactor) {
+    init(coordinator: TravelTitleCoordinator, reactor: TravelTitleReactor) {
         self.coordinator = coordinator
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
@@ -42,7 +43,6 @@ public final class ChangeCompanionNameViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setView()
         addViews()
         setLayouts()
         configureBar()
@@ -51,16 +51,13 @@ public final class ChangeCompanionNameViewController: UIViewController {
     }
     
     // MARK: - Set UI
-    private func setView() {
-        title  = "동행자 이름 수정"
-    }
-    
     private func addViews() {
         [
             titleLabel,
-            nameTextField,
+            optionalLabel,
+            titleTextField,
             effectivenessLabel,
-            modifyButton
+            makeTravelButton
         ].forEach {
             view.addSubview($0)
         }
@@ -72,17 +69,21 @@ public final class ChangeCompanionNameViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).inset(24)
             make.leading.equalToSuperview().inset(24)
         }
-        nameTextField.snp.makeConstraints { make in
+        optionalLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.top)
+            make.leading.equalTo(titleLabel.snp.trailing)
+        }
+        titleTextField.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).inset(-14)
             make.leading.equalTo(titleLabel.snp.leading)
             make.trailing.equalToSuperview().inset(24)
         }
         effectivenessLabel.snp.makeConstraints { make in
-            make.top.equalTo(nameTextField.snp.bottom).inset(-10)
-            make.leading.equalTo(nameTextField.snp.leading)
-            make.trailing.equalTo(nameTextField.snp.trailing)
+            make.top.equalTo(titleTextField.snp.bottom).inset(-10)
+            make.leading.equalTo(titleTextField.snp.leading)
+            make.trailing.equalTo(titleTextField.snp.trailing)
         }
-        modifyButton.snp.makeConstraints { make in
+        makeTravelButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
             make.leading.trailing.equalToSuperview().inset(24)
         }
@@ -98,76 +99,63 @@ public final class ChangeCompanionNameViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
         coordinator.coordinatorDidFinish()
     }
-    
+
     deinit {
-        print("deinit ChangeCompanionNameViewController")
+        print("deinit TravelTitleViewController")
     }
 }
 
 // MARK: - Bind
-extension ChangeCompanionNameViewController: View {
-    public func bind(reactor: ChangeCompanionNameReactor) {
+extension TravelTitleViewController: View {
+    public func bind(reactor: TravelTitleReactor) {
         bindAction(reactor: reactor)
         bindState(reactor: reactor)
     }
     
-    func bindAction(reactor: ChangeCompanionNameReactor) {
-        nameTextField.rx.text
-            .map { Reactor.Action.nameTextFieldText(text: $0 ?? "") }
+    func bindAction(reactor: TravelTitleReactor) {
+        titleTextField.rx.text
+            .map { Reactor.Action.titleTextFieldText(text: $0 ?? "") }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        modifyButton.rx.tap
+        makeTravelButton.rx.tap
             .bind { [weak self] _ in
-                if let name = self?.reactor.currentState.limitedString,
-                   let index = self?.reactor.currentState.index,
-                   let type = self?.reactor.currentState.tripUserItemRequest.type {
-                    let tripUserItemRequest = TripUserItemRequest(name: name, type: type)
-                    self?.coordinator.companion(index: index, tripUserItemRequest: tripUserItemRequest)
-                    
-                    self?.navigationController?.popViewController(animated: true)
-                    self?.coordinator.coordinatorDidFinish()
-                }
+                guard let self,
+                      let titleString = self.titleTextField.text else { return }
+                
+                let currentTripRequest = self.reactor.currentState.tripRequest
+                let tripRequest = TripRequest(
+                    title: titleString,
+                    startDate: currentTripRequest.startDate,
+                    endDate: currentTripRequest.endDate,
+                    countryList: currentTripRequest.countryList,
+                    tripUserList: currentTripRequest.tripUserList
+                )
+                print("보낼 데이터: \(tripRequest)")
             }.disposed(by: disposeBag)
     }
     
-    func bindState(reactor: ChangeCompanionNameReactor) {
+    func bindState(reactor: TravelTitleReactor) {
         reactor.state
-            .map { $0.limitedString }
-            .bind(to: nameTextField.rx.text )
-            .disposed(by: disposeBag)
-        
-        reactor.state
-            .map { $0.effectivenessType }
-            .bind { [weak self] type in
-                switch type {
-                case .none:
+            .map { $0.isValidTitleText }
+            .bind { [weak self] isValid in
+                if isValid {
                     self?.effectivenessLabel.text = ""
-                    self?.modifyButton.isEnabled = false
-                    self?.modifyButton.setTitle("수정하기", for: .normal)
-                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
-                case .notValid:
-                    self?.effectivenessLabel.text = "한글/영문 포함 5자까지 입력 가능해요."
-                    self?.modifyButton.isEnabled = false
-                    self?.modifyButton.setTitle("수정하기", for: .normal)
-                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
-                case .containSpecialCharacters:
-                    self?.effectivenessLabel.text = "특수문자는 사용이 불가해요."
-                    self?.modifyButton.isEnabled = false
-                    self?.modifyButton.setTitle("수정하기", for: .normal)
-                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
-                case .valid:
-                    self?.effectivenessLabel.text = ""
-                    self?.modifyButton.isEnabled = true
-                    self?.modifyButton.setTitle("수정하기", for: .normal)
-                    self?.modifyButton.setAppearance(appearance: .default)
+                    self?.makeTravelButton.isEnabled = true
+                    self?.makeTravelButton.setTitle("여행 만들기", for: .normal)
+                    self?.makeTravelButton.setAppearance(appearance: .default)
+                } else {
+                    self?.effectivenessLabel.text = "한글/영문/특수문자 포함 15까지 입력 가능해요."
+                    self?.makeTravelButton.isEnabled = false
+                    self?.makeTravelButton.setTitle("여행 만들기", for: .normal)
+                    self?.makeTravelButton.setAppearance(appearance: .defaultDisable)
                 }
             }.disposed(by: disposeBag)
     }
 }
 
 // MARK: - Keyboard 처리
-extension ChangeCompanionNameViewController {
+extension TravelTitleViewController {
     private func bindKeyboardNotification() {
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
@@ -196,11 +184,11 @@ extension ChangeCompanionNameViewController {
     private func changeModifyButtonLayout(keyboardHeight: CGFloat) {
         UIView.animate(withDuration: 0) {
             if keyboardHeight == 0 {
-                self.modifyButton.snp.updateConstraints { make in
+                self.makeTravelButton.snp.updateConstraints { make in
                     make.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(10)
                 }
             } else {
-                self.modifyButton.snp.updateConstraints { make in
+                self.makeTravelButton.snp.updateConstraints { make in
                     make.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(keyboardHeight)
                 }
             }
@@ -221,9 +209,9 @@ extension ChangeCompanionNameViewController {
 }
 
 // MARK: - UIGestureRecognizerDelegate
-extension ChangeCompanionNameViewController: UIGestureRecognizerDelegate {
+extension TravelTitleViewController: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if touch.view == modifyButton {
+        if touch.view == makeTravelButton {
             return false
         }
         return true

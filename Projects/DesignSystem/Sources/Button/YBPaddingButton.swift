@@ -93,7 +93,7 @@ public final class YBPaddingButton: UIButton {
         setBackgroundColor(selectedBgColor.color, for: .selected)
         layer.cornerRadius = 20
         
-        if let borderColor = borderColor, state != .selected {
+        if let borderColor, state != .selected {
             self.layer.borderColor = borderColor.color.cgColor
             self.layer.borderWidth = 0.4
         }
