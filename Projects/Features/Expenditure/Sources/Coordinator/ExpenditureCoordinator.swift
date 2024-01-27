@@ -59,4 +59,13 @@ extension ExpenditureCoordinator {
         expenditureNavigationController?.tabBarController?.tabBar.isHidden = true
         expenditureNavigationController?.pushViewController(totalExpenditureViewController, animated: true)
     }
+
+    public func expenditureDetail(expenseItem: ExpenseItem) {
+        let expenditureDetailViewController = ExpenditureDetailViewController(
+            coordinator: self,
+            expenseItem: expenseItem
+        )
+        expenditureNavigationController?.tabBarController?.tabBar.isHidden = true
+        expenditureNavigationController?.pushViewController(expenditureDetailViewController, animated: true)
+    }
 }

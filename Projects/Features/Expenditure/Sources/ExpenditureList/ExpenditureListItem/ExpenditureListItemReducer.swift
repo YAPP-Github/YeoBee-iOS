@@ -19,6 +19,7 @@ public struct ExpenditureListItemReducer: Reducer {
     }
 
     public enum Action {
+        case tappedExpenditureItem(ExpenseItem)
     }
 
     public var body: some ReducerOf<ExpenditureListItemReducer> {

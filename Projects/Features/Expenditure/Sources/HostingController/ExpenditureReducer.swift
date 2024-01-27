@@ -63,6 +63,9 @@ public struct ExpenditureReducer: Reducer {
                 return .none
             case .tappedFilterButton:
                 return .none
+            case let .expenditureList(.expenditureListItem(id: _, action: .tappedExpenditureItem(expenseItem))):
+                cooridinator.expenditureDetail(expenseItem: expenseItem)
+                return .none
             default:
                 return .none
             }

@@ -27,4 +27,17 @@ extension ExpendCategory {
         case .travel: return DesignSystemAsset.Icons.travel.swiftUIImage
         }
     }
+
+    var text: String {
+        switch self {
+        case .activity: return "액티비티"
+        case .air: return "항공"
+        case .eating: return "식비"
+        case .shopping: return "쇼핑"
+        case .stay: return "숙박"
+        case .transition: return "교통"
+        case .travel: return "관광"
+        case .etc: return "기타"
+        }
+    }
 }
