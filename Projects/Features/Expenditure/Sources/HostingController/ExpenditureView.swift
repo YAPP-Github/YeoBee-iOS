@@ -50,7 +50,8 @@ extension ExpenditureView {
                     action: ExpenditureReducer.Action.totalPrice
                 )
             )
-            .padding(.bottom, 16)
+            YBDividerView()
+                .padding(.vertical, 16)
             TripDateView(
                 store: store.scope(
                     state: \.tripDate,

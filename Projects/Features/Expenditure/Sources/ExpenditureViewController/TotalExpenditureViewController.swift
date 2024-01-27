@@ -55,8 +55,8 @@ public final class TotalExpenditureViewController: UIViewController {
     }
 
     func setNavigationBar() {
-        let backImage = DesignSystemAsset.Icons.home.image
-            .withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
+        let backImage = DesignSystemAsset.Icons.back.image
+            .withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
     }

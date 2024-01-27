@@ -24,7 +24,8 @@ public struct ExpenditureReducer: Reducer {
 
         init(type: ExpenditureTab) {
             self.type = type
-            self.totalPrice = .init(type: type)
+            self.totalPrice = .init(type: type, isTappable: true
+            )
         }
     }
 

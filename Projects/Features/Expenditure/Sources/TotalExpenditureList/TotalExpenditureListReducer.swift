@@ -10,7 +10,7 @@ import ComposableArchitecture
 
 public struct TotalExpenditureListReducer: Reducer {
     public struct State: Equatable {
-        var totalPrice = TotalPriceReducer.State(type: .shared)
+        var totalPrice = TotalPriceReducer.State(type: .shared, isTappable: false)
         var expenditureList = ExpenditureListReducer.State()
     }
 
