@@ -13,6 +13,7 @@ import DesignSystem
 import SnapKit
 import ComposableArchitecture
 import Coordinator
+import Entity
 
 public final class ExpenditureDetailViewController: UIViewController {
 
@@ -52,7 +53,7 @@ public final class ExpenditureDetailViewController: UIViewController {
     }
 
     func setupViews() {
-        title = expenseItem.expenseType == .expense ? "지출 상세" : "내 예산 상세"
+        title = expenseItem.expenseType == .individualBudgetExpense ? "지출 상세" : "내 예산 상세"
         view.backgroundColor = .ybColor(.white)
     }
 

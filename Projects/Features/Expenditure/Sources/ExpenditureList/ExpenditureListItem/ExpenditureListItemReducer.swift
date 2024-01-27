@@ -7,6 +7,7 @@
 
 import Foundation
 import ComposableArchitecture
+import Entity
 
 public struct ExpenditureListItemReducer: Reducer {
     public struct State: Equatable, Identifiable {

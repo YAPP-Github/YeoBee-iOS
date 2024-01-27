@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
+import Entity
 
 struct ExpenditureListItemView: View {
     typealias State = ExpenditureListItemReducer.State
@@ -26,7 +27,7 @@ extension ExpenditureListItemView {
         let expenseItem: ExpenseItem
         var exchangedPrice: Int? = nil
         var price: String {
-            return expenseItem.expenseType.symbol
+            return "+"
             + " "
             + expenseItem.price.formattedWithSeparator
         }
@@ -59,7 +60,7 @@ extension ExpenditureListItemView {
                             HStack(spacing: 0) {
                                 Text(viewStore.price)
                                     .foregroundColor(
-                                        viewStore.expenseItem.expenseType == .expense
+                                        viewStore.expenseItem.expenseType == .individualBudgetExpense
                                         ? .ybColor(.black)
                                         : .ybColor(.mainGreen)
                                     )
@@ -67,7 +68,7 @@ extension ExpenditureListItemView {
                                     .lineLimit(1)
                                 Text(viewStore.expenseItem.currency.suffix)
                                     .foregroundColor(
-                                        viewStore.expenseItem.expenseType == .expense
+                                        viewStore.expenseItem.expenseType == .individualBudgetExpense
                                         ? .ybColor(.black)
                                         : .ybColor(.mainGreen)
                                     )

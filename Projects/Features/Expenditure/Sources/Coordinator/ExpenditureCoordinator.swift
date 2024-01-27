@@ -11,6 +11,7 @@ import UIKit
 import Coordinator
 
 import ExpenditureEdit
+import Entity
 
 final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInterface {
     public var viewControllerRef: UIViewController?

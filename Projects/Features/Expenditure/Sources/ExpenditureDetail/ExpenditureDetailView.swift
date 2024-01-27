@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
+import Entity
 
 final class ExpenditureDetailHostingController: UIHostingController<ExpenditureDetailView> {
 }
@@ -66,7 +67,7 @@ extension ExpenditureDetailView {
                     .foregroundColor(.ybColor(.gray5))
                     .font(.ybfont(.body1))
             }
-            if expenseItem.expenseType == .expense {
+            if expenseItem.expenseType == .individualBudgetExpense {
                 HStack {
                     Text("카테고리")
                         .foregroundColor(.ybColor(.gray6))
@@ -78,7 +79,7 @@ extension ExpenditureDetailView {
                 }
             }
             HStack {
-                Text(expenseItem.expenseType == .expense ? "지출 항목" : "예산 내용")
+                Text(expenseItem.expenseType == .individualBudgetExpense ? "지출 항목" : "예산 내용")
                     .foregroundColor(.ybColor(.gray6))
                     .font(.ybfont(.body1))
                 Spacer()

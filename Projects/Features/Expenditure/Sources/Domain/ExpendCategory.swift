@@ -9,10 +9,7 @@
 import Foundation
 import SwiftUI
 import DesignSystem
-
-public enum ExpendCategory {
-    case transition, eating, stay, travel, activity, shopping, air, etc
-}
+import Entity
 
 extension ExpendCategory {
     var image: Image {
