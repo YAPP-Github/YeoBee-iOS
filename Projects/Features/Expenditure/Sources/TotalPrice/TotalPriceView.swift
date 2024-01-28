@@ -20,7 +20,7 @@ struct TotalPriceView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack {
                 if viewStore.totalBudgetPrice <= 0 {
-                    totalExpandPriceView(price: viewStore.totalExpandPrice)
+                    totalExpandPriceView(price: viewStore.totalExpandPrice, isTappable: viewStore.isTappable)
                 } else {
                     budgetPriceView(
                         totalExpandPrice: viewStore.totalExpandPrice,
@@ -34,12 +34,12 @@ struct TotalPriceView: View {
 }
 
 extension TotalPriceView {
-    func totalExpandPriceView(price: Int) -> some View {
+    func totalExpandPriceView(price: Int, isTappable: Bool) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             LargeTotalPriceView(title: "총쓴돈", price: price) {
                 store.send(.tappedTotalPrice)
             }
-            YBDividerView()
+            .disabled(!isTappable)
         }
     }
 

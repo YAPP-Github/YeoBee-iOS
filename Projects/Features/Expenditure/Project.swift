@@ -8,7 +8,6 @@ let project = Project(
         automaticSchemesOptions: .disabled
     ),
     packages: [
-        .composableArchitecture
     ],
     settings: .settings(configurations: [
         .debug(name: .debug),
@@ -27,6 +26,7 @@ let project = Project(
                 .reactorKit,
                 .composableArchitecture,
                 .coordinator,
+                .expenditureEdit
             ]
         ),
         Project.target(

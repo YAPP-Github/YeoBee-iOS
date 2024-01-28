@@ -14,9 +14,11 @@ public struct TotalPriceReducer: Reducer {
         var totalExpandPrice: Int = 1000
         var totalBudgetPrice: Int = 0
         var remainBudgetPrice: Int = 0
+        var isTappable: Bool
 
-        init(type: ExpenditureTab) {
+        init(type: ExpenditureTab, isTappable: Bool) {
             self.type = type
+            self.isTappable = isTappable
         }
     }
 

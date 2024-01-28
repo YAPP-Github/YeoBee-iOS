@@ -7,6 +7,7 @@
 
 import Foundation
 import ComposableArchitecture
+import Entity
 
 public struct ExpenditureListItemReducer: Reducer {
     public struct State: Equatable, Identifiable {
@@ -19,6 +20,7 @@ public struct ExpenditureListItemReducer: Reducer {
     }
 
     public enum Action {
+        case tappedExpenditureItem(ExpenseItem)
     }
 
     public var body: some ReducerOf<ExpenditureListItemReducer> {

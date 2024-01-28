@@ -11,6 +11,7 @@ import UIKit
 import Coordinator
 
 import ExpenditureEdit
+import Entity
 
 final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInterface {
     public var viewControllerRef: UIViewController?
@@ -27,6 +28,11 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
     public func start(animated: Bool) {
         let expenditureViewController = ExpenditureViewController(coordinator: self)
         expenditureNavigationController = UINavigationController(rootViewController: expenditureViewController)
+    }
+
+    public func popDidFinish() {
+        expenditureNavigationController?.tabBarController?.tabBar.isHidden = false
+        expenditureNavigationController?.popViewController(animated: true)
     }
 
     public func coordinatorDidFinish() {
@@ -47,5 +53,20 @@ extension ExpenditureCoordinator {
         expenditureEditCoordinator.parent = self
         addChild(expenditureEditCoordinator)
         expenditureEditCoordinator.start(animated: true)
+    }
+
+    public func totalExpenditureList() {
+        let totalExpenditureViewController = TotalExpenditureViewController(coordinator: self)
+        expenditureNavigationController?.tabBarController?.tabBar.isHidden = true
+        expenditureNavigationController?.pushViewController(totalExpenditureViewController, animated: true)
+    }
+
+    public func expenditureDetail(expenseItem: ExpenseItem) {
+        let expenditureDetailViewController = ExpenditureDetailViewController(
+            coordinator: self,
+            expenseItem: expenseItem
+        )
+        expenditureNavigationController?.tabBarController?.tabBar.isHidden = true
+        expenditureNavigationController?.pushViewController(expenditureDetailViewController, animated: true)
     }
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
+import Entity
 
 struct ExpenditureListItemView: View {
     typealias State = ExpenditureListItemReducer.State
@@ -26,7 +27,7 @@ extension ExpenditureListItemView {
         let expenseItem: ExpenseItem
         var exchangedPrice: Int? = nil
         var price: String {
-            return expenseItem.expenseType.symbol
+            return "+"
             + " "
             + expenseItem.price.formattedWithSeparator
         }
@@ -43,42 +44,46 @@ extension ExpenditureListItemView {
 
     var containerView: some View {
         WithViewStore(store, observe: ViewState.init) { viewStore in
-            HStack(alignment: .top, spacing: 12) {
-                viewStore.expenseItem.category.image
-                    .frame(width: 41, height: 41)
-                VStack(alignment: .trailing, spacing: 4) {
-                    HStack(alignment: .top, spacing: 9) {
-                        Text(viewStore.expenseItem.title)
-                            .foregroundColor(.ybColor(.black))
-                            .font(.ybfont(.body2))
-                            .lineLimit(1)
-                        Spacer(minLength: 0)
-                        HStack(spacing: 0) {
-                            Text(viewStore.price)
-                                .foregroundColor(
-                                    viewStore.expenseItem.expenseType == .expense 
-                                    ? .ybColor(.black)
-                                    : .ybColor(.mainGreen)
-                                )
+            Button {
+                viewStore.send(.tappedExpenditureItem(viewStore.expenseItem))
+            } label: {
+                HStack(alignment: .top, spacing: 12) {
+                    viewStore.expenseItem.category.image
+                        .frame(width: 41, height: 41)
+                    VStack(alignment: .trailing, spacing: 4) {
+                        HStack(alignment: .top, spacing: 9) {
+                            Text(viewStore.expenseItem.title)
+                                .foregroundColor(.ybColor(.black))
                                 .font(.ybfont(.body2))
                                 .lineLimit(1)
-                            Text(viewStore.expenseItem.currency.suffix)
-                                .foregroundColor(
-                                    viewStore.expenseItem.expenseType == .expense 
-                                    ? .ybColor(.black)
-                                    : .ybColor(.mainGreen)
-                                )
-                                .font(.ybfont(.body2))
+                            Spacer(minLength: 0)
+                            HStack(spacing: 0) {
+                                Text(viewStore.price)
+                                    .foregroundColor(
+                                        viewStore.expenseItem.expenseType == .individualBudgetExpense
+                                        ? .ybColor(.black)
+                                        : .ybColor(.mainGreen)
+                                    )
+                                    .font(.ybfont(.body2))
+                                    .lineLimit(1)
+                                Text(viewStore.expenseItem.currency.suffix)
+                                    .foregroundColor(
+                                        viewStore.expenseItem.expenseType == .individualBudgetExpense
+                                        ? .ybColor(.black)
+                                        : .ybColor(.mainGreen)
+                                    )
+                                    .font(.ybfont(.body2))
+                            }
+                        }
+                        if let exchangedPrice = viewStore.exchangedPrice {
+                            Text(exchangedPrice.formattedWithSeparator + "원")
+                                .foregroundColor(.ybColor(.gray5))
+                                .font(.ybfont(.body3))
+                                .lineLimit(1)
                         }
                     }
-                    if let exchangedPrice = viewStore.exchangedPrice {
-                        Text(exchangedPrice.formattedWithSeparator + "원")
-                            .foregroundColor(.ybColor(.gray5))
-                            .font(.ybfont(.body3))
-                            .lineLimit(1)
-                    }
+                    .padding(.top, 5)
                 }
-                .padding(.top, 5)
             }
         }
     }

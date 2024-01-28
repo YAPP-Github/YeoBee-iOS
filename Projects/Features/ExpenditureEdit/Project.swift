@@ -8,7 +8,6 @@ let project = Project(
         automaticSchemesOptions: .disabled
     ),
     packages: [
-        .composableArchitecture
     ],
     settings: .settings(configurations: [
         .debug(name: .debug),
@@ -41,7 +40,7 @@ let project = Project(
             product: .unitTests,
             sources: .tests,
             dependencies: [
-                .target(name: "ExpenditureEdit")
+                .expenditureEdit
             ]
         )
     ],

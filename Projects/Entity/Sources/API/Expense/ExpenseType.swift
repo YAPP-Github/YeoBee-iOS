@@ -9,7 +9,7 @@
 import Foundation
 
 // 지출 타입을 위한 Enum
-enum ExpenseType: String, Codable {
+public enum ExpenseType: String, Codable {
     case shared = "SHARED"
     case individual = "INDIVIDUAL"
     case sharedBudgetIncome = "SHARED_BUDGET_INCOME"
