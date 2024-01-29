@@ -120,7 +120,6 @@ public final class CalendarViewController: UIViewController {
     }
 
     deinit {
-        coordinator.coordinatorDidFinish()
         print("deinit CalendarViewController")
     }
 }

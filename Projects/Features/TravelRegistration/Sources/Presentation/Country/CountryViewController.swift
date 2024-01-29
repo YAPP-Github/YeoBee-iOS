@@ -57,7 +57,6 @@ public final class CountryViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setNavSearchBar()
         configureBar()
         addViews()
         setLayouts()
@@ -79,17 +78,6 @@ public final class CountryViewController: UIViewController {
         ].forEach {
             view.addSubview($0)
         }
-    }
-
-    private func configureBar() {
-        let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
-        let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
-        self.navigationItem.leftBarButtonItem = backButton
-    }
-    
-    @objc private func backButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
-        coordinator.coordinatorDidFinish()
     }
 
     private func setLayouts() {
@@ -141,7 +129,7 @@ public final class CountryViewController: UIViewController {
         selectedCountryView.selectedCountryViewDelegate = self
     }
     
-    private func setNavSearchBar() {
+    private func configureBar() {
         let sc = UIScreen.main.bounds.width
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: sc, height: 0))
         searchBar.delegate = self
@@ -155,7 +143,13 @@ public final class CountryViewController: UIViewController {
                 NSAttributedString.Key.font: YBFont.body1.font
             ]
         )
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchBar)
+        
+        let backImage = UIImage(systemName: "xmark")?
+            .withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        
+        self.navigationItem.leftBarButtonItem = backButton
+        self.navigationItem.titleView = searchBar
     }
     
     private func setDataSource() {
@@ -207,10 +201,14 @@ public final class CountryViewController: UIViewController {
     @objc func dismissKeyboard() {
         navigationController?.view.endEditing(true)
     }
+    
+    @objc private func backButtonTapped() {
+        navigationController?.dismiss(animated: true)
+        coordinator.coordinatorDidFinish()
+    }
 
     deinit {
         print("deinit CountryViewController")
-        coordinator.coordinatorDidFinish()
     }
 }
 

@@ -24,16 +24,15 @@ final public class CountryCoordinator: CountryCoordinatorInterface {
 
     public func start(animated: Bool) {
         let countryReactor = CountryReactor()
-        let countryViewController = CountryViewController(coordinator: self, reactor: countryReactor)
-        navigationController.pushViewController(countryViewController, animated: animated)
-    }
-
-    public func popDidFinish() {
-        navigationController.popViewController(animated: true)
+        let countryViewController = UINavigationController(rootViewController: CountryViewController(coordinator: self, 
+                                                                                                     reactor: countryReactor))
+        countryViewController.modalPresentationStyle = .overFullScreen
+        travelRegistrationNavigationController = countryViewController
+        navigationController.present(travelRegistrationNavigationController!, animated: animated)
     }
 
     public func coordinatorDidFinish() {
-        travelRegistrationNavigationController?.dismiss(animated: true)
+        travelRegistrationNavigationController = nil
         parent?.childDidFinish(self)
     }
 
@@ -44,7 +43,7 @@ final public class CountryCoordinator: CountryCoordinatorInterface {
 
 extension CountryCoordinator {
     public func calendar(tripRequest: TripRequest) {
-        let calendarCoordinator = CalendarCoordinator(navigationController: navigationController, 
+        let calendarCoordinator = CalendarCoordinator(navigationController: travelRegistrationNavigationController!,
                                                       tripRequest: tripRequest)
         calendarCoordinator.parent = self
         addChild(calendarCoordinator)
