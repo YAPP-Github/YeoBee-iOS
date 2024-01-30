@@ -11,44 +11,63 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
-public class HomeReactor: Reactor {
-    
-    var dataSource: UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>!
-    var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeDataItem>()
+public final class HomeReactor: Reactor {
     
     public enum Action {
-        
+        case travelingTrip([Trip])
+        case comingTrip([Trip])
+        case passedTrip([Trip])
     }
     
     public enum Mutation {
-        
+        case travelingTrip([Trip])
+        case comingTrip([Trip])
+        case passedTrip([Trip])
     }
     
     public struct State {
-        
+        var travelingTrip: [Trip] = []
+        var comingTrip: [Trip] = []
+        var passedTrip: [Trip] = []
     }
     
     public var initialState: State = State()
     
     // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {
-        
+        switch action {
+        case .travelingTrip(let travelingTrip):
+            return .just(.travelingTrip(travelingTrip))
+        case .comingTrip(let comingTrip):
+            return .just(.comingTrip(comingTrip))
+        case .passedTrip(let passedTrip):
+            return .just(.passedTrip(passedTrip))
+        }
     }
     
     // MARK: - Reduce
     public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         
+        switch mutation {
+        case .travelingTrip(let trips):
+            newState.travelingTrip = trips
+        case .comingTrip(let trips):
+            newState.comingTrip = trips
+        case .passedTrip(let trips):
+            newState.passedTrip = trips
+        }
         
         return newState
     }
     
-    func configureSnapshot(comingData: [Trip], passedData: [Trip]) {
-        snapshot.appendSections([.header, .coming, .passed])
-        // [TODO] 헤더 데이터 값 추가
-        snapshot.appendItems([.header], toSection: .header)
-        snapshot.appendItems(comingData.map { .coming($0) }, toSection: .coming)
-        snapshot.appendItems(passedData.map { .passed($0) }, toSection: .passed)
-        dataSource.apply(snapshot, animatingDifferences: false)
+    func homeTripUseCase() {
+        let travelingTrip: [Trip] = TripDummy.traveling.getTrips()
+        let comingTrip: [Trip] = TripDummy.coming.getTrips()
+        let passedTrip: [Trip] = TripDummy.passed.getTrips()
+        
+        self.action.onNext(.travelingTrip(travelingTrip))
+        self.action.onNext(.comingTrip(comingTrip))
+        self.action.onNext(.passedTrip(passedTrip))
     }
 }

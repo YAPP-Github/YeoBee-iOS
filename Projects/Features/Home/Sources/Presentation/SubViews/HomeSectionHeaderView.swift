@@ -13,11 +13,15 @@ import SnapKit
 class HomeSectionHeaderView: UICollectionReusableView {
     static let identifier = "HomeSectionHeaderView"
     // MARK: - Properties
-    let sectionTitleLabel: UILabel = {
-        $0.font = YBFont.body1.font
-        $0.textColor = YBColor.black.color
+    let sectionTitleLabel = YBLabel(font: .body1, textColor: .black)
+    
+    let moreButton: UIButton = {
+        $0.setTitle("더보기", for: .normal)
+        $0.titleLabel?.font = YBFont.body3.font
+        $0.setTitleColor(YBColor.gray4.color, for: .normal)
+        $0.isHidden = true
         return $0
-    }(UILabel())
+    }(UIButton())
     
     // MARK: -  Life Cycles
     override init(frame: CGRect) {
@@ -34,12 +38,17 @@ class HomeSectionHeaderView: UICollectionReusableView {
     // MARK: - Set UI
     private func addView() {
         addSubview(sectionTitleLabel)
+        addSubview(moreButton)
     }
     
     private func setLayout() {
         sectionTitleLabel.snp.makeConstraints {
             $0.top.trailing.bottom.equalToSuperview()
             $0.leading.equalToSuperview().inset(26)
+        }
+        moreButton.snp.makeConstraints {
+            $0.centerY.equalTo(sectionTitleLabel.snp.centerY)
+            $0.trailing.equalToSuperview().inset(26)
         }
     }
 }

@@ -15,20 +15,24 @@ import Coordinator
 
 enum HomeSection: CaseIterable {
     case header
+    case traveling
     case coming
     case passed
 }
 
 enum HomeDataItem: Hashable {
     case header
+    case traveling(Trip)
     case coming(Trip)
     case passed(Trip)
 }
 
-public class HomeViewController: UIViewController {
+public final class HomeViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
     private let reactor = HomeReactor()
+    private var dataSource: UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>?
+    private var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeDataItem>()
     
     public var coordinator: HomeCoordinator?
 
@@ -44,8 +48,7 @@ public class HomeViewController: UIViewController {
         setDataSource()
         setCollectionViewDelegate()
         bind(reactor: reactor)
-        // 초기 더미 데이터
-        reactor.configureSnapshot(comingData: TripDummy.coming.getTrips(), passedData: TripDummy.passed.getTrips())
+        reactor.homeTripUseCase()
     }
 
     // MARK: - Set UI
@@ -61,11 +64,15 @@ public class HomeViewController: UIViewController {
     }
     
     private func setDataSource() {
-        reactor.dataSource = UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>(collectionView: homeCollectionView) { (collectionView, indexPath, homeItem) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>(collectionView: homeCollectionView) { (collectionView, indexPath, homeItem) -> UICollectionViewCell? in
             switch homeItem {
             case .header:
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionHeaderViewCell.identifier, for: indexPath) as? HomeCollectionHeaderViewCell else { return UICollectionViewCell() }
                 cell.delegate = self
+                return cell
+            case .traveling(let travelingTrip):
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath) as? HomeCollectionViewCell else { return UICollectionViewCell() }
+                cell.configure(trip: travelingTrip)
                 return cell
             case .coming(let comingTrip):
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath) as? HomeCollectionViewCell else { return UICollectionViewCell() }
@@ -77,21 +84,30 @@ public class HomeViewController: UIViewController {
                 return cell
             }
         }
-
-        reactor.dataSource.supplementaryViewProvider = {[weak self] (collectionView: UICollectionView, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
+        
+        dataSource?.supplementaryViewProvider = {[weak self] (collectionView: UICollectionView, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
             if kind == UICollectionView.elementKindSectionHeader {
-                guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomeSectionHeaderView.identifier, for: indexPath) as? HomeSectionHeaderView else {
+                guard let self,
+                      let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomeSectionHeaderView.identifier, for: indexPath) as? HomeSectionHeaderView else {
                     return UICollectionReusableView()
                 }
-                
-                if let snapshot = self?.reactor.snapshot {
-                    if indexPath.section == snapshot.indexOfSection(.coming) {
-//                        let items = snapshot.itemIdentifiers(inSection: .coming)
-                        // [TODO] 다가오는 가장 빠른 여행 출발일 기준 D-day로 설정
-                        header.sectionTitleLabel.text = "다가오는 여행"
-                    } else if indexPath.section == snapshot.indexOfSection(.passed) {
-                        let items = snapshot.itemIdentifiers(inSection: .passed)
-                        header.sectionTitleLabel.text = "지난 여행 (\(items.count))"
+                    
+                if indexPath.section == self.snapshot.indexOfSection(.traveling) {
+                    header.sectionTitleLabel.text = "여행 중"
+                    if self.reactor.currentState.travelingTrip.count > 1 {
+                        header.moreButton.isHidden = false
+                    }
+                } else if indexPath.section == snapshot.indexOfSection(.coming) {
+                    //                        let items = snapshot.itemIdentifiers(inSection: .coming)
+                    // [TODO] 다가오는 가장 빠른 여행 출발일 기준 D-day로 설정
+                    header.sectionTitleLabel.text = "다가오는 여행"
+                    if self.reactor.currentState.comingTrip.count > 1 {
+                        header.moreButton.isHidden = false
+                    }
+                } else if indexPath.section == snapshot.indexOfSection(.passed) {
+                    header.sectionTitleLabel.text = "지난 여행"
+                    if self.reactor.currentState.passedTrip.count > 1 {
+                        header.moreButton.isHidden = false
                     }
                 }
                 
@@ -101,7 +117,29 @@ public class HomeViewController: UIViewController {
             }
         }
         
-        homeCollectionView.dataSource = reactor.dataSource
+        homeCollectionView.dataSource = dataSource
+    }
+    
+    func configureSnapshot(travelingData: [Trip], comingData: [Trip], passedData: [Trip]) {
+        var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeDataItem>()
+        snapshot.appendSections([.header])
+        snapshot.appendItems([.header], toSection: .header)
+        
+        if let travelingTrip = travelingData.first {
+            snapshot.appendSections([.traveling])
+            snapshot.appendItems([.traveling(travelingTrip)], toSection: .traveling)
+        }
+        if let comingTrip = comingData.first {
+            snapshot.appendSections([.coming])
+            snapshot.appendItems([.coming(comingTrip)], toSection: .coming)
+        }
+        if let passedTrip = passedData.first {
+            snapshot.appendSections([.passed])
+            snapshot.appendItems([.passed(passedTrip)], toSection: .passed)
+        }
+        
+        self.snapshot = snapshot
+        self.dataSource?.apply(snapshot, animatingDifferences: false)
     }
     
     private func setCollectionViewDelegate() {
@@ -131,15 +169,19 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UICollectionViewDelegate
 extension HomeViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let section = reactor.snapshot.sectionIdentifiers[indexPath.section]
+        let section = snapshot.sectionIdentifiers[indexPath.section]
         
         switch section {
+        case .traveling:
+            let travelingTrip = snapshot.itemIdentifiers(inSection: .traveling)[indexPath.item]
+            self.coordinator?.trip()
+            print("Selected traveling Trip: \(travelingTrip) \(indexPath.row)")
         case .coming:
-            let comingTrip = reactor.snapshot.itemIdentifiers(inSection: .coming)[indexPath.item]
+            let comingTrip = snapshot.itemIdentifiers(inSection: .coming)[indexPath.item]
             self.coordinator?.trip()
             print("Selected Coming Trip: \(comingTrip) \(indexPath.row)")
         case .passed:
-            let passedTrip = reactor.snapshot.itemIdentifiers(inSection: .passed)[indexPath.item]
+            let passedTrip = snapshot.itemIdentifiers(inSection: .passed)[indexPath.item]
             self.coordinator?.trip()
             print("Selected Passed Trip: \(passedTrip) \(indexPath.row)")
         case .header:
@@ -160,7 +202,19 @@ extension HomeViewController: View {
     }
 
     func bindState(reactor: HomeReactor) {
-
+        Observable.combineLatest(
+            reactor.state.map { $0.travelingTrip },
+            reactor.state.map { $0.comingTrip },
+            reactor.state.map { $0.passedTrip }
+        )
+        .observe(on: MainScheduler.instance)
+        .bind { [weak self] travelingTrip, comingTrip, passedTrip in
+            self?.configureSnapshot(
+                travelingData: travelingTrip,
+                comingData: comingTrip,
+                passedData: passedTrip
+            )
+        }.disposed(by: disposeBag)
     }
 }
 
