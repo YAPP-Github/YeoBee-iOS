@@ -9,9 +9,12 @@
 import UIKit
 import DesignSystem
 import SnapKit
+import RxSwift
 
 class HomeSectionHeaderView: UICollectionReusableView {
     static let identifier = "HomeSectionHeaderView"
+    var disposeBag = DisposeBag()
+    
     // MARK: - Properties
     let sectionTitleLabel = YBLabel(font: .body1, textColor: .black)
     

@@ -95,9 +95,9 @@ public final class HomeViewController: UIViewController {
         }
         
         dataSource?.supplementaryViewProvider = {[weak self] (collectionView: UICollectionView, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
-            guard let self else { return nil }
             if kind == UICollectionView.elementKindSectionHeader {
-                guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomeSectionHeaderView.identifier, for: indexPath) as? HomeSectionHeaderView else {
+                guard let self,
+                      let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomeSectionHeaderView.identifier, for: indexPath) as? HomeSectionHeaderView else {
                     return UICollectionReusableView()
                 }
                 var tripType: TripType?
@@ -124,6 +124,7 @@ public final class HomeViewController: UIViewController {
                     }
                 }
                 
+                header.disposeBag = DisposeBag()
                 // 더보기 Tap 시
                 header.moreButton.rx.tap
                     .throttle(.seconds(2), scheduler: MainScheduler.instance)
@@ -132,7 +133,7 @@ public final class HomeViewController: UIViewController {
                               let tripType else { return }
 
                         self.coordinator?.moreTrip(tripType: tripType)
-                    }.disposed(by: disposeBag)
+                    }.disposed(by: header.disposeBag)
                 
                 return header
             } else {
