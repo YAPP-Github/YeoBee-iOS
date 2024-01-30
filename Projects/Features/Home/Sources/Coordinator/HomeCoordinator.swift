@@ -9,6 +9,7 @@
 import UIKit
 
 import Coordinator
+import Entity
 import TravelRegistration
 import Trip
 
@@ -24,7 +25,6 @@ final public class HomeCoordinator: HomeCoordinatorInterface {
     public func start(animated: Bool = false) {
         let homeViewController = HomeViewController()
         homeViewController.coordinator = self
-        navigationController.isNavigationBarHidden = true
         navigationController.pushViewController(homeViewController, animated: animated)
     }
 }
@@ -43,5 +43,13 @@ extension HomeCoordinator {
         tripCoordinator.parent = self
         addChild(tripCoordinator)
         tripCoordinator.start(animated: true)
+    }
+    
+    public func moreTrip(tripType: TripType) {
+        let moreTripCoordinator = MoreTripCoordinator(navigationController: navigationController,
+                                                      tripType: tripType)
+        moreTripCoordinator.parent = self
+        addChild(moreTripCoordinator)
+        moreTripCoordinator.start(animated: true)
     }
 }

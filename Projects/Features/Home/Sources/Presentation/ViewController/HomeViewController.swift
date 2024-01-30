@@ -7,13 +7,14 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import SnapKit
 import ReactorKit
 import RxSwift
 import RxCocoa
 import Coordinator
 
-enum HomeSection: CaseIterable {
+public enum HomeSection: CaseIterable {
     case header
     case traveling
     case coming
@@ -49,6 +50,14 @@ public final class HomeViewController: UIViewController {
         setCollectionViewDelegate()
         bind(reactor: reactor)
         reactor.homeTripUseCase()
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let coordinator {
+            coordinator.navigationController.isNavigationBarHidden = true
+        }
     }
 
     // MARK: - Set UI
@@ -86,30 +95,44 @@ public final class HomeViewController: UIViewController {
         }
         
         dataSource?.supplementaryViewProvider = {[weak self] (collectionView: UICollectionView, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
+            guard let self else { return nil }
             if kind == UICollectionView.elementKindSectionHeader {
-                guard let self,
-                      let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomeSectionHeaderView.identifier, for: indexPath) as? HomeSectionHeaderView else {
+                guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomeSectionHeaderView.identifier, for: indexPath) as? HomeSectionHeaderView else {
                     return UICollectionReusableView()
                 }
-                    
+                var tripType: TripType?
+                
                 if indexPath.section == self.snapshot.indexOfSection(.traveling) {
                     header.sectionTitleLabel.text = "여행 중"
+                    tripType = .traveling
                     if self.reactor.currentState.travelingTrip.count > 1 {
                         header.moreButton.isHidden = false
                     }
-                } else if indexPath.section == snapshot.indexOfSection(.coming) {
+                } else if indexPath.section == self.snapshot.indexOfSection(.coming) {
                     //                        let items = snapshot.itemIdentifiers(inSection: .coming)
                     // [TODO] 다가오는 가장 빠른 여행 출발일 기준 D-day로 설정
                     header.sectionTitleLabel.text = "다가오는 여행"
+                    tripType = .coming
                     if self.reactor.currentState.comingTrip.count > 1 {
                         header.moreButton.isHidden = false
                     }
-                } else if indexPath.section == snapshot.indexOfSection(.passed) {
+                } else if indexPath.section == self.snapshot.indexOfSection(.passed) {
                     header.sectionTitleLabel.text = "지난 여행"
+                    tripType = .passed
                     if self.reactor.currentState.passedTrip.count > 1 {
                         header.moreButton.isHidden = false
                     }
                 }
+                
+                // 더보기 Tap 시
+                header.moreButton.rx.tap
+                    .throttle(.seconds(2), scheduler: MainScheduler.instance)
+                    .bind { [weak self] in
+                        guard let self,
+                              let tripType else { return }
+
+                        self.coordinator?.moreTrip(tripType: tripType)
+                    }.disposed(by: disposeBag)
                 
                 return header
             } else {
