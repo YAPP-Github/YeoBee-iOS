@@ -39,6 +39,7 @@ public final class HomeViewController: UIViewController {
 
     // MARK: - Properties
     lazy var homeCollectionView = HomeCollectionView()
+    private let emptyTripView = EmptyTripView()
     
     // MARK: - Life Cycles
     public override func viewDidLoad() {
@@ -63,12 +64,18 @@ public final class HomeViewController: UIViewController {
     // MARK: - Set UI
     private func addViews() {
         view.addSubview(homeCollectionView)
+        view.addSubview(emptyTripView)
     }
     
     private func setLayout() {
         homeCollectionView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
+        }
+        emptyTripView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(200)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -231,6 +238,9 @@ extension HomeViewController: View {
             reactor.state.map { $0.comingTrip },
             reactor.state.map { $0.passedTrip }
         )
+        .do(onNext: { [weak self] traveling, coming, passed in
+            self?.emptyTripView.isHidden = (!traveling.isEmpty || !coming.isEmpty || !passed.isEmpty)
+        })
         .observe(on: MainScheduler.instance)
         .bind { [weak self] travelingTrip, comingTrip, passedTrip in
             self?.configureSnapshot(
