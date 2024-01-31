@@ -38,7 +38,6 @@ final public class CompanionCoordinator: NSObject, CompanionCoordinatorInterface
 
     public func coordinatorDidFinish() {
         companionNavigationController = nil
-        parent?.coordinatorDidFinish()
         parent?.childDidFinish(self)
     }
 

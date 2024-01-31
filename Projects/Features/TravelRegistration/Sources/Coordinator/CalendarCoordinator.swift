@@ -34,7 +34,6 @@ final public class CalendarCoordinator: NSObject, CalendarCoordinatorInterface {
 
     public func coordinatorDidFinish() {
         calendarNavigationController = nil
-        parent?.coordinatorDidFinish()
         parent?.childDidFinish(self)
     }
 

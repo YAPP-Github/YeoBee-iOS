@@ -35,7 +35,6 @@ final public class ChangeCompanionNameCoordinator: NSObject, ChangeCompanionName
 
     public func coordinatorDidFinish() {
         ChangeCompanionNameNavigationController = nil
-        parent?.coordinatorDidFinish()
         parent?.childDidFinish(self)
     }
 

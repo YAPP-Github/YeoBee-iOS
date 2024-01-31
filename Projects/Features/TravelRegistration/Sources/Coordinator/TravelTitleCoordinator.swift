@@ -34,7 +34,6 @@ final public class TravelTitleCoordinator: NSObject, TravelTitleCoordinatorInter
 
     public func coordinatorDidFinish() {
         travelTitleNavigationController = nil
-        parent?.coordinatorDidFinish()
         parent?.childDidFinish(self)
     }
 
