@@ -42,6 +42,7 @@ public final class CountryViewController: UIViewController {
     private let selectedCountryView = SelectedCountryView()
     private let dividerView = YBDivider(height: 0.6, color: .gray3)
     private let nextButton = YBTextButton(text: "다음으로", appearance: .defaultDisable, size: .medium)
+    private let emptyView = YBEmptyView(title: "검색 결과가 없어요.")
     
     // MARK: - Life Cycles
     public init(coordinator: CountryCoordinator, reactor: CountryReactor) {
@@ -64,7 +65,7 @@ public final class CountryViewController: UIViewController {
         setDataSource()
         hideKeyboardWhenTappedAround()
         bind(reactor: reactor)
-        reactor.viewDidLoad()
+        reactor.countryUseCase()
     }
 
     // MARK: - Set UI
@@ -74,7 +75,8 @@ public final class CountryViewController: UIViewController {
             countryTableView,
             selectedCountryView,
             dividerView,
-            nextButton
+            nextButton,
+            emptyView
         ].forEach {
             view.addSubview($0)
         }
@@ -103,6 +105,9 @@ public final class CountryViewController: UIViewController {
             make.top.equalTo(horizontalCountryView.snp.bottom)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(dividerView.snp.top)
+        }
+        emptyView.snp.makeConstraints { make in
+            make.edges.equalTo(countryTableView.snp.edges)
         }
     }
     
@@ -292,6 +297,13 @@ extension CountryViewController: View {
     func bindState(reactor: CountryReactor) {
         reactor.state
             .map { $0.countries }
+            .do(onNext: { [weak self] dataCountry in
+                self?.emptyView.isHidden = (!dataCountry.africa.isEmpty ||
+                                            !dataCountry.asia.isEmpty ||
+                                            !dataCountry.europe.isEmpty ||
+                                            !dataCountry.northAmerica.isEmpty || 
+                                            !dataCountry.southAmerica.isEmpty)
+            })
             .observe(on: MainScheduler.instance)
             .bind { [weak self] dataCountry in
                 self?.configureSnapshot(dc: dataCountry)
