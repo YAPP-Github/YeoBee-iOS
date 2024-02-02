@@ -80,31 +80,61 @@ public final class HomeViewController: UIViewController {
     }
     
     private func setDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>(collectionView: homeCollectionView) { (collectionView, indexPath, homeItem) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>(collectionView: homeCollectionView) 
+        { (collectionView, indexPath, homeItem) -> UICollectionViewCell? in
             switch homeItem {
             case .header:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionHeaderViewCell.identifier, for: indexPath) as? HomeCollectionHeaderViewCell else { return UICollectionViewCell() }
+                guard let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: HomeCollectionHeaderViewCell.identifier,
+                    for: indexPath
+                ) as? HomeCollectionHeaderViewCell else {
+                    return UICollectionViewCell()
+                }
                 cell.delegate = self
                 return cell
             case .traveling(let travelingTrip):
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath) as? HomeCollectionViewCell else { return UICollectionViewCell() }
+                guard let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: HomeCollectionViewCell.identifier, 
+                    for: indexPath
+                ) as? HomeCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
                 cell.configure(trip: travelingTrip)
                 return cell
             case .coming(let comingTrip):
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath) as? HomeCollectionViewCell else { return UICollectionViewCell() }
+                guard let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: HomeCollectionViewCell.identifier,
+                    for: indexPath
+                ) as? HomeCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
                 cell.configure(trip: comingTrip)
                 return cell
             case .passed(let passedTrip):
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath) as? HomeCollectionViewCell else { return UICollectionViewCell() }
+                guard let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: HomeCollectionViewCell.identifier,
+                    for: indexPath
+                ) as? HomeCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
                 cell.configure(trip: passedTrip)
                 return cell
             }
         }
         
-        dataSource?.supplementaryViewProvider = {[weak self] (collectionView: UICollectionView, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
+        dataSource?.supplementaryViewProvider = { [weak self] (
+            collectionView: UICollectionView,
+            kind: String,
+            indexPath: IndexPath
+        ) -> UICollectionReusableView? in
+            
             if kind == UICollectionView.elementKindSectionHeader {
                 guard let self,
-                      let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomeSectionHeaderView.identifier, for: indexPath) as? HomeSectionHeaderView else {
+                      let header = collectionView.dequeueReusableSupplementaryView(
+                        ofKind: kind,
+                        withReuseIdentifier: HomeSectionHeaderView.identifier,
+                        for: indexPath
+                      ) as? HomeSectionHeaderView else {
                     return UICollectionReusableView()
                 }
                 header.delegate = self
@@ -115,8 +145,8 @@ public final class HomeViewController: UIViewController {
                         header.moreButton.isHidden = false
                     }
                 } else if indexPath.section == self.snapshot.indexOfSection(.coming) {
-//                     let items = snapshot.itemIdentifiers(inSection: .coming)
-//                     [TODO] 다가오는 가장 빠른 여행 출발일 기준 D-day로 설정
+                    // [TODO] 다가오는 가장 빠른 여행 출발일 기준 D-day로 설정
+//                    let items = snapshot.itemIdentifiers(inSection: .coming)
                     header.sectionTitleLabel.text = TripType.coming.rawValue
                     if self.reactor.currentState.comingTrip.count > 1 {
                         header.moreButton.isHidden = false

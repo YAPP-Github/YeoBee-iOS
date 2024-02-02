@@ -17,7 +17,7 @@ public final class EmptyTripView: UIView {
     }(UIImageView())
     
     private let titleLabel = YBLabel(text: "등록된 여행이 없어요", font: .header2, textColor: .black)
-    private let subTitleLabel = YBLabel(text: "여행을 등록해보세요!", font: .body3, textColor: .gray5)
+    private let subtitleLabel = YBLabel(text: "여행을 등록해보세요!", font: .body3, textColor: .gray5)
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -41,7 +41,7 @@ public final class EmptyTripView: UIView {
         [
             emptyImageView,
             titleLabel,
-            subTitleLabel
+            subtitleLabel
         ].forEach {
             addSubview($0)
         }
@@ -57,7 +57,7 @@ public final class EmptyTripView: UIView {
             make.height.equalTo(128)
             make.width.equalTo(149)
         }
-        subTitleLabel.snp.makeConstraints { make in
+        subtitleLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).inset(-5)
             make.centerX.equalToSuperview()
         }
