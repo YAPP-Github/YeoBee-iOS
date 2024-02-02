@@ -9,11 +9,14 @@
 import UIKit
 import DesignSystem
 import SnapKit
-import RxSwift
+
+protocol HomeSectionHeaderViewDelegate: AnyObject {
+    func moreButtonTapped(tripType: String)
+}
 
 class HomeSectionHeaderView: UICollectionReusableView {
     static let identifier = "HomeSectionHeaderView"
-    var disposeBag = DisposeBag()
+    weak var delegate: HomeSectionHeaderViewDelegate?
     
     // MARK: - Properties
     let sectionTitleLabel = YBLabel(font: .body1, textColor: .black)
@@ -22,6 +25,7 @@ class HomeSectionHeaderView: UICollectionReusableView {
         $0.setTitle("더보기", for: .normal)
         $0.titleLabel?.font = YBFont.body3.font
         $0.setTitleColor(YBColor.gray4.color, for: .normal)
+        $0.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
         $0.isHidden = true
         return $0
     }(UIButton())
@@ -53,5 +57,10 @@ class HomeSectionHeaderView: UICollectionReusableView {
             $0.centerY.equalTo(sectionTitleLabel.snp.centerY)
             $0.trailing.equalToSuperview().inset(26)
         }
+    }
+    
+    @objc func moreButtonTapped() {
+        guard let tripType = sectionTitleLabel.text else { return }
+        delegate?.moreButtonTapped(tripType: tripType)
     }
 }

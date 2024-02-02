@@ -107,40 +107,26 @@ public final class HomeViewController: UIViewController {
                       let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomeSectionHeaderView.identifier, for: indexPath) as? HomeSectionHeaderView else {
                     return UICollectionReusableView()
                 }
-                var tripType: TripType?
+                header.delegate = self
                 
                 if indexPath.section == self.snapshot.indexOfSection(.traveling) {
-                    header.sectionTitleLabel.text = "여행 중"
-                    tripType = .traveling
+                    header.sectionTitleLabel.text = TripType.traveling.rawValue
                     if self.reactor.currentState.travelingTrip.count > 1 {
                         header.moreButton.isHidden = false
                     }
                 } else if indexPath.section == self.snapshot.indexOfSection(.coming) {
-                    //                        let items = snapshot.itemIdentifiers(inSection: .coming)
-                    // [TODO] 다가오는 가장 빠른 여행 출발일 기준 D-day로 설정
-                    header.sectionTitleLabel.text = "다가오는 여행"
-                    tripType = .coming
+//                     let items = snapshot.itemIdentifiers(inSection: .coming)
+//                     [TODO] 다가오는 가장 빠른 여행 출발일 기준 D-day로 설정
+                    header.sectionTitleLabel.text = TripType.coming.rawValue
                     if self.reactor.currentState.comingTrip.count > 1 {
                         header.moreButton.isHidden = false
                     }
                 } else if indexPath.section == self.snapshot.indexOfSection(.passed) {
-                    header.sectionTitleLabel.text = "지난 여행"
-                    tripType = .passed
+                    header.sectionTitleLabel.text = TripType.passed.rawValue
                     if self.reactor.currentState.passedTrip.count > 1 {
                         header.moreButton.isHidden = false
                     }
                 }
-                
-                header.disposeBag = DisposeBag()
-                // 더보기 Tap 시
-                header.moreButton.rx.tap
-                    .throttle(.seconds(2), scheduler: MainScheduler.instance)
-                    .bind { [weak self] in
-                        guard let self,
-                              let tripType else { return }
-
-                        self.coordinator?.moreTrip(tripType: tripType)
-                    }.disposed(by: header.disposeBag)
                 
                 return header
             } else {
@@ -262,3 +248,15 @@ extension HomeViewController: HomeCollectionHeaderViewCellDelegate {
         coordinator?.travelRegisteration()
     }
 }
+
+// MARK: - 더보기
+extension HomeViewController: HomeSectionHeaderViewDelegate {
+    func moreButtonTapped(tripType: String) {
+        TripType.allCases.forEach {
+            if $0.rawValue == tripType {
+                coordinator?.moreTrip(tripType: $0)
+            }
+        }
+    }
+}
+

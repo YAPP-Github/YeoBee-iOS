@@ -8,8 +8,8 @@
 
 import Foundation
 
-public enum TripType {
-    case traveling
-    case coming
-    case passed
+public enum TripType: String, CaseIterable {
+    case traveling = "여행 중"
+    case coming = "다가오는 여행"
+    case passed = "지난 여행"
 }
