@@ -26,7 +26,8 @@ let project = Project(
                 .reactorKit,
                 .composableArchitecture,
                 .coordinator,
-                .expenditureEdit
+                .expenditureEdit,
+                .usecase
             ]
         ),
         Project.target(

@@ -9,16 +9,42 @@
 import Foundation
 
 // FetchExpenseListResponse 전체 모델
-struct FetchExpenseListResponse: Codable {
-    var content: [ExpenseItem]
-    var pageable: Pageable
-    var totalPages: Int
-    var totalElements: Int
-    var last: Bool
-    var size: Int
-    var number: Int
-    var sort: SortType
-    var numberOfElements: Int
-    var first: Bool
-    var empty: Bool
+public struct FetchExpenseListResponse: Codable {
+    public var content: [ExpenseItem]
+    public var pageable: Pageable
+    public var totalPages: Int
+    public var totalElements: Int
+    public var last: Bool
+    public var size: Int
+    public var number: Int
+    public var sort: SortType
+    public var numberOfElements: Int
+    public var first: Bool
+    public var empty: Bool
+
+    public init(
+        content: [ExpenseItem],
+        pageable: Pageable,
+        totalPages: Int,
+        totalElements: Int,
+        last: Bool,
+        size: Int,
+        number: Int,
+        sort: SortType,
+        numberOfElements: Int,
+        first: Bool,
+        empty: Bool
+    ) {
+        self.content = content
+        self.pageable = pageable
+        self.totalPages = totalPages
+        self.totalElements = totalElements
+        self.last = last
+        self.size = size
+        self.number = number
+        self.sort = sort
+        self.numberOfElements = numberOfElements
+        self.first = first
+        self.empty = empty
+    }
 }

@@ -24,7 +24,8 @@ let project = Project(
                 .RxCocoa,
                 .reactorKit,
                 .composableArchitecture,
-                .coordinator
+                .coordinator,
+                .usecase
             ]
         ),
         Project.target(

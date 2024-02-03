@@ -9,7 +9,8 @@ let dependencies = Dependencies(
             .reactorKit,
             .fscalendar,
             .RxGesture,
-            .composableArchitecture
+            .composableArchitecture,
+            .SnapKit
         ],
         productTypes: [
             "RxSwift": .framework,
@@ -18,7 +19,8 @@ let dependencies = Dependencies(
             "ReactorKit": .framework,
             "FSCalendar": .framework,
             "RxGesture": .framework,
-            "ComposableArchitecture": .framework
+            "ComposableArchitecture": .framework,
+            "Snapkit": .framework
         ],
         baseSettings: .settings(
             configurations: [

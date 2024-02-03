@@ -41,6 +41,9 @@ public extension TargetDependency {
     static let trip: TargetDependency = .project(
         target: "Trip",
         path: .relativeToRoot("Projects/Features/Trip"))
+    static let usecase: TargetDependency = .project(
+        target: "UseCase",
+        path: .relativeToRoot("Projects/UseCase"))
     static let repository: TargetDependency = .project(
         target: "Repository",
         path: .relativeToRoot("Projects/Repository"))
@@ -53,7 +56,7 @@ public extension TargetDependency {
     static let RxCocoa: TargetDependency = .external(name: "RxCocoa")
     static let moya: TargetDependency = .external(name: "Moya")
     static let reactorKit: TargetDependency = .external(name: "ReactorKit")
-    static let SnapKit: TargetDependency = .package(product: "SnapKit")
+    static let SnapKit: TargetDependency = .external(name: "SnapKit")
     static let fscalendar: TargetDependency = .external(name: "FSCalendar")
     static let composableArchitecture: TargetDependency = .external(name: "ComposableArchitecture")
 }

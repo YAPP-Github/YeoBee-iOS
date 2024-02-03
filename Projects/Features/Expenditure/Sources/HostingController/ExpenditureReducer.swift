@@ -7,6 +7,7 @@
 
 import Combine
 import ComposableArchitecture
+import UseCase
 
 public struct ExpenditureReducer: Reducer {
 
@@ -15,7 +16,6 @@ public struct ExpenditureReducer: Reducer {
     init(cooridinator: ExpenditureCoordinator) {
         self.cooridinator = cooridinator
     }
-
     public struct State: Equatable {
         var type: ExpenditureTab
         var totalPrice: TotalPriceReducer.State
@@ -36,6 +36,8 @@ public struct ExpenditureReducer: Reducer {
         case tappedAddButton
         case tappedFilterButton
     }
+
+    @Dependency(\.expenseUseCase) var expenseUseCase
 
     public var body: some ReducerOf<ExpenditureReducer> {
         Reduce { state, action in
@@ -62,7 +64,10 @@ public struct ExpenditureReducer: Reducer {
                 cooridinator.totalExpenditureList()
                 return .none
             case .tappedFilterButton:
-                return .none
+                return .run { _ in
+                    let result = try await expenseUseCase.getExpenseList("냠냠")
+                    print(result)
+                }
             case let .expenditureList(.expenditureListItem(id: _, action: .tappedExpenditureItem(expenseItem))):
                 cooridinator.expenditureDetail(expenseItem: expenseItem)
                 return .none
