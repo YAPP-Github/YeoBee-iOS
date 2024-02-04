@@ -33,7 +33,7 @@ public final class CompanionViewController: UIViewController {
     public var disposeBag = DisposeBag()
     private let reactor: CompanionReactor
     private var dataSource: UITableViewDiffableDataSource<CompanionSection, CompanionDataItem>?
-    private let coordinator: CompanionCoordinator
+    private let coordinator: TravelRegistrationCoordinator
     
     // MARK: - Properties
     private let titleLabel = YBLabel(text: "여행을 함께 하는 동행이 있나요?", font: .header2, textColor: .black)
@@ -56,7 +56,7 @@ public final class CompanionViewController: UIViewController {
                                           size: .medium)
     
     // MARK: - Life Cycles
-    public init(coordinator: CompanionCoordinator, reactor: CompanionReactor) {
+    public init(coordinator: TravelRegistrationCoordinator, reactor: CompanionReactor) {
         self.coordinator = coordinator
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
@@ -80,7 +80,6 @@ public final class CompanionViewController: UIViewController {
     // MARK: - Set UI
     private func setView() {
         view.backgroundColor = .white
-        coordinator.delegate = self
     }
     
     private func addViews() {
@@ -180,7 +179,6 @@ public final class CompanionViewController: UIViewController {
     
     @objc private func backButtonTapped() {
         self.navigationController?.popViewController(animated: true)
-        coordinator.coordinatorDidFinish()
     }
 
     deinit {
@@ -194,7 +192,11 @@ extension CompanionViewController: CompanionTableViewCellDelegate {
         guard let indexPath = dataSource?.indexPath(for: .main(companion)) else { return }
         // 동행자 이미지 타입 api 확인 후 변경
         let tripUserItemRequest = TripUserItemRequest(name: companion.name, type: companion.type)
-        coordinator.changeCompanionName(index: indexPath, tripUserItemRequest: tripUserItemRequest)
+        
+        let changeCompanionNameReactor = ChangeCompanionNameReactor(tripUserItemRequest: tripUserItemRequest, index: indexPath)
+        let changeCompanionNameViewController = ChangeCompanionNameViewController(reactor: changeCompanionNameReactor)
+        changeCompanionNameViewController.delegate = self
+        self.navigationController?.pushViewController(changeCompanionNameViewController, animated: true)
     }
     
     func deleteCompanion(companion: Companion) {
@@ -249,7 +251,11 @@ extension CompanionViewController: View {
                         countryList: currentTripRequest.countryList,
                         tripUserList: tripUserList
                     )
-                    self.coordinator.travelTitle(tripRequest: tripRequest)
+                    
+                    let travelTtitleReactor = TravelTitleReactor(tripRequest: tripRequest)
+                    let travelTitleViewController = TravelTitleViewController(coordinator: self.coordinator, 
+                                                                              reactor: travelTtitleReactor)
+                    self.navigationController?.pushViewController(travelTitleViewController, animated: true)
                 case .alone:
                     let currentTripRequest = self.reactor.currentState.tripRequest
                     let tripRequest = TripRequest(
@@ -259,7 +265,10 @@ extension CompanionViewController: View {
                         countryList: currentTripRequest.countryList,
                         tripUserList: []
                     )
-                    self.coordinator.travelTitle(tripRequest: tripRequest)
+                    let travelTtitleReactor = TravelTitleReactor(tripRequest: tripRequest)
+                    let travelTitleViewController = TravelTitleViewController(coordinator: self.coordinator, 
+                                                                              reactor: travelTtitleReactor)
+                    self.navigationController?.pushViewController(travelTitleViewController, animated: true)
                 }
             }.disposed(by: disposeBag)
     }
@@ -328,9 +337,9 @@ extension CompanionViewController: View {
     }
 }
 
-// MARK: - CompanionCoordinatorDelegate
-extension CompanionViewController: CompanionCoordinatorDelegate {
-    func changedComanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest) {
+//MARK: - ChangeCompanionNameViewControllerDelegate
+extension CompanionViewController: ChangeCompanionNameViewControllerDelegate {
+    func changedCompanionName(index: IndexPath, tripUserItemRequest: Entity.TripUserItemRequest) {
         let companion = Companion(name: tripUserItemRequest.name, type: tripUserItemRequest.type)
         reactor.action.onNext(.updateCompanion(companion, index))
     }

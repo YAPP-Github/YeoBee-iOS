@@ -284,9 +284,11 @@ extension HomeViewController: HomeSectionHeaderViewDelegate {
     func moreButtonTapped(tripType: String) {
         TripType.allCases.forEach {
             if $0.rawValue == tripType {
-                coordinator?.moreTrip(tripType: $0)
+                let moreTripReactor = MoreTripReactor(tripType: $0)
+                let moreTripViewController = MoreTripViewController(reactor: moreTripReactor)
+                self.navigationController?.isNavigationBarHidden = false
+                self.navigationController?.pushViewController(moreTripViewController, animated: true)
             }
         }
     }
 }
-

@@ -14,11 +14,15 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
+protocol ChangeCompanionNameViewControllerDelegate: AnyObject {
+    func changedCompanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest)
+}
+
 public final class ChangeCompanionNameViewController: UIViewController {
 
     public var disposeBag = DisposeBag()
     private let reactor: ChangeCompanionNameReactor
-    let coordinator: ChangeCompanionNameCoordinator
+    weak var delegate: ChangeCompanionNameViewControllerDelegate?
     
     // MARK: - Properties
     private let titleLabel = YBLabel(text: "이름 변경", font: .header2, textColor: .black)
@@ -29,8 +33,7 @@ public final class ChangeCompanionNameViewController: UIViewController {
                                           size: .medium)
     
     // MARK: - Life Cycles
-    public init(coordinator: ChangeCompanionNameCoordinator, reactor: ChangeCompanionNameReactor) {
-        self.coordinator = coordinator
+    public init(reactor: ChangeCompanionNameReactor) {
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -96,7 +99,6 @@ public final class ChangeCompanionNameViewController: UIViewController {
     
     @objc private func backButtonTapped() {
         self.navigationController?.popViewController(animated: true)
-        coordinator.coordinatorDidFinish()
     }
     
     deinit {
@@ -123,10 +125,9 @@ extension ChangeCompanionNameViewController: View {
                    let index = self?.reactor.currentState.index,
                    let type = self?.reactor.currentState.tripUserItemRequest.type {
                     let tripUserItemRequest = TripUserItemRequest(name: name, type: type)
-                    self?.coordinator.companion(index: index, tripUserItemRequest: tripUserItemRequest)
                     
+                    self?.delegate?.changedCompanionName(index: index, tripUserItemRequest: tripUserItemRequest)
                     self?.navigationController?.popViewController(animated: true)
-                    self?.coordinator.coordinatorDidFinish()
                 }
             }.disposed(by: disposeBag)
     }

@@ -34,7 +34,7 @@ public final class CountryViewController: UIViewController {
     public var disposeBag = DisposeBag()
     private let reactor: CountryReactor
     private var dataSource: UITableViewDiffableDataSource<CountrySection, CountryDataItem>?
-    private let coordinator: CountryCoordinator
+    private let coordinator: TravelRegistrationCoordinator
     
     // MARK: - Properties
     private let countryTableView = CountryTableView()
@@ -45,7 +45,7 @@ public final class CountryViewController: UIViewController {
     private let emptyView = YBEmptyView(title: "검색 결과가 없어요.")
     
     // MARK: - Life Cycles
-    public init(coordinator: CountryCoordinator, reactor: CountryReactor) {
+    public init(coordinator: TravelRegistrationCoordinator, reactor: CountryReactor) {
         self.reactor = reactor
         self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
@@ -290,7 +290,10 @@ extension CountryViewController: View {
                     countryList: selectedCountries,
                     tripUserList: []
                 )
-                self.coordinator.calendar(tripRequest: tripRequest)
+                
+                let calendarReactor = CalendarReactor(tripRequest: tripRequest)
+                let calendarViewController = CalendarViewController(coordinator: self.coordinator, reactor: calendarReactor)
+                self.navigationController?.pushViewController(calendarViewController, animated: true)
             }.disposed(by: disposeBag)
     }
     

@@ -27,14 +27,12 @@ public final class MoreTripViewController: UIViewController {
     public var disposeBag = DisposeBag()
     private let reactor: MoreTripReactor
     private var dataSource: UICollectionViewDiffableDataSource<MoreTripSection, MoreTripDataItem>?
-    private let coordinator: MoreTripCoordinator
     
     // MARK: - Properties
     lazy var moreTripCollectionView = HomeCollectionView()
     
     // MARK: - Life Cycles
-    init(coordinator: MoreTripCoordinator, reactor: MoreTripReactor) {
-        self.coordinator = coordinator
+    init(reactor: MoreTripReactor) {
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -100,7 +98,6 @@ public final class MoreTripViewController: UIViewController {
     
     @objc private func backButtonTapped() {
         self.navigationController?.popViewController(animated: true)
-        coordinator.coordinatorDidFinish()
     }
 
     deinit {

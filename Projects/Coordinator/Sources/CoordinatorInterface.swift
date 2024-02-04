@@ -14,30 +14,9 @@ public protocol SignCoordinatorInterface: ParentCoordinator, Coordinator { }
 public protocol HomeCoordinatorInterface: ParentCoordinator, Coordinator {
     func travelRegisteration()
     func trip()
-    func moreTrip(tripType: TripType)
 }
 
-public protocol MoreTripCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
-
-public protocol CountryCoordinatorInterface: ParentCoordinator, ChildCoordinator {
-    func calendar(tripRequest: TripRequest)
-}
-
-public protocol CalendarCoordinatorInterface: ParentCoordinator, ChildCoordinator { 
-    func companion(tripRequest: TripRequest)
-}
-
-public protocol CompanionCoordinatorInterface: ParentCoordinator, ChildCoordinator {
-    func changeCompanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest)
-    func travelTitle(tripRequest: TripRequest)
-    func changedCompanionName(index: IndexPath, tripUserItemRequest: TripUserItemRequest)
-}
-
-public protocol ChangeCompanionNameCoordinatorInterface:ParentCoordinator, ChildCoordinator {
-    func companion(index: IndexPath, tripUserItemRequest: TripUserItemRequest)
-}
-
-public protocol TravelTitleCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
+public protocol TravelRegistrationCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 
 public protocol TripCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 

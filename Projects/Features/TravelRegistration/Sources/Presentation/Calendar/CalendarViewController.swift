@@ -19,7 +19,7 @@ public final class CalendarViewController: UIViewController {
 
     public var disposeBag = DisposeBag()
     private let reactor: CalendarReactor
-    let coordinator: CalendarCoordinator
+    let coordinator: TravelRegistrationCoordinator
     
     private var dateformatter: DateFormatter = {
         $0.dateFormat = "MM.dd E"
@@ -46,7 +46,7 @@ public final class CalendarViewController: UIViewController {
                                           size: .medium)
     
     // MARK: - Life Cycles
-    init(coordinator: CalendarCoordinator, reactor: CalendarReactor) {
+    init(coordinator: TravelRegistrationCoordinator, reactor: CalendarReactor) {
         self.coordinator = coordinator
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
@@ -116,7 +116,6 @@ public final class CalendarViewController: UIViewController {
     
     @objc private func backButtonTapped() {
         self.navigationController?.popViewController(animated: true)
-        coordinator.coordinatorDidFinish()
     }
 
     deinit {
@@ -333,7 +332,11 @@ extension CalendarViewController: View {
                         endDate: self.reactor.formatDateToString(endDate),
                         countryList: self.reactor.currentState.tripRequest.countryList,
                         tripUserList: [])
-                    self.coordinator.companion(tripRequest: tripRequest)
+                    
+                    let companionReactor = CompanionReactor(tripRequest: tripRequest)
+                    let companionViewController = CompanionViewController(coordinator: self.coordinator,
+                                                                          reactor: companionReactor)
+                    self.navigationController?.pushViewController(companionViewController, animated: true)
                 }
             }.disposed(by: disposeBag)
     }

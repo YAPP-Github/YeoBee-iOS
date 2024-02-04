@@ -18,7 +18,7 @@ public final class TravelTitleViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
     private let reactor: TravelTitleReactor
-    private let coordinator: TravelTitleCoordinator
+    private let coordinator: TravelRegistrationCoordinator
     
     // MARK: - Properties
     private let titleLabel = YBLabel(text: "여행 제목을 입력해주세요.", font: .header2, textColor: .black)
@@ -30,7 +30,7 @@ public final class TravelTitleViewController: UIViewController {
                                           size: .medium)
     
     // MARK: - Life Cycles
-    init(coordinator: TravelTitleCoordinator, reactor: TravelTitleReactor) {
+    init(coordinator: TravelRegistrationCoordinator ,reactor: TravelTitleReactor) {
         self.coordinator = coordinator
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
@@ -97,7 +97,6 @@ public final class TravelTitleViewController: UIViewController {
     
     @objc private func backButtonTapped() {
         self.navigationController?.popViewController(animated: true)
-        coordinator.coordinatorDidFinish()
     }
 
     deinit {
@@ -132,6 +131,9 @@ extension TravelTitleViewController: View {
                     tripUserList: currentTripRequest.tripUserList
                 )
                 print("보낼 데이터: \(tripRequest)")
+                
+                self.navigationController?.dismiss(animated: true)
+                self.coordinator.coordinatorDidFinish()
             }.disposed(by: disposeBag)
     }
     
