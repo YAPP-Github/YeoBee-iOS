@@ -45,12 +45,12 @@ final public class ExpenseRepository: ExpenseRepositoryInterface {
     public func createExpense(request: FetchExpenseListRequest) async throws -> CreateExpenseResponse {
         let result = await provider.request(
             .create(request)
-       )
-       switch result {
-       case let .success(response):
-           return try decode(data: response.data)
-       case .failure(let failure):
-           throw failure
-       }
+        )
+        switch result {
+        case let .success(response):
+            return try decode(data: response.data)
+        case .failure(let failure):
+            throw failure
+        }
     }
 }
