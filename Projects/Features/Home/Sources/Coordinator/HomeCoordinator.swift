@@ -44,12 +44,4 @@ extension HomeCoordinator {
         addChild(tripCoordinator)
         tripCoordinator.start(animated: true)
     }
-    
-//    public func moreTrip(tripType: TripType) {
-//        let moreTripCoordinator = MoreTripCoordinator(navigationController: navigationController,
-//                                                      tripType: tripType)
-//        moreTripCoordinator.parent = self
-//        addChild(moreTripCoordinator)
-//        moreTripCoordinator.start(animated: true)
-//    }
 }

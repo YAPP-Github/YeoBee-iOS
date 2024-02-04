@@ -27,12 +27,14 @@ public final class MoreTripViewController: UIViewController {
     public var disposeBag = DisposeBag()
     private let reactor: MoreTripReactor
     private var dataSource: UICollectionViewDiffableDataSource<MoreTripSection, MoreTripDataItem>?
+    let coordinator: HomeCoordinator
     
     // MARK: - Properties
     lazy var moreTripCollectionView = HomeCollectionView()
     
     // MARK: - Life Cycles
-    init(reactor: MoreTripReactor) {
+    init(coordinator: HomeCoordinator, reactor: MoreTripReactor) {
+        self.coordinator = coordinator
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -115,7 +117,7 @@ extension MoreTripViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UICollectionViewDelegate
 extension MoreTripViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // coordinator trip 연결 예정
+        coordinator.trip()
     }
 }
 

@@ -34,7 +34,6 @@ public final class HomeViewController: UIViewController {
     private let reactor = HomeReactor()
     private var dataSource: UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>?
     private var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeDataItem>()
-    
     public var coordinator: HomeCoordinator?
 
     // MARK: - Properties
@@ -285,7 +284,7 @@ extension HomeViewController: HomeSectionHeaderViewDelegate {
         TripType.allCases.forEach {
             if $0.rawValue == tripType {
                 let moreTripReactor = MoreTripReactor(tripType: $0)
-                let moreTripViewController = MoreTripViewController(reactor: moreTripReactor)
+                let moreTripViewController = MoreTripViewController(coordinator: coordinator!, reactor: moreTripReactor)
                 self.navigationController?.isNavigationBarHidden = false
                 self.navigationController?.pushViewController(moreTripViewController, animated: true)
             }
