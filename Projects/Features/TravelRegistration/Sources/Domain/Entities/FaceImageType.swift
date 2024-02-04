@@ -10,18 +10,21 @@ import UIKit
 import DesignSystem
 
 public enum FaceImageType: String, CaseIterable {
-    case face1 = "face1"
-    case face2 = "face2"
-    case face3 = "face3"
-    case face4 = "face4"
-    case face5 = "face5"
-    case face6 = "face6"
-    case face7 = "face7"
-    case face8 = "face8"
-    case face9 = "face9"
+    case face0 = "Image0"
+    case face1 = "Image1"
+    case face2 = "Image2"
+    case face3 = "Image3"
+    case face4 = "Image4"
+    case face5 = "Image5"
+    case face6 = "Image6"
+    case face7 = "Image7"
+    case face8 = "Image8"
+    case face9 = "Image9"
     
     public func iconImage() -> UIImage {
         switch self {
+        case .face0:
+            return DesignSystemAsset.Icons.face0.image
         case .face1:
             return DesignSystemAsset.Icons.face1.image
         case .face2:

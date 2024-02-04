@@ -12,25 +12,14 @@ import SnapKit
 
 class HomeAddTripView: UIView {
 
-    private let greenCircleView: UIView = {
-        $0.backgroundColor = YBColor.mainGreen.color
+    private let plusCircleView : UIImageView = {
+        $0.image = DesignSystemAsset.Icons.plusButton.image
         $0.layer.cornerRadius = 22
         return $0
-    }(UIView())
+    }(UIImageView())
     
-    private let tripTitleLabel: UILabel = {
-        $0.text = "여행 등록하기"
-        $0.font = YBFont.header2.font
-        $0.textColor = YBColor.black.color
-        return $0
-    }(UILabel())
-    
-    private let tripSubTitleLabel: UILabel = {
-        $0.text = "경비 관리를 위해 여행을 등록해보세요!"
-        $0.font = YBFont.body3.font
-        $0.textColor = YBColor.black.color
-        return $0
-    }(UILabel())
+    private let tripTitleLabel = YBLabel(text: "여행 등록하기", font: .header2, textColor: .black)
+    private let tripSubTitleLabel = YBLabel(text: "경비 관리를 위해 여행을 등록해보세요!", font: .body3, textColor: .black)
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -54,7 +43,7 @@ class HomeAddTripView: UIView {
     
     private func addViews() {
         [
-            greenCircleView,
+            plusCircleView,
             tripTitleLabel,
             tripSubTitleLabel
         ].forEach {
@@ -63,14 +52,14 @@ class HomeAddTripView: UIView {
     }
     
     private func setLayouts() {
-        greenCircleView.snp.makeConstraints { make in
+        plusCircleView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.size.equalTo(44)
             make.leading.equalToSuperview().inset(22)
         }
         tripTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(greenCircleView.snp.top)
-            make.leading.equalTo(greenCircleView.snp.trailing).inset(-25)
+            make.top.equalTo(plusCircleView.snp.top)
+            make.leading.equalTo(plusCircleView.snp.trailing).inset(-25)
         }
         tripSubTitleLabel.snp.makeConstraints { make in
             make.top.equalTo(tripTitleLabel.snp.bottom).inset(-5)

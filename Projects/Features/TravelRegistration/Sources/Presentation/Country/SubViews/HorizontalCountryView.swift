@@ -100,6 +100,9 @@ class HorizontalCountryView: UIScrollView {
                     self?.selectedButton?.isSelected = false
                     self?.selectedButton = totalButton
                     totalButton.isSelected.toggle()
+                    
+                    // scrollView contentOffset을 제일 좌측으로 변경
+                    self?.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
                 })
                 .disposed(by: disposeBag)
             totalButton.sendActions(for: .touchUpInside)

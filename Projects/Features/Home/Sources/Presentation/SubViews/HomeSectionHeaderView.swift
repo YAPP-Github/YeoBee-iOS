@@ -10,14 +10,25 @@ import UIKit
 import DesignSystem
 import SnapKit
 
+protocol HomeSectionHeaderViewDelegate: AnyObject {
+    func moreButtonTapped(tripType: String)
+}
+
 class HomeSectionHeaderView: UICollectionReusableView {
     static let identifier = "HomeSectionHeaderView"
+    weak var delegate: HomeSectionHeaderViewDelegate?
+    
     // MARK: - Properties
-    let sectionTitleLabel: UILabel = {
-        $0.font = YBFont.body1.font
-        $0.textColor = YBColor.black.color
+    let sectionTitleLabel = YBLabel(font: .body1, textColor: .black)
+    
+    let moreButton: UIButton = {
+        $0.setTitle("더보기", for: .normal)
+        $0.titleLabel?.font = YBFont.body3.font
+        $0.setTitleColor(YBColor.gray4.color, for: .normal)
+        $0.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
+        $0.isHidden = true
         return $0
-    }(UILabel())
+    }(UIButton())
     
     // MARK: -  Life Cycles
     override init(frame: CGRect) {
@@ -34,6 +45,7 @@ class HomeSectionHeaderView: UICollectionReusableView {
     // MARK: - Set UI
     private func addView() {
         addSubview(sectionTitleLabel)
+        addSubview(moreButton)
     }
     
     private func setLayout() {
@@ -41,5 +53,14 @@ class HomeSectionHeaderView: UICollectionReusableView {
             $0.top.trailing.bottom.equalToSuperview()
             $0.leading.equalToSuperview().inset(26)
         }
+        moreButton.snp.makeConstraints {
+            $0.centerY.equalTo(sectionTitleLabel.snp.centerY)
+            $0.trailing.equalToSuperview().inset(26)
+        }
+    }
+    
+    @objc func moreButtonTapped() {
+        guard let tripType = sectionTitleLabel.text else { return }
+        delegate?.moreButtonTapped(tripType: tripType)
     }
 }

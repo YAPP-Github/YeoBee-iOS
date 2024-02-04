@@ -18,6 +18,7 @@ class CountrySectionHeaderView: UITableViewHeaderFooterView {
     // MARK: -  Life Cycles
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
+        setView()
         addView()
         setLayout()
     }
@@ -27,6 +28,10 @@ class CountrySectionHeaderView: UITableViewHeaderFooterView {
     }
 
     // MARK: - Set UI
+    private func setView() {
+        backgroundColor = YBColor.gray1.color
+    }
+    
     private func addView() {
         addSubview(sectionTitleLabel)
     }

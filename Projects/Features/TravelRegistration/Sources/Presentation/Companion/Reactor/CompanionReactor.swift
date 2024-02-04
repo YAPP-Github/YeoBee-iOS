@@ -70,7 +70,7 @@ public final class CompanionReactor: Reactor {
                 break
             }
             newState.companionNumber += 1
-            newState.companions.append(.init(name: "사용자\(newState.companionNumber)", type: getRandomFaceString()))
+            newState.companions.append(.init(name: "사용자\(newState.companionNumber)", type: getFaceString()))
         case .deleteCompanion(let companion):
             if let companionsIndex = newState.companions.firstIndex(where: { $0 == companion }) {
                 newState.companions.remove(at: companionsIndex)
@@ -83,11 +83,14 @@ public final class CompanionReactor: Reactor {
         return newState
     }
     
-    func getRandomFaceString() -> String {
-        if let randomFaceImageType = FaceImageType.allCases.randomElement() {
-            return randomFaceImageType.rawValue
-        } else {
-            return FaceImageType.face1.rawValue
+    func getFaceString() -> String {
+        let existingTypes = currentState.companions.compactMap { $0.type }
+        
+        var nextNumber = 1
+        while existingTypes.contains("Image\(nextNumber)") {
+            nextNumber += 1
         }
+        
+        return "Image\(nextNumber)"
     }
 }

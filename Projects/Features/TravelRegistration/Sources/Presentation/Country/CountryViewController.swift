@@ -34,7 +34,7 @@ public final class CountryViewController: UIViewController {
     public var disposeBag = DisposeBag()
     private let reactor: CountryReactor
     private var dataSource: UITableViewDiffableDataSource<CountrySection, CountryDataItem>?
-    private let coordinator: CountryCoordinator
+    private let coordinator: TravelRegistrationCoordinator
     
     // MARK: - Properties
     private let countryTableView = CountryTableView()
@@ -42,9 +42,10 @@ public final class CountryViewController: UIViewController {
     private let selectedCountryView = SelectedCountryView()
     private let dividerView = YBDivider(height: 0.6, color: .gray3)
     private let nextButton = YBTextButton(text: "다음으로", appearance: .defaultDisable, size: .medium)
+    private let emptyView = YBEmptyView(title: "검색 결과가 없어요.")
     
     // MARK: - Life Cycles
-    public init(coordinator: CountryCoordinator, reactor: CountryReactor) {
+    public init(coordinator: TravelRegistrationCoordinator, reactor: CountryReactor) {
         self.reactor = reactor
         self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
@@ -57,7 +58,6 @@ public final class CountryViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setNavSearchBar()
         configureBar()
         addViews()
         setLayouts()
@@ -65,7 +65,7 @@ public final class CountryViewController: UIViewController {
         setDataSource()
         hideKeyboardWhenTappedAround()
         bind(reactor: reactor)
-        reactor.viewDidLoad()
+        reactor.countryUseCase()
     }
 
     // MARK: - Set UI
@@ -75,21 +75,11 @@ public final class CountryViewController: UIViewController {
             countryTableView,
             selectedCountryView,
             dividerView,
-            nextButton
+            nextButton,
+            emptyView
         ].forEach {
             view.addSubview($0)
         }
-    }
-
-    private func configureBar() {
-        let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
-        let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
-        self.navigationItem.leftBarButtonItem = backButton
-    }
-    
-    @objc private func backButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
-        coordinator.coordinatorDidFinish()
     }
 
     private func setLayouts() {
@@ -116,6 +106,9 @@ public final class CountryViewController: UIViewController {
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(dividerView.snp.top)
         }
+        emptyView.snp.makeConstraints { make in
+            make.edges.equalTo(countryTableView.snp.edges)
+        }
     }
     
     private func setSelectedCountryViewLayout(isEmpty: Bool) {
@@ -141,7 +134,7 @@ public final class CountryViewController: UIViewController {
         selectedCountryView.selectedCountryViewDelegate = self
     }
     
-    private func setNavSearchBar() {
+    private func configureBar() {
         let sc = UIScreen.main.bounds.width
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: sc, height: 0))
         searchBar.delegate = self
@@ -155,7 +148,13 @@ public final class CountryViewController: UIViewController {
                 NSAttributedString.Key.font: YBFont.body1.font
             ]
         )
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchBar)
+        
+        let backImage = UIImage(systemName: "xmark")?
+            .withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        
+        self.navigationItem.leftBarButtonItem = backButton
+        self.navigationItem.titleView = searchBar
     }
     
     private func setDataSource() {
@@ -207,10 +206,14 @@ public final class CountryViewController: UIViewController {
     @objc func dismissKeyboard() {
         navigationController?.view.endEditing(true)
     }
+    
+    @objc private func backButtonTapped() {
+        navigationController?.dismiss(animated: true)
+        coordinator.coordinatorDidFinish()
+    }
 
     deinit {
         print("deinit CountryViewController")
-        coordinator.coordinatorDidFinish()
     }
 }
 
@@ -287,13 +290,23 @@ extension CountryViewController: View {
                     countryList: selectedCountries,
                     tripUserList: []
                 )
-                self.coordinator.calendar(tripRequest: tripRequest)
+                
+                let calendarReactor = CalendarReactor(tripRequest: tripRequest)
+                let calendarViewController = CalendarViewController(coordinator: self.coordinator, reactor: calendarReactor)
+                self.navigationController?.pushViewController(calendarViewController, animated: true)
             }.disposed(by: disposeBag)
     }
     
     func bindState(reactor: CountryReactor) {
         reactor.state
             .map { $0.countries }
+            .do(onNext: { [weak self] dataCountry in
+                self?.emptyView.isHidden = (!dataCountry.africa.isEmpty ||
+                                            !dataCountry.asia.isEmpty ||
+                                            !dataCountry.europe.isEmpty ||
+                                            !dataCountry.northAmerica.isEmpty || 
+                                            !dataCountry.southAmerica.isEmpty)
+            })
             .observe(on: MainScheduler.instance)
             .bind { [weak self] dataCountry in
                 self?.configureSnapshot(dc: dataCountry)

@@ -34,7 +34,7 @@ public final class CountryReactor: Reactor {
     
     public var initialState: State = State()
     
-    func viewDidLoad() {
+    func countryUseCase() {
         action.onNext(.typeButtonTapped(title: CountryType.total.rawValue))
     }
     
