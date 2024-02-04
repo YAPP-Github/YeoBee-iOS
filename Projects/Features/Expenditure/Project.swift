@@ -27,7 +27,8 @@ let project = Project(
                 .composableArchitecture,
                 .coordinator,
                 .expenditureEdit,
-                .usecase
+                .usecase,
+                .ybdependency
             ]
         ),
         Project.target(

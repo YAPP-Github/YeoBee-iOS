@@ -8,9 +8,9 @@ public extension TargetDependency {
     static let designSystem: TargetDependency = .project(
         target: "DesignSystem",
         path: .relativeToRoot("Projects/DesignSystem"))
-    static let network: TargetDependency = .project(
-        target: "Network",
-        path: .relativeToRoot("Projects/Network"))
+    static let ybnetwork: TargetDependency = .project(
+        target: "YBNetwork",
+        path: .relativeToRoot("Projects/YBNetwork"))
     static let entity: TargetDependency = .project(
         target: "Entity",
         path: .relativeToRoot("Projects/Entity"))
@@ -47,6 +47,9 @@ public extension TargetDependency {
     static let repository: TargetDependency = .project(
         target: "Repository",
         path: .relativeToRoot("Projects/Repository"))
+    static let ybdependency: TargetDependency = .project(
+        target: "YBDependency",
+        path: .relativeToRoot("Projects/YBDependency"))
 }
 
 // MARK: Package

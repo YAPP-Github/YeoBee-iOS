@@ -13,6 +13,10 @@ import Coordinator
 import ExpenditureEdit
 import Entity
 
+import Dependencies
+import YBDependency
+import UseCase
+
 final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInterface {
     public var viewControllerRef: UIViewController?
     public var childCoordinators = [Coordinator]()
@@ -26,8 +30,12 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
     }
 
     public func start(animated: Bool) {
-        let expenditureViewController = ExpenditureViewController(coordinator: self)
-        expenditureNavigationController = UINavigationController(rootViewController: expenditureViewController)
+        withDependencies {
+            $0.yeoBeeDependecy()
+        } operation: {
+            let expenditureViewController = ExpenditureViewController(coordinator: self)
+            expenditureNavigationController = UINavigationController(rootViewController: expenditureViewController)
+        }
     }
 
     public func popDidFinish() {

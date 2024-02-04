@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "Repository",
+    name: "YBNetwork",
     organizationName: "YeoBee.com",
     options: .options(
         automaticSchemesOptions: .disabled
@@ -11,37 +11,36 @@ let project = Project(
     settings: nil,
     targets: [
         Project.target(
-            name: "Repository",
+            name: "YBNetwork",
             product: .framework,
             sources: "Sources/**",
             dependencies: [
-                .ybnetwork,
-                .entity
+                .moya
             ]
         ),
         Project.target(
-            name: "RepositoryTests",
+            name: "YBNetworkTests",
             product: .unitTests,
             sources: "Tests/**",
             dependencies: [
-                .repository
+                .ybnetwork
             ]
         )
     ],
     schemes: [
         Scheme(
-            name: "Repository",
+            name: "YBNetwork",
             shared: true,
             buildAction: BuildAction(
-                targets: ["Repository"]
+                targets: ["YBNetwork"]
             ),
-            testAction: .targets(["RepositoryTests"]),
+            testAction: .targets(["YBNetworkTests"]),
             runAction: .runAction(configuration: .debug),
             archiveAction: .archiveAction(configuration: .debug),
             profileAction: .profileAction(configuration: .debug),
             analyzeAction: .analyzeAction(configuration: .debug)
         )
-    ],
+    ], 
     fileHeaderTemplate: nil,
     additionalFiles: [],
     resourceSynthesizers: []

@@ -17,13 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationController = UINavigationController()
         let coordinator = RootCoordinator(navigationController: navigationController)
         coordinator.start(animated: false)
-
-        withDependencies { dependencyValue in
-            let repository = ExpenseRepository()
-            dependencyValue.expenseUseCase = .live(expenseRepository: repository)
-        } operation: {
-
-        }
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
 
