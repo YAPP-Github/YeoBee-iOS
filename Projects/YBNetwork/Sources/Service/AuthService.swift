@@ -14,8 +14,8 @@ enum AuthService {
 }
 
 extension AuthService: TargetType {
-    var baseURL: URL { return URL(string: BaseURL.string)!}
-    
+    var baseURL: URL { return URL(string: "BaseURL")!}
+
     var path: String {
         switch self {
         case .kakaoLogin:

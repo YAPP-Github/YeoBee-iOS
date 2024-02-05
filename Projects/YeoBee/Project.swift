@@ -11,7 +11,6 @@ let project = Project(
         automaticSchemesOptions: .disabled
     ),
     packages: [
-        .SnapKit
     ],
     settings: .settings(configurations: [
         .debug(name: .debug),
@@ -49,7 +48,7 @@ let project = Project(
     ],
     schemes: [
         Scheme(
-            name: "YeoBee-Dev",
+            name: "YeoBeeDev",
             shared: true,
             buildAction: BuildAction(
                 targets: ["YeoBee"]
@@ -61,7 +60,7 @@ let project = Project(
             analyzeAction: .analyzeAction(configuration: .debug)
         ),
         Scheme(
-            name: "YeoBee-Prod",
+            name: "YeoBeeProd",
             shared: true,
             buildAction: BuildAction(
                 targets: ["YeoBee"]

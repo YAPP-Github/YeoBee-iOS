@@ -1,5 +1,8 @@
 import UIKit
 import Expenditure
+import ComposableArchitecture
+import UseCase
+import Repository
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,11 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationController = UINavigationController()
         let coordinator = RootCoordinator(navigationController: navigationController)
         coordinator.start(animated: false)
-
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
 
         return true
     }
-
 }

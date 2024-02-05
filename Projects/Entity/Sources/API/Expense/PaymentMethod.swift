@@ -9,7 +9,7 @@
 import Foundation
 
 // 결제 방식을 위한 Enum
-enum PaymentMethod: String, Codable {
+public enum PaymentMethod: String, Codable {
     case cash = "CASH"
     case card = "CARD"
 }

@@ -8,9 +8,9 @@ public extension TargetDependency {
     static let designSystem: TargetDependency = .project(
         target: "DesignSystem",
         path: .relativeToRoot("Projects/DesignSystem"))
-    static let network: TargetDependency = .project(
-        target: "Network",
-        path: .relativeToRoot("Projects/Network"))
+    static let ybnetwork: TargetDependency = .project(
+        target: "YBNetwork",
+        path: .relativeToRoot("Projects/YBNetwork"))
     static let entity: TargetDependency = .project(
         target: "Entity",
         path: .relativeToRoot("Projects/Entity"))
@@ -41,9 +41,15 @@ public extension TargetDependency {
     static let trip: TargetDependency = .project(
         target: "Trip",
         path: .relativeToRoot("Projects/Features/Trip"))
+    static let usecase: TargetDependency = .project(
+        target: "UseCase",
+        path: .relativeToRoot("Projects/UseCase"))
     static let repository: TargetDependency = .project(
         target: "Repository",
         path: .relativeToRoot("Projects/Repository"))
+    static let ybdependency: TargetDependency = .project(
+        target: "YBDependency",
+        path: .relativeToRoot("Projects/YBDependency"))
 }
 
 // MARK: Package
@@ -53,7 +59,7 @@ public extension TargetDependency {
     static let RxCocoa: TargetDependency = .external(name: "RxCocoa")
     static let moya: TargetDependency = .external(name: "Moya")
     static let reactorKit: TargetDependency = .external(name: "ReactorKit")
-    static let SnapKit: TargetDependency = .package(product: "SnapKit")
+    static let SnapKit: TargetDependency = .external(name: "SnapKit")
     static let fscalendar: TargetDependency = .external(name: "FSCalendar")
     static let composableArchitecture: TargetDependency = .external(name: "ComposableArchitecture")
 }

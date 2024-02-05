@@ -9,7 +9,7 @@
 import Foundation
 
 // 페이지 정보
-struct Pageable: Codable {
+public struct Pageable: Codable {
     var pageNumber: Int
     var pageSize: Int
     var sort: SortType

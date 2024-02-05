@@ -9,65 +9,51 @@
 import Foundation
 import Moya
 
-enum ExpenseType: String {
-    case shared = "SHARED"
-    case individual = "INDIVIDUAL"
-    case sharedBudgetIncome = "SHARED_BUDGET_INCOME"
-    case sharedBudgetExpense = "SHARED_BUDGET_EXPENSE"
-    case individualBudgetIncome = "INDIVIDUAL_BUDGET_INCOME"
-    case individualBudgetExpense = "INDIVIDUAL_BUDGET_EXPENSE"
-}
-
-enum PaymentMethod: String {
-    case cash = "CASH"
-    case card = "CARD"
-}
-
-enum ExpenseService {
+public enum ExpenseService {
     case fetchList(
-        tripId: String,
+        tripId: Int,
         pageIndex: Int,
         pageSize: Int,
-        type: ExpenseType? = nil,
+        type: String? = nil,
         date: Date? = nil,
-        paymentMethod: PaymentMethod? = nil,
+        paymentMethod: String? = nil,
         unitId: Int? = nil
     )
     //    case fetchDetail
-    //    case create
+    case create(Codable)
     //    case delete
 }
 
 extension ExpenseService: TargetType {
-    var baseURL: URL { return URL(string: BaseURL.string)!}
-    
-    var path: String {
+    public var baseURL: URL { return URL(string: "")!}
+
+    public var path: String {
         switch self {
         case .fetchList:
             return "/v1/expense/list"
             //        case .fetchDetail:
             //            return "v1/expense"
-            //        case .create:
-            //            return "v1/expense"
+                    case .create:
+                        return "v1/expense"
             //        case .delete:
             //            return "v1/expense"
         }
     }
     
-    var method: Moya.Method {
+    public var method: Moya.Method {
         switch self {
         case .fetchList:
             return .get
             //        case .fetchDetail:
             //            return .get
-            //        case .create:
-            //            return .post
+                    case .create:
+                        return .post
             //        case .delete:
             //            return .delete
         }
     }
     
-    var task: Task {
+    public var task: Task {
         switch self {
         case let .fetchList(tripId, pageIndex, pageSize, type, date, method, unitId):
             var params: [String: Any] = [
@@ -75,21 +61,21 @@ extension ExpenseService: TargetType {
                 "pageIndex": pageIndex,
                 "pageSize": pageSize
             ]
-            if let type { params["type"] = type.rawValue }
+            if let type { params["type"] = type }
             if let date { params["date"] = ISO8601DateFormatter().string(from: date) }
-            if let method { params["method"] = method.rawValue }
+            if let method { params["method"] = method }
             if let unitId { params["unitId"] = unitId }
             return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
             //        case .fetchDetail:
             //
-            //        case .create:
-            //            <#code#>
+        case let .create(data):
+            return .requestJSONEncodable(data)
             //        case .delete:
             //            <#code#>
         }
     }
     
-    var headers: [String: String]? {
+    public var headers: [String: String]? {
         return ["Content-type": "application/json"]
     }
 }
