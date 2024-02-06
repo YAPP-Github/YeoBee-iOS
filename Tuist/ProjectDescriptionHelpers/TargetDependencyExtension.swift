@@ -41,6 +41,9 @@ public extension TargetDependency {
     static let trip: TargetDependency = .project(
         target: "Trip",
         path: .relativeToRoot("Projects/Features/Trip"))
+    static let setting: TargetDependency = .project(
+        target: "Setting",
+        path: .relativeToRoot("Projects/Features/Setting"))
     static let usecase: TargetDependency = .project(
         target: "UseCase",
         path: .relativeToRoot("Projects/UseCase"))
