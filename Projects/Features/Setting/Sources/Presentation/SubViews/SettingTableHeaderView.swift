@@ -95,23 +95,22 @@ final class SettingTableHeaderView: UIView {
             make.height.equalTo(18)
             make.width.equalTo(25)
         }
-        backgroundImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(22)
-            make.leading.trailing.equalToSuperview().inset(24).priority(.low)
-            make.height.equalToSuperview().multipliedBy(0.53)
+        dateLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(24)
+            make.bottom.equalToSuperview()
         }
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(backgroundImageView.snp.bottom).inset(-24)
-            make.leading.equalTo(backgroundImageView.snp.leading)
-        }
-        dateLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).inset(-10)
-            make.leading.equalTo(titleLabel.snp.leading)
+            make.bottom.equalTo(dateLabel.snp.top).inset(-15)
+            make.leading.equalTo(dateLabel.snp.leading)
         }
         modifyButton.snp.makeConstraints { make in
-            make.trailing.equalTo(backgroundImageView.snp.trailing)
+            make.trailing.equalToSuperview().inset(24)
             make.centerY.equalTo(titleLabel.snp.centerY)
-            
+        }
+        backgroundImageView.snp.makeConstraints { make in
+            make.bottom.equalTo(titleLabel.snp.top).inset(-22)
+            make.leading.trailing.equalToSuperview().inset(24).priority(.low)
+            make.top.equalToSuperview().inset(22)
         }
         stackView.snp.makeConstraints { make in
             make.leading.bottom.equalToSuperview().inset(20)
@@ -122,7 +121,7 @@ final class SettingTableHeaderView: UIView {
         countryImageView.image = UIImage(systemName: "xmark")
         countryLabel.text = "프랑스"
         titleLabel.text = "여행 어쩌구"
-        dateLabel.text = "2024년 어쩌구 ~~ - 2024 어쩌구"
+        dateLabel.text = "2024년 02월 06일 ~ 2024년 02월 30일"
     }
     
     // MARK: - Handler

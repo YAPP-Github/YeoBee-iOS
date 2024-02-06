@@ -22,6 +22,8 @@ final class SettingTableView: UITableView {
     private func setView() {
         register(SettingCurrencyCell.self, forCellReuseIdentifier: SettingCurrencyCell.identifier)
         register(SettingCompanionCell.self, forCellReuseIdentifier: SettingCompanionCell.identifier)
+        register(SettingTableSectionHeaderView.self,
+                 forHeaderFooterViewReuseIdentifier: SettingTableSectionHeaderView.identifier)
         showsVerticalScrollIndicator = false
         backgroundColor = .clear
         separatorInset.left = 0

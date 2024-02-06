@@ -14,9 +14,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-enum SettingSection: CaseIterable {
-    case companion
-    case currency
+enum SettingSection: String, CaseIterable {
+    case companion = "함께 여행 중인 사람"
+    case currency = "적용된 환율"
 }
 
 enum SettingDataItem: Hashable {
@@ -36,7 +36,7 @@ public final class SettingViewController: UIViewController {
     private let settingHeaderView = SettingTableHeaderView(frame: CGRect(x: 0,
                                                                          y: 0,
                                                                          width: UIScreen.main.bounds.width,
-                                                                         height: 270))
+                                                                         height: 260))
     private let settingTableView = SettingTableView()
     
     // MARK: - Life Cycles
@@ -136,6 +136,19 @@ extension SettingViewController: UITableViewDelegate {
         default:
             return UITableView.automaticDimension
         }
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let sectionHeaderView = tableView.dequeueReusableHeaderFooterView(
+            withIdentifier: SettingTableSectionHeaderView.identifier
+        ) as? SettingTableSectionHeaderView else { return nil }
+        
+        sectionHeaderView.sectionTitleLabel.text = SettingSection.allCases[section].rawValue
+        return sectionHeaderView
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
     }
 }
 
