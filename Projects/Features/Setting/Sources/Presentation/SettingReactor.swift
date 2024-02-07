@@ -72,7 +72,19 @@ public final class SettingReactor: Reactor {
         let currencies: [SettingCurrency] = [
             SettingCurrency(code: "JPY", value: 914),
             SettingCurrency(code: "EUR", value: 914),
-            SettingCurrency(code: "CHF", value: 232)
+            SettingCurrency(code: "CHF", value: 232),
+            SettingCurrency(code: "a1dsa", value: 914),
+            SettingCurrency(code: "dsbWd", value: 914),
+            SettingCurrency(code: "CsdHF", value: 232),
+            SettingCurrency(code: "JedsdsPY", value: 914),
+            SettingCurrency(code: "EwdUR", value: 914),
+            SettingCurrency(code: "CdqssHF", value: 232),
+            SettingCurrency(code: "JwPsY", value: 914),
+            SettingCurrency(code: "EURsd", value: 914),
+            SettingCurrency(code: "CsdsHF", value: 232),
+            SettingCurrency(code: "JdqwPY", value: 914),
+            SettingCurrency(code: "EsvaUR", value: 914),
+            SettingCurrency(code: "CdHsdF", value: 232)
         ]
         
         action.onNext(.companions(companions))

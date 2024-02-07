@@ -97,7 +97,7 @@ final class SettingTableHeaderView: UIView {
         }
         dateLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().inset(24)
-            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview().inset(20)
         }
         titleLabel.snp.makeConstraints { make in
             make.bottom.equalTo(dateLabel.snp.top).inset(-15)

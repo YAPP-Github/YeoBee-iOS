@@ -34,8 +34,8 @@ final class SettingTableSectionHeaderView: UITableViewHeaderFooterView {
     
     private func setLayout() {
         sectionTitleLabel.snp.makeConstraints {
-            $0.top.trailing.bottom.equalToSuperview()
-            $0.leading.equalToSuperview().inset(26)
+            $0.centerY.equalToSuperview()
+            $0.leading.equalToSuperview().inset(24)
         }
     }
 }

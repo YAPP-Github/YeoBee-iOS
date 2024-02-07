@@ -36,8 +36,8 @@ public final class SettingViewController: UIViewController {
     private let settingHeaderView = SettingTableHeaderView(frame: CGRect(x: 0,
                                                                          y: 0,
                                                                          width: UIScreen.main.bounds.width,
-                                                                         height: 260))
-    private let settingTableView = SettingTableView()
+                                                                         height: 270))
+    private let settingTableView = SettingTableView(frame: .zero, style: .grouped)
     
     // MARK: - Life Cycles
     public init(coordinator: SettingCoordinator ,reactor: SettingReactor) {
@@ -148,7 +148,13 @@ extension SettingViewController: UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+        if section == 0 && reactor.currentState.companions.isEmpty {
+            return .zero
+        } else if section == 1 && reactor.currentState.currencies.isEmpty {
+            return .zero
+        } else {
+            return 50
+        }
     }
 }
 

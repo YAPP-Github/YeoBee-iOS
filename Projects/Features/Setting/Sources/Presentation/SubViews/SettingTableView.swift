@@ -26,6 +26,7 @@ final class SettingTableView: UITableView {
                  forHeaderFooterViewReuseIdentifier: SettingTableSectionHeaderView.identifier)
         showsVerticalScrollIndicator = false
         backgroundColor = .clear
+        sectionFooterHeight = 10
         separatorInset.left = 0
         separatorStyle = .none
     }
