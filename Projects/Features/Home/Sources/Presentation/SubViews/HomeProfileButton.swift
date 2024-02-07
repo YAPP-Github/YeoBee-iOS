@@ -20,18 +20,8 @@ final class HomeProfileButton: UIButton {
         return $0
     }(UIImageView())
     
-    private let profileNameLabel: UILabel = {
-        $0.text = "양송이"
-        $0.font = YBFont.body2.font
-        $0.numberOfLines = 1
-        $0.textColor = YBColor.black.color
-        return $0
-    }(UILabel())
-    
-    private let chevronImageView: UIImageView = {
-        $0.image = DesignSystemAsset.Icons.rightChevron.image
-        return $0
-    }(UIImageView())
+    private let profileNameLabel = YBLabel(text: "여비", font: .body2, textColor: .black)
+    private let chevronImageView = YBIconButton(image: DesignSystemAsset.Icons.next.image)
     
     let profileStackView: UIStackView = {
         $0.axis = .horizontal

@@ -112,13 +112,21 @@ public final class SettingViewController: UIViewController {
     
     private func configureBar() {
         let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let trashImage = DesignSystemAsset.Icons.trash.image.withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        let trashButton = UIBarButtonItem(image: trashImage, style: .plain, target: self, action: #selector(trashButtonTapped))
+        self.navigationController?.navigationBar.barTintColor = .white
         self.navigationItem.leftBarButtonItem = backButton
+        self.navigationItem.rightBarButtonItem = trashButton
     }
     
     @objc private func backButtonTapped() {
         coordinator.coordinatorDidFinish()
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func trashButtonTapped() {
+        print("여행 삭제")
     }
 
     deinit {
