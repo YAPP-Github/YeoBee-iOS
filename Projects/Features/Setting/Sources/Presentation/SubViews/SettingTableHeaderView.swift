@@ -69,7 +69,7 @@ final class SettingTableHeaderView: UIView {
 
     
     // MARK: - Set UI
-    func setUI() {
+    private func setUI() {
         [
             backgroundImageView,
             titleLabel,
@@ -90,7 +90,7 @@ final class SettingTableHeaderView: UIView {
         }
     }
     
-    func setConstraints() {
+    private func setConstraints() {
         countryImageView.snp.makeConstraints { make in
             make.height.equalTo(18)
             make.width.equalTo(25)

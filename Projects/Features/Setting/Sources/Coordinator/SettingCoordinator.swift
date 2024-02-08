@@ -41,4 +41,3 @@ final public class SettingCoordinator: SettingCoordinatorInterface {
         print("SettingCoordinator is de-initialized.")
     }
 }
-

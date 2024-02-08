@@ -24,7 +24,6 @@ enum SettingDataItem: Hashable {
     case currency(SettingCurrency)
 }
 
-
 public final class SettingViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
@@ -130,19 +129,22 @@ public final class SettingViewController: UIViewController {
     }
 
     deinit {
-        print("deinit SettingViewController")
+        print("SettingViewController is de-initialized.")
     }
 }
 
+// MARK: - UITableViewDelegate
 extension SettingViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 0: // companion
-            return 60
-        case 1: // currency
-            return 82
-        default:
+        guard let section = SettingSection(rawValue: SettingSection.allCases[indexPath.section].rawValue) else {
             return UITableView.automaticDimension
+        }
+        
+        switch section {
+        case .companion:
+            return 60
+        case .currency:
+            return 82
         }
     }
     
@@ -184,7 +186,8 @@ extension SettingViewController: View {
                 guard let self else { return }
                 let currentCurrencies = self.reactor.currentState.currencies
                 self.configureSnapshot(companions: companions, currencies: currentCurrencies)
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.currencies }
@@ -192,7 +195,8 @@ extension SettingViewController: View {
                 guard let self else { return }
                 let currentCompanion = self.reactor.currentState.companions
                 self.configureSnapshot(companions: currentCompanion, currencies: currencies)
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
     }
 }
 
