@@ -31,7 +31,7 @@ public struct TripRequest: Encodable {
     }
 }
 
-public struct CountryItemRequest: Encodable, Equatable {
+public struct CountryItemRequest: Encodable {
     public var name: String
     
     public init(name: String) {
@@ -39,12 +39,12 @@ public struct CountryItemRequest: Encodable, Equatable {
     }
 }
 
-public struct TripUserItemRequest: Encodable, Equatable {
+public struct TripUserItemRequest: Encodable {
     public var name: String
-    public var type: String
+    public var imageType: String
     
-    public init(name: String, type: String) {
+    public init(name: String, imageType: String) {
         self.name = name
-        self.type = type
+        self.imageType = imageType
     }
 }

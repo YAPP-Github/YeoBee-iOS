@@ -123,8 +123,8 @@ extension ChangeCompanionNameViewController: View {
             .bind { [weak self] _ in
                 if let name = self?.reactor.currentState.limitedString,
                    let index = self?.reactor.currentState.index,
-                   let type = self?.reactor.currentState.tripUserItemRequest.type {
-                    let tripUserItemRequest = TripUserItemRequest(name: name, type: type)
+                   let imageType = self?.reactor.currentState.tripUserItemRequest.imageType {
+                    let tripUserItemRequest = TripUserItemRequest(name: name, imageType: imageType)
                     
                     self?.delegate?.changedCompanionName(index: index, tripUserItemRequest: tripUserItemRequest)
                     self?.navigationController?.popViewController(animated: true)

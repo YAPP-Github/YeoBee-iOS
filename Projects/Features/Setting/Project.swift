@@ -1,71 +1,67 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
-import MyPlugin
-
-let localHelper = LocalHelper(name: "MyPlugin")
 
 let project = Project(
-    name: "YeoBee",
+    name: "Setting",
     organizationName: "YeoBee.com",
     options: .options(
         automaticSchemesOptions: .disabled
     ),
-    packages: [
-    ],
+    packages: [],
     settings: .settings(configurations: [
         .debug(name: .debug),
         .release(name: .release),
     ]),
     targets: [
         Project.target(
-            name: "YeoBee",
-            product: .app,
-            sources: "Sources/**",
-            resources: "Resources/**",
+            name: "Setting",
+            product: .framework,
+            sources: .sources,
             dependencies: [
-                .sign,
-                .expenditure,
-                .home,
-                .travelRegistration,
-                .onboarding,
-                .travleEdit,
-                .expenditureEdit,
-                .trip,
-                .entity,
-                .setting
-            ],
-            settings: .settings(base: [
-                "ASSETCATALOG_COMPILER_APPICON_NAME":"AppIcon",
-              ])
+                .designSystem,
+                .RxSwift,
+                .RxCocoa,
+                .reactorKit,
+                .travelRegistration
+            ]
         ),
         Project.target(
-            name: "YeoBeeTests",
-            product: .unitTests,
-            sources: "Tests/**",
+            name: "SettingDemo",
+            product: .app,
+            sources: .demoSources,
             dependencies: [
-                .yeoBee
+                .target(name: "Setting")
+            ]
+        ),
+        Project.target(
+            name: "SettingTests",
+            product: .unitTests,
+            sources: .tests,
+            dependencies: [
+                .target(name: "Setting")
             ]
         )
     ],
     schemes: [
         Scheme(
-            name: "YeoBeeDev",
+            name: "SettingDemo",
             shared: true,
             buildAction: BuildAction(
-                targets: ["YeoBee"]
+                targets: ["SettingDemo"]
             ),
-            testAction: .targets(["YeoBeeTests"]),
+            testAction: .targets(["SettingTests"]),
             runAction: .runAction(configuration: .debug),
             archiveAction: .archiveAction(configuration: .debug),
             profileAction: .profileAction(configuration: .debug),
             analyzeAction: .analyzeAction(configuration: .debug)
         ),
         Scheme(
-            name: "YeoBeeProd",
+            name: "Setting",
             shared: true,
             buildAction: BuildAction(
-                targets: ["YeoBee"]
+                targets: ["Setting"]
             ),
+            testAction: .targets(["SettingTests"]),
             runAction: .runAction(configuration: .release),
             archiveAction: .archiveAction(configuration: .release),
             profileAction: .profileAction(configuration: .release),

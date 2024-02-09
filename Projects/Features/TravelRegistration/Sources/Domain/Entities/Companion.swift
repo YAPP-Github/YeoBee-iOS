@@ -9,11 +9,17 @@
 import UIKit
 
 public struct Companion: Hashable {
-    var uuid = UUID()
-    var name: String
-    var type: String
+    public var uuid = UUID()
+    public var name: String
+    public var type: String
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
+    }
+    
+    public init(uuid: UUID = UUID(), name: String, type: String) {
+        self.uuid = uuid
+        self.name = name
+        self.type = type
     }
 }

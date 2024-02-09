@@ -24,4 +24,6 @@ public protocol ExpenditureCoordinatorInterface: ParentCoordinator, ChildCoordin
     func expenditureEdit()
 }
 
+public protocol SettingCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
+
 public protocol ExpenditureEditCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
