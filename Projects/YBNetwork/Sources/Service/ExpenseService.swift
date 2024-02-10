@@ -25,7 +25,7 @@ public enum ExpenseService {
 }
 
 extension ExpenseService: TargetType {
-    public var baseURL: URL { return URL(string: "")!}
+    public var baseURL: URL { return URL(string: YeoBeeAPI.shared.baseURL ?? "")!}
 
     public var path: String {
         switch self {

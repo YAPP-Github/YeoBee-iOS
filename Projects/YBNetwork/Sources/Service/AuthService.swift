@@ -1,43 +1,43 @@
 //
 //  AuthService.swift
-//  Network
+//  YBNetwork
 //
-//  Created by 태태's MacBook on 1/2/24.
+//  Created by 김태형 on 2/8/24.
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 //
 
 import Foundation
 import Moya
 
-enum AuthService {
+public enum AuthService {
     case kakaoLogin(token: String)
 }
 
 extension AuthService: TargetType {
-    var baseURL: URL { return URL(string: "BaseURL")!}
+    public var baseURL: URL { return URL(string: YeoBeeAPI.shared.baseURL ?? "")!}
 
-    var path: String {
+    public var path: String {
         switch self {
         case .kakaoLogin:
-            return "/v1/auth/kakao"
+            return "/v1/auth/login/kakao"
         }
     }
     
-    var method: Moya.Method {
+    public var method: Moya.Method {
         switch self {
         case .kakaoLogin:
             return .post
         }
     }
     
-    var task: Task {
+    public var task: Task {
         switch self {
         case .kakaoLogin(let token):
             return .requestParameters(parameters: ["oauthToken": token], encoding: JSONEncoding.default)
         }
     }
     
-    var headers: [String : String]? {
+    public var headers: [String : String]? {
         return ["Content-type": "application/json"]
     }
     
