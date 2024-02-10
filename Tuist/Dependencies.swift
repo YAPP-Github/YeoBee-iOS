@@ -10,7 +10,8 @@ let dependencies = Dependencies(
             .fscalendar,
             .RxGesture,
             .composableArchitecture,
-            .SnapKit
+            .SnapKit,
+            .kakaoLogin
         ],
         productTypes: [
             "RxSwift": .framework,
@@ -20,7 +21,9 @@ let dependencies = Dependencies(
             "FSCalendar": .framework,
             "RxGesture": .framework,
             "ComposableArchitecture": .framework,
-            "Snapkit": .framework
+            "Snapkit": .framework,
+            "kakaoSDKAuth": .framework,
+            "kakaoSDKUser": .framework
         ],
         baseSettings: .settings(
             configurations: [

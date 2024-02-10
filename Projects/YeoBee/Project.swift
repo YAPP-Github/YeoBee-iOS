@@ -13,8 +13,8 @@ let project = Project(
     packages: [
     ],
     settings: .settings(configurations: [
-        .debug(name: .debug),
-        .release(name: .release),
+        .debug(name: .debug, xcconfig: "./Secrets.xcconfig"),
+        .release(name: .release, xcconfig: "./Secrets.xcconfig"),
     ]),
     targets: [
         Project.target(

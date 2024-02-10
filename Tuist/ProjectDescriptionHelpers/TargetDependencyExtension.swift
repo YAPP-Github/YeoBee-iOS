@@ -65,6 +65,8 @@ public extension TargetDependency {
     static let SnapKit: TargetDependency = .external(name: "SnapKit")
     static let fscalendar: TargetDependency = .external(name: "FSCalendar")
     static let composableArchitecture: TargetDependency = .external(name: "ComposableArchitecture")
+    static let kakaoSDKAuth: TargetDependency = .external(name: "KakaoSDKAuth")
+    static let kakaoSDKUser: TargetDependency = .external(name: "KakaoSDKUser")
 }
 
 public extension Package {
@@ -75,6 +77,7 @@ public extension Package {
     static let SnapKit: Package = .remote(url: "https://github.com/SnapKit/SnapKit.git", requirement: .upToNextMajor(from: "5.0.1"))
     static let fscalendar: Package = .remote(url: "https://github.com/WenchaoD/FSCalendar.git", requirement: .branch("master"))
     static let composableArchitecture: Package = .remote(url: "https://github.com/pointfreeco/swift-composable-architecture", requirement: .exact("1.0.0"))
+    static let kakaoLogin: Package = .remote(url: "https://github.com/kakao/kakao-ios-sdk", requirement: .branch("master"))
 }
 
 // MARK: SourceFile

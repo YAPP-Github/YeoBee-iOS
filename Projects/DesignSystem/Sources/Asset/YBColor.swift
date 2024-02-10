@@ -24,6 +24,7 @@ public enum YBColor: Equatable, Hashable {
     case mainRed
     case mediumGreen
     case white
+    case kakaoYellow
 }
 
 public extension YBColor {
@@ -42,6 +43,7 @@ public extension YBColor {
         case .mainRed: return DesignSystemAsset.Colors.mainRed.color
         case .mediumGreen: return DesignSystemAsset.Colors.mediumGreen.color
         case .white: return DesignSystemAsset.Colors.white.color
+        case .kakaoYellow: return DesignSystemAsset.Colors.kakaoYellow.color
         }
     }
 
@@ -60,6 +62,7 @@ public extension YBColor {
         case .mainRed: return DesignSystemAsset.Colors.mainRed.swiftUIColor
         case .mediumGreen: return DesignSystemAsset.Colors.mediumGreen.swiftUIColor
         case .white: return DesignSystemAsset.Colors.white.swiftUIColor
+        case .kakaoYellow: return DesignSystemAsset.Colors.kakaoYellow.swiftUIColor
         }
     }
 }

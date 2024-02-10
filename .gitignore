@@ -71,3 +71,10 @@ Tuist/Dependencies
 
 ### API Base URL ###
 Projects/Network/Sources/API/BaseURL.swift
+
+### xcconfig ###
+Projects/YeoBee/Secrets.xcconfig
+
+### Tuist Signing ###
+Tuist/Signing/
+Tuist/master.key
