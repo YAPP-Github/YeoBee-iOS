@@ -48,33 +48,8 @@ public final class SignReactor: Reactor {
                 return Observable.create { observer in
                     Task {
                         do {
-                            let oauthToken = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<OAuthToken, Error>) in
-                                if UserApi.isKakaoTalkLoginAvailable() {
-                                    UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
-                                        if let error = error {
-                                            continuation.resume(throwing: error)
-                                        } else if let oauthToken = oauthToken {
-                                            continuation.resume(returning: oauthToken)
-                                        } else {
-                                            continuation.resume(throwing: NSError(domain: "LoginError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown login error"]))
-                                        }
-                                    }
-                                } else {
-                                    UserApi.shared.loginWithKakaoAccount { (oauthToken, error) in
-                                        if let error = error {
-                                            continuation.resume(throwing: error)
-                                        } else if let oauthToken = oauthToken {
-                                            continuation.resume(returning: oauthToken)
-                                        } else {
-                                            continuation.resume(throwing: NSError(domain: "LoginError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown login error"]))
-                                        }
-                                    }
-                                }
-                            }
-                            let tokens = try await self.authRepository.loginWithKakao(token: oauthToken.accessToken)
-                            KeychainManager.shared.add(key: "accessToken", value: tokens.accessToken)
-                            KeychainManager.shared.add(key: "refreshToken", value: tokens.refreshToken)
-                            observer.onNext(.setLoginStatus(true))
+                            let isSuccess = try await self.kakaoLogin()
+                            observer.onNext(.setLoginStatus(isSuccess))
                         } catch {
                             observer.onNext(.setLoginStatus(false))
                             observer.onError(error)
@@ -87,20 +62,21 @@ public final class SignReactor: Reactor {
             case .apple:
                 return Observable.create { observer in
                     print("애플로그인")
-//                    let appleIDProvider = ASAuthorizationAppleIDProvider()
-//                    let request = appleIDProvider.createRequest()
-//                    request.requestedScopes = [.fullName, .email]
-//                    
-//                    let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-//                    authorizationController.delegate = self
-//                    authorizationController.presentationContextProvider = self
-//                    authorizationController.performRequests()
-//                    
+                    //                    let appleIDProvider = ASAuthorizationAppleIDProvider()
+                    //                    let request = appleIDProvider.createRequest()
+                    //                    request.requestedScopes = [.fullName, .email]
+                    //
+                    //                    let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+                    //                    authorizationController.delegate = self
+                    //                    authorizationController.presentationContextProvider = self
+                    //                    authorizationController.performRequests()
+                    //
                     return Disposables.create()
                 }
         }
         
     }
+    
     public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         
@@ -112,4 +88,34 @@ public final class SignReactor: Reactor {
         return newState
     }
     
+    private func kakaoLogin() async throws -> Bool {
+        let oauthToken = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<OAuthToken, Error>) in
+            if UserApi.isKakaoTalkLoginAvailable() {
+                UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else if let oauthToken = oauthToken {
+                        continuation.resume(returning: oauthToken)
+                    } else {
+                        continuation.resume(throwing: NSError(domain: "LoginError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown login error"]))
+                    }
+                }
+            } else {
+                UserApi.shared.loginWithKakaoAccount { (oauthToken, error) in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else if let oauthToken = oauthToken {
+                        continuation.resume(returning: oauthToken)
+                    } else {
+                        continuation.resume(throwing: NSError(domain: "LoginError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown login error"]))
+                    }
+                }
+            }
+        }
+        
+        let tokens = try await authRepository.loginWithKakao(token: oauthToken.accessToken)
+        KeychainManager.shared.add(key: "accessToken", value: tokens.accessToken)
+        KeychainManager.shared.add(key: "refreshToken", value: tokens.refreshToken)
+        return true
+    }
 }

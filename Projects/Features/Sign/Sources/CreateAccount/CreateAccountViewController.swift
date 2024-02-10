@@ -31,7 +31,7 @@ public final class CreateAccountViewController: UIViewController, View {
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
+        fatalError("init(coder:) has not been implemented")
     }
     
     public func bind(reactor: CreateAccountReactor) {
@@ -42,29 +42,30 @@ public final class CreateAccountViewController: UIViewController, View {
             .disposed(by: disposeBag)
         
         confirmButton.rx.tap
-                .map { Reactor.Action.confirmButtonTapped }
-                .bind(to: reactor.action)
-                .disposed(by: disposeBag)
+            .map { Reactor.Action.confirmButtonTapped }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
         //State
         reactor.state.map { $0.isNicknameEmpty }
-            .bind { isNicknameEmpty in
+            .bind { [weak self] isNicknameEmpty in
                 if isNicknameEmpty {
-                    self.confirmButton.setAppearance(appearance: .defaultDisable)
-                    self.confirmButton.isEnabled = false
-                    self.confirmButton.setTitle("시작하기", for: .normal)
+                    self?.confirmButton.setAppearance(appearance: .defaultDisable)
+                    self?.confirmButton.isEnabled = false
+                    self?.confirmButton.setTitle("시작하기", for: .normal)
                 } else {
-                    self.confirmButton.setAppearance(appearance: .default)
-                    self.confirmButton.isEnabled = true
-                    self.confirmButton.setTitle("시작하기", for: .normal)
+                    self?.confirmButton.setAppearance(appearance: .default)
+                    self?.confirmButton.isEnabled = true
+                    self?.confirmButton.setTitle("시작하기", for: .normal)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         reactor.state.map { $0.errorMessage }
-                .bind { [weak self] errorMessage in
-                    self?.errorDescriptionLabel.text = errorMessage
-                }
-                .disposed(by: disposeBag)
+            .bind { [weak self] errorMessage in
+                self?.errorDescriptionLabel.text = errorMessage
+            }
+            .disposed(by: disposeBag)
     }
     
     private func setupViews() {
@@ -88,7 +89,7 @@ public final class CreateAccountViewController: UIViewController, View {
         nicknameTextField.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
             make.leading.equalTo(view.snp.leading).offset(24)
-            make.right.equalTo(view.snp.right).offset(-24)
+            make.trailing.equalTo(view.snp.right).offset(-24)
         }
         errorDescriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(nicknameTextField.snp.bottom).offset(10)
@@ -98,7 +99,7 @@ public final class CreateAccountViewController: UIViewController, View {
         confirmButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-68)
             make.leading.equalTo(view.snp.leading).offset(24)
-            make.right.equalTo(view.snp.right).offset(-24)
+            make.trailing.equalTo(view.snp.right).offset(-24)
         }
     }
 }

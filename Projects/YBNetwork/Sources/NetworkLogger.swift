@@ -8,8 +8,9 @@
 
 import Moya
 
-final class NetworkLogger: PluginType {
-    func willSend(_ request: RequestType, target: TargetType) {
+public final class NetworkLogger: PluginType {
+    public init() {}
+    public func willSend(_ request: RequestType, target: TargetType) {
         #if DEBUG
         print("\n---------- [REQUEST] ----------\n")
         print("API Endpoint : \(target.baseURL.absoluteString + target.path)")
@@ -19,7 +20,7 @@ final class NetworkLogger: PluginType {
         #endif
     }
 
-    func didReceive(_ result: Result<Response, MoyaError>, target: TargetType) {
+    public func didReceive(_ result: Result<Response, MoyaError>, target: TargetType) {
         #if DEBUG
         switch result {
         case let .success(response):
