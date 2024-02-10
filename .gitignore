@@ -73,4 +73,8 @@ Tuist/Dependencies
 Projects/Network/Sources/API/BaseURL.swift
 
 ### xcconfig ###
-Project/YeoBee/Secrets.xcconfig
+Projects/YeoBee/Secrets.xcconfig
+
+### Tuist Signing ###
+Tuist/Signing/
+Tuist/master.key
