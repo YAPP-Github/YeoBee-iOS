@@ -88,6 +88,7 @@ public final class SignReactor: Reactor {
         return newState
     }
     
+    @MainActor
     private func kakaoLogin() async throws -> Bool {
         let oauthToken = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<OAuthToken, Error>) in
             if UserApi.isKakaoTalkLoginAvailable() {
@@ -96,8 +97,6 @@ public final class SignReactor: Reactor {
                         continuation.resume(throwing: error)
                     } else if let oauthToken = oauthToken {
                         continuation.resume(returning: oauthToken)
-                    } else {
-                        continuation.resume(throwing: NSError(domain: "LoginError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown login error"]))
                     }
                 }
             } else {
@@ -106,8 +105,6 @@ public final class SignReactor: Reactor {
                         continuation.resume(throwing: error)
                     } else if let oauthToken = oauthToken {
                         continuation.resume(returning: oauthToken)
-                    } else {
-                        continuation.resume(throwing: NSError(domain: "LoginError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown login error"]))
                     }
                 }
             }

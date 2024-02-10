@@ -28,12 +28,10 @@ final public class SignCoordinator: SignCoordinatorInterface {
         navigationController.pushViewController(signViewController, animated: animated)
     }
 
-    public func createAccount() {
-        DispatchQueue.main.async {   //추후원인 확인 (메인스레드)
-            let createCoodinator = CreateAccountCoordinator(navigationController: self.navigationController)
-            self.addChild(createCoodinator)
-            createCoodinator.start(animated: true)
-        }
+    public func createAccount() {   
+        let createCoodinator = CreateAccountCoordinator(navigationController: self.navigationController)
+        self.addChild(createCoodinator)
+        createCoodinator.start(animated: true)
     }
 }
 

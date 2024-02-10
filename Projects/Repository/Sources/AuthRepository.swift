@@ -26,8 +26,8 @@ final public class AuthRepository: AuthRepositoryInterface {
     public func loginWithKakao(token: String) async throws -> AuthTokenResponse {
         let response = try await provider.request(.kakaoLogin(token: token)).get()
         let authTokenResponse = try JSONDecoder().decode(AuthTokenResponse.self, from: response.data)
-        return authTokenResponse
         
+        return authTokenResponse
     }
     
     public func loginWithApple() {
