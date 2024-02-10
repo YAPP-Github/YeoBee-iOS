@@ -10,8 +10,13 @@ import UIKit
 import DesignSystem
 import TravelRegistration
 
+protocol SettingCompanionCellDelegate: AnyObject {
+    func editButtonTapped(companion: Companion)
+}
+
 class SettingCompanionCell: UITableViewCell {
     static let identifier = "SettingCompanionCell"
+    weak var delegate: SettingCompanionCellDelegate?
     
     var companion: Companion? {
         didSet {
@@ -49,6 +54,8 @@ class SettingCompanionCell: UITableViewCell {
     // MARK: - Set UI
     private func setView() {
         selectionStyle = .none
+        
+        editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
     }
     
     private func addViews() {
@@ -81,5 +88,10 @@ class SettingCompanionCell: UITableViewCell {
         guard let companion else { return }
         profileNameLabel.text = companion.name
         profileImageView.image = FaceImageType(rawValue: companion.type)?.iconImage()
+    }
+    
+    @objc func editButtonTapped() {
+        guard let companion else { return }
+        delegate?.editButtonTapped(companion: companion)
     }
 }

@@ -82,6 +82,7 @@ public final class SettingViewController: UIViewController {
             case .companion(let companion):
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingCompanionCell.identifier,
                                                                for: indexPath) as? SettingCompanionCell else { return UITableViewCell() }
+                cell.delegate = self
                 cell.companion = companion
                 return cell
             case .currency(let currency):
@@ -204,5 +205,14 @@ extension SettingViewController: View {
 extension SettingViewController: SettingTableHeaderViewDelegate {
     func modifyButtonTapped() {
         print("편집 Tap - Bottom Sheet")
+    }
+}
+
+// MARK: - 동행자 edit버튼 Tap
+extension SettingViewController: SettingCompanionCellDelegate {
+    func editButtonTapped(companion: TravelRegistration.Companion) {
+        let settingRecycleReactor = SettingRecycleReactor(viewType: .companionName)
+        let settingRecycleViewController = SettingRecycleViewController(reactor: settingRecycleReactor)
+        self.navigationController?.pushViewController(settingRecycleViewController, animated: true)
     }
 }
