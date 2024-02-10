@@ -25,3 +25,5 @@ public protocol ExpenditureCoordinatorInterface: ParentCoordinator, ChildCoordin
 }
 
 public protocol ExpenditureEditCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
+
+public protocol CreateAccountCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
