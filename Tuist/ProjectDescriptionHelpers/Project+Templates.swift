@@ -13,7 +13,20 @@ extension Project {
             "CFBundleIconName": "AppIcon",
             "CFBundleVersion": "1",
             "UIMainStoryboardFile": "",
-            "UILaunchStoryboardName": "LaunchScreen"
+            "UILaunchStoryboardName": "LaunchScreen",
+            "BASE_URL": "$(BASE_URL)",
+            "LSApplicationQueriesSchemes": [
+                  "kakaokompassauth",
+                  "kakaolink",
+                  "kakao$(KAKAO_NATIVE_APP_KEY)"
+                ],
+                "KAKAO_NATIVE_APP_KEY": "$(KAKAO_NATIVE_APP_KEY)",
+                "CFBundleURLTypes": [
+                  [
+                    "CFBundleTypeRole": "Editor",
+                    "CFBundleURLSchemes": ["kakao$(KAKAO_NATIVE_APP_KEY)"]
+                  ]
+                ],
         ]
     }
     

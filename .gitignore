@@ -71,3 +71,6 @@ Tuist/Dependencies
 
 ### API Base URL ###
 Projects/Network/Sources/API/BaseURL.swift
+
+### xcconfig ###
+Project/YeoBee/Secrets.xcconfig
