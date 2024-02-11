@@ -12,7 +12,7 @@ import Entity
 
 public enum UserInfoService {
     case updateInfo(nickname: String, profileImageURL: String?)
-    case updateState(state: UserState)
+    case updateState(state: String)
     case fetchInfo
 }
 
