@@ -5,6 +5,7 @@
 //  Created Hoyoung Lee on 12/29/23.
 //  Copyright © 2023 YeoBee.com. All rights reserved.
 
+import Foundation
 import Combine
 import ComposableArchitecture
 import UseCase
@@ -19,22 +20,34 @@ public struct ExpenditureReducer: Reducer {
     public struct State: Equatable {
         var type: ExpenditureTab
         var totalPrice: TotalPriceReducer.State
-        var tripDate = TripDateReducer.State()
+        var tripDate: TripDateReducer.State
         var expenditureList = ExpenditureListReducer.State()
+        var startDate: Date
+        var endDate: Date
+        var beforeDate: Date
+        var isInitialShow: Bool = true
 
-        init(type: ExpenditureTab) {
+        init(type: ExpenditureTab, startDate: Date, endDate: Date) {
             self.type = type
-            self.totalPrice = .init(type: type, isTappable: true
+            self.tripDate = TripDateReducer.State(startDate: startDate, endDate: endDate)
+            self.totalPrice = .init(
+                type: type,
+                isTappable: true
             )
+            self.startDate = startDate
+            self.endDate = endDate
+            self.beforeDate = Calendar.current.date(byAdding: .day, value: -1, to: startDate) ?? Date()
         }
     }
 
     public enum Action {
+        case onAppear
         case totalPrice(TotalPriceReducer.Action)
         case tripDate(TripDateReducer.Action)
         case expenditureList(ExpenditureListReducer.Action)
         case tappedAddButton
         case tappedFilterButton
+        case getExpenditure(Date)
     }
 
     @Dependency(\.expenseUseCase) var expenseUseCase
@@ -42,35 +55,54 @@ public struct ExpenditureReducer: Reducer {
     public var body: some ReducerOf<ExpenditureReducer> {
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                let currentDate = Date()
+                if state.isInitialShow {
+                    state.isInitialShow = false
+                    let selectDate: Date
+                    if currentDate < state.startDate {
+                        selectDate = state.beforeDate
+                    } else if currentDate > state.endDate {
+                        selectDate = state.startDate
+                    } else {
+                        selectDate = currentDate
+                    }
+                    return .run { send in
+                        await send(.tripDate(.selectDate(selectDate)))
+                        await send(.getExpenditure(selectDate))
+                    }
+                } else {
+                    return .none
+                }
+
             case .tripDate(.tappedTripReadyButton):
-                return .send(.expenditureList(.setExpenditures([])))
+                return .send(.getExpenditure(state.beforeDate))
+
             case let .tripDate(.tripDateItem(id: id, action: .tappedItem)):
-                let date = state.tripDate.tripDateItems[id: id]?.date
-                return .send(.expenditureList(.setExpenditures([
-                    .init(expenseType: .individualBudgetExpense, title: "8글자까지보이기안보이면어떡하징", price: 100051353216, currency: .usd, category: .activity),
-                    .init(expenseType: .individualBudgetExpense, title: "파스타", price: 5000, currency: .krw, category: .activity),
-                    .init(expenseType: .individualBudgetExpense, title: "저는 이번주에 일본갑니다", price: 54800, currency: .jpy, category: .air),
-                    .init(expenseType: .individualBudgetExpense, title: "부럽죠", price: 6421, currency: .jpy, category: .etc),
-                    .init(expenseType: .individualBudgetExpense, title: "여러분 선물 사올게요", price: 558588422, currency: .eur, category: .eating),
-                    .init(expenseType: .individualBudgetExpense, title: "꺄아아아ㅏㅇ", price: 123123, currency: .usd, category: .transition),
-                    .init(expenseType: .individualBudgetExpense, title: "8글자까지보이기안보이면어떡하징", price: 7000, currency: .krw, category: .travel),
-                    .init(expenseType: .individualBudgetExpense, title: "태태제리제로화이팅", price: 100, currency: .jpy, category: .stay),
-                    .init(expenseType: .individualBudgetExpense, title: "여비팀화이팅", price: 87000, currency: .eur, category: .etc),
-                ])))
+                guard let tripDate = state.tripDate.tripDateItems[id: id]?.date else { return .none }
+                return .send(.getExpenditure(tripDate))
+
+            case let .getExpenditure(tripDate):
+                return .run { send in
+                    let expenseItems = try await expenseUseCase.getExpenseList(1, tripDate)
+                    await send(.expenditureList(.setExpenditures(expenseItems)))
+                }
+
             case .tappedAddButton:
                 cooridinator.expenditureEdit()
                 return .none
+
             case .totalPrice(.tappedTotalPrice):
                 cooridinator.totalExpenditureList()
                 return .none
+
             case .tappedFilterButton:
-                return .run { _ in
-                    let result = try await expenseUseCase.getExpenseList("냠냠")
-                    print(result)
-                }
+                return .none
+
             case let .expenditureList(.expenditureListItem(id: _, action: .tappedExpenditureItem(expenseItem))):
                 cooridinator.expenditureDetail(expenseItem: expenseItem)
                 return .none
+
             default:
                 return .none
             }

@@ -24,9 +24,9 @@ final class RootCoordinator: NSObject, Coordinator, ParentCoordinator {
     func start(animated: Bool) {
         /// 토큰 처리
 //        if true {
-        sign(navigationController: navigationController)
+//        sign(navigationController: navigationController)
 //        } else {
-//            home(navigationController: navigationController)
+            home(navigationController: navigationController)
 //        }
 //        home(navigationController: navigationController)
     }

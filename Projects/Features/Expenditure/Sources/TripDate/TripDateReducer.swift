@@ -12,12 +12,12 @@ public struct TripDateReducer: Reducer {
     public struct State: Equatable {
         var tripDateItems: IdentifiedArrayOf<TripDateItemReducer.State> = []
         var dates: [Date] = []
+        var readyDate: Date
         var selectedDate: Date?
 
-        init() {
-            let date = Date()
-            let startDate = date
-            let endDate = Calendar.current.date(byAdding: .day, value: 10, to: date)
+        init(startDate: Date, endDate: Date) {
+            let endDate = Calendar.current.date(byAdding: .day, value: 2, to: startDate)
+            readyDate = Calendar.current.date(byAdding: .day, value: -1, to: startDate) ?? Date()
             let dates = datesBetween(startDate: startDate, endDate: endDate)
             self.dates = dates
             dates.enumerated().forEach { index, date in
@@ -29,6 +29,7 @@ public struct TripDateReducer: Reducer {
     public enum Action {
         case tripDateItem(id: TripDateItemReducer.State.ID, action: TripDateItemReducer.Action)
         case tappedTripReadyButton
+        case selectDate(Date?)
     }
 
     public var body: some ReducerOf<TripDateReducer> {
@@ -36,17 +37,24 @@ public struct TripDateReducer: Reducer {
             switch action {
             case let .tripDateItem(id: id, action: .tappedItem):
                 let selectedDate = state.tripDateItems[id: id]?.date
+                return .send(.selectDate(selectedDate))
+            case .tappedTripReadyButton:
+                return .send(.selectDate(nil))
+
+            case let .selectDate(selectedDate):
                 state.selectedDate = selectedDate
                 state.tripDateItems.removeAll()
                 state.dates.forEach { date in
-                    state.tripDateItems.updateOrAppend(.init(isSelected: date == selectedDate, date: date))
-                }
-                return .none
-            case .tappedTripReadyButton:
-                state.selectedDate = nil
-                state.tripDateItems.removeAll()
-                state.dates.forEach { date in
-                    state.tripDateItems.updateOrAppend(.init(isSelected: false, date: date))
+                    if let selectedDate {
+                        let convertedDate = payedAtDateFormatter.string(from: date)
+                        let convertedSelectedDate = payedAtDateFormatter.string(from: selectedDate)
+                        state.tripDateItems.updateOrAppend(.init(
+                            isSelected: convertedDate == convertedSelectedDate,
+                            date: date
+                        ))
+                    } else {
+                        state.tripDateItems.updateOrAppend(.init(isSelected: false, date: date))
+                    }
                 }
                 return .none
             }
@@ -54,6 +62,12 @@ public struct TripDateReducer: Reducer {
         .forEach(\.tripDateItems, action: /Action.tripDateItem) {
             TripDateItemReducer()
         }
+    }
+
+    var payedAtDateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-dd"
+        return dateFormatter
     }
 }
 

@@ -28,7 +28,7 @@ extension ExpenditureDetailView {
     var containerView: some View {
         WithViewStore(store, observe: \.expenseItem) { viewStore in
             VStack(spacing: 0) {
-                totalExpandPriceView(price: viewStore.price, convertedPrice: viewStore.price)
+                totalExpandPriceView(price: viewStore.amount, convertedPrice: viewStore.koreanAmount)
                     .padding(.all, 24)
                 Rectangle()
                     .frame(height: 10)
@@ -41,17 +41,20 @@ extension ExpenditureDetailView {
         }
     }
 
-    func totalExpandPriceView(price: Int, convertedPrice: Int) -> some View {
+    func totalExpandPriceView(price: Int, convertedPrice: Int?) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("금액")
                 .foregroundColor(.ybColor(.gray6))
                 .font(.ybfont(.body3))
-            Text(price.formattedWithSeparator + " EUR")
+            Text(abs(price).formattedWithSeparator + " EUR")
                 .foregroundColor(.ybColor(.black))
                 .font(.ybfont(.header1))
-            Text("= " + convertedPrice.formattedWithSeparator + "원")
-                .foregroundColor(.ybColor(.gray4))
-                .font(.ybfont(.body2))
+            if let convertedPrice {
+                Text("= " + abs(convertedPrice).formattedWithSeparator + "원")
+                    .foregroundColor(.ybColor(.gray4))
+                    .font(.ybfont(.body2))
+            }
+
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -67,7 +70,7 @@ extension ExpenditureDetailView {
                     .foregroundColor(.ybColor(.gray5))
                     .font(.ybfont(.body1))
             }
-            if expenseItem.expenseType == .individualBudgetExpense {
+            if expenseItem.amount < 0 {
                 HStack {
                     Text("카테고리")
                         .foregroundColor(.ybColor(.gray6))
@@ -79,7 +82,7 @@ extension ExpenditureDetailView {
                 }
             }
             HStack {
-                Text(expenseItem.expenseType == .individualBudgetExpense ? "지출 항목" : "예산 내용")
+                Text(expenseItem.amount < 0 ? "지출 항목" : "예산 내용")
                     .foregroundColor(.ybColor(.gray6))
                     .font(.ybfont(.body1))
                 Spacer()

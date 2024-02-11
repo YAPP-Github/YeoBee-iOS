@@ -9,19 +9,31 @@
 import Foundation
 
 public struct ExpenseItem: Codable, Equatable {
-    public var expenseType: ExpenseType
-    public var title: String
-    public var price: Int
-    public var currency: Currency
-    public var exchangedPrice: Int?
+    public var name: String
+    public var amount: Int
+    public var currency: String
+    public var koreanAmount: Int?
     public var category: ExpendCategory
 
-    public init(expenseType: ExpenseType, title: String, price: Int, currency: Currency, exchangedPrice: Int? = nil, category: ExpendCategory) {
-        self.expenseType = expenseType
-        self.title = title
-        self.price = price
+    enum CodingKeys: String, CodingKey {
+        case name
+        case amount
+        case currency = "currencyCode"
+        case koreanAmount
+        case category = "expenseCategoryImage"
+    }
+
+    public init(
+        name: String,
+        amount: Int,
+        currency: String,
+        koreanAmount: Int? = nil,
+        category: ExpendCategory
+    ) {
+        self.name = name
+        self.amount = amount
         self.currency = currency
-        self.exchangedPrice = exchangedPrice
+        self.koreanAmount = koreanAmount
         self.category = category
     }
 }
@@ -39,8 +51,14 @@ public extension Currency {
     static let cny: Currency = .init(suffix: " CNY", exchangeRate: 182.83)
 }
 
-public enum ExpendCategory: Codable {
-    case transition, eating, stay, travel, activity, shopping, air, etc
+public enum ExpendCategory: String, Codable, Equatable {
+    case transport = "TRANSPORT"
+    case food = "FOOD"
+    case lodge = "LODGE"
+    case travel = "TRAVEL"
+    case activity = "ACTIVITY"
+    case flight = "FLIGHT"
+    case shopping = "SHOPPING"
+    case etc = "ETC"
+    case income = "INCOME"
 }
-
-

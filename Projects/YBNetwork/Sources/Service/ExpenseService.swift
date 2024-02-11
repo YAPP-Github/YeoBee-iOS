@@ -30,11 +30,11 @@ extension ExpenseService: TargetType {
     public var path: String {
         switch self {
         case .fetchList:
-            return "/v1/expense/list"
+            return "/v1/expenses"
             //        case .fetchDetail:
             //            return "v1/expense"
-                    case .create:
-                        return "v1/expense"
+        case .create:
+            return "v1/expenses"
             //        case .delete:
             //            return "v1/expense"
         }
@@ -62,7 +62,7 @@ extension ExpenseService: TargetType {
                 "pageSize": pageSize
             ]
             if let type { params["type"] = type }
-            if let date { params["date"] = ISO8601DateFormatter().string(from: date) }
+            if let date { params["payedAt"] = payedAtDateFormatter.string(from: date) }
             if let method { params["method"] = method }
             if let unitId { params["unitId"] = unitId }
             return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
@@ -76,6 +76,13 @@ extension ExpenseService: TargetType {
     }
     
     public var headers: [String: String]? {
-        return ["Content-type": "application/json"]
+        return ["Content-type": "application/json",
+                "Authorization": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZXhwIjoxNzA4MTg2MTA5fQ.CXKRiLdVMTxwOAQGYC0m1KLeAEup9sn-z-v5ttAo_BI"]
+    }
+
+    var payedAtDateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-dd"
+        return dateFormatter
     }
 }

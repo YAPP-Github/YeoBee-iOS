@@ -5,7 +5,7 @@
 //  Created Hoyoung Lee on 12/30/23.
 //  Copyright © 2023 YeoBee.com. All rights reserved.
 
-import Combine
+import Foundation
 import ComposableArchitecture
 
 public enum ExpenditureTab: Equatable {
@@ -17,8 +17,8 @@ public struct SharedExpenditureReducer: Reducer {
 
     public struct State: Equatable {
         @BindingState var selectedTab: ExpenditureTab = .shared
-        var sharedExpenditure = ExpenditureReducer.State(type: .shared)
-        var individualExpenditure = ExpenditureReducer.State(type: .individual)
+        var sharedExpenditure = ExpenditureReducer.State(type: .shared, startDate: Date(), endDate: Date())
+        var individualExpenditure = ExpenditureReducer.State(type: .individual, startDate: Date(), endDate: Date())
     }
 
     public enum Action: BindableAction {
