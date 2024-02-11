@@ -8,8 +8,10 @@
 
 import Foundation
 
-struct FetchUserResponse: Codable {
-    var nickname: String
-    var profileImage: String
-    var loginProvider: LoginType
+public struct FetchUserResponse: Codable {
+    public var id: Int
+    public var nickname: String
+    public var profileImage: String
+    public var authProvider: AuthProviderType
+    public var userState: UserState
 }
