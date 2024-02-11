@@ -10,5 +10,5 @@ import Foundation
 
 public struct UpdateUserInfoRequest: Codable {
     public var nickname: String
-    public var profileImageUrl: String
+    public var profileImageUrl: String?
 }
