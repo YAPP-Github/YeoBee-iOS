@@ -67,7 +67,7 @@ public final class CreateAccountViewController: UIViewController, View {
             }
             .disposed(by: disposeBag)
         
-        reactor.state.map { $0.isCreateAccountCompleted }
+        reactor.pulse(\.$isCreateAccountCompleted)
             .subscribe(onNext: { [weak self] isCompleted in
                 if isCompleted {
                     self?.coordinator?.onboarding()

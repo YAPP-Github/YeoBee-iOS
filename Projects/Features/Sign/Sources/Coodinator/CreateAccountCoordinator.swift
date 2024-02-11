@@ -13,10 +13,7 @@ import Onboarding
 
 final public class CreateAccountCoordinator: CreateAccountCoordinatorInterface {
     public var navigationController: UINavigationController
-    public var createAccountNavigationController: UINavigationController?
     public var viewControllerRef: UIViewController?
-    public var childCoordinators = [Coordinator]()
-    public var parent: SignCoordinatorInterface?
     
     public init(
         navigationController: UINavigationController
@@ -27,7 +24,6 @@ final public class CreateAccountCoordinator: CreateAccountCoordinatorInterface {
     public func start(animated: Bool) {
         DispatchQueue.main.async {
             let createAccountViewController = CreateAccountViewController()
-            self.createAccountNavigationController = UINavigationController(rootViewController: createAccountViewController)
             let reactor = CreateAccountReactor()
             createAccountViewController.reactor = reactor
             createAccountViewController.coordinator = self
@@ -39,18 +35,12 @@ final public class CreateAccountCoordinator: CreateAccountCoordinatorInterface {
         navigationController.popViewController(animated: true)
     }
     
-    public func coordinatorDidFinish() {
-        createAccountNavigationController?.dismiss(animated: true)
-        parent?.childDidFinish(self)
-    }
-    
     public func onboarding() {
         let onboardingCoordinator = OnboardingCoordinator(navigationController: self.navigationController)
-        self.addChild(onboardingCoordinator)
         onboardingCoordinator.start(animated: true)
     }
     
     deinit {
-        print("TravelRegistrationCoordinator is de-initialized.")
+        print("CreateAccountCoordinator is de-initialized.")
     }
 }

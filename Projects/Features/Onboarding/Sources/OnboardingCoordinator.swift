@@ -9,12 +9,11 @@
 import UIKit
 
 import Coordinator
+import Home
 
 final public class OnboardingCoordinator: OnboardingCoordinatorInterface {
     public var navigationController: UINavigationController
-    public var onboardingNavigationController: UINavigationController?
     public var viewControllerRef: UIViewController?
-    public var childCoordinators = [Coordinator]()
 
     public init(
         navigationController: UINavigationController
@@ -24,7 +23,6 @@ final public class OnboardingCoordinator: OnboardingCoordinatorInterface {
 
     public func start(animated: Bool) {
         let onboardingViewController = OnboardingViewController()
-        onboardingNavigationController = UINavigationController(rootViewController: onboardingViewController)
         let reactor = OnboardingReactor()
         onboardingViewController.reactor = reactor
         onboardingViewController.coordinator = self
@@ -34,12 +32,13 @@ final public class OnboardingCoordinator: OnboardingCoordinatorInterface {
     public func popDidFinish() {
         navigationController.popViewController(animated: true)
     }
-
-    public func coordinatorDidFinish() {
-        onboardingNavigationController?.dismiss(animated: true)
+    
+    public func home() {
+        let homeCoordinator = HomeCoordinator(navigationController: self.navigationController)
+        homeCoordinator.start()
     }
 
     deinit {
-        print("TravelRegistrationCoordinator is de-initialized.")
+        print("OnboardingCoordinator is de-initialized.")
     }
 }

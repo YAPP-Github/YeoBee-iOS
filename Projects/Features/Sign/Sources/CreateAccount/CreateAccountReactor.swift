@@ -31,7 +31,7 @@ public final class CreateAccountReactor: Reactor {
         var isNicknameEmpty: Bool
         var nickname: String
         var errorMessage: String?
-        var isCreateAccountCompleted: Bool
+        @Pulse var isCreateAccountCompleted: Bool
     }
     
     public let initialState: State
