@@ -10,6 +10,10 @@ import Foundation
 import ReactorKit
 import RxSwift
 
+import Repository
+import YBNetwork
+import Entity
+
 public final class CreateAccountReactor: Reactor {
     public enum Action  {
         case confirmButtonTapped
@@ -37,30 +41,38 @@ public final class CreateAccountReactor: Reactor {
         )
     }
     
+    let userInfoRepository = UserInfoRepository()
+    
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .updateNickname(let nickname):
-            return Observable.just(Mutation.setNickname(nickname, nickname.isEmpty))
-        case .confirmButtonTapped:
-            if let errorMessage = isValidNickname(self.currentState.nickname) {
-                return Observable.just(Mutation.setErrorMessage(errorMessage))
-            } else {
-                // 유저 정보 업데이트 api 호출
-                return Observable.just(Mutation.setErrorMessage(nil))
-            }
+            case .updateNickname(let nickname):
+                return Observable.just(Mutation.setNickname(nickname, nickname.isEmpty))
+            case .confirmButtonTapped:
+                return Observable.create { observer in
+                    Task {
+                        if let errorMessage = self.isValidNickname(self.currentState.nickname) {
+                             observer.onNext(.setErrorMessage(errorMessage))
+                        } else {
+                            let userInfo = try await self.updateUserInfo()
+                            observer.onNext(.setErrorMessage(nil))
+                            // 유저 정보 저장 + 화면 전환
+                        }
+                    }
+                    return Disposables.create()
+                }
         }
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
-        case .setNicknameEmpty(let isEmpty):
-            newState.isNicknameEmpty = isEmpty
-        case .setNickname(let nickname, let isEmpty):
-            newState.nickname = nickname
-            newState.isNicknameEmpty = isEmpty
-        case .setErrorMessage(let message):
-            newState.errorMessage = message
+            case .setNicknameEmpty(let isEmpty):
+                newState.isNicknameEmpty = isEmpty
+            case .setNickname(let nickname, let isEmpty):
+                newState.nickname = nickname
+                newState.isNicknameEmpty = isEmpty
+            case .setErrorMessage(let message):
+                newState.errorMessage = message
         }
         return newState
     }
@@ -73,5 +85,13 @@ public final class CreateAccountReactor: Reactor {
             return "한글, 영문 포함 5자 이내로 입력해주세요."
         }
         return nil
+    }
+    
+    private func updateUserInfo() async throws -> UpdateUserInfoResponse {
+        let nickname = currentState.nickname
+        let request = UpdateUserInfoRequest(nickname: nickname)
+        let userInfo = try await userInfoRepository.updateUserInfo(request: request)
+        
+        return userInfo
     }
 }

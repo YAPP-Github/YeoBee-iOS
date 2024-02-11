@@ -52,7 +52,7 @@ extension UserInfoService: TargetType {
                 
             case let .updateState(state):
                 var params: [String: Any] = [
-                    "userState": state.rawValue
+                    "userState": state
                 ]
                 return .requestParameters(parameters: params, encoding: JSONEncoding.default)
                 

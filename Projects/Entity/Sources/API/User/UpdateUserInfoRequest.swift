@@ -11,4 +11,9 @@ import Foundation
 public struct UpdateUserInfoRequest: Codable {
     public var nickname: String
     public var profileImageUrl: String?
+    
+    public init(nickname: String, profileImageUrl: String? = nil) {
+        self.nickname = nickname
+        self.profileImageUrl = profileImageUrl
+    }
 }
