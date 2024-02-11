@@ -20,7 +20,7 @@ public protocol UserInfoInterface {
 final public class UserInfoRepository: UserInfoInterface {
     public init() {}
     
-    let provider = MoyaProvider<UserInfoService>()
+    let provider = MoyaProvider<UserInfoService>(plugins: [NetworkLogger()])
     
     public func updateUserInfo(request: UpdateUserInfoRequest) async throws -> UpdateUserInfoResponse {
         let result = await provider.request(

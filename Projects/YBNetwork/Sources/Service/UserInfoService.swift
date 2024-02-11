@@ -47,11 +47,12 @@ extension UserInfoService: TargetType {
                 var params: [String: Any] = [
                     "nickname": nickname
                 ]
-                if let profileImageURL { params["profileImageUrl"] = profileImageURL}
+                if let profileImageURL { params["profileImageUrl"] = profileImageURL
+                }
                 return .requestParameters(parameters: params, encoding: JSONEncoding.default)
                 
             case let .updateState(state):
-                var params: [String: Any] = [
+                let params: [String: Any] = [
                     "userState": state
                 ]
                 return .requestParameters(parameters: params, encoding: JSONEncoding.default)
@@ -62,8 +63,10 @@ extension UserInfoService: TargetType {
     }
     
     public var headers: [String : String]? {
-        let token = KeychainManager.shared.load(key: KeychainManager.accessToken)
-        
-        return ["Authorization": "Bearer \(String(describing: token))"]
+        if let token = KeychainManager.shared.load(key: KeychainManager.accessToken) {
+            return ["Authorization": "Bearer \(token)"]
+        } else {
+            return nil
+        }
     }
 }
