@@ -89,7 +89,7 @@ public final class CreateAccountViewController: UIViewController, View {
         nicknameTextField.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
             make.leading.equalTo(view.snp.leading).offset(24)
-            make.trailing.equalTo(view.snp.right).offset(-24)
+            make.trailing.equalTo(view.snp.trailing).offset(-24)
         }
         errorDescriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(nicknameTextField.snp.bottom).offset(10)
@@ -99,7 +99,7 @@ public final class CreateAccountViewController: UIViewController, View {
         confirmButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-68)
             make.leading.equalTo(view.snp.leading).offset(24)
-            make.trailing.equalTo(view.snp.right).offset(-24)
+            make.trailing.equalTo(view.snp.trailing).offset(-24)
         }
     }
 }
