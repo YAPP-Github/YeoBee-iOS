@@ -50,9 +50,21 @@ public final class SettingRecycleReactor: Reactor {
         
         switch mutation {
         case .textFieldText(text: let text):
-            if state.viewType == .companionName {
-                newState.effectivenessType = .notValid
+            if state.viewType == .tripTitle {
+                // 여행 제목 변경
+                newState.limitedString = text
+                
+                if text.isEmpty {
+                    newState.effectivenessType = .none
+                } else {
+                    if isValidTitleText(text) {
+                        newState.effectivenessType = .valid
+                    } else {
+                        newState.effectivenessType = .notValid
+                    }
+                }
             } else {
+                // 동행자 이름 변경
                 let limitedString = textFieldLimitedString(text: text)
                 newState.limitedString = limitedString
                 

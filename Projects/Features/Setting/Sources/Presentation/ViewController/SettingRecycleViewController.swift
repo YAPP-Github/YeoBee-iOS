@@ -93,7 +93,7 @@ public final class SettingRecycleViewController: UIViewController {
     }
     
     deinit {
-        print("deinit SettingRecycleViewController")
+        print("SettingRecycleViewController is de-initialized.")
     }
 }
 
