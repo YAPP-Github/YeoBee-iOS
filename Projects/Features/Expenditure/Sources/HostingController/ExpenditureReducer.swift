@@ -59,12 +59,17 @@ public struct ExpenditureReducer: Reducer {
                 let currentDate = Date()
                 if state.isInitialShow {
                     state.isInitialShow = false
+                    let selectDate: Date
                     if currentDate < state.startDate {
-                        return .send(.getExpenditure(state.beforeDate))
+                        selectDate = state.beforeDate
                     } else if currentDate > state.endDate {
-                        return .send(.getExpenditure(state.startDate))
+                        selectDate = state.startDate
                     } else {
-                        return .send(.getExpenditure(currentDate))
+                        selectDate = currentDate
+                    }
+                    return .run { send in
+                        await send(.tripDate(.selectDate(selectDate)))
+                        await send(.getExpenditure(selectDate))
                     }
                 } else {
                     return .none
