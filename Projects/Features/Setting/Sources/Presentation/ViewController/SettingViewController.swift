@@ -213,11 +213,15 @@ extension SettingViewController: SettingTableHeaderViewDelegate {
 // MARK: - 바텀시트
 extension SettingViewController: SettingBottomSheetViewControllerDelegate {
     func modifyTitleButtonTapped() {
-        print("제목")
+        let settingRecycleReactor = SettingRecycleReactor(viewType: .tripTitle)
+        let settingRecycleViewController = SettingRecycleViewController(reactor: settingRecycleReactor)
+        self.navigationController?.pushViewController(settingRecycleViewController, animated: true)
     }
     
     func modifyDateButtonTapped() {
-        print("날짜")
+        let settingCalendarReactor = SettingCalendarReactor()
+        let settingCalendarViewController = SettingCalendarViewController(reactor: settingCalendarReactor)
+        self.navigationController?.pushViewController(settingCalendarViewController, animated: true)
     }
 }
 

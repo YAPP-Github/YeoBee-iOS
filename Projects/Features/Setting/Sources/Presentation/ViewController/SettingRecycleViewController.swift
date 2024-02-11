@@ -166,7 +166,7 @@ extension SettingRecycleViewController: View {
             .bind { [weak self] viewType in
                 switch viewType {
                 case .tripTitle:
-                    self?.titleLabel.text = "여행 제목을 입력해주세요."
+                    self?.titleLabel.text = "여행 제목을 수정해주세요."
                 case .companionName:
                     self?.title = "동행자 이름 수정"
                     self?.titleLabel.text = "이름 변경"

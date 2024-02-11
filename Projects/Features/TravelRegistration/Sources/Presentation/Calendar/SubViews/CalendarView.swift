@@ -13,15 +13,15 @@ import FSCalendar
 import RxSwift
 import RxCocoa
 
-class CalendarView: UIView {
+public final class CalendarView: UIView {
     var disposeBag = DisposeBag()
     
     private let dividerView = YBDivider(height: 0.6, color: .gray3)
-    lazy var monthHeaderLabel = YBLabel(text: dateformatter.string(from: Date()), font: .body1, textColor: .black)
+    public lazy var monthHeaderLabel = YBLabel(text: dateformatter.string(from: Date()), font: .body1, textColor: .black)
     private let previousMonthButton = YBIconButton(image: UIImage(systemName:"chevron.backward"), tintColor: .black)
     private let nextMonthButton = YBIconButton(image: UIImage(systemName:"chevron.forward"), tintColor: .black)
     
-    lazy var calendar: FSCalendar = {
+    public lazy var calendar: FSCalendar = {
         $0.locale = Locale(identifier: "ko_KR")
         $0.allowsMultipleSelection = true
         $0.headerHeight = 0
