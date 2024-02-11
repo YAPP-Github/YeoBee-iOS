@@ -25,7 +25,7 @@ public struct ExpenditureReducer: Reducer {
         var startDate: Date
         var endDate: Date
         var beforeDate: Date
-        var isInitialShow: Bool = false
+        var isInitialShow: Bool = true
 
         init(type: ExpenditureTab, startDate: Date, endDate: Date) {
             self.type = type

@@ -45,7 +45,16 @@ public struct TripDateReducer: Reducer {
                 state.selectedDate = selectedDate
                 state.tripDateItems.removeAll()
                 state.dates.forEach { date in
-                    state.tripDateItems.updateOrAppend(.init(isSelected: date == selectedDate, date: date))
+                    if let selectedDate {
+                        let convertedDate = payedAtDateFormatter.string(from: date)
+                        let convertedSelectedDate = payedAtDateFormatter.string(from: selectedDate)
+                        state.tripDateItems.updateOrAppend(.init(
+                            isSelected: convertedDate == convertedSelectedDate,
+                            date: date
+                        ))
+                    } else {
+                        state.tripDateItems.updateOrAppend(.init(isSelected: false, date: date))
+                    }
                 }
                 return .none
             }
@@ -53,6 +62,12 @@ public struct TripDateReducer: Reducer {
         .forEach(\.tripDateItems, action: /Action.tripDateItem) {
             TripDateItemReducer()
         }
+    }
+
+    var payedAtDateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-dd"
+        return dateFormatter
     }
 }
 

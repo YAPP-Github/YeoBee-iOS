@@ -37,6 +37,7 @@ struct ExpenditureView: View {
                 addButtonView
             }
         }
+        .onAppear { store.send(.onAppear) }
     }
 }
 
