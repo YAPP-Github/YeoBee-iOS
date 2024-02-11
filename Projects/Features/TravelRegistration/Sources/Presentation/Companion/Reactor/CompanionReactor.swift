@@ -63,6 +63,9 @@ public final class CompanionReactor: Reactor {
             
         switch mutation {
         case .companionType(let type):
+            if type == .alone {
+                newState.makeLimitToast = false
+            }
             newState.companionType = type
         case .addCompanion:
             if newState.companions.count >= 9 {
