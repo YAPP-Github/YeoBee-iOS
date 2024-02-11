@@ -29,3 +29,5 @@ public protocol SettingCoordinatorInterface: ParentCoordinator, ChildCoordinator
 public protocol ExpenditureEditCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 
 public protocol CreateAccountCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
+
+public protocol OnboardingCoordinatorInterface: ParentCoordinator, ChildCoordinator { }

@@ -24,12 +24,14 @@ public final class CreateAccountReactor: Reactor {
         case setNicknameEmpty(Bool)
         case setNickname(String, Bool)
         case setErrorMessage(String?)
+        case onBoarding
     }
     
     public struct State {
         var isNicknameEmpty: Bool
         var nickname: String
         var errorMessage: String?
+        var isCreateAccountCompleted: Bool
     }
     
     public let initialState: State
@@ -37,7 +39,8 @@ public final class CreateAccountReactor: Reactor {
     public init() {
         self.initialState = .init(
             isNicknameEmpty: true,
-            nickname: ""
+            nickname: "",
+            isCreateAccountCompleted: false
         )
     }
     
@@ -49,13 +52,15 @@ public final class CreateAccountReactor: Reactor {
                 return Observable.just(Mutation.setNickname(nickname, nickname.isEmpty))
             case .confirmButtonTapped:
                 return Observable.create { observer in
-                    Task {
-                        if let errorMessage = self.isValidNickname(self.currentState.nickname) {
-                             observer.onNext(.setErrorMessage(errorMessage))
-                        } else {
-                            let userInfo = try await self.updateUserInfo()
-                            observer.onNext(.setErrorMessage(nil))
-                            // 유저 정보 저장 + 화면 전환
+                    if let errorMessage = self.isValidNickname(self.currentState.nickname) {
+                        observer.onNext(.setErrorMessage(errorMessage))
+                    } else {
+                        observer.onNext(.setErrorMessage(nil))
+                        Task {
+                            try await self.updateUserInfo()
+                            DispatchQueue.main.async {
+                                observer.onNext(.onBoarding)
+                            }
                         }
                     }
                     return Disposables.create()
@@ -73,12 +78,14 @@ public final class CreateAccountReactor: Reactor {
                 newState.isNicknameEmpty = isEmpty
             case .setErrorMessage(let message):
                 newState.errorMessage = message
+            case .onBoarding:
+                newState.isCreateAccountCompleted = true
         }
         return newState
     }
     
     private func isValidNickname(_ nickname: String) -> String? {
-        if !NSPredicate(format: "SELF MATCHES %@", "^[가-힣A-Za-z0-9]+$").evaluate(with: nickname) {
+        if !NSPredicate(format: "SELF MATCHES %@", "^[가-힣ㄱ-ㅎㅏ-ㅣA-Za-z0-9]+$").evaluate(with: nickname) {
             return "특수문자 사용이 불가해요."
         }
         if nickname.count > 5 {
@@ -87,11 +94,14 @@ public final class CreateAccountReactor: Reactor {
         return nil
     }
     
-    private func updateUserInfo() async throws -> UpdateUserInfoResponse {
+    private func updateUserInfo() async throws -> Void {
         let nickname = currentState.nickname
         let request = UpdateUserInfoRequest(nickname: nickname)
-        let userInfo = try await userInfoRepository.updateUserInfo(request: request)
+        do {
+            try await userInfoRepository.updateUserInfo(request: request)
+        } catch {
+            print("에러 발생: \(error.localizedDescription)")
+        }
         
-        return userInfo
     }
 }

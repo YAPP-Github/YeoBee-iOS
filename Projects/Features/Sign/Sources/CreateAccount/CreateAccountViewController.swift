@@ -66,6 +66,16 @@ public final class CreateAccountViewController: UIViewController, View {
                 self?.errorDescriptionLabel.text = errorMessage
             }
             .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isCreateAccountCompleted }
+            .subscribe(onNext: { [weak self] isCompleted in
+                if isCompleted {
+                    self?.coordinator?.onboarding()
+                } else {
+                    // Error 처리
+                }
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setupViews() {
