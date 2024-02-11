@@ -66,7 +66,7 @@ extension ExpenditureListItemView {
                             HStack(spacing: 0) {
                                 Text(viewStore.price)
                                     .foregroundColor(
-                                        viewStore.expenseItem.amount > 0
+                                        viewStore.expenseItem.amount < 0
                                         ? .ybColor(.black)
                                         : .ybColor(.mainGreen)
                                     )
@@ -74,7 +74,7 @@ extension ExpenditureListItemView {
                                     .lineLimit(1)
                                 Text(viewStore.currency)
                                     .foregroundColor(
-                                        viewStore.expenseItem.amount > 0
+                                        viewStore.expenseItem.amount < 0
                                         ? .ybColor(.black)
                                         : .ybColor(.mainGreen)
                                     )

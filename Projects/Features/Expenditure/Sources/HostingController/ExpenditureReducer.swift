@@ -5,6 +5,7 @@
 //  Created Hoyoung Lee on 12/29/23.
 //  Copyright © 2023 YeoBee.com. All rights reserved.
 
+import Foundation
 import Combine
 import ComposableArchitecture
 import UseCase
@@ -19,24 +20,34 @@ public struct ExpenditureReducer: Reducer {
     public struct State: Equatable {
         var type: ExpenditureTab
         var totalPrice: TotalPriceReducer.State
-        var tripDate = TripDateReducer.State()
+        var tripDate: TripDateReducer.State
         var expenditureList = ExpenditureListReducer.State()
+        var startDate: Date
+        var endDate: Date
+        var beforeDate: Date
+        var isInitialShow: Bool = false
 
-        init(type: ExpenditureTab) {
+        init(type: ExpenditureTab, startDate: Date, endDate: Date) {
             self.type = type
+            self.tripDate = TripDateReducer.State(startDate: startDate, endDate: endDate)
             self.totalPrice = .init(
                 type: type,
                 isTappable: true
             )
+            self.startDate = startDate
+            self.endDate = endDate
+            self.beforeDate = Calendar.current.date(byAdding: .day, value: -1, to: startDate) ?? Date()
         }
     }
 
     public enum Action {
+        case onAppear
         case totalPrice(TotalPriceReducer.Action)
         case tripDate(TripDateReducer.Action)
         case expenditureList(ExpenditureListReducer.Action)
         case tappedAddButton
         case tappedFilterButton
+        case getExpenditure(Date)
     }
 
     @Dependency(\.expenseUseCase) var expenseUseCase
@@ -44,25 +55,49 @@ public struct ExpenditureReducer: Reducer {
     public var body: some ReducerOf<ExpenditureReducer> {
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                let currentDate = Date()
+                if state.isInitialShow {
+                    state.isInitialShow = false
+                    if currentDate < state.startDate {
+                        return .send(.getExpenditure(state.beforeDate))
+                    } else if currentDate > state.endDate {
+                        return .send(.getExpenditure(state.startDate))
+                    } else {
+                        return .send(.getExpenditure(currentDate))
+                    }
+                } else {
+                    return .none
+                }
+
             case .tripDate(.tappedTripReadyButton):
-                return .send(.expenditureList(.setExpenditures([])))
+                return .send(.getExpenditure(state.beforeDate))
+
             case let .tripDate(.tripDateItem(id: id, action: .tappedItem)):
                 guard let tripDate = state.tripDate.tripDateItems[id: id]?.date else { return .none }
+                return .send(.getExpenditure(tripDate))
+
+            case let .getExpenditure(tripDate):
                 return .run { send in
                     let expenseItems = try await expenseUseCase.getExpenseList(1, tripDate)
                     await send(.expenditureList(.setExpenditures(expenseItems)))
                 }
+
             case .tappedAddButton:
                 cooridinator.expenditureEdit()
                 return .none
+
             case .totalPrice(.tappedTotalPrice):
                 cooridinator.totalExpenditureList()
                 return .none
+
             case .tappedFilterButton:
                 return .none
+
             case let .expenditureList(.expenditureListItem(id: _, action: .tappedExpenditureItem(expenseItem))):
                 cooridinator.expenditureDetail(expenseItem: expenseItem)
                 return .none
+
             default:
                 return .none
             }

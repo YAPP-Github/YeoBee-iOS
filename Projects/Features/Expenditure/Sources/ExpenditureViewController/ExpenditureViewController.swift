@@ -27,12 +27,14 @@ public final class ExpenditureViewController: UIViewController {
 //    private let tripDateDataSource: TripDateDataSource
 
     public init(coordinator: ExpenditureCoordinator) {
-
         self.coordinator = coordinator
+
+        let startDate = Date()
+        let endDate = Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date()
         self.expenditureHostingController = ExpenditureHostingController(
             rootView: ExpenditureView(
                 store: .init(
-                    initialState: .init(type: .individual),
+                    initialState: .init(type: .individual, startDate: startDate, endDate: endDate),
                     reducer: {
                         ExpenditureReducer(cooridinator: coordinator)
                     }

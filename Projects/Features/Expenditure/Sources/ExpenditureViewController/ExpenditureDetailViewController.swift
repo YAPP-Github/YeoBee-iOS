@@ -53,7 +53,7 @@ public final class ExpenditureDetailViewController: UIViewController {
     }
 
     func setupViews() {
-        title = "지출 상세"
+        title = expenseItem.amount > 0 ? "내 예산 상세" : "지출 상세"
         view.backgroundColor = .ybColor(.white)
     }
 

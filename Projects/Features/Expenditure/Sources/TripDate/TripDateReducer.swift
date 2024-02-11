@@ -15,9 +15,7 @@ public struct TripDateReducer: Reducer {
         var readyDate: Date
         var selectedDate: Date?
 
-        init() {
-            let date = Calendar.current.date(byAdding: .day, value: -1, to: Date())
-            let startDate = date ?? Date()
+        init(startDate: Date, endDate: Date) {
             let endDate = Calendar.current.date(byAdding: .day, value: 2, to: startDate)
             readyDate = Calendar.current.date(byAdding: .day, value: -1, to: startDate) ?? Date()
             let dates = datesBetween(startDate: startDate, endDate: endDate)
