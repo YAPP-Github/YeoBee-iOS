@@ -204,7 +204,20 @@ extension SettingViewController: View {
 // MARK: - 편집 버튼 Tap
 extension SettingViewController: SettingTableHeaderViewDelegate {
     func modifyButtonTapped() {
-        print("편집 Tap - Bottom Sheet")
+        let settingBottomSheetViewController = SettingBottomSheetViewController()
+        settingBottomSheetViewController.delegate = self
+        presentBottomSheet(presentedViewController: settingBottomSheetViewController, height: 250)
+    }
+}
+
+// MARK: - 바텀시트
+extension SettingViewController: SettingBottomSheetViewControllerDelegate {
+    func modifyTitleButtonTapped() {
+        print("제목")
+    }
+    
+    func modifyDateButtonTapped() {
+        print("날짜")
     }
 }
 

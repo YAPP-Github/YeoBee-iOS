@@ -35,7 +35,7 @@ open class YBBottomSheetViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func setContraints() {
+    open func setContraints() {
         view.addSubview(sheetContentView)
         sheetContentView.snp.makeConstraints { make in
             make.top.equalToSuperview()
