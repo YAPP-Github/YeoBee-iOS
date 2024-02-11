@@ -24,7 +24,9 @@ public struct ExpenditureReducer: Reducer {
 
         init(type: ExpenditureTab) {
             self.type = type
-            self.totalPrice = .init(type: type, isTappable: true
+            self.totalPrice = .init(
+                type: type,
+                isTappable: true
             )
         }
     }
@@ -45,18 +47,11 @@ public struct ExpenditureReducer: Reducer {
             case .tripDate(.tappedTripReadyButton):
                 return .send(.expenditureList(.setExpenditures([])))
             case let .tripDate(.tripDateItem(id: id, action: .tappedItem)):
-                let date = state.tripDate.tripDateItems[id: id]?.date
-                return .send(.expenditureList(.setExpenditures([
-                    .init(expenseType: .individualBudgetExpense, title: "8글자까지보이기안보이면어떡하징", price: 100051353216, currency: .usd, category: .activity),
-                    .init(expenseType: .individualBudgetExpense, title: "파스타", price: 5000, currency: .krw, category: .activity),
-                    .init(expenseType: .individualBudgetExpense, title: "저는 이번주에 일본갑니다", price: 54800, currency: .jpy, category: .air),
-                    .init(expenseType: .individualBudgetExpense, title: "부럽죠", price: 6421, currency: .jpy, category: .etc),
-                    .init(expenseType: .individualBudgetExpense, title: "여러분 선물 사올게요", price: 558588422, currency: .eur, category: .eating),
-                    .init(expenseType: .individualBudgetExpense, title: "꺄아아아ㅏㅇ", price: 123123, currency: .usd, category: .transition),
-                    .init(expenseType: .individualBudgetExpense, title: "8글자까지보이기안보이면어떡하징", price: 7000, currency: .krw, category: .travel),
-                    .init(expenseType: .individualBudgetExpense, title: "태태제리제로화이팅", price: 100, currency: .jpy, category: .stay),
-                    .init(expenseType: .individualBudgetExpense, title: "여비팀화이팅", price: 87000, currency: .eur, category: .etc),
-                ])))
+                guard let tripDate = state.tripDate.tripDateItems[id: id]?.date else { return .none }
+                return .run { send in
+                    let expenseItems = try await expenseUseCase.getExpenseList(1, tripDate)
+                    await send(.expenditureList(.setExpenditures(expenseItems)))
+                }
             case .tappedAddButton:
                 cooridinator.expenditureEdit()
                 return .none
@@ -64,10 +59,7 @@ public struct ExpenditureReducer: Reducer {
                 cooridinator.totalExpenditureList()
                 return .none
             case .tappedFilterButton:
-                return .run { _ in
-                    let result = try await expenseUseCase.getExpenseList("냠냠")
-                    print(result)
-                }
+                return .none
             case let .expenditureList(.expenditureListItem(id: _, action: .tappedExpenditureItem(expenseItem))):
                 cooridinator.expenditureDetail(expenseItem: expenseItem)
                 return .none

@@ -28,7 +28,7 @@ extension ExpenditureDetailView {
     var containerView: some View {
         WithViewStore(store, observe: \.expenseItem) { viewStore in
             VStack(spacing: 0) {
-                totalExpandPriceView(price: viewStore.price, convertedPrice: viewStore.price)
+                totalExpandPriceView(price: viewStore.amount, convertedPrice: viewStore.amount)
                     .padding(.all, 24)
                 Rectangle()
                     .frame(height: 10)
@@ -67,7 +67,7 @@ extension ExpenditureDetailView {
                     .foregroundColor(.ybColor(.gray5))
                     .font(.ybfont(.body1))
             }
-            if expenseItem.expenseType == .individualBudgetExpense {
+            if expenseItem.amount > 0 {
                 HStack {
                     Text("카테고리")
                         .foregroundColor(.ybColor(.gray6))
@@ -79,7 +79,7 @@ extension ExpenditureDetailView {
                 }
             }
             HStack {
-                Text(expenseItem.expenseType == .individualBudgetExpense ? "지출 항목" : "예산 내용")
+                Text(expenseItem.amount > 0 ? "지출 항목" : "예산 내용")
                     .foregroundColor(.ybColor(.gray6))
                     .font(.ybfont(.body1))
                 Spacer()

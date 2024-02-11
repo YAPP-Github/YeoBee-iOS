@@ -13,7 +13,7 @@ import Entity
 import ComposableArchitecture
 
 public struct ExpenseUseCase {
-    public var getExpenseList: @Sendable (_ tripId: String) async throws -> String
+    public var getExpenseList: @Sendable (_ tripId: Int, _ date: Date) async throws -> [ExpenseItem]
 }
 
 extension ExpenseUseCase: TestDependencyKey {
@@ -31,9 +31,16 @@ extension ExpenseUseCase {
     public static func live(
         expenseRepository: ExpenseRepositoryInterface
     ) -> Self {
-        return .init(getExpenseList: { tripId in
-//            let data = try await expenseRepository.getExpenseList(request: .init(tripId: 0, pageIndex: 0, pageSize: 0))
-            return "냠냠"
+        return .init(getExpenseList: { tripId, date in
+            let data = try await expenseRepository.getExpenseList(
+                request: .init(
+                    tripId: tripId,
+                    pageIndex: 0,
+                    pageSize: 30,
+                    date: date
+                )
+            )
+            return data.content
         })
     }
 }

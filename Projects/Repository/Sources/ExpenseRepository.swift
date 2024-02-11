@@ -20,7 +20,7 @@ final public class ExpenseRepository: ExpenseRepositoryInterface {
 
     public init() {}
 
-    let provider = MoyaProvider<ExpenseService>()
+    let provider = MoyaProvider<ExpenseService>(plugins: [NetworkLogger()])
 
     public func getExpenseList(request: FetchExpenseListRequest) async throws -> FetchExpenseListResponse {
          let result = await provider.request(

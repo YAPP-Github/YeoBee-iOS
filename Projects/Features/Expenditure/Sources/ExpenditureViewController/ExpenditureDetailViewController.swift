@@ -53,7 +53,7 @@ public final class ExpenditureDetailViewController: UIViewController {
     }
 
     func setupViews() {
-        title = expenseItem.expenseType == .individualBudgetExpense ? "지출 상세" : "내 예산 상세"
+        title = "지출 상세"
         view.backgroundColor = .ybColor(.white)
     }
 

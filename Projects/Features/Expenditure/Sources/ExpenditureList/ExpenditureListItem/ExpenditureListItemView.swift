@@ -26,18 +26,24 @@ extension ExpenditureListItemView {
     struct ViewState: Equatable {
         let expenseItem: ExpenseItem
         var exchangedPrice: Int? = nil
+        var currency: String
         var price: String {
-            return "+"
-            + " "
-            + expenseItem.price.formattedWithSeparator
+            let price =  expenseItem.amount
+            if price > 0 {
+                return "+ " + price.formattedWithSeparator
+            } else {
+                return "- " + abs(price).formattedWithSeparator
+            }
         }
-
 
         init(state: ExpenditureListItemReducer.State) {
             let expendseItem = state.expendseItem
             self.expenseItem = expendseItem
-            if expendseItem.currency.suffix != "원" {
-                self.exchangedPrice = Int(Double(expendseItem.price) * expendseItem.currency.exchangeRate)
+            self.currency = " \(state.expendseItem.currency)"
+            if expendseItem.currency != "KRW" {
+                self.exchangedPrice = expendseItem.koreanAmount
+            } else {
+                self.currency = "원"
             }
         }
     }
@@ -52,7 +58,7 @@ extension ExpenditureListItemView {
                         .frame(width: 41, height: 41)
                     VStack(alignment: .trailing, spacing: 4) {
                         HStack(alignment: .top, spacing: 9) {
-                            Text(viewStore.expenseItem.title)
+                            Text(viewStore.expenseItem.name)
                                 .foregroundColor(.ybColor(.black))
                                 .font(.ybfont(.body2))
                                 .lineLimit(1)
@@ -60,15 +66,15 @@ extension ExpenditureListItemView {
                             HStack(spacing: 0) {
                                 Text(viewStore.price)
                                     .foregroundColor(
-                                        viewStore.expenseItem.expenseType == .individualBudgetExpense
+                                        viewStore.expenseItem.amount > 0
                                         ? .ybColor(.black)
                                         : .ybColor(.mainGreen)
                                     )
                                     .font(.ybfont(.body2))
                                     .lineLimit(1)
-                                Text(viewStore.expenseItem.currency.suffix)
+                                Text(viewStore.currency)
                                     .foregroundColor(
-                                        viewStore.expenseItem.expenseType == .individualBudgetExpense
+                                        viewStore.expenseItem.amount > 0
                                         ? .ybColor(.black)
                                         : .ybColor(.mainGreen)
                                     )
