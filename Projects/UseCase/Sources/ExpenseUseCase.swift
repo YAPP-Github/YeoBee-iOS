@@ -15,6 +15,7 @@ import ComposableArchitecture
 public struct ExpenseUseCase {
     public var getExpenseList: @Sendable (_ tripId: Int, _ date: Date) async throws -> [ExpenseItem]
     public var createExpense: @Sendable (_ createExpense: CreateExpenseRequest) async throws -> CreateExpenseResponse
+    public var getExpenseDetail: @Sendable (_ expenseId: Int) async throws -> ExpenseDetailItem
 }
 
 extension ExpenseUseCase: TestDependencyKey {
@@ -28,10 +29,9 @@ extension DependencyValues {
     }
 }
 
-extension ExpenseUseCase {
-    public static func live(
-        expenseRepository: ExpenseRepositoryInterface
-    ) -> Self {
+extension ExpenseUseCase: DependencyKey {
+    public static var liveValue: ExpenseUseCase {
+        let expenseRepository = ExpenseRepository()
         return .init(getExpenseList: { tripId, date in
             let data = try await expenseRepository.getExpenseList(
                 request: .init(
@@ -45,6 +45,8 @@ extension ExpenseUseCase {
         }, createExpense: { request in
             let data = try await expenseRepository.createExpense(request: request)
             return data
+        }, getExpenseDetail: { expenseId in
+            return try await expenseRepository.getExpenseDetail(expenseId: expenseId)
         })
     }
 }

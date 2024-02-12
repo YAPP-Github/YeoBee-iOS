@@ -27,10 +27,9 @@ extension DependencyValues {
     }
 }
 
-extension CurrencyUseCase {
-    public static func live(
-        currencyRepository: CurrencyRepositoryInterface
-    ) -> Self {
+extension CurrencyUseCase: DependencyKey {
+    public static var liveValue: CurrencyUseCase {
+        let currencyRepository = CurrencyRepository()
         return .init(getTripCurrencies: { tripId in
             return try await currencyRepository.getTripCurrency(tripId: tripId).currencyList
         })

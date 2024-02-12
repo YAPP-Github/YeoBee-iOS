@@ -10,9 +10,11 @@ import Foundation
 import Moya
 import YBNetwork
 import Entity
+import Dependencies
 
 public protocol ExpenseRepositoryInterface {
     func getExpenseList(request: FetchExpenseListRequest) async throws -> FetchExpenseListResponse
+    func getExpenseDetail(expenseId: Int) async throws -> ExpenseDetailItem
     func createExpense(request: CreateExpenseRequest) async throws -> CreateExpenseResponse
 }
 
@@ -33,6 +35,18 @@ final public class ExpenseRepository: ExpenseRepositoryInterface {
                 paymentMethod: request.method?.rawValue,
                 unitId: request.unitId
             )
+        )
+        switch result {
+        case let .success(response):
+            return try decode(data: response.data)
+        case .failure(let failure):
+            throw failure
+        }
+    }
+
+    public func getExpenseDetail(expenseId: Int) async throws -> ExpenseDetailItem {
+         let result = await provider.request(
+            .fetchDetail(expenseId)
         )
         switch result {
         case let .success(response):

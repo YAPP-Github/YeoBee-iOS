@@ -31,13 +31,9 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
     }
 
     public func start(animated: Bool) {
-        withDependencies {
-            $0.yeoBeeDependecy()
-        } operation: {
-            let expenditureViewController = ExpenditureViewController(coordinator: self)
-            self.expenditureViewController = expenditureViewController
-            expenditureNavigationController = UINavigationController(rootViewController: expenditureViewController)
-        }
+        let expenditureViewController = ExpenditureViewController(coordinator: self)
+        self.expenditureViewController = expenditureViewController
+        expenditureNavigationController = UINavigationController(rootViewController: expenditureViewController)
     }
 
     public func popDidFinish() {
@@ -58,13 +54,23 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
 
 extension ExpenditureCoordinator {
 
-    public func expenditureEdit(tripId: Int, editDate: Date) {
-        let expenditureEditCoordinator = ExpenditureEditCoordinator(
+    public func expenditureAdd(tripId: Int, editDate: Date) {
+        let expenditureAddCoordinator = ExpenditureAddCoordinator(
             navigationController: expenditureNavigationController!,
             tripId: tripId,
             editDate: editDate
         )
-        expenditureEditCoordinator.delegate = self
+        expenditureAddCoordinator.parent = self
+        addChild(expenditureAddCoordinator)
+        expenditureAddCoordinator.start(animated: true)
+    }
+
+    public func expenditureEdit(tripId: Int, expenseDetail: ExpenseDetailItem) {
+        let expenditureEditCoordinator = ExpenditureEditCoordinator(
+            navigationController: expenditureNavigationController!,
+            tripId: tripId,
+            expenseDetail: expenseDetail
+        )
         expenditureEditCoordinator.parent = self
         addChild(expenditureEditCoordinator)
         expenditureEditCoordinator.start(animated: true)

@@ -10,16 +10,16 @@ import DesignSystem
 import SnapKit
 import ComposableArchitecture
 
-public final class ExpenditureEditViewController: UIViewController {
+public final class ExpenditureAddViewController: UIViewController {
 
-    let coordinator: ExpenditureEditCoordinator
+    let coordinator: ExpenditureAddCoordinator
     let editDate: Date
 
     // MARK: View
 
     private let expenditureHostingController: ExpenditureAddHostingController
 
-    public init(coordinator: ExpenditureEditCoordinator, tripId: Int, editDate: Date) {
+    public init(coordinator: ExpenditureAddCoordinator, tripId: Int, editDate: Date) {
         self.coordinator = coordinator
         self.expenditureHostingController = ExpenditureAddHostingController(
             rootView: ExpenditureAddView(
@@ -92,6 +92,6 @@ public final class ExpenditureEditViewController: UIViewController {
     }
 
     deinit {
-        print("ExpenditureEditViewController deinit")
+        print("ExpenditureAddViewController deinit")
     }
 }

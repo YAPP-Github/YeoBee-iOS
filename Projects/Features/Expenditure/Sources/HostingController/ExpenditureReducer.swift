@@ -99,7 +99,7 @@ public struct ExpenditureReducer: Reducer {
 
             case .tappedAddButton:
                 let selectedDate = state.tripDate.selectedDate ?? state.beforeDate
-                cooridinator.expenditureEdit(tripId: state.tripId, editDate: selectedDate)
+                cooridinator.expenditureAdd(tripId: state.tripId, editDate: selectedDate)
                 return .none
 
             case .totalPrice(.tappedTotalPrice):

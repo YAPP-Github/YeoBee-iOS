@@ -14,9 +14,9 @@ public enum ExpenditureTab: Equatable {
 
 public struct ExpenditureReducer: Reducer {
 
-    let cooridinator: ExpenditureEditCoordinator
+    let cooridinator: ExpenditureAddCoordinator
 
-    init(cooridinator: ExpenditureEditCoordinator) {
+    init(cooridinator: ExpenditureAddCoordinator) {
         self.cooridinator = cooridinator
     }
 
@@ -66,15 +66,9 @@ public struct ExpenditureReducer: Reducer {
         Scope(state: \.expenditureEdit, action: /Action.expenditureEdit) {
             ExpendpenditureEditReducer()
         }
-        .transformDependency(\.self) { dependency in
-            dependency.yeoBeeDependecy()
-        }
 
         Scope(state: \.expenditureBudgetEdit, action: /Action.expenditureBudgetEdit) {
             ExpenditureBudgetEditReducer()
-        }
-        .transformDependency(\.self) { dependency in
-            dependency.yeoBeeDependecy()
         }
     }
 }
