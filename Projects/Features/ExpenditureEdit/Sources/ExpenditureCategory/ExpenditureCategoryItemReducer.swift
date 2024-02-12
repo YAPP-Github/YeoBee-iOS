@@ -8,7 +8,7 @@
 import Foundation
 import ComposableArchitecture
 
-enum Category: CaseIterable {
+public enum Category: CaseIterable {
     case transition, eating, stay, travel, activity, shopping, air, etc
 }
 
@@ -17,6 +17,7 @@ public struct ExpenditureCategoryItemReducer: Reducer {
         public var id: String { return category.text }
         var category: Category
         var isSelected: Bool
+
         init(category: Category, isSelected: Bool = false) {
             self.category = category
             self.isSelected = isSelected
@@ -24,7 +25,7 @@ public struct ExpenditureCategoryItemReducer: Reducer {
     }
 
     public enum Action: Equatable {
-        case tappedCategory
+        case tappedCategory(Category)
     }
 
     public var body: some ReducerOf<ExpenditureCategoryItemReducer> {

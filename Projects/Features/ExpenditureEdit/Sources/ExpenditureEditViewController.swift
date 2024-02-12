@@ -13,24 +13,25 @@ import ComposableArchitecture
 public final class ExpenditureEditViewController: UIViewController {
 
     let coordinator: ExpenditureEditCoordinator
+    let editDate: Date
 
     // MARK: View
 
     private let expenditureHostingController: ExpenditureAddHostingController
 
-    public init(coordinator: ExpenditureEditCoordinator) {
-
+    public init(coordinator: ExpenditureEditCoordinator, tripId: Int, editDate: Date) {
         self.coordinator = coordinator
         self.expenditureHostingController = ExpenditureAddHostingController(
             rootView: ExpenditureAddView(
                 store: .init(
-                    initialState: .init(seletedExpenditureType: .shared),
+                    initialState: .init(seletedExpenditureType: .shared, tripId: tripId, editDate: editDate),
                     reducer: {
-                        ExpenditureReducer()
+                        ExpenditureReducer(cooridinator: coordinator)
                     }
                 )
             )
         )
+        self.editDate = editDate
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -48,7 +49,7 @@ public final class ExpenditureEditViewController: UIViewController {
     }
 
     func setupViews() {
-        title = "일본 여행"
+        title = editDateFormatter.string(from: editDate)
         view.backgroundColor = .ybColor(.gray1)
     }
 
@@ -64,7 +65,7 @@ public final class ExpenditureEditViewController: UIViewController {
 
     func setNavigationBar() {
         let backImage = DesignSystemAsset.Icons.delete.image
-            .withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
+            .withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
     }
@@ -81,5 +82,16 @@ public final class ExpenditureEditViewController: UIViewController {
 
     @objc func dismissKeyboard() {
         navigationController?.view.endEditing(true)
+    }
+
+    var editDateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.dateFormat = "MM.dd(EE)"
+        return dateFormatter
+    }
+
+    deinit {
+        print("ExpenditureEditViewController deinit")
     }
 }

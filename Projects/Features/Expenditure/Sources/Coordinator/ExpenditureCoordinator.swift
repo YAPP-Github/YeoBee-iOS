@@ -22,6 +22,7 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
     public var childCoordinators = [Coordinator]()
     public var navigationController: UINavigationController
     public var expenditureNavigationController: UINavigationController?
+    public var expenditureViewController: ExpenditureViewController?
 
     public var parent: TripCoordinatorInterface?
 
@@ -34,6 +35,7 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
             $0.yeoBeeDependecy()
         } operation: {
             let expenditureViewController = ExpenditureViewController(coordinator: self)
+            self.expenditureViewController = expenditureViewController
             expenditureNavigationController = UINavigationController(rootViewController: expenditureViewController)
         }
     }
@@ -56,8 +58,13 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
 
 extension ExpenditureCoordinator {
 
-    public func expenditureEdit() {
-        let expenditureEditCoordinator = ExpenditureEditCoordinator(navigationController: expenditureNavigationController!)
+    public func expenditureEdit(tripId: Int, editDate: Date) {
+        let expenditureEditCoordinator = ExpenditureEditCoordinator(
+            navigationController: expenditureNavigationController!,
+            tripId: tripId,
+            editDate: editDate
+        )
+        expenditureEditCoordinator.delegate = self
         expenditureEditCoordinator.parent = self
         addChild(expenditureEditCoordinator)
         expenditureEditCoordinator.start(animated: true)
@@ -76,5 +83,11 @@ extension ExpenditureCoordinator {
         )
         expenditureNavigationController?.tabBarController?.tabBar.isHidden = true
         expenditureNavigationController?.pushViewController(expenditureDetailViewController, animated: true)
+    }
+}
+
+extension ExpenditureCoordinator: ExpenditureEditCoordinatorDelegate {
+    public func dismissRegisterExpense(editDate: Date) {
+        expenditureViewController?.getExpenseList(editDate: editDate)
     }
 }

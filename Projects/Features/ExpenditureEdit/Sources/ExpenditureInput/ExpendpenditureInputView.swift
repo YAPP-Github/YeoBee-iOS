@@ -23,20 +23,27 @@ struct ExpenditureInputView: View {
 
 extension ExpenditureInputView {
     var containerView: some View {
-        WithViewStore(store, observe: { $0 }) { viewstore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(alignment: .leading, spacing: 10) {
                 Button {
                     // tapp
                 } label: {
-                    Text("유로")
-                        .foregroundColor(.ybColor(.gray6))
-                        .font(.ybfont(.body3))
+                    HStack(spacing: 6) {
+                        Text("\(viewStore.selectedCurrency.code) (\(viewStore.selectedCurrency.name))")
+                            .foregroundColor(.ybColor(.gray6))
+                            .font(.ybfont(.body2))
+                    }
                 }
                 VStack(alignment: .leading, spacing: 0) {
-                    CurrencyTextFieldView(text: viewstore[keyPath: \.$text], placeholder: "0 $")
-                    Text(viewstore.currencyText)
-                        .foregroundColor(.ybColor(.gray3))
-                        .font(.ybfont(.body2))
+                    CurrencyTextFieldView(text: viewStore[keyPath: \.$text], placeholder: "0") {
+                        let toast = Toast.text(icon: .complete, "최대 10자까지 입력 가능해요.")
+                        toast.show()
+                    }
+                    if viewStore.selectedCurrency.code != "KRW" {
+                        Text(viewStore.selectedCurrency.code)
+                            .foregroundColor(.ybColor(.gray3))
+                            .font(.ybfont(.body2))
+                    }
                 }
             }
             .padding(22)

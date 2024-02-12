@@ -17,28 +17,28 @@ import Coordinator
 public final class ExpenditureViewController: UIViewController {
 
     let coordinator: ExpenditureCoordinator
+    let store: StoreOf<ExpenditureReducer>
 
     // MARK: View
 
     private let expenditureHostingController: ExpenditureHostingController
 
 //    // MARK: DataSources
-//
-//    private let tripDateDataSource: TripDateDataSource
 
     public init(coordinator: ExpenditureCoordinator) {
         self.coordinator = coordinator
 
         let startDate = Date()
         let endDate = Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date()
+        let store: StoreOf<ExpenditureReducer> = .init(
+            initialState: .init(type: .individual, tripId: 1, startDate: startDate, endDate: endDate),
+            reducer: {
+                ExpenditureReducer(cooridinator: coordinator)
+            })
+        self.store = store
         self.expenditureHostingController = ExpenditureHostingController(
             rootView: ExpenditureView(
-                store: .init(
-                    initialState: .init(type: .individual, startDate: startDate, endDate: endDate),
-                    reducer: {
-                        ExpenditureReducer(cooridinator: coordinator)
-                    }
-                )
+                store: store
             )
         )
         super.init(nibName: nil, bundle: nil)
@@ -57,7 +57,7 @@ public final class ExpenditureViewController: UIViewController {
     }
 
     func setupViews() {
-        title = "일본 여행"
+        title = "일본 여행" // trip name
         navigationController?.tabBarItem.title = "가계부"
         navigationController?.tabBarItem.image = DesignSystemAsset.Icons.accountBook.image
         navigationController?.toolbar.barTintColor = YBColor.black.color
@@ -83,6 +83,10 @@ public final class ExpenditureViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.horizontalEdges.equalToSuperview()
         }
+    }
+
+    public func getExpenseList(editDate: Date) {
+        store.send(.getExpenseList(editDate))
     }
 
     deinit {

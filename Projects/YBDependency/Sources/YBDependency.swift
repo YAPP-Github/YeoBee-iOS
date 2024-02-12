@@ -4,7 +4,9 @@ import Repository
 
 extension DependencyValues {
     public mutating func yeoBeeDependecy() {
-        let repository = ExpenseRepository()
-        self.expenseUseCase = .live(expenseRepository: repository)
+        let expenseRepository = ExpenseRepository()
+        let currencyRepository = CurrencyRepository()
+        self.expenseUseCase = .live(expenseRepository: expenseRepository)
+        self.currencyUseCase = .live(currencyRepository: currencyRepository)
     }
 }

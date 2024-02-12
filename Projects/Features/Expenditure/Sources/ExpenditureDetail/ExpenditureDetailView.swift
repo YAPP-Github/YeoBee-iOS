@@ -28,7 +28,7 @@ extension ExpenditureDetailView {
     var containerView: some View {
         WithViewStore(store, observe: \.expenseItem) { viewStore in
             VStack(spacing: 0) {
-                totalExpandPriceView(price: viewStore.amount, convertedPrice: viewStore.koreanAmount)
+                totalExpandPriceView(price: Int(viewStore.amount), convertedPrice: viewStore.koreanAmount)
                     .padding(.all, 24)
                 Rectangle()
                     .frame(height: 10)

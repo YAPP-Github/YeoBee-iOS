@@ -8,6 +8,12 @@
 
 import UIKit
 import Coordinator
+import Dependencies
+import YBDependency
+
+public protocol ExpenditureEditCoordinatorDelegate: NSObject {
+    func dismissRegisterExpense(editDate: Date)
+}
 
 final public class ExpenditureEditCoordinator: ExpenditureEditCoordinatorInterface {
     public var navigationController: UINavigationController
@@ -15,16 +21,34 @@ final public class ExpenditureEditCoordinator: ExpenditureEditCoordinatorInterfa
     public var viewControllerRef: UIViewController?
     public var childCoordinators = [Coordinator]()
     public var parent: ExpenditureCoordinatorInterface?
+    public weak var delegate: ExpenditureEditCoordinatorDelegate?
+    public let tripId: Int
+    public let editDate: Date
 
-    public init(navigationController: UINavigationController) {
+    public init(navigationController: UINavigationController, tripId: Int, editDate: Date) {
         self.navigationController = navigationController
+        self.tripId = tripId
+        self.editDate = editDate
     }
 
     public func start(animated: Bool) {
-        let expenditureEditViewController = ExpenditureEditViewController(coordinator: self)
-        expenditureEditNavigationController = UINavigationController(rootViewController: expenditureEditViewController)
-        expenditureEditNavigationController?.modalPresentationStyle = .overFullScreen
-        navigationController.present(expenditureEditNavigationController!, animated: animated)
+        withDependencies {
+            $0.yeoBeeDependecy()
+        } operation: {
+            let expenditureEditViewController = ExpenditureEditViewController(
+                coordinator: self,
+                tripId: tripId,
+                editDate: editDate
+            )
+            expenditureEditNavigationController = UINavigationController(rootViewController: expenditureEditViewController)
+            expenditureEditNavigationController?.modalPresentationStyle = .overFullScreen
+            navigationController.present(expenditureEditNavigationController!, animated: animated)
+        }
+    }
+
+    public func dismissRegisterExpense() {
+        coordinatorDidFinish()
+        delegate?.dismissRegisterExpense(editDate: editDate)
     }
 
     public func popDidFinish() {
@@ -33,6 +57,7 @@ final public class ExpenditureEditCoordinator: ExpenditureEditCoordinatorInterfa
 
     public func coordinatorDidFinish() {
         expenditureEditNavigationController?.dismiss(animated: true)
+        expenditureEditNavigationController = nil
         parent?.childDidFinish(self)
     }
 
