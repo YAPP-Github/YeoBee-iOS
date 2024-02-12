@@ -55,6 +55,7 @@ public final class SignViewController: UIViewController, View {
     
     func bindState(reactor: SignReactor) {
         reactor.state.map { $0.isLoginSuccess }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext : { [weak self] isSuccess in
                 if isSuccess {
                     self?.coordinator?.createAccount()

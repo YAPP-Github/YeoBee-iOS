@@ -17,7 +17,7 @@ import SnapKit
 
 public final class CreateAccountViewController: UIViewController, View {
     public var disposeBag: DisposeBag = DisposeBag()
-    public weak var coordinator: CreateAccountCoordinator?
+    public var coordinator: CreateAccountCoordinator?
     
     let nicknameLabel = YBLabel(text: "닉네임을 입력해주세요", font: .header2)
     let nicknameTextField = YBTextField()
@@ -68,6 +68,7 @@ public final class CreateAccountViewController: UIViewController, View {
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$isCreateAccountCompleted)
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isCompleted in
                 if isCompleted {
                     self?.coordinator?.onboarding()

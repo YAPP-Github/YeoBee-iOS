@@ -52,11 +52,9 @@ public final class SignReactor: Reactor {
                             observer.onNext(.setLoginStatus(isSuccess))
                         } catch {
                             observer.onNext(.setLoginStatus(false))
-                            observer.onError(error)
                         }
                         observer.onCompleted()
                     }
-                    
                     return Disposables.create()
                 }
             case .apple:
@@ -88,23 +86,24 @@ public final class SignReactor: Reactor {
         return newState
     }
     
-    @MainActor
     private func kakaoLogin() async throws -> Bool {
         let oauthToken = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<OAuthToken, Error>) in
-            if UserApi.isKakaoTalkLoginAvailable() {
-                UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
-                    if let error = error {
-                        continuation.resume(throwing: error)
-                    } else if let oauthToken = oauthToken {
-                        continuation.resume(returning: oauthToken)
+            DispatchQueue.main.async {
+                if UserApi.isKakaoTalkLoginAvailable() {
+                    UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                        } else if let oauthToken = oauthToken {
+                            continuation.resume(returning: oauthToken)
+                        }
                     }
-                }
-            } else {
-                UserApi.shared.loginWithKakaoAccount { (oauthToken, error) in
-                    if let error = error {
-                        continuation.resume(throwing: error)
-                    } else if let oauthToken = oauthToken {
-                        continuation.resume(returning: oauthToken)
+                } else {
+                    UserApi.shared.loginWithKakaoAccount { (oauthToken, error) in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                        } else if let oauthToken = oauthToken {
+                            continuation.resume(returning: oauthToken)
+                        }
                     }
                 }
             }

@@ -9,7 +9,7 @@
 import Foundation
 import ReactorKit
 
-public final class OnboardingReactor: Reactor{
+public final class OnboardingReactor: Reactor {
     public enum Action {
         
     }

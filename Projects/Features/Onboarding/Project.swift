@@ -23,6 +23,8 @@ let project = Project(
                 .RxCocoa,
                 .reactorKit,
                 .coordinator,
+                .fscalendar,
+                .home
             ]
         ),
         Project.target(

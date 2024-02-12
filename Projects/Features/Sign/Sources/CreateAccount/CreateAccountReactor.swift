@@ -56,11 +56,9 @@ public final class CreateAccountReactor: Reactor {
                         observer.onNext(.setErrorMessage(errorMessage))
                     } else {
                         observer.onNext(.setErrorMessage(nil))
-                        Task {
+                        Task { @MainActor in
                             try await self.updateUserInfo()
-                            DispatchQueue.main.async {
-                                observer.onNext(.onBoarding)
-                            }
+                            observer.onNext(.onBoarding)
                         }
                     }
                     return Disposables.create()
@@ -97,11 +95,6 @@ public final class CreateAccountReactor: Reactor {
     private func updateUserInfo() async throws -> Void {
         let nickname = currentState.nickname
         let request = UpdateUserInfoRequest(nickname: nickname)
-        do {
-            try await userInfoRepository.updateUserInfo(request: request)
-        } catch {
-            print("에러 발생: \(error.localizedDescription)")
-        }
-        
+        try await userInfoRepository.updateUserInfo(request: request)
     }
 }

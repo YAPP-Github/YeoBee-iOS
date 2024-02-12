@@ -30,7 +30,7 @@ public final class NetworkLogger: PluginType {
             print("\n---------- [RESPONSE] ----------\n")
             print("API Endpoint : \(target.baseURL.absoluteString + target.path)")
             print("Headers : \(httpURLResponse.allHeaderFields)")
-            print("Response JSON : \(try! response.mapJSON())")
+            print("Response JSON : \(String(describing: try? response.mapJSON()))")
             print("---------------------------------\n")
         case let .failure(error):
             print("\n---------- [ERROR RESPONSE] ----------\n")
