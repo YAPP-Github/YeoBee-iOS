@@ -25,7 +25,8 @@ let project = Project(
                 .coordinator,
                 .repository,
                 .kakaoSDKAuth,
-                .kakaoSDKUser
+                .kakaoSDKUser,
+                .onboarding
             ]
         ),
         Project.target(

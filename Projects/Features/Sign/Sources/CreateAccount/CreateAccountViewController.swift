@@ -17,7 +17,7 @@ import SnapKit
 
 public final class CreateAccountViewController: UIViewController, View {
     public var disposeBag: DisposeBag = DisposeBag()
-    public weak var coordinator: CreateAccountCoordinator?
+    public var coordinator: CreateAccountCoordinator?
     
     let nicknameLabel = YBLabel(text: "닉네임을 입력해주세요", font: .header2)
     let nicknameTextField = YBTextField()
@@ -66,6 +66,17 @@ public final class CreateAccountViewController: UIViewController, View {
                 self?.errorDescriptionLabel.text = errorMessage
             }
             .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$isCreateAccountCompleted)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isCompleted in
+                if isCompleted {
+                    self?.coordinator?.onboarding()
+                } else {
+                    // Error 처리
+                }
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setupViews() {
@@ -89,7 +100,7 @@ public final class CreateAccountViewController: UIViewController, View {
         nicknameTextField.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
             make.leading.equalTo(view.snp.leading).offset(24)
-            make.trailing.equalTo(view.snp.right).offset(-24)
+            make.trailing.equalTo(view.snp.trailing).offset(-24)
         }
         errorDescriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(nicknameTextField.snp.bottom).offset(10)
@@ -99,7 +110,7 @@ public final class CreateAccountViewController: UIViewController, View {
         confirmButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-68)
             make.leading.equalTo(view.snp.leading).offset(24)
-            make.trailing.equalTo(view.snp.right).offset(-24)
+            make.trailing.equalTo(view.snp.trailing).offset(-24)
         }
     }
 }

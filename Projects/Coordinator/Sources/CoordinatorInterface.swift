@@ -30,4 +30,6 @@ public protocol ExpenditureAddCoordinatorInterface: ParentCoordinator, ChildCoor
 
 public protocol ExpenditureEditCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 
-public protocol CreateAccountCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
+public protocol CreateAccountCoordinatorInterface: Coordinator { }
+
+public protocol OnboardingCoordinatorInterface: Coordinator { }

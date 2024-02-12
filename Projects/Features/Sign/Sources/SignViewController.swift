@@ -55,6 +55,7 @@ public final class SignViewController: UIViewController, View {
     
     func bindState(reactor: SignReactor) {
         reactor.state.map { $0.isLoginSuccess }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext : { [weak self] isSuccess in
                 if isSuccess {
                     self?.coordinator?.createAccount()
@@ -92,11 +93,10 @@ public final class SignViewController: UIViewController, View {
         illustImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(logoImageView.snp.bottom).offset(89)
-            make.bottom.equalTo(kakaoLoginButton.snp.top).offset(-49)
         }
         
         kakaoLoginButton.snp.makeConstraints { make in
-            make.top.equalTo(illustImageView.snp.bottom).offset(67)
+            make.top.equalTo(illustImageView.snp.bottom).offset(40)
             make.centerX.equalTo(view.snp.centerX)
             make.width.equalTo(view.snp.width).offset(-48)
         }
