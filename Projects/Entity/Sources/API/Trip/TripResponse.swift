@@ -9,7 +9,7 @@
 import Foundation
 
 public struct TripResponse: Codable {
-    var content: [TripItemResponse]
+    var content: [TripItem]
     var pageable: Pageable
     var totalPages: Int
     var totalElements: Int
