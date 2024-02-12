@@ -1,35 +1,34 @@
 //
-//  SettingRecycleViewController.swift
+//  SettingCurrencyViewController.swift
 //  Setting
 //
-//  Created by 박현준 on 2/10/24.
+//  Created by 박현준 on 2/12/24.
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 //
 
 import UIKit
 import DesignSystem
-import TravelRegistration
 import Entity
 import ReactorKit
 import SnapKit
 import RxSwift
 import RxCocoa
 
-public final class SettingRecycleViewController: UIViewController {
+public final class SettingCurrencyViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
-    private let reactor: SettingRecycleReactor
+    private let reactor: SettingCurrencyReactor
     
     // MARK: - Properties
-    private let titleLabel = YBLabel(font: .header2, textColor: .black)
-    private let nameOrTitleTextField = YBTextField(backgroundColor: .gray1)
-    private let effectivenessLabel = YBLabel(text: "",font: .body4, textColor: .mainRed)
+    private let titleLabel = YBLabel(text: "적용된 환율", font: .header2, textColor: .black)
+    private let subtitleLabel = YBLabel(text: "수정 시 지정 환율로 계산됩니다.", font: .body2, textColor: .gray5)
+    private let settingCurrencyView = SettingCurrencyView()
     private var modifyButton = YBTextButton(text: "수정하기",
                                           appearance: .defaultDisable,
                                           size: .medium)
     
     // MARK: - Life Cycles
-    public init(reactor: SettingRecycleReactor) {
+    public init(reactor: SettingCurrencyReactor) {
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -40,7 +39,7 @@ public final class SettingRecycleViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        setView()
         addViews()
         setLayouts()
         configureBar()
@@ -49,11 +48,16 @@ public final class SettingRecycleViewController: UIViewController {
     }
     
     // MARK: - Set UI
+    private func setView() {
+        view.backgroundColor = .white
+        title = "환율 설정"
+    }
+    
     private func addViews() {
         [
             titleLabel,
-            nameOrTitleTextField,
-            effectivenessLabel,
+            subtitleLabel,
+            settingCurrencyView,
             modifyButton
         ].forEach {
             view.addSubview($0)
@@ -65,15 +69,15 @@ public final class SettingRecycleViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).inset(24)
             make.leading.equalToSuperview().inset(24)
         }
-        nameOrTitleTextField.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).inset(-14)
+        subtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).inset(-6)
             make.leading.equalTo(titleLabel.snp.leading)
-            make.trailing.equalToSuperview().inset(24)
         }
-        effectivenessLabel.snp.makeConstraints { make in
-            make.top.equalTo(nameOrTitleTextField.snp.bottom).inset(-10)
-            make.leading.equalTo(nameOrTitleTextField.snp.leading)
-            make.trailing.equalTo(nameOrTitleTextField.snp.trailing)
+        settingCurrencyView.snp.makeConstraints { make in
+            make.top.equalTo(subtitleLabel.snp.bottom).inset(-16)
+            make.leading.equalTo(subtitleLabel.snp.leading)
+            make.trailing.equalToSuperview().inset(24)
+            make.height.equalTo(50)
         }
         modifyButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
@@ -92,83 +96,54 @@ public final class SettingRecycleViewController: UIViewController {
     }
     
     deinit {
-        print("SettingRecycleViewController is de-initialized.")
+        print("SettingCurrencyViewController is de-initialized.")
     }
 }
 
 // MARK: - Bind
-extension SettingRecycleViewController: View {
-    public func bind(reactor: SettingRecycleReactor) {
+extension SettingCurrencyViewController: View {
+    public func bind(reactor: SettingCurrencyReactor) {
         bindAction(reactor: reactor)
         bindState(reactor: reactor)
     }
     
-    func bindAction(reactor: SettingRecycleReactor) {
-        nameOrTitleTextField.rx.text
+    func bindAction(reactor: SettingCurrencyReactor) {
+        settingCurrencyView.wonCurrencyTextField.rx.text
             .map { Reactor.Action.textFieldText(text: $0 ?? "") }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         modifyButton.rx.tap
-            .bind { [weak self] _ in
-                guard let self else { return }
-                if self.reactor.currentState.viewType == .companionName {
-                    print("여행 제목 변경")
-                } else if self.reactor.currentState.viewType == .tripTitle {
-                    print("동행자 이름 수정")
-                }
-                self.navigationController?.popViewController(animated: true)
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] in
+                print("환율 수정")
+                self?.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)
     }
     
-    func bindState(reactor: SettingRecycleReactor) {
+    func bindState(reactor: SettingCurrencyReactor) {
         reactor.state
-            .map { $0.limitedString }
-            .bind(to: nameOrTitleTextField.rx.text)
-            .disposed(by: disposeBag)
-        
-        reactor.state
-            .map { $0.effectivenessType }
-            .bind { [weak self] type in
-                switch type {
-                case .none:
-                    self?.effectivenessLabel.text = ""
-                    self?.modifyButton.isEnabled = false
-                    self?.modifyButton.setTitle("수정하기", for: .normal)
-                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
-                case .notValid:
-                    if self?.reactor.currentState.viewType == .companionName {
-                        self?.effectivenessLabel.text = "한글/영문 포함 5자까지 입력 가능해요."
-                    } else if self?.reactor.currentState.viewType == .tripTitle {
-                        self?.effectivenessLabel.text = "한글/영어/특수문자 포함 15자까지 입력 가능해요."
-                    }
-                    self?.modifyButton.isEnabled = false
-                    self?.modifyButton.setTitle("수정하기", for: .normal)
-                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
-                case .containSpecialCharacters:
-                    self?.effectivenessLabel.text = "특수문자는 사용이 불가해요."
-                    self?.modifyButton.isEnabled = false
-                    self?.modifyButton.setTitle("수정하기", for: .normal)
-                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
-                case .valid:
-                    self?.effectivenessLabel.text = ""
-                    self?.modifyButton.isEnabled = true
-                    self?.modifyButton.setTitle("수정하기", for: .normal)
-                    self?.modifyButton.setAppearance(appearance: .default)
-                }
+            .map { $0.currency }
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] currency in
+                self?.settingCurrencyView.defaultCurrencyLabel.text = currency.code
+                self?.settingCurrencyView.wonCurrencyTextField.placeholder = "\(currency.value)"
             }
             .disposed(by: disposeBag)
         
         reactor.state
-            .map { $0.viewType }
-            .bind { [weak self] viewType in
-                switch viewType {
-                case .tripTitle:
-                    self?.titleLabel.text = "여행 제목을 수정해주세요."
-                case .companionName:
-                    self?.title = "동행자 이름 수정"
-                    self?.titleLabel.text = "이름 변경"
+            .map { $0.textFieldText }
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] text in
+                if text.isEmpty {
+                    self?.modifyButton.isEnabled = false
+                    self?.modifyButton.setTitle("수정하기", for: .normal)
+                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
+                } else {
+                    self?.modifyButton.isEnabled = true
+                    self?.modifyButton.setTitle("수정하기", for: .normal)
+                    self?.modifyButton.setAppearance(appearance: .default)
                 }
             }
             .disposed(by: disposeBag)
@@ -176,7 +151,7 @@ extension SettingRecycleViewController: View {
 }
 
 // MARK: - Keyboard 처리
-extension SettingRecycleViewController {
+extension SettingCurrencyViewController {
     private func bindKeyboardNotification() {
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
@@ -230,7 +205,7 @@ extension SettingRecycleViewController {
 }
 
 // MARK: - UIGestureRecognizerDelegate
-extension SettingRecycleViewController: UIGestureRecognizerDelegate {
+extension SettingCurrencyViewController: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         if touch.view == modifyButton {
             return false
