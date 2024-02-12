@@ -22,13 +22,11 @@ public struct CurrencySheetReducer: Reducer {
         let currenyList: [Currency]
         var selectedCurrency: Currency?
 
-        public init(currencyList: [Currency], selectedCurrency: Currency? = nil) {
+        public init(currencyList: [Currency], selectedCurrency: Currency) {
             self.selectedCurrency = selectedCurrency
             self.currenyList = currencyList
             currencyList.forEach {
-                var isSelected = false
-                if let selectedCurrency { isSelected = $0 == selectedCurrency }
-                self.currencies.updateOrAppend(.init(currency: $0, isSelected: isSelected))
+                self.currencies.updateOrAppend(.init(currency: $0, isSelected: $0.code == selectedCurrency.code))
             }
         }
     }

@@ -67,10 +67,11 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
 }
 
 extension ExpenditureAddCoordinator {
-    public func showCurrencyBottomSheet(currenyList: [Currency]) {
+    public func showCurrencyBottomSheet(currenyList: [Currency], selectedCurrency: Currency) {
         let currencyBottomSheetViewController = CurrencyBottomSheetViewController(
             coordinator: self,
-            currenyList: currenyList
+            currenyList: currenyList, 
+            selectedCurrency: selectedCurrency
         )
         expenditureEditNavigationController?.presentBottomSheet(
             presentedViewController: currencyBottomSheetViewController,

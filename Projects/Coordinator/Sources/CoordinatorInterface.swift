@@ -27,7 +27,7 @@ public protocol ExpenditureCoordinatorInterface: ParentCoordinator, ChildCoordin
 public protocol SettingCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 
 public protocol ExpenditureAddCoordinatorInterface: ParentCoordinator, ChildCoordinator {
-    func showCurrencyBottomSheet(currenyList: [Currency])
+    func showCurrencyBottomSheet(currenyList: [Currency], selectedCurrency: Currency)
 }
 
 public protocol ExpenditureEditCoordinatorInterface: ParentCoordinator, ChildCoordinator { }

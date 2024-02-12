@@ -20,7 +20,7 @@ public struct ExpenditureInputReducer: Reducer {
     public enum Action: BindableAction, Equatable {
         case setCurrency(Currency)
         case binding(BindingAction<State>)
-        case tappedCurrencyButton
+        case tappedCurrencyButton(Currency)
     }
 
     enum DebounceId: Hashable { case id }

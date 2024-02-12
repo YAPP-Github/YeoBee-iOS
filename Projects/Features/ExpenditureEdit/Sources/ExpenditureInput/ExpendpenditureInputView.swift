@@ -26,7 +26,7 @@ extension ExpenditureInputView {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(alignment: .leading, spacing: 10) {
                 Button {
-                    viewStore.send(.tappedCurrencyButton)
+                    viewStore.send(.tappedCurrencyButton(viewStore.selectedCurrency))
                 } label: {
                     HStack(spacing: 3) {
                         Text("\(viewStore.selectedCurrency.code) (\(viewStore.selectedCurrency.name))")

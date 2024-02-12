@@ -67,8 +67,8 @@ public struct ExpenditureReducer: Reducer {
             case .expenditureBudgetEdit(.dismiss):
                 cooridinator.dismissRegisterExpense()
                 return .none
-            case .expenditureEdit(.expenditureInput(.tappedCurrencyButton)):
-                cooridinator.showCurrencyBottomSheet(currenyList: state.currencies)
+            case let .expenditureEdit(.expenditureInput(.tappedCurrencyButton(currency))):
+                cooridinator.showCurrencyBottomSheet(currenyList: state.currencies, selectedCurrency: currency)
                 return .none
             default:
                 return .none
