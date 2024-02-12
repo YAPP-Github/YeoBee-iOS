@@ -8,23 +8,23 @@
 
 import Foundation
 
-public struct TripItemResponse: Codable {
+public struct TripItem: Codable {
     var id: Int
     var title: String
     var startDate: String
     var endDate: String
-    var countryList: [CountryItemResponse]
-    var tripUserList: [TripUserItemResponse]
+    var countryList: [CountryItem]
+    var tripUserList: [TripUserItem]
     var createdAt: String
 }
 
-public struct CountryItemResponse: Codable {
+public struct CountryItem: Codable {
     var name: String
     var flagImageUrl: String
     var coverImageUrl: String
 }
 
-public struct TripUserItemResponse: Codable {
+public struct TripUserItem: Codable {
     var id: Int
     var name: String
     var profileImageUrl: String?

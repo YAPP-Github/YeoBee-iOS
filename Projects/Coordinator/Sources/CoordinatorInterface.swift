@@ -21,10 +21,12 @@ public protocol TravelRegistrationCoordinatorInterface: ParentCoordinator, Child
 public protocol TripCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 
 public protocol ExpenditureCoordinatorInterface: ParentCoordinator, ChildCoordinator {
-    func expenditureEdit(tripId: Int, editDate: Date)
+    func expenditureAdd(tripId: Int, editDate: Date)
 }
 
 public protocol SettingCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
+
+public protocol ExpenditureAddCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 
 public protocol ExpenditureEditCoordinatorInterface: ParentCoordinator, ChildCoordinator { }
 

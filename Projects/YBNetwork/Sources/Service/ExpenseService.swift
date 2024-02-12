@@ -19,7 +19,7 @@ public enum ExpenseService {
         paymentMethod: String? = nil,
         unitId: Int? = nil
     )
-    //    case fetchDetail
+    case fetchDetail(Int)
     case create(Codable)
     //    case delete
 }
@@ -31,8 +31,8 @@ extension ExpenseService: TargetType {
         switch self {
         case .fetchList:
             return "/v1/expenses"
-            //        case .fetchDetail:
-            //            return "v1/expense"
+        case let .fetchDetail(expenseId):
+            return "/v1/expenses/\(expenseId)"
         case .create:
             return "v1/expenses"
             //        case .delete:
@@ -44,15 +44,15 @@ extension ExpenseService: TargetType {
         switch self {
         case .fetchList:
             return .get
-            //        case .fetchDetail:
-            //            return .get
-                    case .create:
-                        return .post
+        case .fetchDetail:
+            return .get
+        case .create:
+            return .post
             //        case .delete:
             //            return .delete
         }
     }
-    
+
     public var task: Task {
         switch self {
         case let .fetchList(tripId, pageIndex, pageSize, type, date, method, unitId):
@@ -66,8 +66,8 @@ extension ExpenseService: TargetType {
             if let method { params["method"] = method }
             if let unitId { params["unitId"] = unitId }
             return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
-            //        case .fetchDetail:
-            //
+        case .fetchDetail:
+            return .requestPlain
         case let .create(data):
             return .requestJSONEncodable(data)
             //        case .delete:
@@ -77,7 +77,7 @@ extension ExpenseService: TargetType {
     
     public var headers: [String: String]? {
         return ["Content-type": "application/json",
-                "Authorization": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZXhwIjoxNzA4MTg2MTA5fQ.CXKRiLdVMTxwOAQGYC0m1KLeAEup9sn-z-v5ttAo_BI"]
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZXhwIjoxNzA4MTg2MTA5fQ.CXKRiLdVMTxwOAQGYC0m1KLeAEup9sn-z-v5ttAo_BI"]
     }
 
     var payedAtDateFormatter: DateFormatter {
