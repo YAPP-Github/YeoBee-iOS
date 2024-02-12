@@ -61,6 +61,7 @@ extension ExpenditureCoordinator {
             editDate: editDate
         )
         expenditureAddCoordinator.parent = self
+        expenditureAddCoordinator.delegate = self
         addChild(expenditureAddCoordinator)
         expenditureAddCoordinator.start(animated: true)
     }
@@ -92,7 +93,7 @@ extension ExpenditureCoordinator {
     }
 }
 
-extension ExpenditureCoordinator: ExpenditureEditCoordinatorDelegate {
+extension ExpenditureCoordinator: ExpenditureAddCoordinatorDelegate {
     public func dismissRegisterExpense(editDate: Date) {
         expenditureViewController?.getExpenseList(editDate: editDate)
     }

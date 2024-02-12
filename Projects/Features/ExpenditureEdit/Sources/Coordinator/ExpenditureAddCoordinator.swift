@@ -10,6 +10,7 @@ import UIKit
 import Coordinator
 import Dependencies
 import YBDependency
+import Entity
 
 public protocol ExpenditureAddCoordinatorDelegate: NSObject {
     func dismissRegisterExpense(editDate: Date)
@@ -22,6 +23,7 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
     public var childCoordinators = [Coordinator]()
     public var parent: ExpenditureCoordinatorInterface?
     public weak var delegate: ExpenditureAddCoordinatorDelegate?
+    public var expenditureAddViewController: ExpenditureAddViewController?
     public let tripId: Int
     public let editDate: Date
 
@@ -37,6 +39,7 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
             tripId: tripId,
             editDate: editDate
         )
+        self.expenditureAddViewController = expenditureAddViewController
         expenditureEditNavigationController = UINavigationController(rootViewController: expenditureAddViewController)
         expenditureEditNavigationController?.modalPresentationStyle = .overFullScreen
         navigationController.present(expenditureEditNavigationController!, animated: animated)
@@ -52,6 +55,7 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
     }
 
     public func coordinatorDidFinish() {
+        expenditureAddViewController = nil
         expenditureEditNavigationController?.dismiss(animated: true)
         expenditureEditNavigationController = nil
         parent?.childDidFinish(self)
@@ -59,5 +63,23 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
 
     deinit {
         print("TravelRegistrationCoordinator is de-initialized.")
+    }
+}
+
+extension ExpenditureAddCoordinator {
+    public func showCurrencyBottomSheet(currenyList: [Currency]) {
+        let currencyBottomSheetViewController = CurrencyBottomSheetViewController(
+            coordinator: self,
+            currenyList: currenyList
+        )
+        expenditureEditNavigationController?.presentBottomSheet(
+            presentedViewController: currencyBottomSheetViewController,
+            height: 310
+        )
+    }
+
+    public func selectCurrency(curreny: Currency) {
+        expenditureAddViewController?.selectCurrency(currency: curreny)
+        expenditureEditNavigationController?.dismiss(animated: true)
     }
 }

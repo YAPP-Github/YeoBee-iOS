@@ -18,8 +18,9 @@ public struct ExpenditureInputReducer: Reducer {
     }
 
     public enum Action: BindableAction, Equatable {
-        case setCurrencies([Currency])
+        case setCurrency(Currency)
         case binding(BindingAction<State>)
+        case tappedCurrencyButton
     }
 
     enum DebounceId: Hashable { case id }
@@ -29,9 +30,8 @@ public struct ExpenditureInputReducer: Reducer {
 
         Reduce { state, action in
             switch action {
-            case let .setCurrencies(currencies):
-                state.currencies = currencies
-                state.selectedCurrency = currencies.first ?? .init(name: "원", code: "KRW", exchangeRate: .init(value: 1.00))
+            case let .setCurrency(currency):
+                state.selectedCurrency = currency
                 return .none
 
             case .binding(\.$text):

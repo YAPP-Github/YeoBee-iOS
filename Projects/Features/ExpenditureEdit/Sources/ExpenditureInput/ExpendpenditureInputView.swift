@@ -26,23 +26,33 @@ extension ExpenditureInputView {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(alignment: .leading, spacing: 10) {
                 Button {
-                    // tapp
+                    viewStore.send(.tappedCurrencyButton)
                 } label: {
-                    HStack(spacing: 6) {
+                    HStack(spacing: 3) {
                         Text("\(viewStore.selectedCurrency.code) (\(viewStore.selectedCurrency.name))")
                             .foregroundColor(.ybColor(.gray6))
                             .font(.ybfont(.body2))
+                        DesignSystemAsset.Icons.dropdown.swiftUIImage
+                            .frame(width: 20, height: 20)
                     }
                 }
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 2) {
                     CurrencyTextFieldView(text: viewStore[keyPath: \.$text], placeholder: "0") {
                         let toast = Toast.text(icon: .complete, "최대 10자까지 입력 가능해요.")
                         toast.show()
                     }
                     if viewStore.selectedCurrency.code != "KRW" {
-                        Text(viewStore.selectedCurrency.code)
-                            .foregroundColor(.ybColor(.gray3))
-                            .font(.ybfont(.body2))
+                        let amountString = viewStore.text.replacingOccurrences(of: ",", with: "")
+                        if let amount = Double(amountString) {
+                            let convertedAmount = viewStore.selectedCurrency.exchangeRate.value * amount
+                            Text("= " + convertedAmount.formattedWithSeparator + "원")
+                                .foregroundColor(.ybColor(.gray4))
+                                .font(.ybfont(.body2))
+                        } else {
+                            Text("= 0원")
+                                .foregroundColor(.ybColor(.gray4))
+                                .font(.ybfont(.body2))
+                        }
                     }
                 }
             }
