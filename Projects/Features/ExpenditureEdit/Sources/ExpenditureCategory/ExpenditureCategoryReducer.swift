@@ -11,6 +11,7 @@ import ComposableArchitecture
 public struct ExpenditureCategoryReducer: Reducer {
     public struct State: Equatable {
         var categoryItems: IdentifiedArrayOf<ExpenditureCategoryItemReducer.State> = []
+        var selectedCategory: Category?
         @BindingState var text: String = ""
         var isInvaildText: Bool = false
 
@@ -37,6 +38,7 @@ public struct ExpenditureCategoryReducer: Reducer {
                 Category.allCases.forEach { category in
                     state.categoryItems.updateOrAppend(.init(category: category, isSelected: category == selectedCategory))
                 }
+                state.selectedCategory = selectedCategory
                 state.text = selectedCategory?.text ?? ""
                 return .none
                 

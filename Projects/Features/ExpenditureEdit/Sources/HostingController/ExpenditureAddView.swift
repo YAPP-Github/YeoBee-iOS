@@ -21,6 +21,7 @@ struct ExpenditureAddView: View {
 
     var body: some View {
         containerView
+            .onAppear { store.send(.onAppear) }
     }
 }
 

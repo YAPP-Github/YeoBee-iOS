@@ -16,13 +16,26 @@ public struct ExpendpenditureEditReducer: Reducer {
 
         var isFocused: Bool = false
         var scrollItem: String = ""
+        var isEnableRegisterButton: Bool = false
+        var tripId: Int
+        var editDate: Date
+
+        init(tripId: Int, editDate: Date) {
+            self.tripId = tripId
+            self.editDate = editDate
+        }
     }
 
     public enum Action: Equatable {
+        case tappedRegisterButton
+        case dismiss
+
         case expenditureInput(ExpenditureInputReducer.Action)
         case expenditurePayment(ExpenditurePaymentReducer.Action)
         case expenditureCategory(ExpenditureCategoryReducer.Action)
     }
+
+    @Dependency(\.expenseUseCase) var expenseUseCase
 
     public var body: some ReducerOf<ExpendpenditureEditReducer> {
         Reduce { state, action in
@@ -31,7 +44,55 @@ public struct ExpendpenditureEditReducer: Reducer {
                 state.isFocused = isFocused
                 state.scrollItem = "expenditureCategoryType"
                 return .none
-                default: return .none
+            case .expenditureCategory(.category(_, .tappedCategory)):
+                state.isEnableRegisterButton = isEnableRegisterBurron(state: &state)
+                return .none
+            case .expenditureInput(.binding(\.$text)):
+                state.isEnableRegisterButton = isEnableRegisterBurron(state: &state)
+                return .none
+            case .expenditureCategory(.binding(\.$text)):
+                state.isEnableRegisterButton = isEnableRegisterBurron(state: &state)
+                return .none
+            case .tappedRegisterButton:
+                return registerExpense(state: &state)
+            default:
+                return .none
+            }
+
+            func isEnableRegisterBurron(state: inout State) -> Bool {
+                return state.expenditureCategory.selectedCategory != nil &&
+                    state.expenditureCategory.text.isEmpty == false &&
+                    state.expenditureCategory.isInvaildText == false &&
+                    state.expenditureInput.text.isEmpty == false
+            }
+
+            func registerExpense(state: inout State) -> Effect<Action> {
+                let amountString = state.expenditureInput.text.replacingOccurrences(of: ",", with: "")
+                if let category = state.expenditureCategory.selectedCategory,
+                    let amount = Double(amountString) {
+                    let paymentType = state.expenditurePayment.seletedPayment.requestText
+                    let expenseText = state.expenditureCategory.text
+                    let tripId = state.tripId
+                    let currencyCode = state.expenditureInput.selectedCurrency.code
+                    let payedAt = state.editDate
+                    return .run { send in
+                        let _ = try await expenseUseCase.createExpense(.init(
+                            tripId: tripId,
+                            payedAt: ISO8601DateFormatter().string(from: payedAt),
+                            expenseType: .individual,
+                            amount: -amount,
+                            currencyCode: currencyCode,
+                            expenseMethod: paymentType,
+                            expenseCategory: category.requestText,
+                            name: expenseText,
+                            payerId: 1
+                        ))
+                        await send(.dismiss)
+                    } catch: { error, send in
+                        print(error)
+                    }
+                }
+                return .none
             }
         }
 
@@ -45,6 +106,31 @@ public struct ExpendpenditureEditReducer: Reducer {
 
         Scope(state: \.expenditureCategory, action: /Action.expenditureCategory) {
             ExpenditureCategoryReducer()
+        }
+    }
+}
+
+extension Payment {
+    var requestText: String {
+        switch self {
+        case .cash: return "CASH"
+        case .card: return "CARD"
+        }
+    }
+}
+
+
+extension Category {
+    var requestText: String {
+        switch self {
+        case .transition: "TRANSPORT"
+        case .eating: "FOOD"
+        case .stay: "LODGE"
+        case .travel: "TRAVEL"
+        case .activity: "ACTIVITY"
+        case .shopping: "SHOPPING"
+        case .air: "FLIGHT"
+        case .etc: "ETC"
         }
     }
 }

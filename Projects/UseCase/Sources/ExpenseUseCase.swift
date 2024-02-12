@@ -14,6 +14,7 @@ import ComposableArchitecture
 
 public struct ExpenseUseCase {
     public var getExpenseList: @Sendable (_ tripId: Int, _ date: Date) async throws -> [ExpenseItem]
+    public var createExpense: @Sendable (_ createExpense: CreateExpenseRequest) async throws -> CreateExpenseResponse
 }
 
 extension ExpenseUseCase: TestDependencyKey {
@@ -41,6 +42,9 @@ extension ExpenseUseCase {
                 )
             )
             return data.content
+        }, createExpense: { request in
+            let data = try await expenseRepository.createExpense(request: request)
+            return data
         })
     }
 }

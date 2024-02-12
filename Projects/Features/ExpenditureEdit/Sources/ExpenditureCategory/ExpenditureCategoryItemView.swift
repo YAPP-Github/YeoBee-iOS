@@ -35,7 +35,7 @@ extension ExpenditureCategoryItemView {
     var containerView: some View {
         WithViewStore(store, observe: CategoryViewState.init) { viewStore in
             Button(action: {
-                viewStore.send(.tappedCategory)
+                viewStore.send(.tappedCategory(viewStore.category))
             }, label: {
                 VStack(alignment: .center) {
                     if viewStore.isSelected {
@@ -46,7 +46,7 @@ extension ExpenditureCategoryItemView {
                             .foregroundColor(.ybColor(.black))
                             .font(.ybfont(.body2))
                     } else {
-                        viewStore.category.image
+                        viewStore.category.disableImage
                             .resizable()
                             .frame(width: 41, height: 41)
                         Text(viewStore.category.text)
@@ -90,10 +90,10 @@ extension Category {
         switch self {
         case .activity: return DesignSystemAsset.Icons.activityDisable.swiftUIImage
         case .air: return DesignSystemAsset.Icons.airDisable.swiftUIImage
-        case .eating: return DesignSystemAsset.Icons.eatingDisable.swiftUIImage
+        case .eating: return DesignSystemAsset.Icons.foodDisable.swiftUIImage
         case .etc: return DesignSystemAsset.Icons.etcDisable.swiftUIImage
         case .shopping: return DesignSystemAsset.Icons.shoppingDisable.swiftUIImage
-        case .stay: return DesignSystemAsset.Icons.stayDisable.swiftUIImage
+        case .stay: return DesignSystemAsset.Icons.lodgeDisable.swiftUIImage
         case .transition: return DesignSystemAsset.Icons.transitionDisable.swiftUIImage
         case .travel: return DesignSystemAsset.Icons.travelDisable.swiftUIImage
         }

@@ -47,6 +47,7 @@ extension ExpenditureCategoryView {
                         ExpenditureCategoryItemView(store: store)
                     }
                 }
+                .padding(.trailing, 24)
             }
             .padding(.leading, 24)
             WithViewStore(store, observe: { $0 }) { viewStore in
@@ -59,7 +60,7 @@ extension ExpenditureCategoryView {
                             .foregroundColor(.ybColor(.mainGreen))
                             .font(.ybfont(.body3))
                     }
-                        .padding(.top, 12)
+                    .padding(.top, 12)
                     Spacer()
                     VStack(alignment: .leading) {
                         ExpenditureTextFieldView(text: viewStore.$text, focused: $focus, placeholder: "내용을 입력해주세요.")
@@ -67,6 +68,7 @@ extension ExpenditureCategoryView {
                             Text("한글, 영어 포함 10자 이내로 입력해주세요.")
                                 .foregroundColor(.ybColor(.mainRed))
                                 .font(.ybfont(.body4))
+                                .animation(.default)
                         }
                     }
                     .onChange(of: focus, perform: { value in

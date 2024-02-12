@@ -14,37 +14,67 @@ public enum ExpenditureTab: Equatable {
 
 public struct ExpenditureReducer: Reducer {
 
+    let cooridinator: ExpenditureEditCoordinator
+
+    init(cooridinator: ExpenditureEditCoordinator) {
+        self.cooridinator = cooridinator
+    }
+
     public struct State: Equatable {
         @BindingState var seletedExpenditureType: ExpenditureTab = .individual
-        var expenditureEdit = ExpendpenditureEditReducer.State()
-        var expenditureBudgetEdit = ExpenditureBudgetEditReducer.State()
+        var expenditureEdit: ExpendpenditureEditReducer.State
+        var expenditureBudgetEdit: ExpenditureBudgetEditReducer.State
+        var tripId: Int
 
-        public init(seletedExpenditureType: ExpenditureTab) {
+        public init(seletedExpenditureType: ExpenditureTab, tripId: Int, editDate: Date) {
+            self.expenditureEdit = .init(tripId: tripId, editDate: editDate)
+            self.expenditureBudgetEdit = .init(tripId: tripId, editDate: editDate)
             self.seletedExpenditureType = seletedExpenditureType
+            self.tripId = tripId
         }
     }
 
     public enum Action: BindableAction, Equatable {
+        case onAppear
         case binding(BindingAction<ExpenditureReducer.State>)
         case expenditureEdit(ExpendpenditureEditReducer.Action)
         case expenditureBudgetEdit(ExpenditureBudgetEditReducer.Action)
     }
 
+    @Dependency(\.currencyUseCase) var currencyUseCase
+
     public var body: some ReducerOf<ExpenditureReducer> {
         BindingReducer()
 
-        Reduce { _, action in
+        Reduce { state, action in
             switch action {
-                default: return .none
+            case .onAppear:
+                return .run { [tripId = state.tripId] send in
+                    let currencies = try await currencyUseCase.getTripCurrencies(tripId)             
+                }
+            case .expenditureEdit(.dismiss):
+                cooridinator.dismissRegisterExpense()
+                return .none
+            case .expenditureBudgetEdit(.dismiss):
+                cooridinator.dismissRegisterExpense()
+                return .none
+            default:
+                return .none
             }
         }
 
         Scope(state: \.expenditureEdit, action: /Action.expenditureEdit) {
             ExpendpenditureEditReducer()
         }
+        .transformDependency(\.self) { dependency in
+            dependency.yeoBeeDependecy()
+        }
 
         Scope(state: \.expenditureBudgetEdit, action: /Action.expenditureBudgetEdit) {
             ExpenditureBudgetEditReducer()
+        }
+        .transformDependency(\.self) { dependency in
+            dependency.yeoBeeDependecy()
         }
     }
 }

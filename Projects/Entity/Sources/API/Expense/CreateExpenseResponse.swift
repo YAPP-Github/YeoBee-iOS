@@ -10,16 +10,15 @@ import Foundation
 
 public struct CreateExpenseResponse: Codable {
     public var tripId: Int
-    public var pageAt: Date
-    public var type: ExpenseType
+    public var payedAt: String
+    public var expenseType: ExpenseType
     public var amount: Double
     public var currencyCode: String
     public var expenseMethod: String
-    public var expenseCategory: String
     public var name: String
     public var payerId: Int
-    public var payerList: [PayerResponse]?
-    public var imageList: [ImageRequest]?
+    public var payerList: [PayerResponse]
+    public var imageList: [ImageRequest]
 }
 
 public struct PayerResponse: Codable {

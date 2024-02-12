@@ -8,30 +8,33 @@
 import Foundation
 import ComposableArchitecture
 import DesignSystem
+import Entity
 
 public struct ExpenditureInputReducer: Reducer {
     public struct State: Equatable {
         @BindingState var text: String = ""
-        var currency: Double = 0.05
-        var currencyText: String = "= 0원"
+        var selectedCurrency: Currency = .init(name: "원", code: "KRW", exchangeRate: .init(value: 1.00))
+        var currencies: [Currency] = []
     }
 
     public enum Action: BindableAction, Equatable {
+        case setCurrencies([Currency])
         case binding(BindingAction<State>)
     }
+
+    enum DebounceId: Hashable { case id }
+
     public var body: some ReducerOf<ExpenditureInputReducer> {
         BindingReducer()
 
         Reduce { state, action in
             switch action {
+            case let .setCurrencies(currencies):
+                state.currencies = currencies
+                state.selectedCurrency = currencies.first ?? .init(name: "원", code: "KRW", exchangeRate: .init(value: 1.00))
+                return .none
+
             case .binding(\.$text):
-                if state.text.count < 10 {
-                    let convertedCurrency = Int((Double(state.text) ?? 0.0) * state.currency)
-                    let formattedText = convertedCurrency.formattedWithSeparator
-                    state.currencyText = "= \(formattedText)원"
-                } else {
-                    state.currencyText = "나타낼 수 없습니다."
-                }
                 return .none
             default:
                 return .none

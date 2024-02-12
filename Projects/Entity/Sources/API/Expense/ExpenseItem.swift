@@ -10,7 +10,7 @@ import Foundation
 
 public struct ExpenseItem: Codable, Equatable {
     public var name: String
-    public var amount: Int
+    public var amount: Double
     public var currency: String
     public var koreanAmount: Int?
     public var category: ExpendCategory
@@ -25,7 +25,7 @@ public struct ExpenseItem: Codable, Equatable {
 
     public init(
         name: String,
-        amount: Int,
+        amount: Double,
         currency: String,
         koreanAmount: Int? = nil,
         category: ExpendCategory
@@ -36,19 +36,6 @@ public struct ExpenseItem: Codable, Equatable {
         self.koreanAmount = koreanAmount
         self.category = category
     }
-}
-
-public struct Currency: Equatable, Codable {
-    public var suffix: String
-    public var exchangeRate: Double
-}
-
-public extension Currency {
-    static let krw: Currency = .init(suffix: "원", exchangeRate: 0)
-    static let usd: Currency = .init(suffix: " USD", exchangeRate: 1315)
-    static let jpy: Currency = .init(suffix: " JPY", exchangeRate: 907.49)
-    static let eur: Currency = .init(suffix: " EUR", exchangeRate: 1440.32)
-    static let cny: Currency = .init(suffix: " CNY", exchangeRate: 182.83)
 }
 
 public enum ExpendCategory: String, Codable, Equatable {

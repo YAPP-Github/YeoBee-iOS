@@ -22,18 +22,20 @@ public struct ExpenditureReducer: Reducer {
         var totalPrice: TotalPriceReducer.State
         var tripDate: TripDateReducer.State
         var expenditureList = ExpenditureListReducer.State()
+        var tripId: Int
         var startDate: Date
         var endDate: Date
         var beforeDate: Date
         var isInitialShow: Bool = true
 
-        init(type: ExpenditureTab, startDate: Date, endDate: Date) {
+        init(type: ExpenditureTab, tripId: Int, startDate: Date, endDate: Date) {
             self.type = type
             self.tripDate = TripDateReducer.State(startDate: startDate, endDate: endDate)
             self.totalPrice = .init(
                 type: type,
                 isTappable: true
             )
+            self.tripId = tripId
             self.startDate = startDate
             self.endDate = endDate
             self.beforeDate = Calendar.current.date(byAdding: .day, value: -1, to: startDate) ?? Date()
@@ -42,6 +44,7 @@ public struct ExpenditureReducer: Reducer {
 
     public enum Action {
         case onAppear
+        case getExpenseList(Date)
         case totalPrice(TotalPriceReducer.Action)
         case tripDate(TripDateReducer.Action)
         case expenditureList(ExpenditureListReducer.Action)
@@ -75,6 +78,12 @@ public struct ExpenditureReducer: Reducer {
                     return .none
                 }
 
+            case let .getExpenseList(selectDate):
+                return .run { send in
+                    await send(.tripDate(.selectDate(selectDate)))
+                    await send(.getExpenditure(selectDate))
+                }
+
             case .tripDate(.tappedTripReadyButton):
                 return .send(.getExpenditure(state.beforeDate))
 
@@ -89,7 +98,8 @@ public struct ExpenditureReducer: Reducer {
                 }
 
             case .tappedAddButton:
-                cooridinator.expenditureEdit()
+                let selectedDate = state.tripDate.selectedDate ?? state.beforeDate
+                cooridinator.expenditureEdit(tripId: state.tripId, editDate: selectedDate)
                 return .none
 
             case .totalPrice(.tappedTotalPrice):

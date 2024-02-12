@@ -13,7 +13,7 @@ import Entity
 
 public protocol ExpenseRepositoryInterface {
     func getExpenseList(request: FetchExpenseListRequest) async throws -> FetchExpenseListResponse
-    func createExpense(request: FetchExpenseListRequest) async throws -> CreateExpenseResponse
+    func createExpense(request: CreateExpenseRequest) async throws -> CreateExpenseResponse
 }
 
 final public class ExpenseRepository: ExpenseRepositoryInterface {
@@ -42,7 +42,7 @@ final public class ExpenseRepository: ExpenseRepositoryInterface {
         }
     }
 
-    public func createExpense(request: FetchExpenseListRequest) async throws -> CreateExpenseResponse {
+    public func createExpense(request: CreateExpenseRequest) async throws -> CreateExpenseResponse {
         let result = await provider.request(
             .create(request)
         )

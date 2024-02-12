@@ -9,17 +9,43 @@
 import Foundation
 
 public struct CreateExpenseRequest: Codable {
-    public var tripId: String
-    public var pageAt: Date
-    public var type: ExpenseType
+    public var tripId: Int
+    public var payedAt: String
+    public var expenseType: ExpenseType
     public var amount: Double
     public var currencyCode: String
     public var expenseMethod: String
     public var expenseCategory: String
     public var name: String
     public var payerId: Int
-    public var payerList: [PayerRequest]?
-    public var imageList: [ImageRequest]?
+    public var payerList: [PayerRequest]
+    public var imageList: [ImageRequest]
+
+    public init(
+        tripId: Int,
+        payedAt: String,
+        expenseType: ExpenseType,
+        amount: Double,
+        currencyCode: String,
+        expenseMethod: String,
+        expenseCategory: String,
+        name: String,
+        payerId: Int,
+        payerList: [PayerRequest] = [],
+        imageList: [ImageRequest] = []
+    ) {
+        self.tripId = tripId
+        self.payedAt = payedAt
+        self.expenseType = expenseType
+        self.amount = amount
+        self.currencyCode = currencyCode
+        self.expenseMethod = expenseMethod
+        self.expenseCategory = expenseCategory
+        self.name = name
+        self.payerId = payerId
+        self.payerList = payerList
+        self.imageList = imageList
+    }
 }
 
 public struct PayerRequest: Codable {

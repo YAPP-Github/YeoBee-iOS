@@ -57,8 +57,6 @@ extension ExpenditurePaymentView {
         }
 
     }
-
-
 }
 
 extension Payment {
