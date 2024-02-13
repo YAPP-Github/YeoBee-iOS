@@ -20,12 +20,13 @@ struct TotalPriceView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack {
                 if viewStore.totalBudgetPrice <= 0 {
-                    totalExpandPriceView(price: viewStore.totalExpandPrice, isTappable: viewStore.isTappable)
+                    totalExpandPriceView(price: viewStore.totalExpandPrice, type: viewStore.totalPriceType, isTappable: viewStore.isTappable)
                 } else {
                     budgetPriceView(
                         totalExpandPrice: viewStore.totalExpandPrice,
                         totalBudgetPrice: viewStore.totalBudgetPrice,
-                        remainBudgetPrice: viewStore.remainBudgetPrice
+                        remainBudgetPrice: viewStore.remainBudgetPrice,
+                        isTappable: viewStore.isTappable
                     )
                 }
             }
@@ -34,25 +35,28 @@ struct TotalPriceView: View {
 }
 
 extension TotalPriceView {
-    func totalExpandPriceView(price: Int, isTappable: Bool) -> some View {
+    func totalExpandPriceView(price: Int, type: TotalPriceTab , isTappable: Bool) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            LargeTotalPriceView(title: "총쓴돈", price: price) {
+            LargeTotalPriceView(title: type == .budget ? "총쓴돈" : "총예산", price: price, isTappable: isTappable) {
                 store.send(.tappedTotalPrice)
             }
             .disabled(!isTappable)
         }
+        .padding(.bottom, 16)
     }
 
     func budgetPriceView(
         totalExpandPrice: Int,
         totalBudgetPrice: Int,
-        remainBudgetPrice: Int
+        remainBudgetPrice: Int,
+        isTappable: Bool
     ) -> some View {
-        WithViewStore(store, observe: \.type) { viewStore in
+        WithViewStore(store, observe: \.expenseType) { viewStore in
             VStack(alignment: .leading, spacing: 8) {
                 LargeTotalPriceView(
                     title: viewStore.state == .individual ? "예산 잔액" : "공동경비 잔액",
-                    price: remainBudgetPrice
+                    price: remainBudgetPrice,
+                    isTappable: isTappable
                 ) {
                     store.send(.tappedBubgetPrice)
                 }
@@ -69,8 +73,6 @@ extension TotalPriceView {
                         price: totalExpandPrice
                     )
                 }
-                .frame(height: 24)
-                YBDividerView()
             }
         }
     }

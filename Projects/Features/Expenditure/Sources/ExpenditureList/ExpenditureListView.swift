@@ -38,11 +38,12 @@ extension ExpenditureListView {
                     ForEachStore(
                         store.scope(
                             state: \.expenditureListItems,
-                            action: ExpenditureListReducer.Action.expenditureListItem)
+                            action: ExpenditureListReducer.Action.expenditureListItem
+                        )
                     ) { store in
                         ExpenditureListItemView(store: store)
                     }
-                    Spacer()
+                    
                 }
             }
         }

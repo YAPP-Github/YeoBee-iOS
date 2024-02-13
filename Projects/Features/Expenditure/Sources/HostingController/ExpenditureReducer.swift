@@ -27,12 +27,17 @@ public struct ExpenditureReducer: Reducer {
         var endDate: Date
         var beforeDate: Date
         var isInitialShow: Bool = true
+        var pageIndex: Int = 0
+        var isLastPage: Bool = false
+        var currentDate: Date?
+
 
         init(type: ExpenditureTab, tripId: Int, startDate: Date, endDate: Date) {
             self.type = type
             self.tripDate = TripDateReducer.State(startDate: startDate, endDate: endDate)
             self.totalPrice = .init(
-                type: type,
+                expenseType: type,
+                totalPriceType: .expense,
                 isTappable: true
             )
             self.tripId = tripId
@@ -51,9 +56,13 @@ public struct ExpenditureReducer: Reducer {
         case tappedAddButton
         case tappedFilterButton
         case getExpenditure(Date)
+        case getBudget
+        case appendExpenditures
+        case setLastPage(Bool)
     }
 
     @Dependency(\.expenseUseCase) var expenseUseCase
+    @Dependency(\.tripCalculationUseCase) var tripCalculationUseCase
 
     public var body: some ReducerOf<ExpenditureReducer> {
         Reduce { state, action in
@@ -73,6 +82,7 @@ public struct ExpenditureReducer: Reducer {
                     return .run { send in
                         await send(.tripDate(.selectDate(selectDate)))
                         await send(.getExpenditure(selectDate))
+                        await send(.getBudget)
                     }
                 } else {
                     return .none
@@ -92,9 +102,19 @@ public struct ExpenditureReducer: Reducer {
                 return .send(.getExpenditure(tripDate))
 
             case let .getExpenditure(tripDate):
-                return .run { send in
-                    let expenseItems = try await expenseUseCase.getExpenseList(1, tripDate)
-                    await send(.expenditureList(.setExpenditures(expenseItems)))
+                var isReset: Bool = false
+                if state.currentDate == nil || tripDate != state.currentDate {
+                    state.pageIndex = 0
+                    state.currentDate = tripDate
+                    state.isLastPage = false
+                    isReset = true
+                } else {
+                    state.pageIndex += 1
+                }
+                return .run { [pageIndex = state.pageIndex, isReset] send in
+                    let (expenseItems, isLastPage) = try await expenseUseCase.getExpenseList(1, tripDate, pageIndex)
+                    await send(.expenditureList(.setExpenditures(expenseItems, isReset)))
+                    await send(.setLastPage(isLastPage))
                 } catch: { error, send in
                     print(error)
                 }
@@ -108,11 +128,33 @@ public struct ExpenditureReducer: Reducer {
                 cooridinator.totalExpenditureList()
                 return .none
 
+            case .totalPrice(.tappedBubgetPrice):
+                cooridinator.totalBudgetExpenditureList()
+                return .none
+
+            case .getBudget:
+                return .run { send in
+                    let budget = try await tripCalculationUseCase.getBudget(1).individualBudget
+                    await send(.totalPrice(.setTotalPrice(budget.budgetExpense, budget.budgetIncome, budget.leftBudget)))
+                } catch: { error, send in
+                    print(error)
+                }
+
             case .tappedFilterButton:
                 return .none
 
             case let .expenditureList(.expenditureListItem(id: _, action: .tappedExpenditureItem(expenseItem))):
                 cooridinator.expenditureDetail(expenseItem: expenseItem)
+                return .none
+
+            case .appendExpenditures:
+                if let currentDate = state.currentDate, state.isLastPage == false {
+                    return .send(.getExpenditure(currentDate))
+                }
+                return .none
+
+            case let .setLastPage(isLastPage):
+                state.isLastPage = isLastPage
                 return .none
 
             default:

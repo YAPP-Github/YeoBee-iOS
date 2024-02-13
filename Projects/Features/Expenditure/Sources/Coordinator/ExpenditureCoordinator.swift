@@ -83,6 +83,15 @@ extension ExpenditureCoordinator {
         expenditureNavigationController?.pushViewController(totalExpenditureViewController, animated: true)
     }
 
+    public func totalBudgetExpenditureList() {
+        let totalBudgetExpenditureViewController = TotalBudgetExpenditureViewController(
+            coordinator: self,
+            expenseType: .individual
+        )
+        expenditureNavigationController?.tabBarController?.tabBar.isHidden = true
+        expenditureNavigationController?.pushViewController(totalBudgetExpenditureViewController, animated: true)
+    }
+
     public func expenditureDetail(expenseItem: ExpenseItem) {
         let expenditureDetailViewController = ExpenditureDetailViewController(
             coordinator: self,

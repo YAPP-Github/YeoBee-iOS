@@ -40,9 +40,9 @@ public struct SharedExpenditureReducer: Reducer {
         }
 
 //        Scope(state: \.sharedExpenditure, action: /Action.sharedExpenditure) {
-//            ExpenditureReducer()
+//            ExpenditureReducer(
 //        }
-
+//
 //        Scope(state: \.individualExpenditure, action: /Action.individualExpenditure) {
 //            ExpenditureReducer()
 //        }

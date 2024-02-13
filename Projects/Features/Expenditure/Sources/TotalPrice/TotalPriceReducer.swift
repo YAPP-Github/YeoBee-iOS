@@ -10,14 +10,16 @@ import ComposableArchitecture
 
 public struct TotalPriceReducer: Reducer {
     public struct State: Equatable {
-        var type: ExpenditureTab
+        var expenseType: ExpenditureTab
+        var totalPriceType: TotalPriceTab
         var totalExpandPrice: Int = 1000
         var totalBudgetPrice: Int = 0
         var remainBudgetPrice: Int = 0
         var isTappable: Bool
 
-        init(type: ExpenditureTab, isTappable: Bool) {
-            self.type = type
+        init(expenseType: ExpenditureTab, totalPriceType: TotalPriceTab, isTappable: Bool) {
+            self.expenseType = expenseType
+            self.totalPriceType = totalPriceType
             self.isTappable = isTappable
         }
     }
@@ -32,9 +34,9 @@ public struct TotalPriceReducer: Reducer {
         Reduce { state, action in
             switch action {
             case let .setTotalPrice(totalExpandPrice, totalBudgetPrice, remainBudgetPrice):
-                state.totalExpandPrice = totalExpandPrice
-                state.totalBudgetPrice = totalBudgetPrice ?? state.totalBudgetPrice
-                state.remainBudgetPrice = remainBudgetPrice ?? state.remainBudgetPrice
+                state.totalExpandPrice = abs(totalExpandPrice)
+                state.totalBudgetPrice = abs(totalBudgetPrice ?? 0) 
+                state.remainBudgetPrice = abs(remainBudgetPrice ?? 0)
                 return .none
             case .tappedTotalPrice:
                 return .none

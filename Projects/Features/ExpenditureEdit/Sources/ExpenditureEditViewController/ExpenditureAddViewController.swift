@@ -101,7 +101,11 @@ public final class ExpenditureAddViewController: UIViewController {
 }
 
 extension ExpenditureAddViewController {
-    func selectCurrency(currency: Currency) {
-        store.send(.expenditureEdit(.expenditureInput(.setCurrency(currency))))
+    func selectCurrency(currency: Currency, expenseType: ExpenseType?) {
+        if case expenseType = .individual {
+            store.send(.expenditureEdit(.expenditureInput(.setCurrency(currency))))
+        } else if case expenseType = .individualBudget {
+            store.send(.expenditureBudgetEdit(.expenditureInput(.setCurrency(currency))))
+        }
     }
 }
