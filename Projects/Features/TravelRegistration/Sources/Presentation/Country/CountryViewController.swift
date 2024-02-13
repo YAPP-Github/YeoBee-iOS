@@ -283,7 +283,7 @@ extension CountryViewController: View {
                 let selectedCountries = self.reactor.currentState.selectedCountries
                     .map { CountryItemRequest(name: $0.name) }
                 
-                let tripRequest = TripRequest(
+                let tripRequest = RegistTripRequest(
                     title: "",
                     startDate: "",
                     endDate: "",

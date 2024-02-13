@@ -1,5 +1,5 @@
 //
-//  TripRequest.swift
+//  RegistTripRequest.swift
 //  Entity
 //
 //  Created by 박현준 on 1/25/24.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-// 여행 등록, 수정
-public struct TripRequest: Encodable {
+// 여행 등록
+public struct RegistTripRequest: Encodable {
     public var title: String
     public var startDate: String
     public var endDate: String
@@ -41,10 +41,10 @@ public struct CountryItemRequest: Encodable {
 
 public struct TripUserItemRequest: Encodable {
     public var name: String
-    public var imageType: String
+    public var profileImageUrl: String
     
-    public init(name: String, imageType: String) {
+    public init(name: String, profileImageUrl: String) {
         self.name = name
-        self.imageType = imageType
+        self.profileImageUrl = profileImageUrl
     }
 }

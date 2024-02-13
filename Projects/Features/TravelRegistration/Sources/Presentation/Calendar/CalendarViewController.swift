@@ -326,7 +326,7 @@ extension CalendarViewController: View {
                 if let startDate = self.reactor.currentState.startDate {
                     let endDate = self.reactor.currentState.endDate ?? startDate
                     
-                    let tripRequest = TripRequest(
+                    let tripRequest = RegistTripRequest(
                         title: "",
                         startDate: self.reactor.formatDateToString(startDate),
                         endDate: self.reactor.formatDateToString(endDate),

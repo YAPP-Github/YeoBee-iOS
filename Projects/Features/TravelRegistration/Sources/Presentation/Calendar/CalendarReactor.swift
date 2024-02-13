@@ -30,12 +30,12 @@ public final class CalendarReactor: Reactor {
         var startDate: Date? = nil
         var endDate: Date? = nil
         var selectedDate: [Date] = []
-        var tripRequest: TripRequest
+        var tripRequest: RegistTripRequest
     }
     
     public var initialState: State
     
-    init(tripRequest: TripRequest) {
+    init(tripRequest: RegistTripRequest) {
         self.initialState = State(tripRequest: tripRequest)
     }
     

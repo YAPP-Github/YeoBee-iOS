@@ -123,7 +123,7 @@ extension TravelTitleViewController: View {
                       let titleString = self.titleTextField.text else { return }
                 
                 let currentTripRequest = self.reactor.currentState.tripRequest
-                let tripRequest = TripRequest(
+                let tripRequest = RegistTripRequest(
                     title: titleString,
                     startDate: currentTripRequest.startDate,
                     endDate: currentTripRequest.endDate,
