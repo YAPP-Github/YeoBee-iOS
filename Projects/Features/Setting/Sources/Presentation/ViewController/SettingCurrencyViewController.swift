@@ -24,8 +24,8 @@ public final class SettingCurrencyViewController: UIViewController {
     private let subtitleLabel = YBLabel(text: "수정 시 지정 환율로 계산됩니다.", font: .body2, textColor: .gray5)
     private let settingCurrencyView = SettingCurrencyView()
     private var modifyButton = YBTextButton(text: "수정하기",
-                                          appearance: .defaultDisable,
-                                          size: .medium)
+                                            appearance: .defaultDisable,
+                                            size: .medium)
     
     // MARK: - Life Cycles
     public init(reactor: SettingCurrencyReactor) {

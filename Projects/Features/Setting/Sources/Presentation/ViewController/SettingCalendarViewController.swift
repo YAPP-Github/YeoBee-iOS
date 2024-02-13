@@ -170,7 +170,6 @@ extension SettingCalendarViewController: FSCalendarDelegate, FSCalendarDataSourc
         configureVisibleCells()
     }
     
-    
     public func calendar(_ calendar: FSCalendar, cellFor date: Date, at position: FSCalendarMonthPosition) -> FSCalendarCell {
         let cell = calendar.dequeueReusableCell(withIdentifier: YBCalendarCell.identifier, for: date, at: position)
         return cell
