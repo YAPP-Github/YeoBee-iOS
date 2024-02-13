@@ -8,6 +8,7 @@
 
 import UIKit
 import Coordinator
+import Entity
 import Expenditure
 import DesignSystem
 
@@ -17,9 +18,11 @@ final public class TripCoordinator: TripCoordinatorInterface {
     public var tabBarController: UITabBarController?
     public var childCoordinators = [Coordinator]()
     public var parent: HomeCoordinatorInterface?
+    public let tripItem: TripItem
 
-    public init(navigationController: UINavigationController) {
+    public init(navigationController: UINavigationController, tripItem: TripItem) {
         self.navigationController = navigationController
+        self.tripItem = tripItem
     }
 
     public func start(animated: Bool = false) {
