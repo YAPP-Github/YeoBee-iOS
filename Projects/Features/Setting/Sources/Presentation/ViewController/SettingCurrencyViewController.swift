@@ -1,8 +1,8 @@
 //
-//  TravelTitleViewController.swift
-//  TravelRegistration
+//  SettingCurrencyViewController.swift
+//  Setting
 //
-//  Created by 박현준 on 1/24/24.
+//  Created by 박현준 on 2/12/24.
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 //
 
@@ -14,24 +14,21 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-public final class TravelTitleViewController: UIViewController {
+public final class SettingCurrencyViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
-    private let reactor: TravelTitleReactor
-    private let coordinator: TravelRegistrationCoordinator
+    private let reactor: SettingCurrencyReactor
     
     // MARK: - Properties
-    private let titleLabel = YBLabel(text: "여행 제목을 입력해주세요.", font: .header2, textColor: .black)
-    private let optionalLabel = YBLabel(text: "(선택)", font: .header2, textColor: .gray4)
-    private let titleTextField = YBTextField(backgroundColor: .gray1)
-    private let effectivenessLabel = YBLabel(text: "",font: .body4, textColor: .mainRed)
-    private var makeTravelButton = YBTextButton(text: "여행만들기",
-                                          appearance: .defaultDisable,
-                                          size: .medium)
+    private let titleLabel = YBLabel(text: "적용된 환율", font: .header2, textColor: .black)
+    private let subtitleLabel = YBLabel(text: "수정 시 지정 환율로 계산됩니다.", font: .body2, textColor: .gray5)
+    private let settingCurrencyView = SettingCurrencyView()
+    private var modifyButton = YBTextButton(text: "수정하기",
+                                            appearance: .defaultDisable,
+                                            size: .medium)
     
     // MARK: - Life Cycles
-    init(coordinator: TravelRegistrationCoordinator ,reactor: TravelTitleReactor) {
-        self.coordinator = coordinator
+    public init(reactor: SettingCurrencyReactor) {
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -42,26 +39,29 @@ public final class TravelTitleViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        setView()
         addViews()
         setLayouts()
         configureBar()
-        bindKeyboardNotification()
         bind(reactor: reactor)
+        bindKeyboardNotification()
     }
     
     // MARK: - Set UI
+    private func setView() {
+        view.backgroundColor = .white
+        title = "환율 설정"
+    }
+    
     private func addViews() {
         [
             titleLabel,
-            optionalLabel,
-            titleTextField,
-            effectivenessLabel,
-            makeTravelButton
+            subtitleLabel,
+            settingCurrencyView,
+            modifyButton
         ].forEach {
             view.addSubview($0)
         }
-        
     }
     
     private func setLayouts() {
@@ -69,21 +69,17 @@ public final class TravelTitleViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).inset(24)
             make.leading.equalToSuperview().inset(24)
         }
-        optionalLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.top)
-            make.leading.equalTo(titleLabel.snp.trailing)
-        }
-        titleTextField.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).inset(-14)
+        subtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).inset(-6)
             make.leading.equalTo(titleLabel.snp.leading)
+        }
+        settingCurrencyView.snp.makeConstraints { make in
+            make.top.equalTo(subtitleLabel.snp.bottom).inset(-16)
+            make.leading.equalTo(subtitleLabel.snp.leading)
             make.trailing.equalToSuperview().inset(24)
+            make.height.equalTo(50)
         }
-        effectivenessLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleTextField.snp.bottom).inset(-10)
-            make.leading.equalTo(titleTextField.snp.leading)
-            make.trailing.equalTo(titleTextField.snp.trailing)
-        }
-        makeTravelButton.snp.makeConstraints { make in
+        modifyButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
             make.leading.trailing.equalToSuperview().inset(24)
         }
@@ -98,66 +94,64 @@ public final class TravelTitleViewController: UIViewController {
     @objc private func backButtonTapped() {
         self.navigationController?.popViewController(animated: true)
     }
-
+    
     deinit {
-        print("deinit TravelTitleViewController")
+        print("SettingCurrencyViewController is de-initialized.")
     }
 }
 
 // MARK: - Bind
-extension TravelTitleViewController: View {
-    public func bind(reactor: TravelTitleReactor) {
+extension SettingCurrencyViewController: View {
+    public func bind(reactor: SettingCurrencyReactor) {
         bindAction(reactor: reactor)
         bindState(reactor: reactor)
     }
     
-    func bindAction(reactor: TravelTitleReactor) {
-        titleTextField.rx.text
-            .map { Reactor.Action.titleTextFieldText(text: $0 ?? "") }
+    func bindAction(reactor: SettingCurrencyReactor) {
+        settingCurrencyView.wonCurrencyTextField.rx.text
+            .map { Reactor.Action.textFieldText(text: $0 ?? "") }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        makeTravelButton.rx.tap
-            .bind { [weak self] _ in
-                guard let self,
-                      let titleString = self.titleTextField.text else { return }
-                
-                let currentTripRequest = self.reactor.currentState.tripRequest
-                let tripRequest = RegistTripRequest(
-                    title: titleString,
-                    startDate: currentTripRequest.startDate,
-                    endDate: currentTripRequest.endDate,
-                    countryList: currentTripRequest.countryList,
-                    tripUserList: currentTripRequest.tripUserList
-                )
-                print("보낼 데이터: \(tripRequest)")
-                
-                self.navigationController?.dismiss(animated: true)
-                self.coordinator.coordinatorDidFinish()
-            }.disposed(by: disposeBag)
+        modifyButton.rx.tap
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] in
+                print("환율 수정")
+                self?.navigationController?.popViewController(animated: true)
+            }
+            .disposed(by: disposeBag)
     }
     
-    func bindState(reactor: TravelTitleReactor) {
+    func bindState(reactor: SettingCurrencyReactor) {
         reactor.state
-            .map { $0.isValidTitleText }
-            .bind { [weak self] isValid in
-                if isValid {
-                    self?.effectivenessLabel.text = ""
-                    self?.makeTravelButton.isEnabled = true
-                    self?.makeTravelButton.setTitle("여행 만들기", for: .normal)
-                    self?.makeTravelButton.setAppearance(appearance: .default)
+            .map { $0.currency }
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] currency in
+                self?.settingCurrencyView.defaultCurrencyLabel.text = currency.code
+                self?.settingCurrencyView.wonCurrencyTextField.placeholder = "\(currency.value)"
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.textFieldText }
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] text in
+                if text.isEmpty {
+                    self?.modifyButton.isEnabled = false
+                    self?.modifyButton.setTitle("수정하기", for: .normal)
+                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
                 } else {
-                    self?.effectivenessLabel.text = "한글/영문/특수문자 포함 15까지 입력 가능해요."
-                    self?.makeTravelButton.isEnabled = false
-                    self?.makeTravelButton.setTitle("여행 만들기", for: .normal)
-                    self?.makeTravelButton.setAppearance(appearance: .defaultDisable)
+                    self?.modifyButton.isEnabled = true
+                    self?.modifyButton.setTitle("수정하기", for: .normal)
+                    self?.modifyButton.setAppearance(appearance: .default)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
     }
 }
 
 // MARK: - Keyboard 처리
-extension TravelTitleViewController {
+extension SettingCurrencyViewController {
     private func bindKeyboardNotification() {
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
@@ -186,11 +180,11 @@ extension TravelTitleViewController {
     private func changeModifyButtonLayout(keyboardHeight: CGFloat) {
         UIView.animate(withDuration: 0) {
             if keyboardHeight == 0 {
-                self.makeTravelButton.snp.updateConstraints { make in
+                self.modifyButton.snp.updateConstraints { make in
                     make.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(10)
                 }
             } else {
-                self.makeTravelButton.snp.updateConstraints { make in
+                self.modifyButton.snp.updateConstraints { make in
                     make.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(keyboardHeight)
                 }
             }
@@ -211,9 +205,9 @@ extension TravelTitleViewController {
 }
 
 // MARK: - UIGestureRecognizerDelegate
-extension TravelTitleViewController: UIGestureRecognizerDelegate {
+extension SettingCurrencyViewController: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if touch.view == makeTravelButton {
+        if touch.view == modifyButton {
             return false
         }
         return true

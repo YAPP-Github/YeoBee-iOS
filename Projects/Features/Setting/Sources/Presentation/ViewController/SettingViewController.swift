@@ -30,6 +30,7 @@ public final class SettingViewController: UIViewController {
     private let reactor: SettingReactor
     private let coordinator: SettingCoordinator
     private var dataSource: UITableViewDiffableDataSource<SettingSection, SettingDataItem>?
+    private var snapshot = NSDiffableDataSourceSnapshot<SettingSection, SettingDataItem>()
     
     // MARK: - Properties
     private let settingHeaderView = SettingTableHeaderView(frame: CGRect(x: 0,
@@ -82,6 +83,7 @@ public final class SettingViewController: UIViewController {
             case .companion(let companion):
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingCompanionCell.identifier,
                                                                for: indexPath) as? SettingCompanionCell else { return UITableViewCell() }
+                cell.delegate = self
                 cell.companion = companion
                 return cell
             case .currency(let currency):
@@ -100,6 +102,7 @@ public final class SettingViewController: UIViewController {
         snapshot.appendSections([.companion, .currency])
         snapshot.appendItems(companions.map { .companion($0) }, toSection: .companion)
         snapshot.appendItems(currencies.map { .currency($0) }, toSection: .currency)
+        self.snapshot = snapshot
         dataSource?.apply(snapshot, animatingDifferences: false)
     }
     
@@ -166,6 +169,21 @@ extension SettingViewController: UITableViewDelegate {
             return 50
         }
     }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let section = snapshot.sectionIdentifiers[indexPath.section]
+        
+        switch section {
+        case .companion:
+            break
+        case .currency:
+            if case let .currency(currency) = snapshot.itemIdentifiers(inSection: .currency)[indexPath.item] {
+                let settingCurrencyReactor = SettingCurrencyReactor(currency: currency)
+                let settingCurrencyViewController = SettingCurrencyViewController(reactor: settingCurrencyReactor)
+                self.navigationController?.pushViewController(settingCurrencyViewController, animated: true)
+            }
+        }
+    }
 }
 
 // MARK: - Bind
@@ -203,6 +221,32 @@ extension SettingViewController: View {
 // MARK: - 편집 버튼 Tap
 extension SettingViewController: SettingTableHeaderViewDelegate {
     func modifyButtonTapped() {
-        print("편집 Tap - Bottom Sheet")
+        let settingBottomSheetViewController = SettingBottomSheetViewController()
+        settingBottomSheetViewController.delegate = self
+        presentBottomSheet(presentedViewController: settingBottomSheetViewController, height: 250)
+    }
+}
+
+// MARK: - 바텀시트
+extension SettingViewController: SettingBottomSheetViewControllerDelegate {
+    func modifyTitleButtonTapped() {
+        let settingRecycleReactor = SettingRecycleReactor(viewType: .tripTitle)
+        let settingRecycleViewController = SettingRecycleViewController(reactor: settingRecycleReactor)
+        self.navigationController?.pushViewController(settingRecycleViewController, animated: true)
+    }
+    
+    func modifyDateButtonTapped() {
+        let settingCalendarReactor = SettingCalendarReactor()
+        let settingCalendarViewController = SettingCalendarViewController(reactor: settingCalendarReactor)
+        self.navigationController?.pushViewController(settingCalendarViewController, animated: true)
+    }
+}
+
+// MARK: - 동행자 edit버튼 Tap
+extension SettingViewController: SettingCompanionCellDelegate {
+    func editButtonTapped(companion: TravelRegistration.Companion) {
+        let settingRecycleReactor = SettingRecycleReactor(viewType: .companionName)
+        let settingRecycleViewController = SettingRecycleViewController(reactor: settingRecycleReactor)
+        self.navigationController?.pushViewController(settingRecycleViewController, animated: true)
     }
 }

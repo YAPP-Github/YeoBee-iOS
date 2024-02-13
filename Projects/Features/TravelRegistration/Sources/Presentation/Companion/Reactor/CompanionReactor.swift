@@ -9,6 +9,7 @@
 import UIKit
 import DesignSystem
 import Entity
+import YBNetwork
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -34,12 +35,12 @@ public final class CompanionReactor: Reactor {
         var companions: [Companion] = []
         var companionNumber: Int = 0
         var makeLimitToast: Bool = false
-        var tripRequest: TripRequest
+        var tripRequest: RegistTripRequest
     }
     
     public var initialState: State
     
-    init(tripRequest: TripRequest) {
+    init(tripRequest: RegistTripRequest) {
         self.initialState = State(tripRequest: tripRequest)
     }
     
@@ -63,6 +64,9 @@ public final class CompanionReactor: Reactor {
             
         switch mutation {
         case .companionType(let type):
+            if type == .alone {
+                newState.makeLimitToast = false
+            }
             newState.companionType = type
         case .addCompanion:
             if newState.companions.count >= 9 {
@@ -70,7 +74,7 @@ public final class CompanionReactor: Reactor {
                 break
             }
             newState.companionNumber += 1
-            newState.companions.append(.init(name: "사용자\(newState.companionNumber)", type: getFaceString()))
+            newState.companions.append(.init(name: "사용자\(newState.companionNumber)", imageUrl: getFaceUrl()))
         case .deleteCompanion(let companion):
             if let companionsIndex = newState.companions.firstIndex(where: { $0 == companion }) {
                 newState.companions.remove(at: companionsIndex)
@@ -83,14 +87,13 @@ public final class CompanionReactor: Reactor {
         return newState
     }
     
-    func getFaceString() -> String {
-        let existingTypes = currentState.companions.compactMap { $0.type }
+    func getFaceUrl() -> String {
+        let existingTypes = currentState.companions.compactMap { $0.imageUrl }
         
         var nextNumber = 1
-        while existingTypes.contains("Image\(nextNumber)") {
+        while existingTypes.contains("\(YeoBeeAPI.shared.baseImageURL ?? "")/static/user/profile/profile\(nextNumber).png") {
             nextNumber += 1
         }
-        
-        return "Image\(nextNumber)"
+        return "\(YeoBeeAPI.shared.baseImageURL ?? "")/static/user/profile/profile\(nextNumber).png"
     }
 }

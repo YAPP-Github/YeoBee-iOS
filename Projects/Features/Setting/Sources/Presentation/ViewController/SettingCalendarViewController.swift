@@ -1,25 +1,25 @@
 //
-//  CalendarViewController.swift
-//  TravelRegistration
+//  SettingCalendarViewController.swift
+//  Setting
 //
-//  Created by 박현준 on 1/6/24.
+//  Created by 박현준 on 2/12/24.
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 //
 
 import UIKit
 import DesignSystem
 import Entity
+import TravelRegistration
 import ReactorKit
 import RxSwift
 import RxCocoa
 import SnapKit
 import FSCalendar
 
-public final class CalendarViewController: UIViewController {
+public final class SettingCalendarViewController: UIViewController {
 
     public var disposeBag = DisposeBag()
-    private let reactor: CalendarReactor
-    let coordinator: TravelRegistrationCoordinator
+    private let reactor: SettingCalendarReactor
     
     private var dateformatter: DateFormatter = {
         $0.dateFormat = "MM.dd E"
@@ -28,7 +28,7 @@ public final class CalendarViewController: UIViewController {
     }(DateFormatter())
     
     // MARK: - Properties
-    private let registerLabel = YBLabel(text: "여행일정을 등록해주세요.", 
+    private let registerLabel = YBLabel(text: "여행일정을 수정해주세요.",
                                         font: .header2,
                                         textColor: .black,
                                         textAlignment: .left)
@@ -39,15 +39,14 @@ public final class CalendarViewController: UIViewController {
                                                   font: .body2,
                                                   padding: .small)
     private let calendarView = CalendarView()
-    private let dividerView = YBDivider(height: 0.6, 
+    private let dividerView = YBDivider(height: 0.6,
                                         color: .gray3)
-    private let nextButton = YBTextButton(text: "다음으로", 
+    private let modifyButton = YBTextButton(text: "수정하기",
                                           appearance: .defaultDisable,
                                           size: .medium)
     
     // MARK: - Life Cycles
-    init(coordinator: TravelRegistrationCoordinator, reactor: CalendarReactor) {
-        self.coordinator = coordinator
+    init(reactor: SettingCalendarReactor) {
         self.reactor = reactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -73,7 +72,7 @@ public final class CalendarViewController: UIViewController {
             periodLabel,
             calendarView,
             dividerView,
-            nextButton
+            modifyButton
         ].forEach {
             view.addSubview($0)
         }
@@ -88,12 +87,12 @@ public final class CalendarViewController: UIViewController {
             make.top.equalTo(registerLabel.snp.bottom).inset(-18)
             make.leading.equalTo(registerLabel.snp.leading)
         }
-        nextButton.snp.makeConstraints { make in
+        modifyButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
             make.leading.trailing.equalToSuperview().inset(24)
         }
         dividerView.snp.makeConstraints { make in
-            make.bottom.equalTo(nextButton.snp.top).inset(-16)
+            make.bottom.equalTo(modifyButton.snp.top).inset(-16)
             make.leading.trailing.equalToSuperview()
         }
         calendarView.snp.makeConstraints { make in
@@ -119,11 +118,12 @@ public final class CalendarViewController: UIViewController {
     }
 
     deinit {
-        print("deinit CalendarViewController")
+        print("SettingCalendarViewController is de-initialized.")
     }
 }
 
-extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
+// MARK: - FSCalendar
+extension SettingCalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
     public func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
         configureCalenderHeaderText()
     }
@@ -170,7 +170,6 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCa
         configureVisibleCells()
     }
     
-    
     public func calendar(_ calendar: FSCalendar, cellFor date: Date, at position: FSCalendarMonthPosition) -> FSCalendarCell {
         let cell = calendar.dequeueReusableCell(withIdentifier: YBCalendarCell.identifier, for: date, at: position)
         return cell
@@ -216,7 +215,7 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCa
 }
 
 // MARK: - 헤더 / 날짜 설정
-extension CalendarViewController {
+extension SettingCalendarViewController {
     private func configureCalenderHeaderText() {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy년 MM월"
@@ -234,7 +233,7 @@ extension CalendarViewController {
 }
 
 // MARK: - 캘린더 설정
-extension CalendarViewController {
+extension SettingCalendarViewController {
     private func clearSelectedDates(in calendar: FSCalendar) {
         calendar.selectedDates.forEach { calendar.deselect($0) }
         reactor.action.onNext(.startDate(date: nil))
@@ -312,63 +311,56 @@ extension CalendarViewController {
 }
 
 // MARK: - Bind
-extension CalendarViewController: View {
-    public func bind(reactor: CalendarReactor) {
+extension SettingCalendarViewController: View {
+    public func bind(reactor: SettingCalendarReactor) {
         bindAction(reactor: reactor)
         bindState(reactor: reactor)
     }
     
-    func bindAction(reactor: CalendarReactor) {
-        nextButton.rx.tap
+    func bindAction(reactor: SettingCalendarReactor) {
+        modifyButton.rx.tap
             .observe(on: MainScheduler.instance)
             .bind { [weak self] _ in
                 guard let self else { return }
                 if let startDate = self.reactor.currentState.startDate {
                     let endDate = self.reactor.currentState.endDate ?? startDate
-                    
-                    let tripRequest = RegistTripRequest(
-                        title: "",
-                        startDate: self.reactor.formatDateToString(startDate),
-                        endDate: self.reactor.formatDateToString(endDate),
-                        countryList: self.reactor.currentState.tripRequest.countryList,
-                        tripUserList: [])
-                    
-                    let companionReactor = CompanionReactor(tripRequest: tripRequest)
-                    let companionViewController = CompanionViewController(coordinator: self.coordinator,
-                                                                          reactor: companionReactor)
-                    self.navigationController?.pushViewController(companionViewController, animated: true)
+                    self.navigationController?.popViewController(animated: true)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
     }
     
-    func bindState(reactor: CalendarReactor) {
+    func bindState(reactor: SettingCalendarReactor) {
         reactor.state
             .map { $0.startDate }
             .observe(on: MainScheduler.instance)
             .bind { [weak self] startDate in
                 self?.updatePeriodLabel(startDate: startDate, endDate: nil)
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.endDate }
             .observe(on: MainScheduler.instance)
             .bind { [weak self] endDate in
                 self?.updatePeriodLabel(startDate: reactor.currentState.startDate, endDate: endDate)
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.selectedDate }
             .observe(on: MainScheduler.instance)
             .bind { [weak self] selectedDate in
                 if selectedDate.isEmpty {
-                    self?.nextButton.isEnabled = false
-                    self?.nextButton.setTitle("다음으로", for: .normal)
-                    self?.nextButton.setAppearance(appearance: .defaultDisable)
+                    self?.modifyButton.isEnabled = false
+                    self?.modifyButton.setTitle("수정하기", for: .normal)
+                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
                 } else {
-                    self?.nextButton.isEnabled = true
-                    self?.nextButton.setTitle("다음으로", for: .normal)
-                    self?.nextButton.setAppearance(appearance: .default)
+                    self?.modifyButton.isEnabled = true
+                    self?.modifyButton.setTitle("수정하기", for: .normal)
+                    self?.modifyButton.setAppearance(appearance: .default)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
     }
 }

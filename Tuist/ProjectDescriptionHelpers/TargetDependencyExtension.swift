@@ -67,17 +67,19 @@ public extension TargetDependency {
     static let composableArchitecture: TargetDependency = .external(name: "ComposableArchitecture")
     static let kakaoSDKAuth: TargetDependency = .external(name: "KakaoSDKAuth")
     static let kakaoSDKUser: TargetDependency = .external(name: "KakaoSDKUser")
+    static let kingfisher: TargetDependency = .external(name: "Kingfisher")
 }
 
 public extension Package {
-    static let RxSwift = Package.remote(url: "https://github.com/ReactiveX/RxSwift", requirement: .upToNextMajor(from: "6.2.0"))
-    static let RxGesture = Package.remote(url: "https://github.com/RxSwiftCommunity/RxGesture.git", requirement: .upToNextMajor(from: "4.0.3"))
+    static let RxSwift: Package = .remote(url: "https://github.com/ReactiveX/RxSwift", requirement: .upToNextMajor(from: "6.2.0"))
+    static let RxGesture: Package = .remote(url: "https://github.com/RxSwiftCommunity/RxGesture.git", requirement: .upToNextMajor(from: "4.0.3"))
     static let moya: Package = .remote(url: "https://github.com/Moya/Moya.git", requirement: .branch("master"))
     static let reactorKit: Package = .remote(url: "https://github.com/ReactorKit/ReactorKit.git", requirement: .branch("master"))
     static let SnapKit: Package = .remote(url: "https://github.com/SnapKit/SnapKit.git", requirement: .upToNextMajor(from: "5.0.1"))
     static let fscalendar: Package = .remote(url: "https://github.com/WenchaoD/FSCalendar.git", requirement: .branch("master"))
     static let composableArchitecture: Package = .remote(url: "https://github.com/pointfreeco/swift-composable-architecture", requirement: .exact("1.0.0"))
     static let kakaoLogin: Package = .remote(url: "https://github.com/kakao/kakao-ios-sdk", requirement: .branch("master"))
+    static let kingfisher: Package = .remote(url: "https://github.com/onevcat/Kingfisher.git", requirement: .upToNextMajor(from: "7.2.0"))
 }
 
 // MARK: SourceFile

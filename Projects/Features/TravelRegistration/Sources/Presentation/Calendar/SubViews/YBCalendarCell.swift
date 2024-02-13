@@ -11,7 +11,7 @@ import DesignSystem
 import SnapKit
 import FSCalendar
 
-enum SelectionType {
+public enum SelectionType {
     case none
     case single
     case leftBorder
@@ -19,14 +19,14 @@ enum SelectionType {
     case rightBorder
 }
 
-class YBCalendarCell: FSCalendarCell {
-    static let identifier = "YBCalendarCell"
+public class YBCalendarCell: FSCalendarCell {
+    public static let identifier = "YBCalendarCell"
     
-    weak var circleImageView: UIImageView?
-    weak var selectionLayer: CAShapeLayer?
-    weak var roundedLayer: CAShapeLayer?
+    public weak var circleImageView: UIImageView?
+    public weak var selectionLayer: CAShapeLayer?
+    public weak var roundedLayer: CAShapeLayer?
 
-    var selectionType: SelectionType = .none {
+    public var selectionType: SelectionType = .none {
         didSet {
             setNeedsLayout()
         }
@@ -60,7 +60,7 @@ class YBCalendarCell: FSCalendarCell {
         self.backgroundView = view
     }
 
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
 
         self.selectionLayer?.frame = self.contentView.bounds

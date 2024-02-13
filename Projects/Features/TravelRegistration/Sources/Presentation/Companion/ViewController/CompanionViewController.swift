@@ -190,9 +190,7 @@ public final class CompanionViewController: UIViewController {
 extension CompanionViewController: CompanionTableViewCellDelegate {
     func changeCompanionName(companion: Companion) {
         guard let indexPath = dataSource?.indexPath(for: .main(companion)) else { return }
-        // 동행자 이미지 타입 api 확인 후 변경
-        let tripUserItemRequest = TripUserItemRequest(name: companion.name, imageType: companion.type)
-        
+        let tripUserItemRequest = TripUserItemRequest(name: companion.name, profileImageUrl: companion.imageUrl)
         let changeCompanionNameReactor = ChangeCompanionNameReactor(tripUserItemRequest: tripUserItemRequest, index: indexPath)
         let changeCompanionNameViewController = ChangeCompanionNameViewController(reactor: changeCompanionNameReactor)
         changeCompanionNameViewController.delegate = self
@@ -241,10 +239,10 @@ extension CompanionViewController: View {
                     break
                 case .companion:
                     let companions = self.reactor.currentState.companions
-                    let tripUserList = companions.map { TripUserItemRequest(name: $0.name, imageType: $0.type) }
+                    let tripUserList = companions.map { TripUserItemRequest(name: $0.name, profileImageUrl: $0.imageUrl) }
                     
                     let currentTripRequest = self.reactor.currentState.tripRequest
-                    let tripRequest = TripRequest(
+                    let tripRequest = RegistTripRequest(
                         title: currentTripRequest.title,
                         startDate: currentTripRequest.startDate,
                         endDate: currentTripRequest.endDate,
@@ -258,7 +256,7 @@ extension CompanionViewController: View {
                     self.navigationController?.pushViewController(travelTitleViewController, animated: true)
                 case .alone:
                     let currentTripRequest = self.reactor.currentState.tripRequest
-                    let tripRequest = TripRequest(
+                    let tripRequest = RegistTripRequest(
                         title: currentTripRequest.title,
                         startDate: currentTripRequest.startDate,
                         endDate: currentTripRequest.endDate,
@@ -340,7 +338,7 @@ extension CompanionViewController: View {
 //MARK: - ChangeCompanionNameViewControllerDelegate
 extension CompanionViewController: ChangeCompanionNameViewControllerDelegate {
     func changedCompanionName(index: IndexPath, tripUserItemRequest: Entity.TripUserItemRequest) {
-        let companion = Companion(name: tripUserItemRequest.name, type: tripUserItemRequest.imageType)
+        let companion = Companion(name: tripUserItemRequest.name, imageUrl: tripUserItemRequest.profileImageUrl)
         reactor.action.onNext(.updateCompanion(companion, index))
     }
 }

@@ -68,9 +68,9 @@ public final class ChangeCompanionNameReactor: Reactor {
     
     private func isValidName(_ text: String) -> Bool {
         // 한글/영문 포함 5자
-        let regex = try! NSRegularExpression(pattern: "^[a-zA-Z가-힣]{0,5}$", options: .caseInsensitive)
+        let regex = try? NSRegularExpression(pattern: "^[a-zA-Z가-힣]{0,5}$", options: .caseInsensitive)
         let range = NSRange(location: 0, length: text.utf16.count)
-        return regex.firstMatch(in: text, options: [], range: range) != nil
+        return regex?.firstMatch(in: text, options: [], range: range) != nil
     }
 
     private func containsSpecialCharacters(_ text: String) -> Bool {

@@ -9,9 +9,15 @@
 import UIKit
 import DesignSystem
 import TravelRegistration
+import Kingfisher
+
+protocol SettingCompanionCellDelegate: AnyObject {
+    func editButtonTapped(companion: Companion)
+}
 
 class SettingCompanionCell: UITableViewCell {
     static let identifier = "SettingCompanionCell"
+    weak var delegate: SettingCompanionCellDelegate?
     
     var companion: Companion? {
         didSet {
@@ -49,6 +55,8 @@ class SettingCompanionCell: UITableViewCell {
     // MARK: - Set UI
     private func setView() {
         selectionStyle = .none
+        
+        editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
     }
     
     private func addViews() {
@@ -78,8 +86,16 @@ class SettingCompanionCell: UITableViewCell {
     }
     
     func configure() {
-        guard let companion else { return }
+        guard let companion,
+              let imageUrl = URL(string: companion.imageUrl) else { return }
+        
         profileNameLabel.text = companion.name
-        profileImageView.image = FaceImageType(rawValue: companion.type)?.iconImage()
+        profileImageView.kf.indicatorType = .activity
+        profileImageView.kf.setImage(with: imageUrl)
+    }
+    
+    @objc func editButtonTapped() {
+        guard let companion else { return }
+        delegate?.editButtonTapped(companion: companion)
     }
 }

@@ -1,8 +1,8 @@
 //
-//  CalendarReactor.swift
-//  TravelRegistration
+//  SettingCalendarReactor.swift
+//  Setting
 //
-//  Created by 박현준 on 1/6/24.
+//  Created by 박현준 on 2/12/24.
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 //
 
@@ -12,7 +12,7 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
-public final class CalendarReactor: Reactor {
+public final class SettingCalendarReactor: Reactor {
     
     public enum Action {
         case startDate(date: Date?)
@@ -30,13 +30,12 @@ public final class CalendarReactor: Reactor {
         var startDate: Date? = nil
         var endDate: Date? = nil
         var selectedDate: [Date] = []
-        var tripRequest: RegistTripRequest
     }
     
     public var initialState: State
     
-    init(tripRequest: RegistTripRequest) {
-        self.initialState = State(tripRequest: tripRequest)
+    init() {
+        self.initialState = State()
     }
     
     // MARK: - Mutate
@@ -67,6 +66,7 @@ public final class CalendarReactor: Reactor {
             newState.endDate = date
         case .selectedDate(dates: let dates):
             newState.selectedDate.append(contentsOf: dates)
+            print(newState.selectedDate)
         }
         
         return newState

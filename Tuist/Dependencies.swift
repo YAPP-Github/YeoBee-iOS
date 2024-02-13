@@ -11,6 +11,7 @@ let dependencies = Dependencies(
             .RxGesture,
             .composableArchitecture,
             .SnapKit,
+            .kingfisher,
             .kakaoLogin
         ],
         productTypes: [
@@ -22,6 +23,7 @@ let dependencies = Dependencies(
             "RxGesture": .framework,
             "ComposableArchitecture": .framework,
             "Snapkit": .framework,
+            "Kingfisher": .framework,
             "kakaoSDKAuth": .framework,
             "kakaoSDKUser": .framework
         ],

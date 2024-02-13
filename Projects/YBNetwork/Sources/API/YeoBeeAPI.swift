@@ -8,9 +8,10 @@
 
 import Foundation
 
-final class YeoBeeAPI {
-    static let shared = YeoBeeAPI()
+public final class YeoBeeAPI {
+    public static let shared = YeoBeeAPI()
     private init() {}
     
     public let baseURL = Bundle.main.object(forInfoDictionaryKey: "BASE_URL") as? String
+    public let baseImageURL = Bundle.main.object(forInfoDictionaryKey: "BASE_IMAGE_URL") as? String
 }

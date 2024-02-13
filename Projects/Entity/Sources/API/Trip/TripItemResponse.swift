@@ -26,6 +26,7 @@ public struct CountryItem: Codable {
 
 public struct TripUserItem: Codable {
     var id: Int
+    var userId: Int
     var name: String
     var profileImageUrl: String?
 }

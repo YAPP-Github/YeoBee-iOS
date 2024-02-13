@@ -63,10 +63,10 @@ public final class SettingReactor: Reactor {
     
     func settingUseCase() {
         let companions: [Companion] = [
-            Companion(uuid: UUID(), name: "짱구", type: "Image1"),
-            Companion(uuid: UUID(), name: "제리", type: "Image2"),
-            Companion(uuid: UUID(), name: "태태", type: "Image3"),
-            Companion(uuid: UUID(), name: "제로", type: "Image4")
+            Companion(uuid: UUID(), name: "짱구", imageUrl: "Image1"),
+            Companion(uuid: UUID(), name: "제리", imageUrl: "Image2"),
+            Companion(uuid: UUID(), name: "태태", imageUrl: "Image3"),
+            Companion(uuid: UUID(), name: "제로", imageUrl: "Image4")
         ]
         
         let currencies: [SettingCurrency] = [

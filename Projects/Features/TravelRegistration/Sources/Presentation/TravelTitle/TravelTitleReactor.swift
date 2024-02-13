@@ -25,12 +25,12 @@ public final class TravelTitleReactor: Reactor {
     
     public struct State {
         var isValidTitleText: Bool = false
-        var tripRequest: TripRequest
+        var tripRequest: RegistTripRequest
     }
     
     public var initialState: State
     
-    init(tripRequest: TripRequest) {
+    init(tripRequest: RegistTripRequest) {
         self.initialState = State(tripRequest: tripRequest)
     }
     

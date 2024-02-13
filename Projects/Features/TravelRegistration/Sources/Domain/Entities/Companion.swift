@@ -11,15 +11,15 @@ import UIKit
 public struct Companion: Hashable {
     public var uuid = UUID()
     public var name: String
-    public var type: String
+    public var imageUrl: String
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
     }
     
-    public init(uuid: UUID = UUID(), name: String, type: String) {
+    public init(uuid: UUID = UUID(), name: String, imageUrl: String) {
         self.uuid = uuid
         self.name = name
-        self.type = type
+        self.imageUrl = imageUrl
     }
 }

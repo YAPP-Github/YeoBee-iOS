@@ -10,6 +10,7 @@ import UIKit
 import DesignSystem
 import RxSwift
 import RxCocoa
+import Kingfisher
 
 protocol CompanionTableViewCellDelegate: AnyObject {
     func changeCompanionName(companion: Companion)
@@ -92,10 +93,12 @@ class CompanionTableViewCell: UITableViewCell {
     }
     
     func configure() {
-        guard let companion = companion else { return }
+        guard let companion = companion,
+              let imageUrl = URL(string: companion.imageUrl) else { return }
         
         profileNameLabel.text = companion.name
-        profileImageView.image = FaceImageType(rawValue: companion.type)?.iconImage()
+        profileImageView.kf.indicatorType = .activity
+        profileImageView.kf.setImage(with: imageUrl)
     }
     
     private func bind() {
@@ -114,4 +117,3 @@ class CompanionTableViewCell: UITableViewCell {
             }.disposed(by: disposeBag)
     }
 }
-
