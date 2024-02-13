@@ -91,9 +91,9 @@ public final class CompanionReactor: Reactor {
         let existingTypes = currentState.companions.compactMap { $0.imageUrl }
         
         var nextNumber = 1
-        while existingTypes.contains("\(YeoBeeAPI.shared.baseImageURL ?? "")/static/user/profile/profile\(nextNumber).svg") {
+        while existingTypes.contains("\(YeoBeeAPI.shared.baseImageURL ?? "")/static/user/profile/profile\(nextNumber).png") {
             nextNumber += 1
         }
-        return "\(YeoBeeAPI.shared.baseImageURL ?? "")/static/user/profile/profile\(nextNumber).svg"
+        return "\(YeoBeeAPI.shared.baseImageURL ?? "")/static/user/profile/profile\(nextNumber).png"
     }
 }
