@@ -11,6 +11,7 @@ import UIKit
 import Coordinator
 
 import ExpenditureEdit
+import Setting
 import Entity
 
 import Dependencies
@@ -99,6 +100,15 @@ extension ExpenditureCoordinator {
         )
         expenditureNavigationController?.tabBarController?.tabBar.isHidden = true
         expenditureNavigationController?.pushViewController(expenditureDetailViewController, animated: true)
+    }
+
+    public func tripSetting() {
+        if let expenditureNavigationController {
+            let settingCoordinator = SettingCoordinator(navigationController: expenditureNavigationController)
+            settingCoordinator.parent = self
+            addChild(settingCoordinator)
+            settingCoordinator.start(animated: true)
+        }
     }
 }
 

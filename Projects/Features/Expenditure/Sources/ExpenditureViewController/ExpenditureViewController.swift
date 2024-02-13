@@ -80,7 +80,7 @@ public final class ExpenditureViewController: UIViewController {
     }
 
     @objc func setButtonTapped() {
-        // 여행 상세
+        coordinator.tripSetting()
     }
 
     func setLayouts() {

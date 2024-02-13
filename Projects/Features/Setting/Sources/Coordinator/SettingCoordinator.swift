@@ -16,7 +16,7 @@ final public class SettingCoordinator: SettingCoordinatorInterface {
     public var settingNavigationController: UINavigationController?
     public var viewControllerRef: UIViewController?
     public var childCoordinators = [Coordinator]()
-    public var parent: HomeCoordinatorInterface?
+    public var parent: ExpenditureCoordinatorInterface?
 
     public init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -25,7 +25,7 @@ final public class SettingCoordinator: SettingCoordinatorInterface {
     public func start(animated: Bool) {
         let settingReactor = SettingReactor()
         let settingViewController = UINavigationController(
-            rootViewController: SettingViewController(coordinator: self,reactor: settingReactor)
+            rootViewController: SettingViewController(coordinator: self, reactor: settingReactor)
         )
         settingViewController.modalPresentationStyle = .overFullScreen
         settingNavigationController = settingViewController
@@ -33,6 +33,7 @@ final public class SettingCoordinator: SettingCoordinatorInterface {
     }
 
     public func coordinatorDidFinish() {
+        settingNavigationController?.dismiss(animated: true)
         settingNavigationController = nil
         parent?.childDidFinish(self)
     }

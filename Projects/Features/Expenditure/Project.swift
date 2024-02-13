@@ -28,7 +28,8 @@ let project = Project(
                 .coordinator,
                 .expenditureEdit,
                 .usecase,
-                .ybdependency
+                .ybdependency,
+                .setting
             ]
         ),
         Project.target(
