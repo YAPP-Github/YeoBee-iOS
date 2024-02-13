@@ -22,7 +22,7 @@ extension ExpendCategory {
         case .lodge: return DesignSystemAsset.Icons.stay.swiftUIImage
         case .transport: return DesignSystemAsset.Icons.transition.swiftUIImage
         case .travel: return DesignSystemAsset.Icons.travel.swiftUIImage
-        case .income: return DesignSystemAsset.Icons.travel.swiftUIImage
+        case .income: return DesignSystemAsset.Icons.income.swiftUIImage
         }
     }
 

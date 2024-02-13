@@ -22,13 +22,18 @@ public class CurrencyBottomSheetViewController: YBBottomSheetViewController {
     public init(
         coordinator: ExpenditureAddCoordinator,
         currenyList: [Currency],
-        selectedCurrency: Currency
+        selectedCurrency: Currency,
+        expenseType: ExpenseType
     ) {
         self.coordinator = coordinator
         self.currencyBottomSheetHostingController = CurrencyBottomSheetHostingController(
             rootView: .init(
                 store: .init(
-                    initialState: .init(currencyList: currenyList, selectedCurrency: selectedCurrency),
+                    initialState: .init(
+                        currencyList: currenyList,
+                        selectedCurrency: selectedCurrency,
+                        expenseType: expenseType
+                    ),
                     reducer: {
                         CurrencySheetReducer(cooridinator: coordinator)
                     }

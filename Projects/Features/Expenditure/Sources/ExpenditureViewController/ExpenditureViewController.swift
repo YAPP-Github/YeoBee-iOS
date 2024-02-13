@@ -65,14 +65,22 @@ public final class ExpenditureViewController: UIViewController {
     }
 
     func setNavigationBar() {
-        let backImage = DesignSystemAsset.Icons.home.image
-            .withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
+        let backImage = DesignSystemAsset.Icons.delete.image
+            .withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        let setImage = DesignSystemAsset.Icons.set.image
+            .withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
+        let setButton = UIBarButtonItem(image: setImage, style: .plain, target: self, action: #selector(setButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
+        self.navigationItem.rightBarButtonItem = setButton
     }
 
     @objc func backButtonTapped() {
         coordinator.coordinatorDidFinish()
+    }
+
+    @objc func setButtonTapped() {
+        // 여행 상세
     }
 
     func setLayouts() {

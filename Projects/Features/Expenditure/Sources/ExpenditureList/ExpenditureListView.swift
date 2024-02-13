@@ -25,7 +25,8 @@ extension ExpenditureListView {
         WithViewStore(store, observe: { $0 }) { viewStore in
             if viewStore.isEmpty {
                 VStack(spacing: 20) {
-                    Spacer()
+                    Color.clear
+                        .frame(height: 40)
                     DesignSystemAsset.Icons.emptyImage.swiftUIImage
                         .frame(width: 95, height: 84)
                     Text("내역이 없어요.")
