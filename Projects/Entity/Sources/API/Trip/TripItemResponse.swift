@@ -24,9 +24,16 @@ public struct CountryItem: Codable, Hashable {
     public var coverImageUrl: String
 }
 
-public struct TripUserItem: Codable, Hashable {
+public struct TripUserItem: Codable, Hashable, Identifiable {
     public var id: Int
     public var userId: Int
     public var name: String?
     public var profileImageUrl: String?
+
+    public init(id: Int, userId: Int, name: String? = nil, profileImageUrl: String? = nil) {
+        self.id = id
+        self.userId = userId
+        self.name = name
+        self.profileImageUrl = profileImageUrl
+    }
 }
