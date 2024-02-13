@@ -21,7 +21,7 @@ final public class CreateAccountCoordinator: CreateAccountCoordinatorInterface {
         self.navigationController = navigationController
     }
     
-    public func start(animated: Bool) {
+    public func start(animated: Bool = false) {
         DispatchQueue.main.async {
             let createAccountViewController = CreateAccountViewController()
             let reactor = CreateAccountReactor()

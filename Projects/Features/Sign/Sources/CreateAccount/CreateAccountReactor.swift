@@ -95,6 +95,8 @@ public final class CreateAccountReactor: Reactor {
     private func updateUserInfo() async throws -> Void {
         let nickname = currentState.nickname
         let request = UpdateUserInfoRequest(nickname: nickname)
+        let stateRequest = UpdateUserStateRequest(userState: .onboardingCompleted)
         try await userInfoRepository.updateUserInfo(request: request)
+        try await userInfoRepository.updateUserState(request: stateRequest)
     }
 }
