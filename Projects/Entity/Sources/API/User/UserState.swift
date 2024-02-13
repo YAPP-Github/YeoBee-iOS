@@ -10,5 +10,5 @@ import Foundation
 
 public enum UserState: String, Codable, Equatable {
     case onboardingNeeded = "ONBOARDING_NEEDED"
-    case onboardingCompleted = "ONBOARD_COMPLETED"
+    case onboardingCompleted = "ONBOARDING_COMPLETE"
 }
