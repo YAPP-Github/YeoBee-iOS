@@ -24,9 +24,9 @@ extension UserInfoService: TargetType {
             case .updateInfo:
                 return "/v1/users/me"
             case .updateState:
-                return "/v1/user/me/state"
+                return "/v1/users/me/state"
             case .fetchInfo:
-                return "/v1/user/me"
+                return "/v1/users/me"
         }
     }
     
