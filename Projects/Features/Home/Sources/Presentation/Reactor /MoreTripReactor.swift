@@ -16,15 +16,15 @@ import RxCocoa
 public final class MoreTripReactor: Reactor {
     
     public enum Action {
-        case trips([Trip])
+        case trips([TripItem])
     }
     
     public enum Mutation {
-        case trips([Trip])
+        case trips([TripItem])
     }
     
     public struct State {
-        var trips: [Trip] = []
+        var trips: [TripItem] = []
         var tripType: TripType
     }
     
@@ -60,53 +60,20 @@ public final class MoreTripReactor: Reactor {
         case .traveling:
             Task {
                 let presentResult = try await tripUseCase.getPresentTrip(0, 1)
-                
-                let trips = presentResult.content.compactMap { content in
-                    Trip(
-                        countries: content.countryList.compactMap { $0.name },
-                        coverImageURL: content.countryList.first?.coverImageUrl ?? "",
-                        flagImageURL: content.countryList.first?.flagImageUrl ?? "",
-                        title: content.title,
-                        startDate: content.startDate,
-                        endDate: content.endDate
-                    )
-                }
-
-                self.action.onNext(.trips(trips))
+                let tripItems = presentResult.content
+                self.action.onNext(.trips(tripItems))
             }
         case .coming:
             Task {
                 let futureResult = try await tripUseCase.getFutureTrip(0, 1)
-                
-                let trips = futureResult.content.compactMap { content in
-                    Trip(
-                        countries: content.countryList.compactMap { $0.name },
-                        coverImageURL: content.countryList.first?.coverImageUrl ?? "",
-                        flagImageURL: content.countryList.first?.flagImageUrl ?? "",
-                        title: content.title,
-                        startDate: content.startDate,
-                        endDate: content.endDate
-                    )
-                }
-                
-                self.action.onNext(.trips(trips))
+                let tripItems = futureResult.content
+                self.action.onNext(.trips(tripItems))
             }
         case .passed:
             Task {
                 let pastResult = try await tripUseCase.getPastTrip(0, 1)
-                
-                let trips = pastResult.content.compactMap { content in
-                    Trip(
-                        countries: content.countryList.compactMap { $0.name },
-                        coverImageURL: content.countryList.first?.coverImageUrl ?? "",
-                        flagImageURL: content.countryList.first?.flagImageUrl ?? "",
-                        title: content.title,
-                        startDate: content.startDate,
-                        endDate: content.endDate
-                    )
-                }
-
-                self.action.onNext(.trips(trips))
+                let tripItems = pastResult.content
+                self.action.onNext(.trips(tripItems))
             }
         }
     }

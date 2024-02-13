@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import SnapKit
 
 final class HomeCollectionViewCell: UICollectionViewCell {
@@ -128,13 +129,13 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configure(trip: Trip) {
-        titleLabel.text = trip.title
-        dateLabel.text = "\(trip.startDate) - \(trip.endDate)"
-        countryLabel.text = trip.countries.first
+    func configure(tripItem: TripItem) {
+        titleLabel.text = tripItem.title
+        dateLabel.text = "\(tripItem.startDate) - \(tripItem.endDate)"
+        countryLabel.text = tripItem.countryList.first?.name
         countryImageView.image = UIImage(systemName: "xmark")
-        if trip.countries.count-1 > 0 {
-            otherCountryLabel.text = "외 \(trip.countries.count-1)개국"
+        if tripItem.countryList.count-1 > 0 {
+            otherCountryLabel.text = "외 \(tripItem.countryList.count-1)개국"
         } else {
             otherCountryLabel.text = ""
         }

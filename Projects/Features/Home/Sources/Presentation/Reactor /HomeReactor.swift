@@ -8,6 +8,7 @@
 
 import UIKit
 import UseCase
+import Entity
 import ComposableArchitecture
 
 import ReactorKit
@@ -17,21 +18,21 @@ import RxCocoa
 public final class HomeReactor: Reactor {
     
     public enum Action {
-        case travelingTrip([Trip])
-        case comingTrip([Trip])
-        case passedTrip([Trip])
+        case travelingTrip([TripItem])
+        case comingTrip([TripItem])
+        case passedTrip([TripItem])
     }
     
     public enum Mutation {
-        case travelingTrip([Trip])
-        case comingTrip([Trip])
-        case passedTrip([Trip])
+        case travelingTrip([TripItem])
+        case comingTrip([TripItem])
+        case passedTrip([TripItem])
     }
     
     public struct State {
-        var travelingTrip: [Trip] = []
-        var comingTrip: [Trip] = []
-        var passedTrip: [Trip] = []
+        var travelingTrip: [TripItem] = []
+        var comingTrip: [TripItem] = []
+        var passedTrip: [TripItem] = []
     }
     
     @Dependency(\.tripUseCase) var tripUseCase
@@ -58,12 +59,12 @@ public final class HomeReactor: Reactor {
         var newState = state
         
         switch mutation {
-        case .travelingTrip(let trips):
-            newState.travelingTrip = trips
-        case .comingTrip(let trips):
-            newState.comingTrip = trips
-        case .passedTrip(let trips):
-            newState.passedTrip = trips
+        case .travelingTrip(let tripItems):
+            newState.travelingTrip = tripItems
+        case .comingTrip(let tripItems):
+            newState.comingTrip = tripItems
+        case .passedTrip(let tripItems):
+            newState.passedTrip = tripItems
         }
         
         return newState
@@ -72,53 +73,20 @@ public final class HomeReactor: Reactor {
     func homeTripUseCase() {
         Task {
             let pastResult = try await tripUseCase.getPastTrip(0, 1)
-            
-            let trips = pastResult.content.compactMap { content in
-                Trip(
-                    countries: content.countryList.compactMap { $0.name },
-                    coverImageURL: content.countryList.first?.coverImageUrl ?? "",
-                    flagImageURL: content.countryList.first?.flagImageUrl ?? "",
-                    title: content.title,
-                    startDate: content.startDate,
-                    endDate: content.endDate
-                )
-            }
-
-            self.action.onNext(.passedTrip(trips))
+            let tripItems = pastResult.content
+            self.action.onNext(.passedTrip(tripItems))
         }
         
         Task {
             let presentResult = try await tripUseCase.getPresentTrip(0, 1)
-            
-            let trips = presentResult.content.compactMap { content in
-                Trip(
-                    countries: content.countryList.compactMap { $0.name },
-                    coverImageURL: content.countryList.first?.coverImageUrl ?? "",
-                    flagImageURL: content.countryList.first?.flagImageUrl ?? "",
-                    title: content.title,
-                    startDate: content.startDate,
-                    endDate: content.endDate
-                )
-            }
-
-            self.action.onNext(.travelingTrip(trips))
+            let tripItems = presentResult.content
+            self.action.onNext(.travelingTrip(tripItems))
         }
         
         Task {
             let futureResult = try await tripUseCase.getFutureTrip(0, 1)
-            
-            let trips = futureResult.content.compactMap { content in
-                Trip(
-                    countries: content.countryList.compactMap { $0.name },
-                    coverImageURL: content.countryList.first?.coverImageUrl ?? "",
-                    flagImageURL: content.countryList.first?.flagImageUrl ?? "",
-                    title: content.title,
-                    startDate: content.startDate,
-                    endDate: content.endDate
-                )
-            }
-            
-            self.action.onNext(.comingTrip(trips))
+            let tripItems = futureResult.content
+            self.action.onNext(.comingTrip(tripItems))
         }
     }
 }

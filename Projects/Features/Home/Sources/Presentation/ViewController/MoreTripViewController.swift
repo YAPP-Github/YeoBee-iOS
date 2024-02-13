@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import SnapKit
 import ReactorKit
 import RxSwift
@@ -19,7 +20,7 @@ enum MoreTripSection: CaseIterable {
 }
 
 enum MoreTripDataItem: Hashable {
-    case main(Trip)
+    case main(TripItem)
 }
 
 public final class MoreTripViewController: UIViewController {
@@ -70,9 +71,9 @@ public final class MoreTripViewController: UIViewController {
     private func setDataSource() {
         dataSource = UICollectionViewDiffableDataSource<MoreTripSection, MoreTripDataItem>(collectionView: moreTripCollectionView) { (collectionView, indexPath, moreTripItem) -> UICollectionViewCell? in
             switch moreTripItem {
-            case .main(let trip):
+            case .main(let tripItem):
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath) as? HomeCollectionViewCell else { return UICollectionViewCell() }
-                cell.configure(trip: trip)
+                cell.configure(tripItem: tripItem)
                 return cell
             }
         }
@@ -80,10 +81,10 @@ public final class MoreTripViewController: UIViewController {
         moreTripCollectionView.dataSource = dataSource
     }
     
-    func configureSnapshot(trips: [Trip]) {
+    func configureSnapshot(tripItems: [TripItem]) {
         var snapshot = NSDiffableDataSourceSnapshot<MoreTripSection, MoreTripDataItem>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(trips.map { .main($0) }, toSection: .main)
+        snapshot.appendItems(tripItems.map { .main($0) }, toSection: .main)
         self.dataSource?.apply(snapshot, animatingDifferences: false)
     }
     
@@ -117,7 +118,8 @@ extension MoreTripViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UICollectionViewDelegate
 extension MoreTripViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        coordinator.trip()
+        let tripItem = reactor.currentState.trips[indexPath.row]
+        coordinator.trip(tripItem: tripItem)
     }
 }
 
@@ -145,13 +147,15 @@ extension MoreTripViewController: View {
                 case .passed:
                     self?.title = "지난 여행"
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.trips }
             .observe(on: MainScheduler.instance)
-            .bind { [weak self] trips in
-                self?.configureSnapshot(trips: trips)
-            }.disposed(by: disposeBag)
+            .bind { [weak self] tripItems in
+                self?.configureSnapshot(tripItems: tripItems)
+            }
+            .disposed(by: disposeBag)
     }
 }
