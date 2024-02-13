@@ -10,4 +10,8 @@ import Foundation
 
 public struct UpdateUserStateRequest: Codable {
     public var userState: UserState
+    
+    public init(userState: UserState) {
+        self.userState = userState
+    }
 }
