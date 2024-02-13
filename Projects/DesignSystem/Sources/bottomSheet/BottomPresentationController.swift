@@ -116,7 +116,7 @@ class BottomSheetTransitioningDelegate: NSObject, UIViewControllerTransitioningD
     }
 }
 
-extension UIViewController {
+public extension UIViewController {
     func presentBottomSheet(presentedViewController: UIViewController, height: CGFloat) {
         let overlayTransitioningDelegate = BottomSheetTransitioningDelegate()
         overlayTransitioningDelegate.height = height

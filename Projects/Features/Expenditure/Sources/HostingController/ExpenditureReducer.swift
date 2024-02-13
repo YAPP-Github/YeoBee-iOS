@@ -95,6 +95,8 @@ public struct ExpenditureReducer: Reducer {
                 return .run { send in
                     let expenseItems = try await expenseUseCase.getExpenseList(1, tripDate)
                     await send(.expenditureList(.setExpenditures(expenseItems)))
+                } catch: { error, send in
+                    print(error)
                 }
 
             case .tappedAddButton:

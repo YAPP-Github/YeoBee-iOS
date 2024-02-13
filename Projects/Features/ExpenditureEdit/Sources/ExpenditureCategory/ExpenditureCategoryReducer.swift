@@ -39,7 +39,9 @@ public struct ExpenditureCategoryReducer: Reducer {
                     state.categoryItems.updateOrAppend(.init(category: category, isSelected: category == selectedCategory))
                 }
                 state.selectedCategory = selectedCategory
-                state.text = selectedCategory?.text ?? ""
+                if state.text.isEmpty {
+                    state.text = selectedCategory?.text ?? ""
+                }
                 return .none
                 
             case .binding(\.$text):

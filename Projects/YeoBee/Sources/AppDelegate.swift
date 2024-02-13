@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         let navigationController = UINavigationController()
+        navigationController.hidesBottomBarWhenPushed = true
         let coordinator = RootCoordinator(navigationController: navigationController)
         coordinator.start(animated: false)
         window?.overrideUserInterfaceStyle = .light

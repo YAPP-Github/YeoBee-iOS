@@ -9,10 +9,12 @@ import UIKit
 import DesignSystem
 import SnapKit
 import ComposableArchitecture
+import Entity
 
 public final class ExpenditureAddViewController: UIViewController {
 
     let coordinator: ExpenditureAddCoordinator
+    let store: StoreOf<ExpenditureReducer>
     let editDate: Date
 
     // MARK: View
@@ -21,14 +23,16 @@ public final class ExpenditureAddViewController: UIViewController {
 
     public init(coordinator: ExpenditureAddCoordinator, tripId: Int, editDate: Date) {
         self.coordinator = coordinator
+        let store: StoreOf<ExpenditureReducer> = .init(
+            initialState: .init(seletedExpenditureType: .shared, tripId: tripId, editDate: editDate),
+            reducer: {
+                ExpenditureReducer(cooridinator: coordinator)
+            }
+        )
+        self.store = store
         self.expenditureHostingController = ExpenditureAddHostingController(
             rootView: ExpenditureAddView(
-                store: .init(
-                    initialState: .init(seletedExpenditureType: .shared, tripId: tripId, editDate: editDate),
-                    reducer: {
-                        ExpenditureReducer(cooridinator: coordinator)
-                    }
-                )
+                store: store
             )
         )
         self.editDate = editDate
@@ -93,5 +97,11 @@ public final class ExpenditureAddViewController: UIViewController {
 
     deinit {
         print("ExpenditureAddViewController deinit")
+    }
+}
+
+extension ExpenditureAddViewController {
+    func selectCurrency(currency: Currency) {
+        store.send(.expenditureEdit(.expenditureInput(.setCurrency(currency))))
     }
 }
