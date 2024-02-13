@@ -9,6 +9,7 @@
 import UIKit
 import Entity
 import ReactorKit
+import ComposableArchitecture
 import RxSwift
 import RxCocoa
 
@@ -27,6 +28,7 @@ public final class MoreTripReactor: Reactor {
         var tripType: TripType
     }
     
+    @Dependency(\.tripUseCase) var tripUseCase
     public var initialState: State
     
     init(tripType: TripType) {
@@ -56,14 +58,56 @@ public final class MoreTripReactor: Reactor {
     func moreTripUseCase() {
         switch currentState.tripType {
         case .traveling:
-            let travelingTrip: [Trip] = TripDummy.traveling.getTrips()
-            action.onNext(.trips(travelingTrip))
+            Task {
+                let presentResult = try await tripUseCase.getPresentTrip(0, 1)
+                
+                let trips = presentResult.content.compactMap { content in
+                    Trip(
+                        countries: content.countryList.compactMap { $0.name },
+                        coverImageURL: content.countryList.first?.coverImageUrl ?? "",
+                        flagImageURL: content.countryList.first?.flagImageUrl ?? "",
+                        title: content.title,
+                        startDate: content.startDate,
+                        endDate: content.endDate
+                    )
+                }
+
+                self.action.onNext(.trips(trips))
+            }
         case .coming:
-            let comingTrip: [Trip] = TripDummy.coming.getTrips()
-            action.onNext(.trips(comingTrip))
+            Task {
+                let futureResult = try await tripUseCase.getFutureTrip(0, 1)
+                
+                let trips = futureResult.content.compactMap { content in
+                    Trip(
+                        countries: content.countryList.compactMap { $0.name },
+                        coverImageURL: content.countryList.first?.coverImageUrl ?? "",
+                        flagImageURL: content.countryList.first?.flagImageUrl ?? "",
+                        title: content.title,
+                        startDate: content.startDate,
+                        endDate: content.endDate
+                    )
+                }
+                
+                self.action.onNext(.trips(trips))
+            }
         case .passed:
-            let passedTrip: [Trip] = TripDummy.passed.getTrips()
-            action.onNext(.trips(passedTrip))
+            Task {
+                let pastResult = try await tripUseCase.getPastTrip(0, 1)
+                
+                let trips = pastResult.content.compactMap { content in
+                    Trip(
+                        countries: content.countryList.compactMap { $0.name },
+                        coverImageURL: content.countryList.first?.coverImageUrl ?? "",
+                        flagImageURL: content.countryList.first?.flagImageUrl ?? "",
+                        title: content.title,
+                        startDate: content.startDate,
+                        endDate: content.endDate
+                    )
+                }
+
+                self.action.onNext(.trips(trips))
+            }
         }
     }
 }

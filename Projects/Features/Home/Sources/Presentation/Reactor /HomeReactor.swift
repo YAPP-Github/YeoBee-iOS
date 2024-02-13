@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import UseCase
+import ComposableArchitecture
+
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -31,7 +34,12 @@ public final class HomeReactor: Reactor {
         var passedTrip: [Trip] = []
     }
     
-    public var initialState: State = State()
+    @Dependency(\.tripUseCase) var tripUseCase
+    public var initialState: State
+    
+    public init() {
+        self.initialState = State()
+    }
     
     // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {
@@ -62,12 +70,55 @@ public final class HomeReactor: Reactor {
     }
     
     func homeTripUseCase() {
-        let travelingTrip: [Trip] = TripDummy.traveling.getTrips()
-        let comingTrip: [Trip] = TripDummy.coming.getTrips()
-        let passedTrip: [Trip] = TripDummy.passed.getTrips()
+        Task {
+            let pastResult = try await tripUseCase.getPastTrip(0, 1)
+            
+            let trips = pastResult.content.compactMap { content in
+                Trip(
+                    countries: content.countryList.compactMap { $0.name },
+                    coverImageURL: content.countryList.first?.coverImageUrl ?? "",
+                    flagImageURL: content.countryList.first?.flagImageUrl ?? "",
+                    title: content.title,
+                    startDate: content.startDate,
+                    endDate: content.endDate
+                )
+            }
+
+            self.action.onNext(.passedTrip(trips))
+        }
         
-        self.action.onNext(.travelingTrip(travelingTrip))
-        self.action.onNext(.comingTrip(comingTrip))
-        self.action.onNext(.passedTrip(passedTrip))
+        Task {
+            let presentResult = try await tripUseCase.getPresentTrip(0, 1)
+            
+            let trips = presentResult.content.compactMap { content in
+                Trip(
+                    countries: content.countryList.compactMap { $0.name },
+                    coverImageURL: content.countryList.first?.coverImageUrl ?? "",
+                    flagImageURL: content.countryList.first?.flagImageUrl ?? "",
+                    title: content.title,
+                    startDate: content.startDate,
+                    endDate: content.endDate
+                )
+            }
+
+            self.action.onNext(.travelingTrip(trips))
+        }
+        
+        Task {
+            let futureResult = try await tripUseCase.getFutureTrip(0, 1)
+            
+            let trips = futureResult.content.compactMap { content in
+                Trip(
+                    countries: content.countryList.compactMap { $0.name },
+                    coverImageURL: content.countryList.first?.coverImageUrl ?? "",
+                    flagImageURL: content.countryList.first?.flagImageUrl ?? "",
+                    title: content.title,
+                    startDate: content.startDate,
+                    endDate: content.endDate
+                )
+            }
+            
+            self.action.onNext(.comingTrip(trips))
+        }
     }
 }
