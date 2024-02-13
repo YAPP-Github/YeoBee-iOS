@@ -9,28 +9,19 @@
 import UIKit
 import DesignSystem
 import Entity
+import Kingfisher
 import SnapKit
 
 final class HomeCollectionViewCell: UICollectionViewCell {
     static let identifier = "HomeCollectionViewCell"
     // MARK: - Properties
     private let backgroundImageView: UIImageView = {
-        $0.backgroundColor = .systemPink
-        $0.contentMode = .scaleAspectFit
+        $0.contentMode = .scaleAspectFill
         return $0
     }(UIImageView())
     
-    private let titleLabel: UILabel = {
-        $0.font = YBFont.body1.font
-        $0.textColor = YBColor.black.color
-        return $0
-    }(UILabel())
-    
-    private let dateLabel: UILabel = {
-        $0.font = YBFont.body3.font
-        $0.textColor = YBColor.gray6.color
-        return $0
-    }(UILabel())
+    private let titleLabel = YBLabel(font: .body1, textColor: .black)
+    private let dateLabel = YBLabel(font: .body3, textColor: .gray6)
     
     private let countryImageView: UIImageView = {
         $0.layer.cornerRadius = 4
@@ -39,17 +30,8 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         return $0
     }(UIImageView())
     
-    private let countryLabel: UILabel = {
-        $0.font = YBFont.header2.font
-        $0.textColor = .white
-        return $0
-    }(UILabel())
-    
-    private let otherCountryLabel: UILabel = {
-        $0.font = YBFont.body1.font
-        $0.textColor = .white
-        return $0
-    }(UILabel())
+    private let countryLabel = YBLabel(font: .header2, textColor: .white)
+    private let otherCountryLabel = YBLabel(font: .body1, textColor: .white)
     
     private let stackView: UIStackView = {
         $0.axis = .horizontal
@@ -130,10 +112,17 @@ final class HomeCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(tripItem: TripItem) {
+        guard let firstCountry = tripItem.countryList.first,
+              let coverImageUrl = URL(string: firstCountry.coverImageUrl),
+              let flagImageUrl = URL(string: firstCountry.flagImageUrl) else { return }
+              
         titleLabel.text = tripItem.title
         dateLabel.text = "\(tripItem.startDate) - \(tripItem.endDate)"
-        countryLabel.text = tripItem.countryList.first?.name
-        countryImageView.image = UIImage(systemName: "xmark")
+        countryLabel.text = firstCountry.name
+        backgroundImageView.kf.indicatorType = .activity
+        countryImageView.kf.indicatorType = .activity
+        backgroundImageView.kf.setImage(with: coverImageUrl)
+        countryImageView.kf.setImage(with: flagImageUrl)
         if tripItem.countryList.count-1 > 0 {
             otherCountryLabel.text = "외 \(tripItem.countryList.count-1)개국"
         } else {
