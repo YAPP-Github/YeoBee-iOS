@@ -25,7 +25,9 @@ let project = Project(
                 .reactorKit,
                 .fscalendar,
                 .coordinator,
-                .entity
+                .entity,
+                .ybnetwork,
+                .kingfisher
             ]
         ),
         Project.target(

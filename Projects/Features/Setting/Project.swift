@@ -23,7 +23,8 @@ let project = Project(
                 .RxCocoa,
                 .reactorKit,
                 .travelRegistration,
-                .fscalendar
+                .fscalendar,
+                .kingfisher
             ]
         ),
         Project.target(

@@ -24,7 +24,8 @@ let project = Project(
                 .RxGesture,
                 .reactorKit,
                 .travelRegistration,
-                .trip
+                .trip,
+                .kingfisher
             ]
         ),
         Project.target(

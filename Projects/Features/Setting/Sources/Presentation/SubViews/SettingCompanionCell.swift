@@ -9,6 +9,7 @@
 import UIKit
 import DesignSystem
 import TravelRegistration
+import Kingfisher
 
 protocol SettingCompanionCellDelegate: AnyObject {
     func editButtonTapped(companion: Companion)
@@ -85,9 +86,12 @@ class SettingCompanionCell: UITableViewCell {
     }
     
     func configure() {
-        guard let companion else { return }
+        guard let companion,
+              let imageUrl = URL(string: companion.imageUrl) else { return }
+        
         profileNameLabel.text = companion.name
-        profileImageView.image = FaceImageType(rawValue: companion.type)?.iconImage()
+        profileImageView.kf.indicatorType = .activity
+        profileImageView.kf.setImage(with: imageUrl)
     }
     
     @objc func editButtonTapped() {
