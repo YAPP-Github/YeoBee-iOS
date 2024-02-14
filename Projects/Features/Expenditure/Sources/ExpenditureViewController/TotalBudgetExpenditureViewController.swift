@@ -23,8 +23,6 @@ public final class TotalBudgetExpenditureViewController: UIViewController {
 
     private let totalBudgetHostingController: TotalBudgetHostingController
 
-//    // MARK: DataSources
-
     public init(coordinator: ExpenditureCoordinator, expenseType: ExpenditureTab) {
 
         self.coordinator = coordinator
@@ -81,4 +79,3 @@ public final class TotalBudgetExpenditureViewController: UIViewController {
         print("ExpenditureViewController is de-initialized.")
     }
 }
-
