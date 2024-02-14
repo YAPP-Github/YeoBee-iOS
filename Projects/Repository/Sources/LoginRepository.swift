@@ -13,7 +13,7 @@ import Entity
 
 public protocol LoginRepositoryInterface {
     func loginWithKakao(token: String) async throws -> AuthTokenResponse
-    func loginWithApple()
+    func loginWithApple(code: String, idToken: String) async throws -> AuthTokenResponse
     func logout()
 }
 
@@ -30,8 +30,11 @@ final public class LoginRepository: LoginRepositoryInterface {
         return authTokenResponse
     }
     
-    public func loginWithApple() {
-        // apple login
+    public func loginWithApple(code: String, idToken: String) async throws -> AuthTokenResponse {
+        let response = try await provider.request(.appleLogin(code: code, idToken: idToken)).get()
+        let authTokenResponse = try JSONDecoder().decode(AuthTokenResponse.self, from: response.data)
+        
+        return authTokenResponse
     }
     
     public func logout() {
