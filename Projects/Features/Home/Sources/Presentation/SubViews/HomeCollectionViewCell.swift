@@ -115,7 +115,7 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         guard let firstCountry = tripItem.countryList.first,
               let coverImageUrl = URL(string: firstCountry.coverImageUrl),
               let flagImageUrl = URL(string: firstCountry.flagImageUrl) else { return }
-              
+        
         titleLabel.text = tripItem.title
         dateLabel.text = "\(tripItem.startDate) - \(tripItem.endDate)"
         countryLabel.text = firstCountry.name
@@ -123,10 +123,16 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         countryImageView.kf.indicatorType = .activity
         backgroundImageView.kf.setImage(with: coverImageUrl)
         countryImageView.kf.setImage(with: flagImageUrl)
-        if tripItem.countryList.count-1 > 0 {
+        if tripItem.countryList.count > 1 {
             otherCountryLabel.text = "외 \(tripItem.countryList.count-1)개국"
         } else {
             otherCountryLabel.text = ""
+        }
+        
+        let tripUsersView = TripUsersHostingController(rootView: TripUsersView(tripUsers: tripItem.tripUserList)).view
+        backgroundImageView.addSubview(tripUsersView ?? UIView())
+        tripUsersView?.snp.makeConstraints { make in
+            make.top.trailing.equalToSuperview().inset(22)
         }
     }
 }
