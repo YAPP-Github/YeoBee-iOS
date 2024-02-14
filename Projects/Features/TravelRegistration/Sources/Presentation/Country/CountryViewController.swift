@@ -298,7 +298,8 @@ extension CountryViewController: View {
                 let calendarReactor = CalendarReactor(tripRequest: tripRequest)
                 let calendarViewController = CalendarViewController(coordinator: self.coordinator, reactor: calendarReactor)
                 self.navigationController?.pushViewController(calendarViewController, animated: true)
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
     }
     
     func bindState(reactor: CountryReactor) {
@@ -315,7 +316,8 @@ extension CountryViewController: View {
             .observe(on: MainScheduler.instance)
             .bind { [weak self] dataCountry in
                 self?.configureSnapshot(dc: dataCountry)
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.selectedCountries }
@@ -342,7 +344,19 @@ extension CountryViewController: View {
                     self?.nextButton.isEnabled = true
                     self?.setSelectedCountryViewLayout(isEmpty: false)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.makeLimitToast }
+            .observe(on: MainScheduler.instance)
+            .bind { makeToast in
+                if makeToast {
+                    let toast = Toast.text(icon: .warning, "최대 20개 나라를 선택할 수 있어요.")
+                    toast.show()
+                }
+            }
+            .disposed(by: disposeBag)
     }
 }
 

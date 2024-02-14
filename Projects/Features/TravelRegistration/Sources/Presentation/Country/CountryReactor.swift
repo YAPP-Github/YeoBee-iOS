@@ -36,6 +36,7 @@ public final class CountryReactor: Reactor {
         var totalCountries: DataCountry = DataCountry(europe: [], asia: [], northAmerica: [], southAmerica: [], oceania: [], africa: [])
         var countries: DataCountry = DataCountry(europe: [], asia: [], northAmerica: [], southAmerica: [], oceania: [], africa: [])
         var selectedCountries: [Country] = []
+        var makeLimitToast: Bool = false
     }
     
     @Dependency(\.countryUseCase) var countryUseCase
@@ -70,6 +71,7 @@ public final class CountryReactor: Reactor {
         
         switch mutation {
         case .searchBarText(text: let searchText):
+            newState.makeLimitToast = false
             let filteredEurope = state.totalCountries.europe.filter { $0.name.contains(searchText) }
             let filteredAsia = state.totalCountries.asia.filter { $0.name.contains(searchText) }
             let filteredNorthAmerica = state.totalCountries.northAmerica.filter { $0.name.contains(searchText) }
@@ -95,6 +97,7 @@ public final class CountryReactor: Reactor {
                     africa: state.totalCountries.africa)
             }
         case .typeButtonTapped(title: let title):
+            newState.makeLimitToast = false
             switch title {
             case CountryType.total.rawValue:
                 newState.countries = DataCountry(
@@ -156,14 +159,20 @@ public final class CountryReactor: Reactor {
                 break
             }
         case .checkedButtonTapped(country: let country):
+            newState.makeLimitToast = false
             if let selectedCountryIndex = newState.selectedCountries.firstIndex(where: { $0.name == country.name }) {
                 newState.selectedCountries.remove(at: selectedCountryIndex)
             } else {
+                if newState.selectedCountries.count >= 20 {
+                    newState.makeLimitToast = true
+                    break
+                }
                 newState.selectedCountries.append(country)
             }
         case .deletedCountry(country: let country):
             if let selectedCountryIndex = newState.selectedCountries.firstIndex(where: { $0.name == country.name }) {
                 newState.selectedCountries.remove(at: selectedCountryIndex)
+                newState.makeLimitToast = false
             }
         case .initCountry(countryListResponse: let countryListResponse):
             var newTotalCountries = DataCountry(
