@@ -98,7 +98,7 @@ final class HomeCollectionViewCell: UICollectionViewCell {
             make.height.equalToSuperview().multipliedBy(0.61)
         }
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(backgroundImageView.snp.bottom).inset(-20)
+            make.top.equalTo(backgroundImageView.snp.bottom).inset(-25)
             make.leading.equalToSuperview().inset(20)
         }
         dateLabel.snp.makeConstraints { make in
@@ -125,14 +125,16 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         countryImageView.kf.setImage(with: flagImageUrl)
         if tripItem.countryList.count > 1 {
             otherCountryLabel.text = "외 \(tripItem.countryList.count-1)개국"
+            
+            let tripUsersView = TripUsersHostingController(rootView: TripUsersView(tripUsers: tripItem.tripUserList)).view
+            tripUsersView?.backgroundColor = .clear
+            backgroundImageView.addSubview(tripUsersView ?? UIView())
+            tripUsersView?.snp.makeConstraints { make in
+                make.top.equalToSuperview().inset(22)
+                make.trailing.equalTo(backgroundImageView.snp.trailing).inset(82)
+            }
         } else {
             otherCountryLabel.text = ""
-        }
-        
-        let tripUsersView = TripUsersHostingController(rootView: TripUsersView(tripUsers: tripItem.tripUserList)).view
-        backgroundImageView.addSubview(tripUsersView ?? UIView())
-        tripUsersView?.snp.makeConstraints { make in
-            make.top.trailing.equalToSuperview().inset(22)
         }
     }
 }
