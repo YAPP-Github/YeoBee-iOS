@@ -21,13 +21,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let navigationController = UINavigationController()
         let tokenRepository = TokenRepository.shared
-
+        
         navigationController.hidesBottomBarWhenPushed = true
         
         Task {
             let isTokenExpiring = try await tokenRepository.isTokenExpiring()
-            let isOnboardingCompleted = try await UserInfoRepository().isOnboardingCompleted()
-            
+            var isOnboardingCompleted: Bool? = nil
+            if isTokenExpiring {
+                isOnboardingCompleted = try await UserInfoRepository().isOnboardingCompleted()
+            }
             DispatchQueue.main.async {
                 let coordinator = RootCoordinator(
                     navigationController: navigationController,

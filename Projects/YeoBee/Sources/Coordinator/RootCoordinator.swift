@@ -19,11 +19,11 @@ final class RootCoordinator: NSObject, Coordinator, ParentCoordinator {
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
     var isTokenExpring: Bool
-    var isOnboardingCompleted: Bool
+    var isOnboardingCompleted: Bool?
     
     init(navigationController: UINavigationController,
          isTokenExpring: Bool,
-         isOnboardingCompleted: Bool
+         isOnboardingCompleted: Bool?
     ) {
         self.navigationController = navigationController
         self.isTokenExpring = isTokenExpring
@@ -32,7 +32,7 @@ final class RootCoordinator: NSObject, Coordinator, ParentCoordinator {
 
     func start(animated: Bool) {
         if isTokenExpring {
-            if isOnboardingCompleted {
+            if let isOnboardingCompleted {
                 home(navigationController: navigationController)
             } else {
                 createAccount(navigationController: navigationController)
