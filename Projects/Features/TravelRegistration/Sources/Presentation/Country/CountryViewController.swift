@@ -14,20 +14,18 @@ import RxCocoa
 import SnapKit
 
 enum CountrySection: String, CaseIterable {
-    case europe = "유럽"
     case asia = "아시아"
-    case northAmerica = "북아메리카"
-    case southAmerica = "남아메리카"
+    case europe = "유럽"
     case oceania = "오세아니아"
+    case america = "아메리카"
     case africa = "아프리카"
 }
 
 enum CountryDataItem: Hashable {
-    case europe(Country)
     case asia(Country)
-    case northAmerica(Country)
-    case southAmerica(Country)
+    case europe(Country)
     case oceania(Country)
+    case america(Country)
     case africa(Country)
 }
 
@@ -172,10 +170,8 @@ public final class CountryViewController: UIViewController {
                 country = europeCountry
             case .asia(let asiaCountry):
                 country = asiaCountry
-            case .northAmerica(let naCountry):
-                country = naCountry
-            case .southAmerica(let saCountry):
-                country = saCountry
+            case .america(let americaCountry):
+                country = americaCountry
             case .oceania(let oceaniaCountry):
                 country = oceaniaCountry
             case .africa(let africaCountry):
@@ -197,12 +193,11 @@ public final class CountryViewController: UIViewController {
     
     func configureSnapshot(dc: DataCountry) {
         var snapshot = NSDiffableDataSourceSnapshot<CountrySection, CountryDataItem>()
-        snapshot.appendSections([.europe, .asia, .northAmerica, .southAmerica, .oceania, .africa])
-        snapshot.appendItems(dc.europe.map { .europe($0) }, toSection: .europe)
+        snapshot.appendSections([.asia, .europe, .oceania, .america, .africa])
         snapshot.appendItems(dc.asia.map { .asia($0) }, toSection: .asia)
-        snapshot.appendItems(dc.northAmerica.map { .northAmerica($0) }, toSection: .northAmerica)
-        snapshot.appendItems(dc.southAmerica.map { .southAmerica($0) }, toSection: .southAmerica)
+        snapshot.appendItems(dc.europe.map { .europe($0) }, toSection: .europe)
         snapshot.appendItems(dc.oceania.map { .oceania($0) }, toSection: .oceania)
+        snapshot.appendItems(dc.america.map { .america($0) }, toSection: .america)
         snapshot.appendItems(dc.africa.map { .africa($0) }, toSection: .africa)
         dataSource?.apply(snapshot, animatingDifferences: false)
     }
@@ -240,11 +235,10 @@ extension CountryViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let dataCountry = self.reactor.currentState.countries
         let sectionArray = [
-            dataCountry.europe,
             dataCountry.asia,
-            dataCountry.northAmerica,
-            dataCountry.southAmerica,
+            dataCountry.europe,
             dataCountry.oceania,
+            dataCountry.america,
             dataCountry.africa
         ]
         
@@ -309,9 +303,8 @@ extension CountryViewController: View {
                 self?.emptyView.isHidden = (!dataCountry.africa.isEmpty ||
                                             !dataCountry.asia.isEmpty ||
                                             !dataCountry.europe.isEmpty ||
-                                            !dataCountry.northAmerica.isEmpty ||
-                                            !dataCountry.oceania.isEmpty ||
-                                            !dataCountry.southAmerica.isEmpty)
+                                            !dataCountry.america.isEmpty ||
+                                            !dataCountry.oceania.isEmpty)
             })
             .observe(on: MainScheduler.instance)
             .bind { [weak self] dataCountry in

@@ -33,8 +33,8 @@ public final class CountryReactor: Reactor {
     }
     
     public struct State {
-        var totalCountries: DataCountry = DataCountry(europe: [], asia: [], northAmerica: [], southAmerica: [], oceania: [], africa: [])
-        var countries: DataCountry = DataCountry(europe: [], asia: [], northAmerica: [], southAmerica: [], oceania: [], africa: [])
+        var totalCountries: DataCountry = DataCountry(asia: [], europe: [], oceania: [], america: [], africa: [])
+        var countries: DataCountry = DataCountry(asia: [], europe: [], oceania: [], america: [], africa: [])
         var selectedCountries: [Country] = []
         var makeLimitToast: Bool = false
     }
@@ -72,28 +72,25 @@ public final class CountryReactor: Reactor {
         switch mutation {
         case .searchBarText(text: let searchText):
             newState.makeLimitToast = false
-            let filteredEurope = state.totalCountries.europe.filter { $0.name.contains(searchText) }
             let filteredAsia = state.totalCountries.asia.filter { $0.name.contains(searchText) }
-            let filteredNorthAmerica = state.totalCountries.northAmerica.filter { $0.name.contains(searchText) }
-            let filteredSouthAmerica = state.totalCountries.southAmerica.filter { $0.name.contains(searchText) }
+            let filteredEurope = state.totalCountries.europe.filter { $0.name.contains(searchText) }
             let filteredOceania = state.totalCountries.oceania.filter { $0.name.contains(searchText) }
+            let filteredAmerica = state.totalCountries.america.filter { $0.name.contains(searchText) }
             let filteredAfrica = state.totalCountries.africa.filter { $0.name.contains(searchText) }
 
             newState.countries = DataCountry(
-                europe: filteredEurope,
                 asia: filteredAsia,
-                northAmerica: filteredNorthAmerica,
-                southAmerica: filteredSouthAmerica,
+                europe: filteredEurope,
                 oceania: filteredOceania,
+                america: filteredAmerica,
                 africa: filteredAfrica
             )
             if searchText.isEmpty {
                 newState.countries = DataCountry(
-                    europe: state.totalCountries.europe,
                     asia: state.totalCountries.asia,
-                    northAmerica: state.totalCountries.northAmerica,
-                    southAmerica: state.totalCountries.southAmerica,
+                    europe: state.totalCountries.europe,
                     oceania: state.totalCountries.oceania,
+                    america: state.totalCountries.america,
                     africa: state.totalCountries.africa)
             }
         case .typeButtonTapped(title: let title):
@@ -101,59 +98,45 @@ public final class CountryReactor: Reactor {
             switch title {
             case CountryType.total.rawValue:
                 newState.countries = DataCountry(
-                    europe: state.totalCountries.europe,
                     asia: state.totalCountries.asia,
-                    northAmerica: state.totalCountries.northAmerica,
-                    southAmerica: state.totalCountries.southAmerica,
+                    europe: state.totalCountries.europe,
                     oceania: state.totalCountries.oceania,
+                    america: state.totalCountries.america,
                     africa: state.totalCountries.africa)
             case CountryType.europe.rawValue:
                 newState.countries = DataCountry(
-                    europe: state.totalCountries.europe,
                     asia: [],
-                    northAmerica: [],
-                    southAmerica: [],
+                    europe: state.totalCountries.europe,
                     oceania: [],
+                    america: [],
                     africa: [])
             case CountryType.asia.rawValue:
                 newState.countries = DataCountry(
-                    europe: [],
                     asia: state.totalCountries.asia,
-                    northAmerica: [],
-                    southAmerica: [],
-                    oceania: [],
-                    africa: [])
-            case CountryType.northAmerica.rawValue:
-                newState.countries = DataCountry(
                     europe: [],
-                    asia: [],
-                    northAmerica: state.totalCountries.northAmerica,
-                    southAmerica: [],
                     oceania: [],
+                    america: [],
                     africa: [])
-            case CountryType.southAmerica.rawValue:
+            case CountryType.america.rawValue:
                 newState.countries = DataCountry(
-                    europe: [],
                     asia: [],
-                    northAmerica: [],
-                    southAmerica: state.totalCountries.southAmerica,
+                    europe: [],
                     oceania: [],
+                    america: state.totalCountries.america,
                     africa: [])
             case CountryType.oceania.rawValue:
                 newState.countries = DataCountry(
-                    europe: [],
                     asia: [],
-                    northAmerica: [],
-                    southAmerica: [],
+                    europe: [],
                     oceania: state.totalCountries.oceania,
+                    america: [],
                     africa: [])
             case CountryType.africa.rawValue:
                 newState.countries = DataCountry(
-                    europe: [],
                     asia: [],
-                    northAmerica: [],
-                    southAmerica: [],
+                    europe: [],
                     oceania: [],
+                    america: [],
                     africa: state.totalCountries.africa)
             default:
                 break
@@ -176,26 +159,23 @@ public final class CountryReactor: Reactor {
             }
         case .initCountry(countryListResponse: let countryListResponse):
             var newTotalCountries = DataCountry(
-                europe: [],
                 asia: [],
-                northAmerica: [],
-                southAmerica: [],
+                europe: [],
                 oceania: [],
+                america: [],
                 africa: []
             )
             
             for country in countryListResponse.countryList.values.flatMap({ $0 }) {
                 switch country.continent {
-                case CountryType.europe.rawValue:
-                    newTotalCountries.europe.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
                 case CountryType.asia.rawValue:
                     newTotalCountries.asia.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
-                case CountryType.northAmerica.rawValue:
-                    newTotalCountries.northAmerica.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
-                case CountryType.southAmerica.rawValue:
-                    newTotalCountries.southAmerica.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
+                case CountryType.europe.rawValue:
+                    newTotalCountries.europe.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
                 case CountryType.oceania.rawValue:
                     newTotalCountries.oceania.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
+                case CountryType.america.rawValue:
+                    newTotalCountries.america.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
                 case CountryType.africa.rawValue:
                     newTotalCountries.africa.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
                 default:
