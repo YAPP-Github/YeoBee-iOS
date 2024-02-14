@@ -134,6 +134,13 @@ extension ChangeCompanionNameViewController: View {
     
     func bindState(reactor: ChangeCompanionNameReactor) {
         reactor.state
+            .map { $0.tripUserItemRequest }
+            .bind { [weak self] tripUserItemRequest in
+                self?.nameTextField.placeholder = tripUserItemRequest.name
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
             .map { $0.limitedString }
             .bind(to: nameTextField.rx.text )
             .disposed(by: disposeBag)
@@ -163,7 +170,8 @@ extension ChangeCompanionNameViewController: View {
                     self?.modifyButton.setTitle("수정하기", for: .normal)
                     self?.modifyButton.setAppearance(appearance: .default)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
     }
 }
 

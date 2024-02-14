@@ -48,9 +48,19 @@ public final class TravelTitleViewController: UIViewController {
         configureBar()
         bindKeyboardNotification()
         bind(reactor: reactor)
+        setView()
     }
     
     // MARK: - Set UI
+    private func setView() {
+        guard let countryName = reactor.currentState.tripRequest.countryList.first?.name else { return }
+
+        if titleTextField.text?.isEmpty == true {
+            titleTextField.text = "\(countryName) 여행"
+            reactor.action.onNext(.titleTextFieldText(text: "\(countryName) 여행"))
+        }
+    }
+    
     private func addViews() {
         [
             titleLabel,
@@ -61,7 +71,6 @@ public final class TravelTitleViewController: UIViewController {
         ].forEach {
             view.addSubview($0)
         }
-        
     }
     
     private func setLayouts() {

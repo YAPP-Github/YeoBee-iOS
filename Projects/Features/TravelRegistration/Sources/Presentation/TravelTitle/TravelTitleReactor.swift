@@ -56,6 +56,10 @@ public final class TravelTitleReactor: Reactor {
     }
     
     private func isValidTitleText(_ text: String) -> Bool {
-        return text.count <= 15
+        if text.count > 0 && text.count <= 15 {
+            return true
+        } else {
+            return false
+        }
     }
 }
