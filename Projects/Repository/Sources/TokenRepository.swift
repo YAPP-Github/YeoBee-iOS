@@ -61,22 +61,28 @@ final public class TokenRepository {
     }
     
     public func isTokenExpiring() async throws -> Bool {
-        if let accessToken = keychainManager.load(key: KeychainManager.accessToken),
-        let refreshToken = keychainManager.load(key: KeychainManager.refreshToken),
-        let accessTokenExp = extractExpiredTime(token: accessToken),
-        let refreshTokenExp = extractExpiredTime(token: refreshToken) {
-            if checkExpirationTime(expirationTime: accessTokenExp) {
+        let accessTokenExp = keychainManager.load(key: KeychainManager.accessToken).flatMap { extractExpiredTime(token: $0) }
+            let refreshTokenExp = keychainManager.load(key: KeychainManager.refreshToken).flatMap { extractExpiredTime(token: $0) }
+            
+            // 액세스 토큰이 만료되었는지 검사
+            if let accessTokenExp = accessTokenExp, checkExpirationTime(expirationTime: accessTokenExp) {
                 return true
-            } else {
-                if checkExpirationTime(expirationTime: refreshTokenExp) {
-                    try await refresh(token: refreshToken)
-                    return true
-                } else {
-                    return false
-                }
             }
-        }
-        return false
+            
+            // 리프레시 토큰이 만료되었는지 검사 및 갱신 시도
+            else if let refreshTokenExp = refreshTokenExp, checkExpirationTime(expirationTime: refreshTokenExp) {
+                try await refresh(token: keychainManager.load(key: KeychainManager.refreshToken)!)
+                return true
+            }
+            
+            // 두 토큰이 모두 유효하지 않은 경우 삭제
+            deleteTokens()
+            return false
+    }
+    
+    public func deleteTokens() {
+        keychainManager.delete(key: KeychainManager.accessToken)
+        keychainManager.delete(key: KeychainManager.refreshToken)
     }
 }
 
