@@ -69,9 +69,31 @@ public final class CountryReactor: Reactor {
         var newState = state
         
         switch mutation {
-        case .searchBarText(text: let text):
-            // 검색 api 받기
-            print(text)
+        case .searchBarText(text: let searchText):
+            let filteredEurope = state.totalCountries.europe.filter { $0.name.contains(searchText) }
+            let filteredAsia = state.totalCountries.asia.filter { $0.name.contains(searchText) }
+            let filteredNorthAmerica = state.totalCountries.northAmerica.filter { $0.name.contains(searchText) }
+            let filteredSouthAmerica = state.totalCountries.southAmerica.filter { $0.name.contains(searchText) }
+            let filteredOceania = state.totalCountries.oceania.filter { $0.name.contains(searchText) }
+            let filteredAfrica = state.totalCountries.africa.filter { $0.name.contains(searchText) }
+
+            newState.countries = DataCountry(
+                europe: filteredEurope,
+                asia: filteredAsia,
+                northAmerica: filteredNorthAmerica,
+                southAmerica: filteredSouthAmerica,
+                oceania: filteredOceania,
+                africa: filteredAfrica
+            )
+            if searchText.isEmpty {
+                newState.countries = DataCountry(
+                    europe: state.totalCountries.europe,
+                    asia: state.totalCountries.asia,
+                    northAmerica: state.totalCountries.northAmerica,
+                    southAmerica: state.totalCountries.southAmerica,
+                    oceania: state.totalCountries.oceania,
+                    africa: state.totalCountries.africa)
+            }
         case .typeButtonTapped(title: let title):
             switch title {
             case CountryType.total.rawValue:
@@ -154,7 +176,6 @@ public final class CountryReactor: Reactor {
             )
             
             for country in countryListResponse.countryList.values.flatMap({ $0 }) {
-                print(country.continent)
                 switch country.continent {
                 case CountryType.europe.rawValue:
                     newTotalCountries.europe.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))

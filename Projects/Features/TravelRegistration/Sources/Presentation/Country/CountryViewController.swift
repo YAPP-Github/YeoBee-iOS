@@ -157,6 +157,11 @@ public final class CountryViewController: UIViewController {
         
         self.navigationItem.leftBarButtonItem = backButton
         self.navigationItem.titleView = searchBar
+        
+        searchBar.rx.text
+            .map { Reactor.Action.searchBarText(text: $0 ?? "") }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func setDataSource() {
@@ -267,13 +272,6 @@ extension CountryViewController: View {
     
     // MARK: - Bind
     func bindAction(reactor: CountryReactor) {
-        if let searchBar = self.navigationItem.rightBarButtonItem?.customView as? UISearchBar {
-            searchBar.rx.text
-                .map { Reactor.Action.searchBarText(text: $0 ?? "") }
-                .bind(to: reactor.action)
-                .disposed(by: disposeBag)
-        }
-        
         for button in horizontalCountryView.stackView.arrangedSubviews {
             if let button = button as? UIButton {
                 button.rx.tap
