@@ -79,8 +79,8 @@ public struct ExpendpenditureEditReducer: Reducer {
                         let _ = try await expenseUseCase.createExpense(.init(
                             tripId: tripId,
                             payedAt: ISO8601DateFormatter().string(from: payedAt),
-                            expenseType: .individual,
-                            amount: -amount,
+                            expenseType: "INDIVIDUAL",
+                            amount: amount,
                             currencyCode: currencyCode,
                             expenseMethod: paymentType,
                             expenseCategory: category.requestText,

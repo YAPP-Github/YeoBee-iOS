@@ -111,6 +111,6 @@ extension ExpenditureDetailView {
         .background(YBColor.gray3.swiftUIColor)
         .cornerRadius(10)
         .padding(.horizontal, 24)
-        .padding(.bottom, 5)
+        .padding(.bottom, 20)
     }
 }

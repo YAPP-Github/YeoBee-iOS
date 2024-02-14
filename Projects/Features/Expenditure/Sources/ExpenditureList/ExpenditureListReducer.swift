@@ -21,19 +21,22 @@ public struct ExpenditureListReducer: Reducer {
 
     public enum Action {
         case expenditureListItem(id: ExpenditureListItemReducer.State.ID, action: ExpenditureListItemReducer.Action)
-        case setExpenditures([ExpenseItem])
+        case setExpenditures([ExpenseItem], Bool)
     }
 
     public var body: some ReducerOf<ExpenditureListReducer> {
         Reduce { state, action in
             switch action {
-            case let .setExpenditures(items):
-                state.expenditureListItems.removeAll()
+            case let .setExpenditures(items, isReset):
+                if isReset {
+                    state.expenditureListItems.removeAll()
+                }
                 items.forEach { item in
                     state.expenditureListItems.updateOrAppend(.init(expendseItem: item))
                 }
                 return .none
-                default: return .none
+            default:
+                return .none
             }
         }
         .forEach(\.expenditureListItems, action: /Action.expenditureListItem) {

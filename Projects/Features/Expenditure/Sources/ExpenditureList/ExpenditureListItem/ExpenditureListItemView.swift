@@ -41,7 +41,7 @@ extension ExpenditureListItemView {
             self.expenseItem = expendseItem
             self.currency = " \(state.expendseItem.currency)"
             if expendseItem.currency != "KRW" {
-                self.exchangedPrice = abs(expendseItem.koreanAmount ?? 0)
+                self.exchangedPrice = expendseItem.koreanAmount
             } else {
                 self.currency = "원"
             }

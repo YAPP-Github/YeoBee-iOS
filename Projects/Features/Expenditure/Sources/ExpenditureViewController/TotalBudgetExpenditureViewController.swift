@@ -1,8 +1,8 @@
 //
-//  TotalExpenditureViewController.swift
+//  TotalBudgetExpenditureViewController.swift
 //  Expenditure
 //
-//  Created by Hoyoung Lee on 1/27/24.
+//  Created by Hoyoung Lee on 2/14/24.
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 //
 
@@ -14,23 +14,23 @@ import SnapKit
 import ComposableArchitecture
 import Coordinator
 
-public final class TotalExpenditureViewController: UIViewController {
+public final class TotalBudgetExpenditureViewController: UIViewController {
 
     let coordinator: ExpenditureCoordinator
+    let expenseType: ExpenditureTab
 
     // MARK: View
 
-    private let totalExpenditureListHostingController: TotalExpenditureListHostingController
+    private let totalBudgetHostingController: TotalBudgetHostingController
 
-//    // MARK: DataSources
-
-    public init(coordinator: ExpenditureCoordinator) {
+    public init(coordinator: ExpenditureCoordinator, expenseType: ExpenditureTab) {
 
         self.coordinator = coordinator
-        self.totalExpenditureListHostingController = TotalExpenditureListHostingController(
-            rootView: TotalExpenditureListView(
-                store: .init(initialState: .init(expenditureType: .individual, totalPriceType: .expense), reducer: {
-                    TotalExpenditureListReducer()
+        self.expenseType = expenseType
+        self.totalBudgetHostingController = TotalBudgetHostingController(
+            rootView: TotalBudgetExpenditureListView(
+                store: .init(initialState: .init(expenseType: expenseType), reducer: {
+                    TotalBudgetExpenditureListReducer(cooridinator: coordinator)
                 })
             )
         )
@@ -50,7 +50,7 @@ public final class TotalExpenditureViewController: UIViewController {
     }
 
     func setupViews() {
-        title = "총쓴돈 내역"
+        title = expenseType == .individual ? "예산 잔액 내역" : "공동경비 잔액 내역"
         view.backgroundColor = .ybColor(.white)
     }
 
@@ -66,9 +66,9 @@ public final class TotalExpenditureViewController: UIViewController {
     }
 
     func setLayouts() {
-        view.addSubview(totalExpenditureListHostingController.view)
+        view.addSubview(totalBudgetHostingController.view)
 
-        totalExpenditureListHostingController.view.snp.makeConstraints { make in
+        totalBudgetHostingController.view.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.horizontalEdges.equalToSuperview()

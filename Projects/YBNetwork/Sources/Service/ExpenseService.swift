@@ -34,7 +34,7 @@ extension ExpenseService: TargetType {
         case let .fetchDetail(expenseId):
             return "/v1/expenses/\(expenseId)"
         case .create:
-            return "v1/expenses"
+            return "/v1/expenses"
             //        case .delete:
             //            return "v1/expense"
         }

@@ -11,7 +11,7 @@ import Foundation
 public struct CreateExpenseRequest: Codable {
     public var tripId: Int
     public var payedAt: String
-    public var expenseType: ExpenseType
+    public var expenseType: String
     public var amount: Double
     public var currencyCode: String
     public var expenseMethod: String
@@ -24,7 +24,7 @@ public struct CreateExpenseRequest: Codable {
     public init(
         tripId: Int,
         payedAt: String,
-        expenseType: ExpenseType,
+        expenseType: String,
         amount: Double,
         currencyCode: String,
         expenseMethod: String,

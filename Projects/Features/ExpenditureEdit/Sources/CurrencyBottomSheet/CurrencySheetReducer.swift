@@ -21,10 +21,12 @@ public struct CurrencySheetReducer: Reducer {
         var currencies: IdentifiedArrayOf<CurrencyItemReducer.State> = []
         let currenyList: [Currency]
         var selectedCurrency: Currency?
+        var expenseType: ExpenseType
 
-        public init(currencyList: [Currency], selectedCurrency: Currency) {
+        public init(currencyList: [Currency], selectedCurrency: Currency, expenseType: ExpenseType) {
             self.selectedCurrency = selectedCurrency
             self.currenyList = currencyList
+            self.expenseType = expenseType
             currencyList.forEach {
                 self.currencies.updateOrAppend(.init(currency: $0, isSelected: $0.code == selectedCurrency.code))
             }
@@ -46,7 +48,7 @@ public struct CurrencySheetReducer: Reducer {
                     ))
                 }
                 state.selectedCurrency = selectedCurrency
-                cooridinator.selectCurrency(curreny: selectedCurrency)
+                cooridinator.selectCurrency(curreny: selectedCurrency, expenseType: state.expenseType)
                 return .none
             }
         }
