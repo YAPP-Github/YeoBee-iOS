@@ -13,7 +13,7 @@ public protocol SignCoordinatorInterface: ParentCoordinator, Coordinator { }
 
 public protocol HomeCoordinatorInterface: ParentCoordinator, Coordinator {
     func travelRegisteration()
-    func trip()
+    func trip(tripItem: TripItem)
 }
 
 public protocol TravelRegistrationCoordinatorInterface: ParentCoordinator, ChildCoordinator { }

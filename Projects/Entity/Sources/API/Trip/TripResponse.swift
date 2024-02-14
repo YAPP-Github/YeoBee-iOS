@@ -9,15 +9,15 @@
 import Foundation
 
 public struct TripResponse: Codable {
-    var content: [TripItem]
-    var pageable: Pageable
-    var totalPages: Int
-    var totalElements: Int
-    var last: Bool
-    var size: Int
-    var number: Int
-    var sort: SortType
-    var numberOfElements: Int
-    var first: Bool
-    var empty: Bool
+    public var content: [TripItem]
+    public var pageable: Pageable
+    public var totalPages: Int
+    public var totalElements: Int
+    public var last: Bool
+    public var size: Int
+    public var number: Int
+    public var sort: SortType
+    public var numberOfElements: Int
+    public var first: Bool
+    public var empty: Bool
 }

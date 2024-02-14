@@ -23,9 +23,9 @@ public enum HomeSection: CaseIterable {
 
 enum HomeDataItem: Hashable {
     case header
-    case traveling(Trip)
-    case coming(Trip)
-    case passed(Trip)
+    case traveling(TripItem)
+    case coming(TripItem)
+    case passed(TripItem)
 }
 
 public final class HomeViewController: UIViewController {
@@ -98,7 +98,7 @@ public final class HomeViewController: UIViewController {
                 ) as? HomeCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                cell.configure(trip: travelingTrip)
+                cell.configure(tripItem: travelingTrip)
                 return cell
             case .coming(let comingTrip):
                 guard let cell = collectionView.dequeueReusableCell(
@@ -107,7 +107,7 @@ public final class HomeViewController: UIViewController {
                 ) as? HomeCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                cell.configure(trip: comingTrip)
+                cell.configure(tripItem: comingTrip)
                 return cell
             case .passed(let passedTrip):
                 guard let cell = collectionView.dequeueReusableCell(
@@ -116,7 +116,7 @@ public final class HomeViewController: UIViewController {
                 ) as? HomeCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                cell.configure(trip: passedTrip)
+                cell.configure(tripItem: passedTrip)
                 return cell
             }
         }
@@ -166,7 +166,7 @@ public final class HomeViewController: UIViewController {
         homeCollectionView.dataSource = dataSource
     }
     
-    func configureSnapshot(travelingData: [Trip], comingData: [Trip], passedData: [Trip]) {
+    func configureSnapshot(travelingData: [TripItem], comingData: [TripItem], passedData: [TripItem]) {
         var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeDataItem>()
         snapshot.appendSections([.header])
         snapshot.appendItems([.header], toSection: .header)
@@ -219,17 +219,17 @@ extension HomeViewController: UICollectionViewDelegate {
         
         switch section {
         case .traveling:
-            let travelingTrip = snapshot.itemIdentifiers(inSection: .traveling)[indexPath.item]
-            self.coordinator?.trip()
-            print("Selected traveling Trip: \(travelingTrip) \(indexPath.row)")
+            if case let .traveling(tripItem) = snapshot.itemIdentifiers(inSection: .traveling)[indexPath.item] {
+                self.coordinator?.trip(tripItem: tripItem)
+            }
         case .coming:
-            let comingTrip = snapshot.itemIdentifiers(inSection: .coming)[indexPath.item]
-            self.coordinator?.trip()
-            print("Selected Coming Trip: \(comingTrip) \(indexPath.row)")
+            if case let .coming(tripItem) = snapshot.itemIdentifiers(inSection: .coming)[indexPath.item] {
+                self.coordinator?.trip(tripItem: tripItem)
+            }
         case .passed:
-            let passedTrip = snapshot.itemIdentifiers(inSection: .passed)[indexPath.item]
-            self.coordinator?.trip()
-            print("Selected Passed Trip: \(passedTrip) \(indexPath.row)")
+            if case let .passed(tripItem) = snapshot.itemIdentifiers(inSection: .passed)[indexPath.item] {
+                self.coordinator?.trip(tripItem: tripItem)
+            }
         case .header:
             break
         }
@@ -263,7 +263,8 @@ extension HomeViewController: View {
                 comingData: comingTrip,
                 passedData: passedTrip
             )
-        }.disposed(by: disposeBag)
+        }
+        .disposed(by: disposeBag)
     }
 }
 

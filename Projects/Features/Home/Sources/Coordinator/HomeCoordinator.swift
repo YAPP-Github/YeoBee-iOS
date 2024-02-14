@@ -38,8 +38,8 @@ extension HomeCoordinator {
         countryCoordinator.start(animated: true)
     }
 
-    public func trip() {
-        let tripCoordinator = TripCoordinator(navigationController: navigationController)
+    public func trip(tripItem: TripItem) {
+        let tripCoordinator = TripCoordinator(navigationController: navigationController, tripItem: tripItem)
         tripCoordinator.parent = self
         addChild(tripCoordinator)
         tripCoordinator.start(animated: true)

@@ -9,24 +9,26 @@
 import UIKit
 import Entity
 import ReactorKit
+import ComposableArchitecture
 import RxSwift
 import RxCocoa
 
 public final class MoreTripReactor: Reactor {
     
     public enum Action {
-        case trips([Trip])
+        case trips([TripItem])
     }
     
     public enum Mutation {
-        case trips([Trip])
+        case trips([TripItem])
     }
     
     public struct State {
-        var trips: [Trip] = []
+        var trips: [TripItem] = []
         var tripType: TripType
     }
     
+    @Dependency(\.tripUseCase) var tripUseCase
     public var initialState: State
     
     init(tripType: TripType) {
@@ -56,14 +58,23 @@ public final class MoreTripReactor: Reactor {
     func moreTripUseCase() {
         switch currentState.tripType {
         case .traveling:
-            let travelingTrip: [Trip] = TripDummy.traveling.getTrips()
-            action.onNext(.trips(travelingTrip))
+            Task {
+                let presentResult = try await tripUseCase.getPresentTrip(0, 1)
+                let tripItems = presentResult.content
+                self.action.onNext(.trips(tripItems))
+            }
         case .coming:
-            let comingTrip: [Trip] = TripDummy.coming.getTrips()
-            action.onNext(.trips(comingTrip))
+            Task {
+                let futureResult = try await tripUseCase.getFutureTrip(0, 1)
+                let tripItems = futureResult.content
+                self.action.onNext(.trips(tripItems))
+            }
         case .passed:
-            let passedTrip: [Trip] = TripDummy.passed.getTrips()
-            action.onNext(.trips(passedTrip))
+            Task {
+                let pastResult = try await tripUseCase.getPastTrip(0, 1)
+                let tripItems = pastResult.content
+                self.action.onNext(.trips(tripItems))
+            }
         }
     }
 }

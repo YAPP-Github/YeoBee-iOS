@@ -7,6 +7,10 @@
 //
 
 import UIKit
+import UseCase
+import Entity
+import ComposableArchitecture
+
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -14,24 +18,29 @@ import RxCocoa
 public final class HomeReactor: Reactor {
     
     public enum Action {
-        case travelingTrip([Trip])
-        case comingTrip([Trip])
-        case passedTrip([Trip])
+        case travelingTrip([TripItem])
+        case comingTrip([TripItem])
+        case passedTrip([TripItem])
     }
     
     public enum Mutation {
-        case travelingTrip([Trip])
-        case comingTrip([Trip])
-        case passedTrip([Trip])
+        case travelingTrip([TripItem])
+        case comingTrip([TripItem])
+        case passedTrip([TripItem])
     }
     
     public struct State {
-        var travelingTrip: [Trip] = []
-        var comingTrip: [Trip] = []
-        var passedTrip: [Trip] = []
+        var travelingTrip: [TripItem] = []
+        var comingTrip: [TripItem] = []
+        var passedTrip: [TripItem] = []
     }
     
-    public var initialState: State = State()
+    @Dependency(\.tripUseCase) var tripUseCase
+    public var initialState: State
+    
+    public init() {
+        self.initialState = State()
+    }
     
     // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {
@@ -50,24 +59,34 @@ public final class HomeReactor: Reactor {
         var newState = state
         
         switch mutation {
-        case .travelingTrip(let trips):
-            newState.travelingTrip = trips
-        case .comingTrip(let trips):
-            newState.comingTrip = trips
-        case .passedTrip(let trips):
-            newState.passedTrip = trips
+        case .travelingTrip(let tripItems):
+            newState.travelingTrip = tripItems
+        case .comingTrip(let tripItems):
+            newState.comingTrip = tripItems
+        case .passedTrip(let tripItems):
+            newState.passedTrip = tripItems
         }
         
         return newState
     }
     
     func homeTripUseCase() {
-        let travelingTrip: [Trip] = TripDummy.traveling.getTrips()
-        let comingTrip: [Trip] = TripDummy.coming.getTrips()
-        let passedTrip: [Trip] = TripDummy.passed.getTrips()
+        Task {
+            let pastResult = try await tripUseCase.getPastTrip(0, 1)
+            let tripItems = pastResult.content
+            self.action.onNext(.passedTrip(tripItems))
+        }
         
-        self.action.onNext(.travelingTrip(travelingTrip))
-        self.action.onNext(.comingTrip(comingTrip))
-        self.action.onNext(.passedTrip(passedTrip))
+        Task {
+            let presentResult = try await tripUseCase.getPresentTrip(0, 1)
+            let tripItems = presentResult.content
+            self.action.onNext(.travelingTrip(tripItems))
+        }
+        
+        Task {
+            let futureResult = try await tripUseCase.getFutureTrip(0, 1)
+            let tripItems = futureResult.content
+            self.action.onNext(.comingTrip(tripItems))
+        }
     }
 }
