@@ -12,23 +12,34 @@ import UIKit
 import Coordinator
 import Sign
 import Home
+import YBNetwork
+import Repository
 
 final class RootCoordinator: NSObject, Coordinator, ParentCoordinator {
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
-
-    init(navigationController: UINavigationController) {
+    var isTokenExpring: Bool
+    var isOnboardingCompleted: Bool
+    
+    init(navigationController: UINavigationController,
+         isTokenExpring: Bool,
+         isOnboardingCompleted: Bool
+    ) {
         self.navigationController = navigationController
+        self.isTokenExpring = isTokenExpring
+        self.isOnboardingCompleted = isOnboardingCompleted
     }
 
     func start(animated: Bool) {
-        /// 토큰 처리
-//        if true {
-//        sign(navigationController: navigationController)
-//        } else {
-            home(navigationController: navigationController)
-//        }
-//        home(navigationController: navigationController)
+        if isTokenExpring {
+            if isOnboardingCompleted {
+                home(navigationController: navigationController)
+            } else {
+                createAccount(navigationController: navigationController)
+            }
+        } else {
+            sign(navigationController: navigationController)
+        }
     }
 }
 
@@ -44,5 +55,11 @@ extension RootCoordinator {
         let homeCoordinator = HomeCoordinator(navigationController: navigationController)
         addChild(homeCoordinator)
         homeCoordinator.start()
+    }
+    
+    func createAccount(navigationController: UINavigationController) {
+        let createAccountCoordinator = CreateAccountCoordinator(navigationController: navigationController)
+        addChild(createAccountCoordinator)
+        createAccountCoordinator.start()
     }
 }

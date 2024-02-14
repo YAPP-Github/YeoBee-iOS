@@ -16,15 +16,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
+        // 런치 스크린
+        Thread.sleep(forTimeInterval: 1.5)
+        
         let navigationController = UINavigationController()
+        let tokenRepository = TokenRepository.shared
+
         navigationController.hidesBottomBarWhenPushed = true
-        let coordinator = RootCoordinator(navigationController: navigationController)
-        coordinator.start(animated: false)
-        window?.overrideUserInterfaceStyle = .light
-        window?.rootViewController = navigationController
-        window?.makeKeyAndVisible()
+        
+        Task {
+            let isTokenExpiring = try await tokenRepository.isTokenExpiring()
+            let isOnboardingCompleted = try await UserInfoRepository().isOnboardingCompleted()
+            
+            DispatchQueue.main.async {
+                let coordinator = RootCoordinator(
+                    navigationController: navigationController,
+                    isTokenExpring: isTokenExpiring,
+                    isOnboardingCompleted: isOnboardingCompleted
+                )
+                coordinator.start(animated: false)
+                
+                self.window?.overrideUserInterfaceStyle = .light
+                self.window?.rootViewController = navigationController
+                self.window?.makeKeyAndVisible()
+            }
+        }
+        
         let appkey = Bundle.main.object(forInfoDictionaryKey: "KAKAO_NATIVE_APP_KEY") as? String ?? ""
         KakaoSDK.initSDK(appKey: appkey)
+        
         return true
     }
 

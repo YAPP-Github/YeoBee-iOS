@@ -60,4 +60,11 @@ final public class UserInfoRepository: UserInfoInterface {
                 throw failure
         }
     }
+    
+    public func isOnboardingCompleted() async throws -> Bool {
+        let userInfo = try await fetchUserInfo()
+        let userState = userInfo.userState
+        
+        return userState == .onboardingCompleted
+    }
 }

@@ -11,17 +11,17 @@ import Moya
 import YBNetwork
 import Entity
 
-public protocol AuthRepositoryInterface {
+public protocol LoginRepositoryInterface {
     func loginWithKakao(token: String) async throws -> AuthTokenResponse
     func loginWithApple()
     func logout()
 }
 
-final public class AuthRepository: AuthRepositoryInterface {
+final public class LoginRepository: LoginRepositoryInterface {
     
     public init() {}
     
-    let provider = MoyaProvider<AuthService>(plugins: [NetworkLogger()])
+    let provider = MoyaProvider<LoginService>(plugins: [NetworkLogger()])
     
     public func loginWithKakao(token: String) async throws -> AuthTokenResponse {
         let response = try await provider.request(.kakaoLogin(token: token)).get()

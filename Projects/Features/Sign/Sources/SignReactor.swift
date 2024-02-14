@@ -40,7 +40,7 @@ public final class SignReactor: Reactor {
         )
     }
     
-    let authRepository = AuthRepository()
+    let authRepository = LoginRepository()
     
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {

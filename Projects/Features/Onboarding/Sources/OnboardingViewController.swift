@@ -43,9 +43,9 @@ public final class OnboardingViewController: UIViewController, View {
     }
     
     private func setupPageViewController() {
-        let page1 = UIViewController() // 첫 번째 페이지 뷰 컨트롤러 초기화
-        let page2 = UIViewController() // 두 번째 페이지 뷰 컨트롤러 초기화
-        let page3 = UIViewController() // 세 번째 페이지 뷰 컨트롤러 초기화
+        let page1 = UIViewController()
+        let page2 = UIViewController()
+        let page3 = UIViewController()
         pages = [page1, page2, page3]
         page1.view.backgroundColor = .blue
         page2.view.backgroundColor = .red
@@ -70,18 +70,15 @@ public final class OnboardingViewController: UIViewController, View {
             make.centerX.equalTo(view)
             make.width.equalToSuperview().offset(-24)
         }
-        nextButton.rx.tap.bind { [weak self] in
-            self?.goToNextPage()
-        }.disposed(by: disposeBag)
     }
     
     private func goToNextPage() {
-          currentPageIndex += 1
-          if currentPageIndex < pages.count {
+          if currentPageIndex < pages.count - 1 {
+            currentPageIndex += 1
               let nextViewController = pages[currentPageIndex]
-              pageViewController.setViewControllers([nextViewController], direction: .forward, animated: true, completion: nil)
+              pageViewController.setViewControllers([nextViewController], direction: .forward, animated: false, completion: nil)
           }
-          if currentPageIndex == pages.count {
+          if currentPageIndex == pages.count - 1 {
               nextButton.setTitle("시작하기", for: .normal)
           }
       }
