@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 import DesignSystem
 import RxSwift
 import RxCocoa
@@ -86,9 +87,11 @@ class SelectedCountryCell: UICollectionViewCell {
     }
     
     func configure() {
-        guard let country = country else { return }
-        // 이미지 변경
-        countryImageView.image = UIImage(systemName: "xmark")
+        guard let country = country,
+              let imageUrl = URL(string: country.imageURL) else { return }
+        
+        countryImageView.kf.indicatorType = .activity
+        countryImageView.kf.setImage(with: imageUrl)
         countryNameLabel.text = country.name
     }
     
@@ -99,6 +102,7 @@ class SelectedCountryCell: UICollectionViewCell {
                 guard let self = self,
                       let country = country else { return }
                 self.delegate?.deleteButtonTapped(country: country)
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
     }
 }

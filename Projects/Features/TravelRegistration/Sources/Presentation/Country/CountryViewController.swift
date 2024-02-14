@@ -18,6 +18,7 @@ enum CountrySection: String, CaseIterable {
     case asia = "아시아"
     case northAmerica = "북아메리카"
     case southAmerica = "남아메리카"
+    case oceania = "오세아니아"
     case africa = "아프리카"
 }
 
@@ -26,6 +27,7 @@ enum CountryDataItem: Hashable {
     case asia(Country)
     case northAmerica(Country)
     case southAmerica(Country)
+    case oceania(Country)
     case africa(Country)
 }
 
@@ -65,7 +67,7 @@ public final class CountryViewController: UIViewController {
         setDataSource()
         hideKeyboardWhenTappedAround()
         bind(reactor: reactor)
-        reactor.countryUseCase()
+        reactor.countriesUseCase()
     }
 
     // MARK: - Set UI
@@ -169,6 +171,8 @@ public final class CountryViewController: UIViewController {
                 country = naCountry
             case .southAmerica(let saCountry):
                 country = saCountry
+            case .oceania(let oceaniaCountry):
+                country = oceaniaCountry
             case .africa(let africaCountry):
                 country = africaCountry
             }
@@ -188,11 +192,12 @@ public final class CountryViewController: UIViewController {
     
     func configureSnapshot(dc: DataCountry) {
         var snapshot = NSDiffableDataSourceSnapshot<CountrySection, CountryDataItem>()
-        snapshot.appendSections([.europe, .asia, .northAmerica, .southAmerica, .africa])
+        snapshot.appendSections([.europe, .asia, .northAmerica, .southAmerica, .oceania, .africa])
         snapshot.appendItems(dc.europe.map { .europe($0) }, toSection: .europe)
         snapshot.appendItems(dc.asia.map { .asia($0) }, toSection: .asia)
         snapshot.appendItems(dc.northAmerica.map { .northAmerica($0) }, toSection: .northAmerica)
         snapshot.appendItems(dc.southAmerica.map { .southAmerica($0) }, toSection: .southAmerica)
+        snapshot.appendItems(dc.oceania.map { .oceania($0) }, toSection: .oceania)
         snapshot.appendItems(dc.africa.map { .africa($0) }, toSection: .africa)
         dataSource?.apply(snapshot, animatingDifferences: false)
     }
@@ -234,6 +239,7 @@ extension CountryViewController: UITableViewDelegate {
             dataCountry.asia,
             dataCountry.northAmerica,
             dataCountry.southAmerica,
+            dataCountry.oceania,
             dataCountry.africa
         ]
         
@@ -304,7 +310,8 @@ extension CountryViewController: View {
                 self?.emptyView.isHidden = (!dataCountry.africa.isEmpty ||
                                             !dataCountry.asia.isEmpty ||
                                             !dataCountry.europe.isEmpty ||
-                                            !dataCountry.northAmerica.isEmpty || 
+                                            !dataCountry.northAmerica.isEmpty ||
+                                            !dataCountry.oceania.isEmpty ||
                                             !dataCountry.southAmerica.isEmpty)
             })
             .observe(on: MainScheduler.instance)

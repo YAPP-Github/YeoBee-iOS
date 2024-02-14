@@ -9,9 +9,13 @@
 import Foundation
 
 // 나라 선택
-public struct CountryResponse: Codable {
-    var name: String
-    var flagImageUrl: String
-    var coverImageUrl: String
-    var continent: String
+public struct CountryListResponse: Codable {
+    public var countryList: [String: [CountryResponse]]
+}
+
+public struct CountryResponse: Codable, Hashable {
+    public var name: String
+    public var flagImageUrl: String?
+    public var coverImageUrl: String?
+    public var continent: String
 }

@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import ComposableArchitecture
+import Entity
+import UseCase
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -18,6 +21,7 @@ public final class CountryReactor: Reactor {
         case typeButtonTapped(title: String)
         case checkedButtonTapped(country: Country)
         case deletedCountry(country: Country)
+        case initCountry(countryListResponse: CountryListResponse)
     }
     
     public enum Mutation {
@@ -25,17 +29,23 @@ public final class CountryReactor: Reactor {
         case typeButtonTapped(title: String)
         case checkedButtonTapped(country: Country)
         case deletedCountry(country: Country)
+        case initCountry(countryListResponse: CountryListResponse)
     }
     
     public struct State {
-        var countries: DataCountry = DataCountry(europe: [], asia: [], northAmerica: [], southAmerica: [], africa: [])
+        var totalCountries: DataCountry = DataCountry(europe: [], asia: [], northAmerica: [], southAmerica: [], oceania: [], africa: [])
+        var countries: DataCountry = DataCountry(europe: [], asia: [], northAmerica: [], southAmerica: [], oceania: [], africa: [])
         var selectedCountries: [Country] = []
     }
     
+    @Dependency(\.countryUseCase) var countryUseCase
     public var initialState: State = State()
     
-    func countryUseCase() {
-        action.onNext(.typeButtonTapped(title: CountryType.total.rawValue))
+    func countriesUseCase() {
+        Task {
+            let result = try await countryUseCase.getCountries()
+            action.onNext(.initCountry(countryListResponse: result))
+        }
     }
     
     // MARK: - Mutate
@@ -49,6 +59,8 @@ public final class CountryReactor: Reactor {
             return .just(Mutation.checkedButtonTapped(country: country))
         case .deletedCountry(country: let country):
             return .just(Mutation.deletedCountry(country: country))
+        case .initCountry(countryListResponse: let countryListReponse):
+            return .just(.initCountry(countryListResponse: countryListReponse))
         }
     }
     
@@ -61,42 +73,54 @@ public final class CountryReactor: Reactor {
             // 검색 api 받기
             print(text)
         case .typeButtonTapped(title: let title):
-            // 데이터 api 받기
             switch title {
             case CountryType.total.rawValue:
                 newState.countries = DataCountry(
-                    europe: CountryType.europe.getCountries(),
-                    asia: CountryType.asia.getCountries(),
-                    northAmerica: CountryType.northAmerica.getCountries(),
-                    southAmerica: CountryType.southAmerica.getCountries(),
-                    africa: CountryType.africa.getCountries())
+                    europe: state.totalCountries.europe,
+                    asia: state.totalCountries.asia,
+                    northAmerica: state.totalCountries.northAmerica,
+                    southAmerica: state.totalCountries.southAmerica,
+                    oceania: state.totalCountries.oceania,
+                    africa: state.totalCountries.africa)
             case CountryType.europe.rawValue:
                 newState.countries = DataCountry(
-                    europe: CountryType.europe.getCountries(),
+                    europe: state.totalCountries.europe,
                     asia: [],
                     northAmerica: [],
                     southAmerica: [],
+                    oceania: [],
                     africa: [])
             case CountryType.asia.rawValue:
                 newState.countries = DataCountry(
                     europe: [],
-                    asia: CountryType.asia.getCountries(),
+                    asia: state.totalCountries.asia,
                     northAmerica: [],
                     southAmerica: [],
+                    oceania: [],
                     africa: [])
             case CountryType.northAmerica.rawValue:
                 newState.countries = DataCountry(
                     europe: [],
                     asia: [],
-                    northAmerica: CountryType.northAmerica.getCountries(),
+                    northAmerica: state.totalCountries.northAmerica,
                     southAmerica: [],
+                    oceania: [],
                     africa: [])
             case CountryType.southAmerica.rawValue:
                 newState.countries = DataCountry(
                     europe: [],
                     asia: [],
                     northAmerica: [],
-                    southAmerica: CountryType.southAmerica.getCountries(),
+                    southAmerica: state.totalCountries.southAmerica,
+                    oceania: [],
+                    africa: [])
+            case CountryType.oceania.rawValue:
+                newState.countries = DataCountry(
+                    europe: [],
+                    asia: [],
+                    northAmerica: [],
+                    southAmerica: [],
+                    oceania: state.totalCountries.oceania,
                     africa: [])
             case CountryType.africa.rawValue:
                 newState.countries = DataCountry(
@@ -104,7 +128,8 @@ public final class CountryReactor: Reactor {
                     asia: [],
                     northAmerica: [],
                     southAmerica: [],
-                    africa: CountryType.africa.getCountries())
+                    oceania: [],
+                    africa: state.totalCountries.africa)
             default:
                 break
             }
@@ -118,6 +143,37 @@ public final class CountryReactor: Reactor {
             if let selectedCountryIndex = newState.selectedCountries.firstIndex(where: { $0.name == country.name }) {
                 newState.selectedCountries.remove(at: selectedCountryIndex)
             }
+        case .initCountry(countryListResponse: let countryListResponse):
+            var newTotalCountries = DataCountry(
+                europe: [],
+                asia: [],
+                northAmerica: [],
+                southAmerica: [],
+                oceania: [],
+                africa: []
+            )
+            
+            for country in countryListResponse.countryList.values.flatMap({ $0 }) {
+                print(country.continent)
+                switch country.continent {
+                case CountryType.europe.rawValue:
+                    newTotalCountries.europe.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
+                case CountryType.asia.rawValue:
+                    newTotalCountries.asia.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
+                case CountryType.northAmerica.rawValue:
+                    newTotalCountries.northAmerica.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
+                case CountryType.southAmerica.rawValue:
+                    newTotalCountries.southAmerica.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
+                case CountryType.oceania.rawValue:
+                    newTotalCountries.oceania.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
+                case CountryType.africa.rawValue:
+                    newTotalCountries.africa.append(Country(name: country.name, imageURL: country.flagImageUrl ?? ""))
+                default:
+                    break
+                }
+            }
+            newState.totalCountries = newTotalCountries
+            newState.countries = newTotalCountries
         }
         return newState
     }
