@@ -303,7 +303,7 @@ extension HomeViewController: HomeCollectionHeaderViewCellDelegate {
 extension HomeViewController: HomeSectionHeaderViewDelegate {
     func moreButtonTapped(tripType: String) {
         TripType.allCases.forEach {
-            if $0.rawValue == tripType {
+            if $0.rawValue.first == tripType.first {
                 let moreTripReactor = MoreTripReactor(tripType: $0)
                 let moreTripViewController = MoreTripViewController(coordinator: coordinator!, reactor: moreTripReactor)
                 self.navigationController?.isNavigationBarHidden = false
