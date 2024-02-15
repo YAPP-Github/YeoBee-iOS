@@ -113,7 +113,6 @@ final class HomeCollectionViewCell: UICollectionViewCell {
     
     func configure(tripItem: TripItem) {
         guard let firstCountry = tripItem.countryList.first,
-              let coverImageUrl = URL(string: firstCountry.coverImageUrl),
               let flagImageUrl = URL(string: firstCountry.flagImageUrl) else { return }
         
         titleLabel.text = tripItem.title
@@ -121,7 +120,6 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         countryLabel.text = firstCountry.name
         backgroundImageView.kf.indicatorType = .activity
         countryImageView.kf.indicatorType = .activity
-        backgroundImageView.kf.setImage(with: coverImageUrl)
         countryImageView.kf.setImage(with: flagImageUrl)
         
         // 선택한 나라 1개 이상
@@ -141,5 +139,8 @@ final class HomeCollectionViewCell: UICollectionViewCell {
                 make.trailing.equalTo(backgroundImageView.snp.trailing).inset(82)
             }
         }
+        
+        guard let coverImageUrl = URL(string: firstCountry.coverImageUrl ?? "") else { return }
+        backgroundImageView.kf.setImage(with: coverImageUrl)
     }
 }

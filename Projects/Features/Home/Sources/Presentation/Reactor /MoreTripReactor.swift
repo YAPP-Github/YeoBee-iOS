@@ -59,19 +59,19 @@ public final class MoreTripReactor: Reactor {
         switch currentState.tripType {
         case .traveling:
             Task {
-                let presentResult = try await tripUseCase.getPresentTrip(0, 1)
+                let presentResult = try await tripUseCase.getPresentTrip(0, 10)
                 let tripItems = presentResult.content
                 self.action.onNext(.trips(tripItems))
             }
         case .coming:
             Task {
-                let futureResult = try await tripUseCase.getFutureTrip(0, 1)
+                let futureResult = try await tripUseCase.getFutureTrip(0, 10)
                 let tripItems = futureResult.content
                 self.action.onNext(.trips(tripItems))
             }
         case .passed:
             Task {
-                let pastResult = try await tripUseCase.getPastTrip(0, 1)
+                let pastResult = try await tripUseCase.getPastTrip(0, 10)
                 let tripItems = pastResult.content
                 self.action.onNext(.trips(tripItems))
             }
