@@ -22,7 +22,7 @@ public enum HomeSection: CaseIterable {
 }
 
 enum HomeDataItem: Hashable {
-    case header
+    case header(FetchUserResponse)
     case traveling(TripItem)
     case coming(TripItem)
     case passed(TripItem)
@@ -82,13 +82,14 @@ public final class HomeViewController: UIViewController {
         dataSource = UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>(collectionView: homeCollectionView) 
         { (collectionView, indexPath, homeItem) -> UICollectionViewCell? in
             switch homeItem {
-            case .header:
+            case .header(let fetchUserResponse):
                 guard let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: HomeCollectionHeaderViewCell.identifier,
                     for: indexPath
                 ) as? HomeCollectionHeaderViewCell else {
                     return UICollectionViewCell()
                 }
+                cell.configure(fetchUserResponse: fetchUserResponse)
                 cell.delegate = self
                 return cell
             case .traveling(let travelingTrip):
@@ -166,10 +167,11 @@ public final class HomeViewController: UIViewController {
         homeCollectionView.dataSource = dataSource
     }
     
-    func configureSnapshot(travelingData: [TripItem], comingData: [TripItem], passedData: [TripItem]) {
+    func configureSnapshot(userInfo: FetchUserResponse, travelingData: [TripItem], comingData: [TripItem], passedData: [TripItem]) {
         var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeDataItem>()
+        
         snapshot.appendSections([.header])
-        snapshot.appendItems([.header], toSection: .header)
+        snapshot.appendItems([.header(userInfo)], toSection: .header)
         
         if let travelingTrip = travelingData.first {
             snapshot.appendSections([.traveling])
@@ -249,16 +251,18 @@ extension HomeViewController: View {
 
     func bindState(reactor: HomeReactor) {
         Observable.combineLatest(
+            reactor.state.compactMap { $0.userInfo },
             reactor.state.map { $0.travelingTrip },
             reactor.state.map { $0.comingTrip },
             reactor.state.map { $0.passedTrip }
         )
-        .do(onNext: { [weak self] traveling, coming, passed in
+        .do(onNext: { [weak self] userInfo, traveling, coming, passed in
             self?.emptyTripView.isHidden = (!traveling.isEmpty || !coming.isEmpty || !passed.isEmpty)
         })
         .observe(on: MainScheduler.instance)
-        .bind { [weak self] travelingTrip, comingTrip, passedTrip in
+        .bind { [weak self] userInfo, travelingTrip, comingTrip, passedTrip in
             self?.configureSnapshot(
+                userInfo: userInfo,
                 travelingData: travelingTrip,
                 comingData: comingTrip,
                 passedData: passedTrip

@@ -9,6 +9,8 @@
 import UIKit
 import DesignSystem
 import Entity
+import UseCase
+import ComposableArchitecture
 import YBNetwork
 import ReactorKit
 import RxSwift
@@ -21,6 +23,7 @@ public final class CompanionReactor: Reactor {
         case addCompanion
         case deleteCompanion(Companion)
         case updateCompanion(Companion, IndexPath)
+        case userInfo(FetchUserResponse)
     }
     
     public enum Mutation {
@@ -28,6 +31,7 @@ public final class CompanionReactor: Reactor {
         case addCompanion
         case deleteCompanion(Companion)
         case updateCompanion(Companion, IndexPath)
+        case userInfo(FetchUserResponse)
     }
     
     public struct State {
@@ -36,12 +40,22 @@ public final class CompanionReactor: Reactor {
         var companionNumber: Int = 0
         var makeLimitToast: Bool = false
         var tripRequest: RegistTripRequest
+        var userInfo: FetchUserResponse? = nil
     }
     
     public var initialState: State
     
+    @Dependency(\.userInfoUseCase) var userInfoUseCase
+    
     init(tripRequest: RegistTripRequest) {
         self.initialState = State(tripRequest: tripRequest)
+    }
+    
+    func getuserInfoUseCase() {
+        Task {
+            let userResult = try await userInfoUseCase.fetchUserInfo()
+            self.action.onNext(.userInfo(userResult))
+        }
     }
     
     // MARK: - Mutate
@@ -55,6 +69,8 @@ public final class CompanionReactor: Reactor {
             return .just(.deleteCompanion(companion))
         case .updateCompanion(let companion, let index):
             return .just(.updateCompanion(companion, index))
+        case .userInfo(let userInfo):
+            return .just(.userInfo(userInfo))
         }
     }
     
@@ -82,6 +98,8 @@ public final class CompanionReactor: Reactor {
             }
         case .updateCompanion(let companion, let index):
             newState.companions[index.row] = companion
+        case .userInfo(let userInfo):
+            newState.userInfo = userInfo
         }
         
         return newState

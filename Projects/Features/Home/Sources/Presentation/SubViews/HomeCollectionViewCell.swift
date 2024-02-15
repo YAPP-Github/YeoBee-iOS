@@ -98,7 +98,7 @@ final class HomeCollectionViewCell: UICollectionViewCell {
             make.height.equalToSuperview().multipliedBy(0.61)
         }
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(backgroundImageView.snp.bottom).inset(-20)
+            make.top.equalTo(backgroundImageView.snp.bottom).inset(-25)
             make.leading.equalToSuperview().inset(20)
         }
         dateLabel.snp.makeConstraints { make in
@@ -113,7 +113,6 @@ final class HomeCollectionViewCell: UICollectionViewCell {
     
     func configure(tripItem: TripItem) {
         guard let firstCountry = tripItem.countryList.first,
-              let coverImageUrl = URL(string: firstCountry.coverImageUrl),
               let flagImageUrl = URL(string: firstCountry.flagImageUrl) else { return }
         
         titleLabel.text = tripItem.title
@@ -121,18 +120,27 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         countryLabel.text = firstCountry.name
         backgroundImageView.kf.indicatorType = .activity
         countryImageView.kf.indicatorType = .activity
-        backgroundImageView.kf.setImage(with: coverImageUrl)
         countryImageView.kf.setImage(with: flagImageUrl)
+        
+        // 선택한 나라 1개 이상
         if tripItem.countryList.count > 1 {
             otherCountryLabel.text = "외 \(tripItem.countryList.count-1)개국"
         } else {
             otherCountryLabel.text = ""
         }
         
-        let tripUsersView = TripUsersHostingController(rootView: TripUsersView(tripUsers: tripItem.tripUserList)).view
-        backgroundImageView.addSubview(tripUsersView ?? UIView())
-        tripUsersView?.snp.makeConstraints { make in
-            make.top.trailing.equalToSuperview().inset(22)
+        // 동행자 1명 이상
+        if tripItem.tripUserList.count > 1 {
+            let tripUsersView = TripUsersHostingController(rootView: TripUsersView(tripUsers: tripItem.tripUserList)).view
+            tripUsersView?.backgroundColor = .clear
+            backgroundImageView.addSubview(tripUsersView ?? UIView())
+            tripUsersView?.snp.makeConstraints { make in
+                make.top.equalToSuperview().inset(22)
+                make.trailing.equalTo(backgroundImageView.snp.trailing).inset(82)
+            }
         }
+        
+        guard let coverImageUrl = URL(string: firstCountry.coverImageUrl ?? "") else { return }
+        backgroundImageView.kf.setImage(with: coverImageUrl)
     }
 }

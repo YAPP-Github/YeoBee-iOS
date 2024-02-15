@@ -37,7 +37,7 @@ struct TripUsersView: View {
             Color.white
                 .clipShape(Circle())
                 .frame(width: 28, height: 28)
-            AsyncImage(url: URL(string: tripUserItem.profileImageUrl ?? ""))
+            AsyncImage(url: URL(string: tripUserItem.profileImageUrl ?? ""), scale: 26)
                 .clipShape(Circle())
                 .frame(width: 26, height: 26)
         }
@@ -48,7 +48,7 @@ struct TripUsersView: View {
             Color.white
                 .clipShape(Circle())
                 .frame(width: 28, height: 28)
-            AsyncImage(url: URL(string: tripUserItem.profileImageUrl ?? ""))
+            AsyncImage(url: URL(string: tripUserItem.profileImageUrl ?? ""), scale: 26)
                 .clipShape(Circle())
                 .frame(width: 26, height: 26)
             Color.black.opacity(0.7)

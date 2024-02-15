@@ -8,6 +8,7 @@
 
 import UIKit
 import DesignSystem
+import Kingfisher
 import RxSwift
 import RxCocoa
 import SnapKit
@@ -98,8 +99,11 @@ class CountryTableViewCell: UITableViewCell {
     }
     
     func configure() {
-        guard let country = country else { return }
-        countryImageView.image = UIImage(systemName: "xmark")
+        guard let country = country,
+              let imageUrl = URL(string: country.imageURL) else { return }
+        
+        countryImageView.kf.indicatorType = .activity
+        countryImageView.kf.setImage(with: imageUrl)
         countryNameLabel.text = country.name
     }
     

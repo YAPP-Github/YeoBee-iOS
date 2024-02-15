@@ -21,16 +21,16 @@ public struct TripItem: Codable, Hashable {
 public struct CountryItem: Codable, Hashable {
     public var name: String
     public var flagImageUrl: String
-    public var coverImageUrl: String
+    public var coverImageUrl: String?
 }
 
 public struct TripUserItem: Codable, Hashable, Identifiable {
     public var id: Int
-    public var userId: Int
+    public var userId: Int?
     public var name: String?
     public var profileImageUrl: String?
 
-    public init(id: Int, userId: Int, name: String? = nil, profileImageUrl: String? = nil) {
+    public init(id: Int, userId: Int? = nil, name: String? = nil, profileImageUrl: String? = nil) {
         self.id = id
         self.userId = userId
         self.name = name

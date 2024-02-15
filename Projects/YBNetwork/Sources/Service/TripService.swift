@@ -14,11 +14,17 @@ public enum TripService {
     case getTrip(_ tripId: Int)
     case putTrip(_ tripId: Int)
     case deleteTrip(_ tripId: Int)
-    case postTrip
+    case postTrip(
+        _ title: String,
+        _ startDate: String,
+        _ endDate: String,
+        _ countryList: [CountryItemRequest],
+        _ tripUserList: [TripUserItemRequest]
+    )
     case getPastTrip(_ pageIndex: Int, _ pageSize: Int)
     case getPresentTrip(_ pageIndex: Int, _ pageSize: Int)
     case getFutureTrip(_ pageIndex: Int, _ pageSize: Int)
-    case checkDateOverlap
+    case checkDateOverlap(_ startDate: String, _ endDate: String)
 }
 
 extension TripService: TargetType {
@@ -68,6 +74,22 @@ extension TripService: TargetType {
                 "pageSize": pageSize
             ]
             return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+        case .checkDateOverlap(let startDate, let endDate):
+            let params: [String: Any] = [
+                "startDate": startDate,
+                "endDate": endDate
+            ]
+            return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+        case .postTrip(let title, let startDate, let endDate, let countryList, let tripUserList):
+            let registTripRequest = RegistTripRequest(
+                title: title,
+                startDate: startDate,
+                endDate: endDate,
+                countryList: countryList,
+                tripUserList: tripUserList
+            )
+            
+            return .requestJSONEncodable(registTripRequest)
         default:
             return .requestPlain
         }

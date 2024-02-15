@@ -64,7 +64,10 @@ extension UserInfoService: TargetType {
     
     public var headers: [String: String]? {
         if let token = KeychainManager.shared.load(key: KeychainManager.accessToken) {
-            return ["Authorization": "Bearer \(token)"]
+            return [
+                "Content-type": "application/json",
+                "Authorization": "\(token)"
+            ]
         } else {
             return nil
         }

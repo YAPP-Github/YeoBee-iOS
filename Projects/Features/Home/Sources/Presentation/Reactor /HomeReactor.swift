@@ -21,20 +21,24 @@ public final class HomeReactor: Reactor {
         case travelingTrip([TripItem])
         case comingTrip([TripItem])
         case passedTrip([TripItem])
+        case userInfo(FetchUserResponse)
     }
     
     public enum Mutation {
         case travelingTrip([TripItem])
         case comingTrip([TripItem])
         case passedTrip([TripItem])
+        case userInfo(FetchUserResponse)
     }
     
     public struct State {
         var travelingTrip: [TripItem] = []
         var comingTrip: [TripItem] = []
         var passedTrip: [TripItem] = []
+        var userInfo: FetchUserResponse? = nil
     }
     
+    @Dependency(\.userInfoUseCase) var userInfoUseCase
     @Dependency(\.tripUseCase) var tripUseCase
     public var initialState: State
     
@@ -51,6 +55,8 @@ public final class HomeReactor: Reactor {
             return .just(.comingTrip(comingTrip))
         case .passedTrip(let passedTrip):
             return .just(.passedTrip(passedTrip))
+        case .userInfo(let userInfo):
+            return .just(.userInfo(userInfo))
         }
     }
     
@@ -65,26 +71,33 @@ public final class HomeReactor: Reactor {
             newState.comingTrip = tripItems
         case .passedTrip(let tripItems):
             newState.passedTrip = tripItems
+        case .userInfo(let userInfo):
+            newState.userInfo = userInfo
         }
         
         return newState
     }
     
     func homeTripUseCase() {
+        Task {       
+            let userResult = try await userInfoUseCase.fetchUserInfo()
+            self.action.onNext(.userInfo(userResult))
+        }
+        
         Task {
-            let pastResult = try await tripUseCase.getPastTrip(0, 1)
+            let pastResult = try await tripUseCase.getPastTrip(0, 3)
             let tripItems = pastResult.content
             self.action.onNext(.passedTrip(tripItems))
         }
         
         Task {
-            let presentResult = try await tripUseCase.getPresentTrip(0, 1)
+            let presentResult = try await tripUseCase.getPresentTrip(0, 3)
             let tripItems = presentResult.content
             self.action.onNext(.travelingTrip(tripItems))
         }
         
         Task {
-            let futureResult = try await tripUseCase.getFutureTrip(0, 1)
+            let futureResult = try await tripUseCase.getFutureTrip(0, 3)
             let tripItems = futureResult.content
             self.action.onNext(.comingTrip(tripItems))
         }

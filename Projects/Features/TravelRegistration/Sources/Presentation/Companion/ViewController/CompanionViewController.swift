@@ -74,7 +74,7 @@ public final class CompanionViewController: UIViewController {
         bind(reactor: reactor)
         configureBar()
         setDataSource()
-        addCompanionView.configure() // 임시 내 프로필 데이터 설정
+        reactor.getuserInfoUseCase()
     }
     
     // MARK: - Set UI
@@ -268,7 +268,8 @@ extension CompanionViewController: View {
                                                                               reactor: travelTtitleReactor)
                     self.navigationController?.pushViewController(travelTitleViewController, animated: true)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
     }
     
     func bindState(reactor: CompanionReactor) {
@@ -286,7 +287,8 @@ extension CompanionViewController: View {
                     self?.nextButton.isEnabled = true
                     self?.nextButton.setAppearance(appearance: .default)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.companionType }
@@ -321,7 +323,8 @@ extension CompanionViewController: View {
                     self?.nextButton.isEnabled = true
                     self?.nextButton.setAppearance(appearance: .default)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.makeLimitToast }
@@ -331,7 +334,16 @@ extension CompanionViewController: View {
                     let toast = Toast.text(icon: .warning, "최대 10명까지 추가할 수 있어요.")
                     toast.show()
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .compactMap { $0.userInfo }
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] userInfo in
+                self?.addCompanionView.configure(fetchUserResponse: userInfo)
+            }
+            .disposed(by: disposeBag)
     }
 }
 

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct FetchUserResponse: Codable {
+public struct FetchUserResponse: Codable, Hashable {
     public var id: Int
     public var nickname: String
     public var profileImage: String?
