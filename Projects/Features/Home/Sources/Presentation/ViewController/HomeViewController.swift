@@ -35,6 +35,10 @@ public final class HomeViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<HomeSection, HomeDataItem>?
     private var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeDataItem>()
     public var coordinator: HomeCoordinator?
+    private let dateFormatter: DateFormatter = {
+        $0.dateFormat = "yyyy-MM-dd"
+        return $0
+    }(DateFormatter())
 
     // MARK: - Properties
     lazy var homeCollectionView = HomeCollectionView()
@@ -145,11 +149,22 @@ public final class HomeViewController: UIViewController {
                         header.moreButton.isHidden = false
                     }
                 } else if indexPath.section == self.snapshot.indexOfSection(.coming) {
-                    // [TODO] 다가오는 가장 빠른 여행 출발일 기준 D-day로 설정
-//                    let items = snapshot.itemIdentifiers(inSection: .coming)
-                    header.sectionTitleLabel.text = TripType.coming.rawValue
-                    if self.reactor.currentState.comingTrip.count > 1 {
-                        header.moreButton.isHidden = false
+                    let items = snapshot.itemIdentifiers(inSection: .coming)
+                    if let item = items.first {
+                        switch item {
+                        case .header, .traveling, .passed:
+                            break
+                        case .coming(let tripItem):
+                            // 현재 날짜와 startDate 차이 계산
+                            if let startDate = dateFormatter.date(from: tripItem.startDate) {
+                                if let daysDiff = Calendar.current.dateComponents([.day], from: Date(), to: startDate).day {
+                                    header.sectionTitleLabel.text = "\(TripType.coming.rawValue), D-\(daysDiff)"
+                                    if self.reactor.currentState.comingTrip.count > 1 {
+                                        header.moreButton.isHidden = false
+                                    }
+                                }
+                            }
+                        }
                     }
                 } else if indexPath.section == self.snapshot.indexOfSection(.passed) {
                     header.sectionTitleLabel.text = TripType.passed.rawValue
