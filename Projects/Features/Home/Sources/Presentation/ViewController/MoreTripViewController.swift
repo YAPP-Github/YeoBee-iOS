@@ -121,6 +121,17 @@ extension MoreTripViewController: UICollectionViewDelegate {
         let tripItem = reactor.currentState.trips[indexPath.row]
         coordinator.trip(tripItem: tripItem)
     }
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let height = scrollView.frame.height // 스크롤뷰의 전체 높이
+        let contentSizeHeight = scrollView.contentSize.height // 전체 콘텐츠 영역의 높이
+        let offset = scrollView.contentOffset.y // 클릭 위치
+        let reachedBottom = (offset > contentSizeHeight - height) // (클릭 지점 + 스크롤뷰 높이 == 전체 컨텐츠 높이) -> Bool
+        
+        if reachedBottom && (contentSizeHeight > height) { // 스크롤이 바닥에 닿았다면 & 컨텐츠가 스크롤 가능한 높이일 때
+            reactor.loadNextPageIfNeeded()
+        }
+    }
 }
 
 // MARK: - Bind
