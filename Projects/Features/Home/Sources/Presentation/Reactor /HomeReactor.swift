@@ -21,20 +21,24 @@ public final class HomeReactor: Reactor {
         case travelingTrip([TripItem])
         case comingTrip([TripItem])
         case passedTrip([TripItem])
+        case userInfo(FetchUserResponse)
     }
     
     public enum Mutation {
         case travelingTrip([TripItem])
         case comingTrip([TripItem])
         case passedTrip([TripItem])
+        case userInfo(FetchUserResponse)
     }
     
     public struct State {
         var travelingTrip: [TripItem] = []
         var comingTrip: [TripItem] = []
         var passedTrip: [TripItem] = []
+        var userInfo: FetchUserResponse? = nil
     }
     
+    @Dependency(\.userInfoUseCase) var userInfoUseCase
     @Dependency(\.tripUseCase) var tripUseCase
     public var initialState: State
     
@@ -51,6 +55,8 @@ public final class HomeReactor: Reactor {
             return .just(.comingTrip(comingTrip))
         case .passedTrip(let passedTrip):
             return .just(.passedTrip(passedTrip))
+        case .userInfo(let userInfo):
+            return .just(.userInfo(userInfo))
         }
     }
     
@@ -65,12 +71,19 @@ public final class HomeReactor: Reactor {
             newState.comingTrip = tripItems
         case .passedTrip(let tripItems):
             newState.passedTrip = tripItems
+        case .userInfo(let userInfo):
+            newState.userInfo = userInfo
         }
         
         return newState
     }
     
     func homeTripUseCase() {
+        Task {       
+            let userResult = try await userInfoUseCase.fetchUserInfo()
+            self.action.onNext(.userInfo(userResult))
+        }
+        
         Task {
             let pastResult = try await tripUseCase.getPastTrip(0, 3)
             let tripItems = pastResult.content

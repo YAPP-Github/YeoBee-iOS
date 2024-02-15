@@ -12,20 +12,19 @@ import SnapKit
 
 final class HomeProfileButton: UIButton {
     
-    private let profileImageView: UIImageView = {
-        $0.image = UIImage(systemName: "circle")
+    let profileImageView: UIImageView = {
         $0.contentMode = .scaleAspectFit
         $0.layer.cornerRadius = 30 / 2
         $0.clipsToBounds = true
         return $0
     }(UIImageView())
     
-    private let profileNameLabel = YBLabel(text: "여비", font: .body2, textColor: .black)
+    let profileNameLabel = YBLabel(font: .body2, textColor: .black)
     private let chevronImageView = YBIconButton(image: DesignSystemAsset.Icons.next.image)
     
     let profileStackView: UIStackView = {
         $0.axis = .horizontal
-        $0.spacing = 5
+        $0.spacing = 10
         $0.distribution = .fill
         $0.alignment = .center
         return $0

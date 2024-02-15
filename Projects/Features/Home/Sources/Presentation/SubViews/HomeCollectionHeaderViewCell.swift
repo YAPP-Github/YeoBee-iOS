@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import Entity
+import YBNetwork
 import DesignSystem
 import SnapKit
 import RxSwift
 import RxCocoa
 import RxGesture
+import Kingfisher
 
 protocol HomeCollectionHeaderViewCellDelegate: AnyObject {
     func profileButtonTapped()
@@ -65,6 +68,13 @@ class HomeCollectionHeaderViewCell: UICollectionViewCell {
             make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(95).priority(.low)
         }
+    }
+    
+    func configure(fetchUserResponse: FetchUserResponse) {
+        guard let profileImageUrl = URL(string: fetchUserResponse.profileImage ?? "\(YeoBeeAPI.shared.baseImageURL ?? "")/static/user/profile/profile0.png") else { return }
+        
+        profileButton.profileNameLabel.text = fetchUserResponse.nickname
+        profileButton.profileImageView.kf.setImage(with: profileImageUrl)
     }
     
     private func bind() {
