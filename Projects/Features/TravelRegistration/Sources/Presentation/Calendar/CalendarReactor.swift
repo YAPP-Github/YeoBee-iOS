@@ -81,9 +81,14 @@ public final class CalendarReactor: Reactor {
             }
         case .endDate(date: let date):
             newState.endDate = date
-            let startDate = formatDateToString(state.startDate ?? Date())
-            let endDate = formatDateToString(date ?? Date())
-            checkDateValidationUseCase(startDate, endDate)
+        
+            if let startDate = state.startDate, let endDate = date {
+                let startDateString = formatDateToString(startDate)
+                let endDateString = formatDateToString(endDate)
+                checkDateValidationUseCase(startDateString, endDateString)
+            } else {
+                newState.checkedDateValidation = false
+            }
         case .selectedDate(dates: let dates):
             newState.selectedDate.append(contentsOf: dates)
         case .checkedDateValidation(isOverlap: let isOverlap):
