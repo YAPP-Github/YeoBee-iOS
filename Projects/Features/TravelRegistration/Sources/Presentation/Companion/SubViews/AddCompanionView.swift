@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import Entity
+import YBNetwork
 import DesignSystem
 import SnapKit
+import Kingfisher
 
 final class AddCompanionView: UIView {
     private let addCompanionLabel = YBLabel(text: "동행을 추가해주세요.", font: .header2, textColor: .black)
@@ -69,8 +72,10 @@ final class AddCompanionView: UIView {
         }
     }
     
-    func configure() {
-        myProfileImageView.backgroundColor = .systemPink
-        myProfileNameLabel.text = "여비"
+    func configure(fetchUserResponse: FetchUserResponse) {
+        guard let profileImageUrl = URL(string: fetchUserResponse.profileImage ?? "\(YeoBeeAPI.shared.baseImageURL ?? "")/static/user/profile/profile0.png") else { return }
+        
+        myProfileNameLabel.text = fetchUserResponse.nickname
+        myProfileImageView.kf.setImage(with: profileImageUrl)
     }
 }
