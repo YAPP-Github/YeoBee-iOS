@@ -102,4 +102,28 @@ public final class HomeReactor: Reactor {
             self.action.onNext(.comingTrip(tripItems))
         }
     }
+    
+    func updateHomeTripUseCase() {
+        self.action.onNext(.passedTrip([]))
+        self.action.onNext(.travelingTrip([]))
+        self.action.onNext(.comingTrip([]))
+        
+        Task {
+            let pastResult = try await tripUseCase.getPastTrip(0, 3)
+            let tripItems = pastResult.content
+            self.action.onNext(.passedTrip(tripItems))
+        }
+        
+        Task {
+            let presentResult = try await tripUseCase.getPresentTrip(0, 3)
+            let tripItems = presentResult.content
+            self.action.onNext(.travelingTrip(tripItems))
+        }
+        
+        Task {
+            let futureResult = try await tripUseCase.getFutureTrip(0, 3)
+            let tripItems = futureResult.content
+            self.action.onNext(.comingTrip(tripItems))
+        }
+    }
 }

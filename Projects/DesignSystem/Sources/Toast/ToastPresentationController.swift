@@ -23,7 +23,7 @@ public class Toast {
         icon: ToastIcon,
         _ text: String
     ) -> Toast {
-        let view = ToastView(child: YBToastView(icon: .warning, text))
+        let view = ToastView(child: YBToastView(icon: icon, text))
         return self.init(view: view)
     }
 

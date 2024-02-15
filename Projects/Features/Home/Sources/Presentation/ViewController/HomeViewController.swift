@@ -207,6 +207,7 @@ public final class HomeViewController: UIViewController {
     
     private func setCollectionViewDelegate() {
         homeCollectionView.delegate = self
+        coordinator?.delegate = self
     }
 }
 
@@ -308,6 +309,17 @@ extension HomeViewController: HomeSectionHeaderViewDelegate {
                 self.navigationController?.isNavigationBarHidden = false
                 self.navigationController?.pushViewController(moreTripViewController, animated: true)
             }
+        }
+    }
+}
+
+// MARK: - 여행 등록 완료 후
+extension HomeViewController: HomeCoordinatorDelegate {
+    public func finishedRegistration() {
+        reactor.updateHomeTripUseCase()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let toast = Toast.text(icon: .complete, "새로운 여행이 등록 되었어요!")
+            toast.show()
         }
     }
 }

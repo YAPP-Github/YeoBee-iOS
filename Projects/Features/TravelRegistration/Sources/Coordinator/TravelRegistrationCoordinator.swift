@@ -11,12 +11,17 @@ import UIKit
 import Coordinator
 import Entity
 
+public protocol TravelRegistrationCoordinatorDelegate: AnyObject {
+    func finishedRegistration()
+}
+
 final public class TravelRegistrationCoordinator: TravelRegistrationCoordinatorInterface {
     public var navigationController: UINavigationController
     public var travelRegistrationNavigationController: UINavigationController?
     public var viewControllerRef: UIViewController?
     public var childCoordinators = [Coordinator]()
     public var parent: HomeCoordinatorInterface?
+    public weak var delegate: TravelRegistrationCoordinatorDelegate?
 
     public init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -35,6 +40,11 @@ final public class TravelRegistrationCoordinator: TravelRegistrationCoordinatorI
     public func coordinatorDidFinish() {
         travelRegistrationNavigationController = nil
         parent?.childDidFinish(self)
+    }
+    
+    public func finishedRegistration() {
+        delegate?.finishedRegistration()
+        coordinatorDidFinish()
     }
 
     deinit {
