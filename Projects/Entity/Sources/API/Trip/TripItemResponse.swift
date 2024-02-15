@@ -21,7 +21,7 @@ public struct TripItem: Codable, Hashable {
 public struct CountryItem: Codable, Hashable {
     public var name: String
     public var flagImageUrl: String
-    public var coverImageUrl: String
+    public var coverImageUrl: String?
 }
 
 public struct TripUserItem: Codable, Hashable, Identifiable {

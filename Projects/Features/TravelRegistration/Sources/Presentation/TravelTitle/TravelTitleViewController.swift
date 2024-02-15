@@ -131,19 +131,9 @@ extension TravelTitleViewController: View {
                 guard let self,
                       let titleString = self.titleTextField.text else { return }
                 
-                let currentTripRequest = self.reactor.currentState.tripRequest
-                let tripRequest = RegistTripRequest(
-                    title: titleString,
-                    startDate: currentTripRequest.startDate,
-                    endDate: currentTripRequest.endDate,
-                    countryList: currentTripRequest.countryList,
-                    tripUserList: currentTripRequest.tripUserList
-                )
-                print("보낼 데이터: \(tripRequest)")
-                
-                self.navigationController?.dismiss(animated: true)
-                self.coordinator.coordinatorDidFinish()
-            }.disposed(by: disposeBag)
+                reactor.action.onNext(.makeTravelButtonTapped(text: titleString))
+            }
+            .disposed(by: disposeBag)
     }
     
     func bindState(reactor: TravelTitleReactor) {
@@ -161,7 +151,20 @@ extension TravelTitleViewController: View {
                     self?.makeTravelButton.setTitle("여행 만들기", for: .normal)
                     self?.makeTravelButton.setAppearance(appearance: .defaultDisable)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.postValidation }
+            .bind { [weak self] isSuccess in
+                if isSuccess {
+                    self?.navigationController?.dismiss(animated: true)
+                    self?.coordinator.coordinatorDidFinish()
+                } else {
+                    print("post 실패")
+                }
+            }
+            .disposed(by: disposeBag)
     }
 }
 
