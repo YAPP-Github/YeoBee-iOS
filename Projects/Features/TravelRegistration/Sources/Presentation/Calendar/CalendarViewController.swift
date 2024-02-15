@@ -338,7 +338,8 @@ extension CalendarViewController: View {
                                                                           reactor: companionReactor)
                     self.navigationController?.pushViewController(companionViewController, animated: true)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
     }
     
     func bindState(reactor: CalendarReactor) {
@@ -347,14 +348,16 @@ extension CalendarViewController: View {
             .observe(on: MainScheduler.instance)
             .bind { [weak self] startDate in
                 self?.updatePeriodLabel(startDate: startDate, endDate: nil)
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.endDate }
             .observe(on: MainScheduler.instance)
             .bind { [weak self] endDate in
                 self?.updatePeriodLabel(startDate: reactor.currentState.startDate, endDate: endDate)
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.selectedDate }
@@ -369,6 +372,17 @@ extension CalendarViewController: View {
                     self?.nextButton.setTitle("다음으로", for: .normal)
                     self?.nextButton.setAppearance(appearance: .default)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.checkedDateValidation }
+            .observe(on: MainScheduler.instance)
+            .bind { isOverlap in
+                if isOverlap {
+                    print("여행이 겹쳤어요 - alert")
+                }
+            }
+            .disposed(by: disposeBag)
     }
 }

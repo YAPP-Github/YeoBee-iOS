@@ -17,6 +17,7 @@ public struct TripUseCase {
     public var getPastTrip: @Sendable (_ pageIndex: Int, _ pageSize: Int) async throws -> TripResponse
     public var getPresentTrip: @Sendable (_ pageIndex: Int, _ pageSize: Int) async throws -> TripResponse
     public var getFutureTrip: @Sendable (_ pageIndex: Int, _ pageSize: Int) async throws -> TripResponse
+    public var checkDateOverlap: @Sendable (_ startDate: String, _ endDate: String) async throws -> TripDateValidationResponse
 }
 
 extension TripUseCase: TestDependencyKey {
@@ -41,6 +42,8 @@ extension TripUseCase: DependencyKey {
             return try await tripRepository.getPresentTrip(pageIndex, pageSize)
         }, getFutureTrip: { pageIndex, pageSize in
             return try await tripRepository.getFutureTrip(pageIndex, pageSize)
+        }, checkDateOverlap: { startDate, endDate in
+            return try await tripRepository.checkDateOverlap(startDate, endDate)
         })
     }
 }

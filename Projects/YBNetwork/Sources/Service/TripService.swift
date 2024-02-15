@@ -18,7 +18,7 @@ public enum TripService {
     case getPastTrip(_ pageIndex: Int, _ pageSize: Int)
     case getPresentTrip(_ pageIndex: Int, _ pageSize: Int)
     case getFutureTrip(_ pageIndex: Int, _ pageSize: Int)
-    case checkDateOverlap
+    case checkDateOverlap(_ startDate: String, _ endDate: String)
 }
 
 extension TripService: TargetType {
@@ -66,6 +66,12 @@ extension TripService: TargetType {
             let params: [String: Any] = [
                 "pageIndex": pageIndex,
                 "pageSize": pageSize
+            ]
+            return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+        case .checkDateOverlap(let startDate, let endDate):
+            let params: [String: Any] = [
+                "startDate": startDate,
+                "endDate": endDate
             ]
             return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
         default:
