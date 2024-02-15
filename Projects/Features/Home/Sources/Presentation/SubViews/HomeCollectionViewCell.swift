@@ -123,9 +123,16 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         countryImageView.kf.indicatorType = .activity
         backgroundImageView.kf.setImage(with: coverImageUrl)
         countryImageView.kf.setImage(with: flagImageUrl)
+        
+        // 선택한 나라 1개 이상
         if tripItem.countryList.count > 1 {
             otherCountryLabel.text = "외 \(tripItem.countryList.count-1)개국"
-            
+        } else {
+            otherCountryLabel.text = ""
+        }
+        
+        // 동행자 1명 이상
+        if tripItem.tripUserList.count > 1 {
             let tripUsersView = TripUsersHostingController(rootView: TripUsersView(tripUsers: tripItem.tripUserList)).view
             tripUsersView?.backgroundColor = .clear
             backgroundImageView.addSubview(tripUsersView ?? UIView())
@@ -133,8 +140,6 @@ final class HomeCollectionViewCell: UICollectionViewCell {
                 make.top.equalToSuperview().inset(22)
                 make.trailing.equalTo(backgroundImageView.snp.trailing).inset(82)
             }
-        } else {
-            otherCountryLabel.text = ""
         }
     }
 }
