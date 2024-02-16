@@ -26,13 +26,15 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
     public var expenditureViewController: ExpenditureViewController?
 
     public var parent: TripCoordinatorInterface?
+    public let tripItem: TripItem
 
-    public init(navigationController: UINavigationController) {
+    public init(navigationController: UINavigationController, tripItem: TripItem) {
         self.navigationController = navigationController
+        self.tripItem = tripItem
     }
 
     public func start(animated: Bool) {
-        let expenditureViewController = ExpenditureViewController(coordinator: self)
+        let expenditureViewController = ExpenditureViewController(coordinator: self, tripItem: tripItem)
         self.expenditureViewController = expenditureViewController
         expenditureNavigationController = UINavigationController(rootViewController: expenditureViewController)
     }
@@ -43,6 +45,7 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
     }
 
     public func coordinatorDidFinish() {
+        expenditureViewController = nil
         expenditureNavigationController = nil
         parent?.coordinatorDidFinish()
         parent?.childDidFinish(self)
@@ -104,11 +107,29 @@ extension ExpenditureCoordinator {
 
     public func tripSetting() {
         if let expenditureNavigationController {
+            expenditureNavigationController.tabBarController?.tabBar.isHidden = true
             let settingCoordinator = SettingCoordinator(navigationController: expenditureNavigationController)
+            // TODO: 현준님 여기서 멤버변수인 tripItem 가져다 쓰시면 됩니당
             settingCoordinator.parent = self
             addChild(settingCoordinator)
             settingCoordinator.start(animated: true)
         }
+    }
+
+    public func showFilterBottomSheet(selectedExpenseFilter: PaymentMethod?) {
+        let filterBottomSheetViewController = FilterBottomSheetViewController(
+            coordinator: self,
+            selectedExpenseFilter: selectedExpenseFilter
+        )
+        expenditureNavigationController?.presentBottomSheet(
+            presentedViewController: filterBottomSheetViewController,
+            height: 280
+        )
+    }
+
+    public func selectExpenseFilter(selectedExpenseFilter: PaymentMethod?) {
+        expenditureViewController?.selectExpenseFilter(selectedExpenseFilter: selectedExpenseFilter)
+        expenditureNavigationController?.dismiss(animated: true)
     }
 }
 

@@ -13,6 +13,7 @@ import DesignSystem
 import SnapKit
 import ComposableArchitecture
 import Coordinator
+import Entity
 
 public final class ExpenditureViewController: UIViewController {
 
@@ -25,13 +26,10 @@ public final class ExpenditureViewController: UIViewController {
 
 //    // MARK: DataSources
 
-    public init(coordinator: ExpenditureCoordinator) {
+    public init(coordinator: ExpenditureCoordinator, tripItem: TripItem) {
         self.coordinator = coordinator
-
-        let startDate = Date()
-        let endDate = Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date()
         let store: StoreOf<ExpenditureReducer> = .init(
-            initialState: .init(type: .individual, tripId: 1, startDate: startDate, endDate: endDate),
+            initialState: .init(type: .individual, tripItem: tripItem),
             reducer: {
                 ExpenditureReducer(cooridinator: coordinator)
             })
@@ -95,6 +93,10 @@ public final class ExpenditureViewController: UIViewController {
 
     public func getExpenseList(editDate: Date) {
         store.send(.getExpenseList(editDate))
+    }
+
+    func selectExpenseFilter(selectedExpenseFilter: PaymentMethod?) {
+        store.send(.setExpenseFilter(selectedExpenseFilter))
     }
 
     deinit {

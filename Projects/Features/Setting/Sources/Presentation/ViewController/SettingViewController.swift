@@ -77,7 +77,7 @@ public final class SettingViewController: UIViewController {
     
     private func setDataSource() {
         dataSource = UITableViewDiffableDataSource<SettingSection, SettingDataItem>(tableView: settingTableView)
-        { (tableView, indexPath, settingDataItem) -> UITableViewCell? in
+        { [weak self] (tableView, indexPath, settingDataItem) -> UITableViewCell? in
             
             switch settingDataItem {
             case .companion(let companion):
@@ -113,7 +113,7 @@ public final class SettingViewController: UIViewController {
     }
     
     private func configureBar() {
-        let deleteImage = DesignSystemAsset.Icons.delete.image.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let deleteImage = DesignSystemAsset.Icons.back.image.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
         let trashImage = DesignSystemAsset.Icons.trash.image.withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
         let deleteButton = UIBarButtonItem(image: deleteImage, style: .plain, target: self, action: #selector(deleteButtonTapped))
         let trashButton = UIBarButtonItem(image: trashImage, style: .plain, target: self, action: #selector(trashButtonTapped))
@@ -124,7 +124,6 @@ public final class SettingViewController: UIViewController {
     
     @objc private func deleteButtonTapped() {
         coordinator.coordinatorDidFinish()
-        self.navigationController?.popViewController(animated: true)
     }
     
     @objc private func trashButtonTapped() {

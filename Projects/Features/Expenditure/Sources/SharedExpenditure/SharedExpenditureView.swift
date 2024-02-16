@@ -26,23 +26,23 @@ struct SharedExpenditureView: View {
                     expenditureTab: viewStore.$selectedTab)
                     .frame(width: 200, height: 40)
                     .padding(.top, 5)
-                TabView(selection: viewStore.$selectedTab) {
-                    ExpenditureView(
-                        store: store.scope(
-                            state: \.sharedExpenditure,
-                            action: SharedExpenditureReducer.Action.sharedExpenditure
-                        )
-                    )
-                    .tag(ExpenditureTab.shared)
-                    ExpenditureView(
-                        store: store.scope(
-                            state: \.individualExpenditure,
-                            action: SharedExpenditureReducer.Action.individualExpenditure
-                        )
-                    )
-                    .tag(ExpenditureTab.individual)
-                }
-                .tabViewStyle(.page(indexDisplayMode: .never))
+//                TabView(selection: viewStore.$selectedTab) {
+//                    ExpenditureView(
+//                        store: store.scope(
+//                            state: \.sharedExpenditure,
+//                            action: SharedExpenditureReducer.Action.sharedExpenditure
+//                        )
+//                    )
+//                    .tag(ExpenditureTab.shared)
+//                    ExpenditureView(
+//                        store: store.scope(
+//                            state: \.individualExpenditure,
+//                            action: SharedExpenditureReducer.Action.individualExpenditure
+//                        )
+//                    )
+//                    .tag(ExpenditureTab.individual)
+//                }
+//                .tabViewStyle(.page(indexDisplayMode: .never))
             }
             .background(YBColor.gray1.swiftUIColor)
         }

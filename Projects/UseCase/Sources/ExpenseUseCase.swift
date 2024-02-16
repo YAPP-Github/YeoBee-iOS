@@ -7,13 +7,17 @@
 //
 
 import Foundation
-
 import Repository
 import Entity
 import ComposableArchitecture
 
 public struct ExpenseUseCase {
-    public var getExpenseList: @Sendable (_ tripId: Int, _ date: Date, _ pageIndex: Int) async throws -> ([ExpenseItem], Bool)
+    public var getExpenseList: @Sendable (
+        _ tripId: Int, 
+        _ date: Date,
+        _ expenseMethod: PaymentMethod?,
+        _ pageIndex: Int
+    ) async throws -> ([ExpenseItem], Bool)
     public var createExpense: @Sendable (_ createExpense: CreateExpenseRequest) async throws -> CreateExpenseResponse
     public var getExpenseDetail: @Sendable (_ expenseId: Int) async throws -> ExpenseDetailItem
 }
@@ -32,14 +36,15 @@ extension DependencyValues {
 extension ExpenseUseCase: DependencyKey {
     public static var liveValue: ExpenseUseCase {
         let expenseRepository = ExpenseRepository()
-        return .init(getExpenseList: { tripId, date, pageIndex in
+        return .init(getExpenseList: { tripId, date, expenseMethod, pageIndex in
             let pageSize = 20
             let data = try await expenseRepository.getExpenseList(
                 request: .init(
                     tripId: tripId,
                     pageIndex: pageIndex,
                     pageSize: pageSize,
-                    date: date
+                    date: date,
+                    method: expenseMethod
                 )
             )
             return (data.content, data.number <= 20)

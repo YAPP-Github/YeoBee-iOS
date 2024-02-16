@@ -6,9 +6,9 @@
 //  Copyright © 2023 YeoBee.com. All rights reserved.
 
 import Foundation
-import Combine
 import ComposableArchitecture
 import UseCase
+import Entity
 
 public struct ExpenditureReducer: Reducer {
 
@@ -22,28 +22,34 @@ public struct ExpenditureReducer: Reducer {
         var totalPrice: TotalPriceReducer.State
         var tripDate: TripDateReducer.State
         var expenditureList = ExpenditureListReducer.State()
-        var tripId: Int
-        var startDate: Date
-        var endDate: Date
-        var beforeDate: Date
+        let tripItem: TripItem
         var isInitialShow: Bool = true
         var pageIndex: Int = 0
         var isLastPage: Bool = false
         var currentDate: Date?
+        var currentFilter: PaymentMethod?
+        var startDate: Date
+        var endDate: Date
+        var readyDate: Date
+        var selectedDate: Date?
 
-
-        init(type: ExpenditureTab, tripId: Int, startDate: Date, endDate: Date) {
+        init(type: ExpenditureTab, tripItem: TripItem) {
             self.type = type
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "YYYY-MM-dd"
+            let startDate = dateFormatter.date(from: tripItem.startDate) ?? Date()
+            let endDate = dateFormatter.date(from: tripItem.endDate) ?? Date()
+            let readyDate = Calendar.current.date(byAdding: .day, value: 1, to: startDate) ?? Date()
+            self.tripItem = tripItem
+            self.startDate = startDate
+            self.endDate = endDate
+            self.readyDate = readyDate
             self.tripDate = TripDateReducer.State(startDate: startDate, endDate: endDate)
             self.totalPrice = .init(
                 expenseType: type,
                 totalPriceType: .expense,
                 isTappable: true
             )
-            self.tripId = tripId
-            self.startDate = startDate
-            self.endDate = endDate
-            self.beforeDate = Calendar.current.date(byAdding: .day, value: -1, to: startDate) ?? Date()
         }
     }
 
@@ -54,11 +60,12 @@ public struct ExpenditureReducer: Reducer {
         case tripDate(TripDateReducer.Action)
         case expenditureList(ExpenditureListReducer.Action)
         case tappedAddButton
-        case tappedFilterButton
+        case tappedFilterButton(PaymentMethod?)
         case getExpenditure(Date)
         case getBudget
         case appendExpenditures
         case setLastPage(Bool)
+        case setExpenseFilter(PaymentMethod?)
     }
 
     @Dependency(\.expenseUseCase) var expenseUseCase
@@ -73,7 +80,7 @@ public struct ExpenditureReducer: Reducer {
                     state.isInitialShow = false
                     let selectDate: Date
                     if currentDate < state.startDate {
-                        selectDate = state.beforeDate
+                        selectDate = state.readyDate
                     } else if currentDate > state.endDate {
                         selectDate = state.startDate
                     } else {
@@ -95,7 +102,7 @@ public struct ExpenditureReducer: Reducer {
                 }
 
             case .tripDate(.tappedTripReadyButton):
-                return .send(.getExpenditure(state.beforeDate))
+                return .send(.getExpenditure(state.readyDate))
 
             case let .tripDate(.tripDateItem(id: id, action: .tappedItem)):
                 guard let tripDate = state.tripDate.tripDateItems[id: id]?.date else { return .none }
@@ -111,8 +118,13 @@ public struct ExpenditureReducer: Reducer {
                 } else {
                     state.pageIndex += 1
                 }
-                return .run { [pageIndex = state.pageIndex, isReset] send in
-                    let (expenseItems, isLastPage) = try await expenseUseCase.getExpenseList(1, tripDate, pageIndex)
+                return .run { [
+                    pageIndex = state.pageIndex,
+                    isReset,
+                    tripId = state.tripItem.id,
+                    expenseMethod = state.currentFilter
+                ] send in
+                    let (expenseItems, isLastPage) = try await expenseUseCase.getExpenseList(tripId, tripDate, expenseMethod ,pageIndex)
                     await send(.expenditureList(.setExpenditures(expenseItems, isReset)))
                     await send(.setLastPage(isLastPage))
                 } catch: { error, send in
@@ -120,8 +132,8 @@ public struct ExpenditureReducer: Reducer {
                 }
 
             case .tappedAddButton:
-                let selectedDate = state.tripDate.selectedDate ?? state.beforeDate
-                cooridinator.expenditureAdd(tripId: state.tripId, editDate: selectedDate)
+                let selectedDate = state.tripDate.selectedDate ?? state.readyDate
+                cooridinator.expenditureAdd(tripId: state.tripItem.id, editDate: selectedDate)
                 return .none
 
             case .totalPrice(.tappedTotalPrice):
@@ -133,14 +145,16 @@ public struct ExpenditureReducer: Reducer {
                 return .none
 
             case .getBudget:
-                return .run { send in
-                    let budget = try await tripCalculationUseCase.getBudget(1).individualBudget
-                    await send(.totalPrice(.setTotalPrice(budget.budgetExpense, budget.budgetIncome, budget.leftBudget)))
+                return .run { [tripId = state.tripItem.id] send in
+                    if let budget = try await tripCalculationUseCase.getBudget(tripId).individualBudget {
+                        await send(.totalPrice(.setTotalPrice(budget.budgetExpense, budget.budgetIncome, budget.leftBudget)))
+                    }
                 } catch: { error, send in
                     print(error)
                 }
 
-            case .tappedFilterButton:
+            case let .tappedFilterButton(selectedExpense):
+                cooridinator.showFilterBottomSheet(selectedExpenseFilter: selectedExpense)
                 return .none
 
             case let .expenditureList(.expenditureListItem(id: _, action: .tappedExpenditureItem(expenseItem))):
@@ -155,6 +169,14 @@ public struct ExpenditureReducer: Reducer {
 
             case let .setLastPage(isLastPage):
                 state.isLastPage = isLastPage
+                return .none
+
+            case let .setExpenseFilter(expenseFilter):
+                state.currentFilter = expenseFilter
+                if let currentDate = state.currentDate {
+                    state.pageIndex = -1
+                    return .send(.getExpenditure(currentDate))
+                }
                 return .none
 
             default:
