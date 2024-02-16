@@ -26,7 +26,7 @@ final public class TripCoordinator: TripCoordinatorInterface {
     }
 
     public func start(animated: Bool = false) {
-        let expenditureCoordinator = ExpenditureCoordinator(navigationController: UINavigationController())
+        let expenditureCoordinator = ExpenditureCoordinator(navigationController: UINavigationController(), tripItem: tripItem)
         expenditureCoordinator.parent = self
         addChild(expenditureCoordinator)
 

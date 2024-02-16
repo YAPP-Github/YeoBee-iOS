@@ -17,8 +17,8 @@ public struct SharedExpenditureReducer: Reducer {
 
     public struct State: Equatable {
         @BindingState var selectedTab: ExpenditureTab = .shared
-        var sharedExpenditure = ExpenditureReducer.State(type: .shared, tripId: 1, startDate: Date(), endDate: Date())
-        var individualExpenditure = ExpenditureReducer.State(type: .individual, tripId: 1, startDate: Date(), endDate: Date())
+//        var sharedExpenditure = ExpenditureReducer.State(type: .shared, tripId: 1, startDate: Date(), endDate: Date())
+//        var individualExpenditure = ExpenditureReducer.State(type: .individual, tripId: 1, startDate: Date(), endDate: Date())
     }
 
     public enum Action: BindableAction {

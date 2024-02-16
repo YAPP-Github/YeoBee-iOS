@@ -9,8 +9,8 @@
 import Foundation
 
 public struct Budgets: Codable {
-    public var sharedBudget: BudgetItem
-    public var individualBudget: BudgetItem
+    public var sharedBudget: BudgetItem?
+    public var individualBudget: BudgetItem?
 }
 
 

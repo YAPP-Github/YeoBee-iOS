@@ -10,6 +10,16 @@ import Foundation
 
 // 결제 방식을 위한 Enum
 public enum PaymentMethod: String, Codable {
-    case cash = "CASH"
-    case card = "CARD"
+    case cash = "현금만"
+    case card = "카드만"
+}
+
+public extension PaymentMethod {
+    var apiText: String {
+        switch self {
+        case .cash: "CASH"
+        case .card: "CARD"
+        }
+    }
+
 }

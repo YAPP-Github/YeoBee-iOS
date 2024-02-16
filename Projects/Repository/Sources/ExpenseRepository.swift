@@ -32,7 +32,7 @@ final public class ExpenseRepository: ExpenseRepositoryInterface {
                 pageSize: request.pageSize,
                 type: request.type?.rawValue,
                 date: request.date,
-                paymentMethod: request.method?.rawValue,
+                paymentMethod: request.method?.apiText,
                 unitId: request.unitId
             )
         )
