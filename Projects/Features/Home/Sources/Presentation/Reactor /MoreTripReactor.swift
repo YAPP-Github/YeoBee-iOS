@@ -76,31 +76,33 @@ public final class MoreTripReactor: Reactor {
         return newState
     }
     
+    private func handleTripResponse(result: TripResponse, pageNumber: Int) {
+        var currentTripItems = currentState.trips
+        currentTripItems.append(contentsOf: result.content)
+        action.onNext(.trips(currentTripItems))
+        action.onNext(.pageNumber(pageNumber))
+        action.onNext(.isLoading(false))
+    }
+    
     func moreTripUseCase() {
         switch currentState.tripType {
         case .traveling:
             Task {
                 let presentResult = try await tripUseCase.getPresentTrip(0, 5)
-                let tripItems = presentResult.content
-                action.onNext(.trips(tripItems))
                 action.onNext(.totalPage(presentResult.totalPages))
-                action.onNext(.pageNumber(presentResult.pageable.pageNumber))
+                handleTripResponse(result: presentResult, pageNumber: presentResult.pageable.pageNumber)
             }
         case .coming:
             Task {
                 let futureResult = try await tripUseCase.getFutureTrip(0, 5)
-                let tripItems = futureResult.content
-                action.onNext(.trips(tripItems))
                 action.onNext(.totalPage(futureResult.totalPages))
-                action.onNext(.pageNumber(futureResult.pageable.pageNumber))
+                handleTripResponse(result: futureResult, pageNumber: futureResult.pageable.pageNumber)
             }
         case .passed:
             Task {
                 let pastResult = try await tripUseCase.getPastTrip(0, 5)
-                let tripItems = pastResult.content
-                action.onNext(.trips(tripItems))
                 action.onNext(.totalPage(pastResult.totalPages))
-                action.onNext(.pageNumber(pastResult.pageable.pageNumber))
+                handleTripResponse(result: pastResult, pageNumber: pastResult.pageable.pageNumber)
             }
         }
     }
@@ -119,32 +121,17 @@ public final class MoreTripReactor: Reactor {
         case .traveling:
             Task {
                 let presentResult = try await tripUseCase.getPresentTrip(pageNumber, 5)
-                var currentTripItems = currentState.trips
-                let newTripItems = presentResult.content
-                currentTripItems.append(contentsOf: newTripItems)
-                self.action.onNext(.trips(currentTripItems))
-                self.action.onNext(.pageNumber(presentResult.pageable.pageNumber))
-                self.action.onNext(.isLoading(false))
+                handleTripResponse(result: presentResult, pageNumber: presentResult.pageable.pageNumber)
             }
         case .coming:
             Task {
                 let futureResult = try await tripUseCase.getFutureTrip(pageNumber, 5)
-                var currentTripItems = currentState.trips
-                let newTripItems = futureResult.content
-                currentTripItems.append(contentsOf: newTripItems)
-                self.action.onNext(.trips(currentTripItems))
-                self.action.onNext(.pageNumber(futureResult.pageable.pageNumber))
-                self.action.onNext(.isLoading(false))
+                handleTripResponse(result: futureResult, pageNumber: futureResult.pageable.pageNumber)
             }
         case .passed:
             Task {
                 let pastResult = try await tripUseCase.getPastTrip(pageNumber, 5)
-                var currentTripItems = currentState.trips
-                let newTripItems = pastResult.content
-                currentTripItems.append(contentsOf: newTripItems)
-                self.action.onNext(.trips(currentTripItems))
-                self.action.onNext(.pageNumber(pastResult.pageable.pageNumber))
-                self.action.onNext(.isLoading(false))
+                handleTripResponse(result: pastResult, pageNumber: pastResult.pageable.pageNumber)
             }
         }
     }

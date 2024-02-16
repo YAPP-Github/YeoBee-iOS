@@ -302,12 +302,15 @@ extension HomeViewController: HomeCollectionHeaderViewCellDelegate {
 // MARK: - 더보기
 extension HomeViewController: HomeSectionHeaderViewDelegate {
     func moreButtonTapped(tripType: String) {
-        TripType.allCases.forEach {
-            if $0.rawValue.first == tripType.first {
-                let moreTripReactor = MoreTripReactor(tripType: $0)
-                let moreTripViewController = MoreTripViewController(coordinator: coordinator!, reactor: moreTripReactor)
-                self.navigationController?.isNavigationBarHidden = false
-                self.navigationController?.pushViewController(moreTripViewController, animated: true)
+        TripType.allCases.forEach { tripTypeCase in
+            if let coordinator = coordinator,
+               let firstCharacter = tripType.first,
+               tripTypeCase.rawValue.first == firstCharacter {
+                
+                let moreTripReactor = MoreTripReactor(tripType: tripTypeCase)
+                let moreTripViewController = MoreTripViewController(coordinator: coordinator, reactor: moreTripReactor)
+                navigationController?.isNavigationBarHidden = false
+                navigationController?.pushViewController(moreTripViewController, animated: true)
             }
         }
     }
