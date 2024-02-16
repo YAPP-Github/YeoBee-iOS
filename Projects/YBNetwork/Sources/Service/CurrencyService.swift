@@ -38,9 +38,10 @@ extension CurrencyService: TargetType {
     }
 
     public var headers: [String : String]? {
-        return [
-            "Content-type": "application/json",
-            "Authorization": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZXhwIjoxNzA4MTg2MTA5fQ.CXKRiLdVMTxwOAQGYC0m1KLeAEup9sn-z-v5ttAo_BI"
-        ]
+        if let token = KeychainManager.shared.load(key: KeychainManager.accessToken) {
+            return ["Authorization": "Bearer \(token)"]
+        } else {
+            return nil
+        }
     }
 }
