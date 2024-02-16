@@ -159,7 +159,7 @@ extension TravelTitleViewController: View {
             .bind { [weak self] isSuccess in
                 if isSuccess {
                     self?.navigationController?.dismiss(animated: true)
-                    self?.coordinator.coordinatorDidFinish()
+                    self?.coordinator.finishedRegistration()
                 } else {
                     print("post 실패")
                 }
