@@ -7,6 +7,7 @@
 
 import Foundation
 import ComposableArchitecture
+import Entity
 
 public struct ExpenditureBudgetEditReducer: Reducer {
     public struct State: Equatable {
@@ -19,10 +20,12 @@ public struct ExpenditureBudgetEditReducer: Reducer {
         var isEnableRegisterButton: Bool = false
         var tripId: Int
         var editDate: Date
+        let expenditureTab: ExpenditureTab
 
-        init(tripId: Int, editDate: Date) {
+        init(tripId: Int, editDate: Date, expenditureTab: ExpenditureTab) {
             self.tripId = tripId
             self.editDate = editDate
+            self.expenditureTab = expenditureTab
         }
     }
 
@@ -66,11 +69,12 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                     let currencyCode = state.expenditureInput.selectedCurrency.code
                     let expenseText = state.expenditureContent.text
                     let payedAt = state.editDate
+                    let expenditureTab = state.expenditureTab
                     return .run { send in
                         let _ = try await expenseUseCase.createExpense(.init(
                             tripId: tripId,
                             payedAt: ISO8601DateFormatter().string(from: payedAt),
-                            expenseType: "INDIVIDUAL_BUDGET_INCOME",
+                            expenseType: expenditureTab == .shared ? "SHARED_BUDGET_INCOME" : "INDIVIDUAL_BUDGET_INCOME",
                             amount: amount,
                             currencyCode: currencyCode,
                             expenseMethod: paymentType,

@@ -9,8 +9,8 @@ import Foundation
 import ComposableArchitecture
 import Entity
 
-public enum ExpenditureTab: Equatable {
-    case individual, shared
+public enum ExpenditureType: Equatable {
+    case expense, budget
 }
 
 public struct ExpenditureReducer: Reducer {
@@ -22,17 +22,24 @@ public struct ExpenditureReducer: Reducer {
     }
 
     public struct State: Equatable {
-        @BindingState var seletedExpenditureType: ExpenditureTab = .individual
+        @BindingState var seletedExpenditureType: ExpenditureType = .expense
         var expenditureEdit: ExpendpenditureEditReducer.State
         var expenditureBudgetEdit: ExpenditureBudgetEditReducer.State
-        var tripId: Int
+        var tripItem: TripItem
         var currencies: [Currency] = []
+        let expenditureTab: ExpenditureTab
 
-        public init(seletedExpenditureType: ExpenditureTab, tripId: Int, editDate: Date) {
-            self.expenditureEdit = .init(tripId: tripId, editDate: editDate)
-            self.expenditureBudgetEdit = .init(tripId: tripId, editDate: editDate)
+        public init(
+            expenditureTab: ExpenditureTab,
+            seletedExpenditureType: ExpenditureType,
+            tripItem: TripItem,
+            editDate: Date
+        ) {
+            self.expenditureEdit = .init(tripItem: tripItem, editDate: editDate, expenditureTab: expenditureTab)
+            self.expenditureBudgetEdit = .init(tripId: tripItem.id, editDate: editDate, expenditureTab: expenditureTab)
             self.seletedExpenditureType = seletedExpenditureType
-            self.tripId = tripId
+            self.tripItem = tripItem
+            self.expenditureTab = expenditureTab
         }
     }
 
@@ -52,7 +59,7 @@ public struct ExpenditureReducer: Reducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .run { [tripId = state.tripId] send in
+                return .run { [tripId = state.tripItem.id] send in
                     let currencies = try await currencyUseCase.getTripCurrencies(tripId)
                     await send(.setCurrencies(currencies))
                 } catch: { error, send in

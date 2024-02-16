@@ -75,6 +75,7 @@ public struct ExpenditureReducer: Reducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                print("trip data", state.tripItem)
                 let currentDate = Date()
                 if state.isInitialShow {
                     state.isInitialShow = false
@@ -122,18 +123,30 @@ public struct ExpenditureReducer: Reducer {
                     pageIndex = state.pageIndex,
                     isReset,
                     tripId = state.tripItem.id,
-                    expenseMethod = state.currentFilter
+                    expenseMethod = state.currentFilter,
+                    expenseType = state.type
                 ] send in
-                    let (expenseItems, isLastPage) = try await expenseUseCase.getExpenseList(tripId, tripDate, expenseMethod ,pageIndex)
+                    let (expenseItems, isLastPage) = try await expenseUseCase.getExpenseList(
+                        tripId,
+                        tripDate,
+                        expenseType == .individual ? .individual : .shared,
+                        expenseMethod,
+                        pageIndex
+                    )
                     await send(.expenditureList(.setExpenditures(expenseItems, isReset)))
                     await send(.setLastPage(isLastPage))
                 } catch: { error, send in
                     print(error)
+                    await send(.setLastPage(true))
                 }
 
             case .tappedAddButton:
                 let selectedDate = state.tripDate.selectedDate ?? state.readyDate
-                cooridinator.expenditureAdd(tripId: state.tripItem.id, editDate: selectedDate)
+                cooridinator.expenditureAdd(
+                    tripItem: state.tripItem,
+                    editDate: selectedDate,
+                    expenditureTab: state.type
+                )
                 return .none
 
             case .totalPrice(.tappedTotalPrice):
@@ -168,6 +181,7 @@ public struct ExpenditureReducer: Reducer {
                 return .none
 
             case let .setLastPage(isLastPage):
+                state.pageIndex = 0
                 state.isLastPage = isLastPage
                 return .none
 

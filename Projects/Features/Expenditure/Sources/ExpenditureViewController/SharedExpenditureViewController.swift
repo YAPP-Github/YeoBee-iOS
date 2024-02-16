@@ -1,8 +1,8 @@
 //
-//  ExpenditureListViewController.swift
+//  SharedExpenditure.swift
 //  Expenditure
 //
-//  Created by Hoyoung Lee on 12/26/23.
+//  Created by Hoyoung Lee on 12/30/23.
 //  Copyright © 2023 YeoBee.com. All rights reserved.
 //
 
@@ -12,32 +12,29 @@ import RxSwift
 import DesignSystem
 import SnapKit
 import ComposableArchitecture
-import Coordinator
 import Entity
 
-public final class ExpenditureViewController: UIViewController {
+public final class SharedExpenditureViewController: UIViewController {
 
     let coordinator: ExpenditureCoordinator
-    let store: StoreOf<ExpenditureReducer>
+    let store: StoreOf<SharedExpenditureReducer>
     let tripItem: TripItem
 
     // MARK: View
 
-    private let expenditureHostingController: ExpenditureHostingController
+    private let sharedExpenditureHostingController: SharedExpenditureHostingController
 
     public init(coordinator: ExpenditureCoordinator, tripItem: TripItem) {
         self.coordinator = coordinator
         self.tripItem = tripItem
-        let store: StoreOf<ExpenditureReducer> = .init(
-            initialState: .init(type: .individual, tripItem: tripItem),
+        let store: StoreOf<SharedExpenditureReducer> = .init(
+            initialState: .init(tripItem: tripItem),
             reducer: {
-                ExpenditureReducer(cooridinator: coordinator)
+                SharedExpenditureReducer(cooridinator: coordinator)
             })
         self.store = store
-        self.expenditureHostingController = ExpenditureHostingController(
-            rootView: ExpenditureView(
-                store: store
-            )
+        self.sharedExpenditureHostingController = SharedExpenditureHostingController(
+            rootView: SharedExpenditureView(store: store)
         )
         super.init(nibName: nil, bundle: nil)
     }
@@ -45,9 +42,9 @@ public final class ExpenditureViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
 
-        setNavigationBar()
         setupViews()
         setLayouts()
+        setNavigationBar()
     }
 
     required convenience init?(coder aDecoder: NSCoder) {
@@ -82,24 +79,13 @@ public final class ExpenditureViewController: UIViewController {
     }
 
     func setLayouts() {
-        view.addSubview(expenditureHostingController.view)
+        view.addSubview(sharedExpenditureHostingController.view)
 
-        expenditureHostingController.view.snp.makeConstraints { make in
+        sharedExpenditureHostingController.view.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.horizontalEdges.equalToSuperview()
         }
     }
-
-    public func getExpenseList(editDate: Date) {
-        store.send(.getExpenseList(editDate))
-    }
-
-    func selectExpenseFilter(selectedExpenseFilter: PaymentMethod?) {
-        store.send(.setExpenseFilter(selectedExpenseFilter))
-    }
-
-    deinit {
-        print("ExpenditureViewController is de-initialized.")
-    }
 }
+

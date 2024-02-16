@@ -24,6 +24,7 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
     public var navigationController: UINavigationController
     public var expenditureNavigationController: UINavigationController?
     public var expenditureViewController: ExpenditureViewController?
+    public var sharedExpenditureViewController: SharedExpenditureViewController?
 
     public var parent: TripCoordinatorInterface?
     public let tripItem: TripItem
@@ -34,9 +35,15 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
     }
 
     public func start(animated: Bool) {
-        let expenditureViewController = ExpenditureViewController(coordinator: self, tripItem: tripItem)
-        self.expenditureViewController = expenditureViewController
-        expenditureNavigationController = UINavigationController(rootViewController: expenditureViewController)
+        if tripItem.tripUserList.count > 1 {
+            let sharedExpenditureViewController = SharedExpenditureViewController(coordinator: self, tripItem: tripItem)
+            self.sharedExpenditureViewController = sharedExpenditureViewController
+            expenditureNavigationController = UINavigationController(rootViewController: sharedExpenditureViewController)
+        } else {
+            let expenditureViewController = ExpenditureViewController(coordinator: self, tripItem: tripItem)
+            self.expenditureViewController = expenditureViewController
+            expenditureNavigationController = UINavigationController(rootViewController: expenditureViewController)
+        }
     }
 
     public func popDidFinish() {
@@ -58,11 +65,12 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
 
 extension ExpenditureCoordinator {
 
-    public func expenditureAdd(tripId: Int, editDate: Date) {
+    public func expenditureAdd(tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab) {
         let expenditureAddCoordinator = ExpenditureAddCoordinator(
             navigationController: expenditureNavigationController!,
-            tripId: tripId,
-            editDate: editDate
+            tripItem: tripItem,
+            editDate: editDate,
+            expenditureTab: expenditureTab
         )
         expenditureAddCoordinator.parent = self
         expenditureAddCoordinator.delegate = self
@@ -70,10 +78,10 @@ extension ExpenditureCoordinator {
         expenditureAddCoordinator.start(animated: true)
     }
 
-    public func expenditureEdit(tripId: Int, expenseDetail: ExpenseDetailItem) {
+    public func expenditureEdit(expenseDetail: ExpenseDetailItem) {
         let expenditureEditCoordinator = ExpenditureEditCoordinator(
             navigationController: expenditureNavigationController!,
-            tripId: tripId,
+            tripItem: tripItem,
             expenseDetail: expenseDetail
         )
         expenditureEditCoordinator.parent = self
@@ -88,12 +96,12 @@ extension ExpenditureCoordinator {
     }
 
     public func totalBudgetExpenditureList() {
-        let totalBudgetExpenditureViewController = TotalBudgetExpenditureViewController(
-            coordinator: self,
-            expenseType: .individual
-        )
-        expenditureNavigationController?.tabBarController?.tabBar.isHidden = true
-        expenditureNavigationController?.pushViewController(totalBudgetExpenditureViewController, animated: true)
+//        let totalBudgetExpenditureViewController = TotalBudgetExpenditureViewController(
+//            coordinator: self,
+//            expenseType: .individual
+//        )
+//        expenditureNavigationController?.tabBarController?.tabBar.isHidden = true
+//        expenditureNavigationController?.pushViewController(totalBudgetExpenditureViewController, animated: true)
     }
 
     public func expenditureDetail(expenseItem: ExpenseItem) {

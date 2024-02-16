@@ -59,7 +59,7 @@ public struct ExpenditureDetailReducer: Reducer {
 
             case .tappedEditButton:
                 if let expenseDetail = state.expenseDetailItem {
-                    cooridinator.expenditureEdit(tripId: 1, expenseDetail: expenseDetail)
+                    cooridinator.expenditureEdit(expenseDetail: expenseDetail)
                 }
                 return .none
 

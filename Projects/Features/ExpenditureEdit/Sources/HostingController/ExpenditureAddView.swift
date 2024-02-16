@@ -31,7 +31,10 @@ extension ExpenditureAddView {
     var containerView: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(spacing: 10) {
-                ExpenditureToggleView(expenditureTab: viewStore.$seletedExpenditureType)
+                ExpenditureToggleView(
+                    expenditureTab: viewStore.$seletedExpenditureType,
+                    isSharedTrip: viewStore.tripItem.tripUserList.count > 1
+                )
                 .frame(height: 40)
                 .padding(.horizontal, 24)
                 TabView(selection: viewStore.$seletedExpenditureType) {
@@ -41,14 +44,14 @@ extension ExpenditureAddView {
                         action: ExpenditureReducer.Action.expenditureEdit
                        )
                     )
-                    .tag(ExpenditureTab.shared)
+                    .tag(ExpenditureType.expense)
                     ExpenditureBudgetEditView(
                        store: store.scope(
                         state: \.expenditureBudgetEdit,
                         action: ExpenditureReducer.Action.expenditureBudgetEdit
                        )
                     )
-                    .tag(ExpenditureTab.individual)
+                    .tag(ExpenditureType.budget)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .ignoresSafeArea(.keyboard, edges: .bottom)

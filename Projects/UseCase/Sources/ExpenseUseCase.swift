@@ -15,6 +15,7 @@ public struct ExpenseUseCase {
     public var getExpenseList: @Sendable (
         _ tripId: Int, 
         _ date: Date,
+        _ expenseType: ExpenseType?,
         _ expenseMethod: PaymentMethod?,
         _ pageIndex: Int
     ) async throws -> ([ExpenseItem], Bool)
@@ -36,13 +37,14 @@ extension DependencyValues {
 extension ExpenseUseCase: DependencyKey {
     public static var liveValue: ExpenseUseCase {
         let expenseRepository = ExpenseRepository()
-        return .init(getExpenseList: { tripId, date, expenseMethod, pageIndex in
+        return .init(getExpenseList: { tripId, date, expenseType, expenseMethod, pageIndex in
             let pageSize = 20
             let data = try await expenseRepository.getExpenseList(
                 request: .init(
                     tripId: tripId,
                     pageIndex: pageIndex,
                     pageSize: pageSize,
+                    type: expenseType,
                     date: date,
                     method: expenseMethod
                 )

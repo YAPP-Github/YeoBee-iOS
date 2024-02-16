@@ -15,3 +15,8 @@ public enum ExpenseType: String, Codable, Equatable {
     case sharedBudgetIncome = "SHARED_BUDGET_INCOME"
     case individualBudget = "INDIVIDUAL_BUDGET_INCOME"
 }
+
+public enum ExpenditureTab: Equatable {
+    case shared
+    case individual
+}

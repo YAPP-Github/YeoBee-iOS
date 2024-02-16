@@ -9,16 +9,18 @@ import SwiftUI
 import DesignSystem
 
 struct ExpenditureToggleView: View {
-    @Binding var expenditureTab: ExpenditureTab
+    @Binding var expenditureTab: ExpenditureType
+    let isSharedTrip: Bool
 
-    init(expenditureTab: Binding<ExpenditureTab>) {
+    init(expenditureTab: Binding<ExpenditureType>, isSharedTrip: Bool) {
         self._expenditureTab = expenditureTab
+        self.isSharedTrip = isSharedTrip
     }
     var body: some View {
         GeometryReader { reader in
             ZStack {
                 HStack(spacing: 0) {
-                    if expenditureTab == .individual {
+                    if expenditureTab == .budget {
                         Spacer(minLength: 0)
                     }
                     VStack {
@@ -28,7 +30,7 @@ struct ExpenditureToggleView: View {
                     }
                     .frame(width: reader.frame(in: .global).width / 2)
                     .padding(4)
-                    if expenditureTab == .shared {
+                    if expenditureTab == .expense {
                         Spacer(minLength: 0)
                     }
                 }
@@ -49,7 +51,7 @@ struct ExpenditureToggleView: View {
                             expenditureTab.toggle()
                         }
                     } label: {
-                        Text("내예산 추가")
+                        Text(isSharedTrip ? "공동경비 추가" : "내예산 추가")
                             .foregroundColor(.ybColor(.gray6))
                             .font(.ybfont(.body3))
                             .frame(maxWidth: .infinity, alignment: .center)
@@ -62,13 +64,13 @@ struct ExpenditureToggleView: View {
     }
 }
 
-extension ExpenditureTab {
+extension ExpenditureType {
     mutating func toggle() {
         switch self {
-        case .shared:
-            self = .individual
-        case .individual:
-            self = .shared
+        case .budget:
+            self = .expense
+        case .expense:
+            self = .budget
         }
     }
 }

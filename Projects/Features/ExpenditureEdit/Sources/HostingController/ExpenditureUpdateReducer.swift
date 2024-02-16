@@ -9,11 +9,6 @@ import Foundation
 import ComposableArchitecture
 import Entity
 
-public enum ExpenditureEditTab: Equatable {
-//    case individual, individualBudget, shared, sharedBudget
-    case individual, individualBudget
-}
-
 public struct ExpenditureUpdateReducer: Reducer {
 
     let cooridinator: ExpenditureEditCoordinator
@@ -29,16 +24,16 @@ public struct ExpenditureUpdateReducer: Reducer {
             case expenditureBudgetEdit(ExpenditureBudgetEditReducer.State)
         }
         var expenditureEditRoute: ExpenditureEditRoute
-        var tripId: Int
+        var tripItem: TripItem
 
-        public init(seletedExpenditureType: ExpenditureEditTab, tripId: Int, expenseDetail: ExpenseDetailItem) {
+        public init(seletedExpenditureType: ExpenseType, tripItem: TripItem, expenseDetail: ExpenseDetailItem) {
             switch seletedExpenditureType {
-            case .individual:
-                self.expenditureEditRoute = .expenditureEdit(.init(tripId: tripId, editDate: Date()))
-            case .individualBudget:
-                self.expenditureEditRoute = .expenditureBudgetEdit(.init(tripId: tripId, editDate: Date()))
+            case .individual, .shared:
+                self.expenditureEditRoute = .expenditureEdit(.init(tripItem: tripItem, editDate: Date(), expenditureTab: .individual))
+            case .individualBudget, .sharedBudgetIncome:
+                self.expenditureEditRoute = .expenditureBudgetEdit(.init(tripId: tripItem.id, editDate: Date(), expenditureTab: .individual))
             }
-            self.tripId = tripId
+            self.tripItem = tripItem
         }
     }
 
@@ -55,7 +50,7 @@ public struct ExpenditureUpdateReducer: Reducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .run { [tripId = state.tripId] send in
+                return .run { [tripId = state.tripItem.id] send in
                     let currencies = try await currencyUseCase.getTripCurrencies(tripId)
                 }
             case .expenditureEdit(.dismiss):

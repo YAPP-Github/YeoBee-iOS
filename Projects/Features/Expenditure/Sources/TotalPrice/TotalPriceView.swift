@@ -42,7 +42,6 @@ extension TotalPriceView {
             }
             .disabled(!isTappable)
         }
-        .padding(.bottom, 16)
     }
 
     func budgetPriceView(

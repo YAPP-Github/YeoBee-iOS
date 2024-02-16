@@ -29,7 +29,10 @@ public final class TotalExpenditureViewController: UIViewController {
         self.coordinator = coordinator
         self.totalExpenditureListHostingController = TotalExpenditureListHostingController(
             rootView: TotalExpenditureListView(
-                store: .init(initialState: .init(expenditureType: .individual, totalPriceType: .expense), reducer: {
+                store: .init(initialState: .init(
+                    expenditureType: .individual,
+                    totalPriceType: .expense
+                ), reducer: {
                     TotalExpenditureListReducer()
                 })
             )

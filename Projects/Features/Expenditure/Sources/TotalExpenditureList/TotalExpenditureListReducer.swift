@@ -7,6 +7,7 @@
 
 import Combine
 import ComposableArchitecture
+import Entity
 
 public struct TotalExpenditureListReducer: Reducer {
     public struct State: Equatable {
