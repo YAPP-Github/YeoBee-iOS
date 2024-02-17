@@ -8,7 +8,9 @@
 
 import UIKit
 import DesignSystem
+import Entity
 import SnapKit
+import Kingfisher
 
 protocol SettingTableHeaderViewDelegate: AnyObject {
     func modifyButtonTapped()
@@ -20,9 +22,8 @@ final class SettingTableHeaderView: UIView {
     
     //MARK: - Properties
     private let backgroundImageView: UIImageView = {
-        $0.backgroundColor = .systemMint
-        $0.layer.cornerRadius = 10
-        $0.contentMode = .scaleAspectFit
+        $0.layer.cornerRadius = 12
+        $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
         return $0
     }(UIImageView())
@@ -45,8 +46,8 @@ final class SettingTableHeaderView: UIView {
         return $0
     }(UIStackView())
     
-    private let titleLabel = YBLabel(font: .header2, textColor: .black)
-    private let dateLabel = YBLabel(font: .body3, textColor: .gray5)
+    private var titleLabel = YBLabel(text: " ", font: .header2, textColor: .black)
+    private var dateLabel = YBLabel(text: " ",font: .body3, textColor: .gray5)
     
     private let modifyButton: UIButton = {
         $0.setTitle("편집", for: .normal)
@@ -91,10 +92,6 @@ final class SettingTableHeaderView: UIView {
     }
     
     private func setConstraints() {
-        countryImageView.snp.makeConstraints { make in
-            make.height.equalTo(18)
-            make.width.equalTo(25)
-        }
         dateLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().inset(24)
             make.bottom.equalToSuperview().inset(20)
@@ -107,21 +104,50 @@ final class SettingTableHeaderView: UIView {
             make.trailing.equalToSuperview().inset(24)
             make.centerY.equalTo(titleLabel.snp.centerY)
         }
+        countryImageView.snp.makeConstraints { make in
+            make.height.equalTo(18)
+            make.width.equalTo(25)
+        }
         backgroundImageView.snp.makeConstraints { make in
-            make.bottom.equalTo(titleLabel.snp.top).inset(-22)
-            make.leading.trailing.equalToSuperview().inset(24).priority(.low)
+            make.bottom.equalTo(modifyButton.snp.top).inset(-22)
+            make.width.equalTo(UIScreen.main.bounds.width-46)
             make.top.equalToSuperview().inset(22)
+            make.centerX.equalToSuperview()
         }
         stackView.snp.makeConstraints { make in
-            make.leading.bottom.equalToSuperview().inset(20)
+            make.leading.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(28)
         }
     }
     
-    func configure() {
-        countryImageView.image = UIImage(systemName: "xmark")
-        countryLabel.text = "프랑스"
-        titleLabel.text = "여행 어쩌구"
-        dateLabel.text = "2024년 02월 06일 ~ 2024년 02월 30일"
+    func configure(tripItem: TripItem) {
+        guard let firstCountry = tripItem.countryList.first,
+            let flagImageUrl = URL(string: firstCountry.flagImageUrl) else { return }
+        countryLabel.text = firstCountry.name
+        titleLabel.text = tripItem.title
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        if let startDate = dateFormatter.date(from: tripItem.startDate),
+           let endDate = dateFormatter.date(from: tripItem.endDate) {
+            dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+            let formattedStartDate = dateFormatter.string(from: startDate)
+            let formattedEndDate = dateFormatter.string(from: endDate)
+            dateLabel.text = "\(formattedStartDate) ~ \(formattedEndDate)"
+        }
+        
+        // 선택한 나라 1개 이상
+        if tripItem.countryList.count > 1 {
+            otherCountryLabel.text = "외 \(tripItem.countryList.count-1)개국"
+        }
+        
+        countryImageView.kf.indicatorType = .activity
+        countryImageView.kf.setImage(with: flagImageUrl)
+        guard let coverImageUrl = URL(string: firstCountry.coverImageUrl ?? "") else { return }
+        backgroundImageView.kf.indicatorType = .activity
+        backgroundImageView.kf.setImage(with: coverImageUrl)
+
     }
     
     // MARK: - Handler

@@ -20,7 +20,7 @@ enum SettingSection: String, CaseIterable {
 }
 
 enum SettingDataItem: Hashable {
-    case companion(Companion)
+    case companion(TripUserItem)
     case currency(SettingCurrency)
 }
 
@@ -59,7 +59,6 @@ public final class SettingViewController: UIViewController {
         configureBar()
         setDataSource()
         bind(reactor: reactor)
-        settingHeaderView.configure() // 임시 데이터 바인딩
         reactor.settingUseCase() // 임시 데이터 바인딩
     }
     
@@ -97,7 +96,7 @@ public final class SettingViewController: UIViewController {
         settingTableView.dataSource = dataSource
     }
     
-    private func configureSnapshot(companions: [Companion], currencies: [SettingCurrency]) {
+    private func configureSnapshot(companions: [TripUserItem], currencies: [SettingCurrency]) {
         var snapshot = NSDiffableDataSourceSnapshot<SettingSection, SettingDataItem>()
         snapshot.appendSections([.companion, .currency])
         snapshot.appendItems(companions.map { .companion($0) }, toSection: .companion)
@@ -198,6 +197,14 @@ extension SettingViewController: View {
     
     func bindState(reactor: SettingReactor) {
         reactor.state
+            .map { $0.tripItem }
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] tripItem in
+                self?.settingHeaderView.configure(tripItem: tripItem)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
             .map { $0.companions }
             .bind { [weak self] companions in
                 guard let self else { return }
@@ -243,7 +250,7 @@ extension SettingViewController: SettingBottomSheetViewControllerDelegate {
 
 // MARK: - 동행자 edit버튼 Tap
 extension SettingViewController: SettingCompanionCellDelegate {
-    func editButtonTapped(companion: TravelRegistration.Companion) {
+    func editButtonTapped(companion: TripUserItem) {
         let settingRecycleReactor = SettingRecycleReactor(viewType: .companionName)
         let settingRecycleViewController = SettingRecycleViewController(reactor: settingRecycleReactor)
         self.navigationController?.pushViewController(settingRecycleViewController, animated: true)

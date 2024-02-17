@@ -17,24 +17,25 @@ import RxCocoa
 public final class SettingReactor: Reactor {
     
     public enum Action {
-        case companions([Companion])
+        case companions([TripUserItem])
         case currencies([SettingCurrency])
     }
     
     public enum Mutation {
-        case companions([Companion])
+        case companions([TripUserItem])
         case currencies([SettingCurrency])
     }
     
     public struct State {
-        var companions: [Companion] = []
+        var companions: [TripUserItem] = []
         var currencies: [SettingCurrency] = []
+        var tripItem: TripItem
     }
     
-    public var initialState: State = State()
+    public var initialState: State
     
-    public init() {
-        
+    public init(tripItem: TripItem) {
+        self.initialState = State(tripItem: tripItem)
     }
     
     // MARK: - Mutate
@@ -62,12 +63,15 @@ public final class SettingReactor: Reactor {
     }
     
     func settingUseCase() {
-        let companions: [Companion] = [
-            Companion(uuid: UUID(), name: "짱구", imageUrl: "Image1"),
-            Companion(uuid: UUID(), name: "제리", imageUrl: "Image2"),
-            Companion(uuid: UUID(), name: "태태", imageUrl: "Image3"),
-            Companion(uuid: UUID(), name: "제로", imageUrl: "Image4")
-        ]
+        let currentTripItem = currentState.tripItem
+        let companions = currentTripItem.tripUserList
+        
+//        let companions: [Companion] = [
+//            Companion(uuid: UUID(), name: "짱구", imageUrl: "Image1"),
+//            Companion(uuid: UUID(), name: "제리", imageUrl: "Image2"),
+//            Companion(uuid: UUID(), name: "태태", imageUrl: "Image3"),
+//            Companion(uuid: UUID(), name: "제로", imageUrl: "Image4")
+//        ]
         
         let currencies: [SettingCurrency] = [
             SettingCurrency(code: "JPY", value: 914),

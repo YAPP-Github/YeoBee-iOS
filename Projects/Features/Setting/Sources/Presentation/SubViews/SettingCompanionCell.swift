@@ -8,18 +8,20 @@
 
 import UIKit
 import DesignSystem
+import YBNetwork
+import Entity
 import TravelRegistration
 import Kingfisher
 
 protocol SettingCompanionCellDelegate: AnyObject {
-    func editButtonTapped(companion: Companion)
+    func editButtonTapped(companion: TripUserItem)
 }
 
 class SettingCompanionCell: UITableViewCell {
     static let identifier = "SettingCompanionCell"
     weak var delegate: SettingCompanionCellDelegate?
     
-    var companion: Companion? {
+    var companion: TripUserItem? {
         didSet {
             configure()
         }
@@ -87,8 +89,9 @@ class SettingCompanionCell: UITableViewCell {
     
     func configure() {
         guard let companion,
-              let imageUrl = URL(string: companion.imageUrl) else { return }
+              let imageUrl = URL(string: companion.profileImageUrl ?? "\(YeoBeeAPI.shared.baseImageURL ?? "")/static/user/profile/profile0.png") else { return }
         
+        // MARK: [TODO] 자신의 ID keychain에 저장해서 companion의 ID와 같은 경우 editButton hidden 처리
         profileNameLabel.text = companion.name
         profileImageView.kf.indicatorType = .activity
         profileImageView.kf.setImage(with: imageUrl)
