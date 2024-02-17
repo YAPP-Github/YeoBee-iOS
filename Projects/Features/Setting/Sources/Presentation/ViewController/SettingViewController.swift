@@ -59,7 +59,7 @@ public final class SettingViewController: UIViewController {
         configureBar()
         setDataSource()
         bind(reactor: reactor)
-        reactor.settingUseCase() // 임시 데이터 바인딩
+        reactor.settingUseCase()
     }
     
     // MARK: - Set UI
@@ -264,9 +264,9 @@ extension SettingViewController: SettingCompanionCellDelegate {
     }
 }
 
-// MARK: - 수정된 이후
+// MARK: - 수정된 이후 trip update
 extension SettingViewController: ModifiedSettingViewControllerDelegate {
     func modified() {
-        print("재설정")
+        reactor.updateSettingUseCase()
     }
 }

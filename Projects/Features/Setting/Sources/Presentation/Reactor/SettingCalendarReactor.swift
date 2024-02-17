@@ -75,7 +75,6 @@ public final class SettingCalendarReactor: Reactor {
             newState.endDate = date
         case .selectedDate(dates: let dates):
             newState.selectedDate.append(contentsOf: dates)
-            print(newState.selectedDate)
         case .modified(let isSucess):
             newState.modified = isSucess
         }

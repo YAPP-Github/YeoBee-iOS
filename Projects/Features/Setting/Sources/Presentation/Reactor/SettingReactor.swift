@@ -21,11 +21,13 @@ public final class SettingReactor: Reactor {
     public enum Action {
         case companions([TripUserItem])
         case currencies([Currency])
+        case tripItem(TripItem)
     }
     
     public enum Mutation {
         case companions([TripUserItem])
         case currencies([Currency])
+        case tripItem(TripItem)
     }
     
     public struct State {
@@ -34,6 +36,7 @@ public final class SettingReactor: Reactor {
         var tripItem: TripItem
     }
     
+    @Dependency(\.tripUseCase) var tripUseCase
     @Dependency(\.currencyUseCase) var currencyUseCase
     public var initialState: State
     
@@ -48,6 +51,8 @@ public final class SettingReactor: Reactor {
             return .just(.companions(companions))
         case .currencies(let currencies):
             return .just(.currencies(currencies))
+        case .tripItem(let tripItem):
+            return .just(.tripItem(tripItem))
         }
     }
     
@@ -60,6 +65,8 @@ public final class SettingReactor: Reactor {
             newState.companions.append(contentsOf: companions)
         case .currencies(let currencies):
             newState.currencies.append(contentsOf: currencies)
+        case .tripItem(let tripItem):
+            newState.tripItem = tripItem
         }
         
         return newState
@@ -73,6 +80,15 @@ public final class SettingReactor: Reactor {
         Task {
             let currencyResult = try await currencyUseCase.getTripCurrencies(currentTripItem.id)
             action.onNext(.currencies(currencyResult))
+        }
+    }
+    
+    func updateSettingUseCase() {
+        let currentTripItem = currentState.tripItem
+        
+        Task {
+            let tripResult = try await tripUseCase.getTrip(currentTripItem.id)
+            action.onNext(.tripItem(tripResult))
         }
     }
 }
