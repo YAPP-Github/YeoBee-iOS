@@ -10,6 +10,8 @@ import UIKit
 import DesignSystem
 import TravelRegistration
 import Entity
+import UseCase
+import ComposableArchitecture
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -18,20 +20,21 @@ public final class SettingReactor: Reactor {
     
     public enum Action {
         case companions([TripUserItem])
-        case currencies([SettingCurrency])
+        case currencies([Currency])
     }
     
     public enum Mutation {
         case companions([TripUserItem])
-        case currencies([SettingCurrency])
+        case currencies([Currency])
     }
     
     public struct State {
         var companions: [TripUserItem] = []
-        var currencies: [SettingCurrency] = []
+        var currencies: [Currency] = []
         var tripItem: TripItem
     }
     
+    @Dependency(\.currencyUseCase) var currencyUseCase
     public var initialState: State
     
     public init(tripItem: TripItem) {
@@ -65,33 +68,11 @@ public final class SettingReactor: Reactor {
     func settingUseCase() {
         let currentTripItem = currentState.tripItem
         let companions = currentTripItem.tripUserList
-        
-//        let companions: [Companion] = [
-//            Companion(uuid: UUID(), name: "짱구", imageUrl: "Image1"),
-//            Companion(uuid: UUID(), name: "제리", imageUrl: "Image2"),
-//            Companion(uuid: UUID(), name: "태태", imageUrl: "Image3"),
-//            Companion(uuid: UUID(), name: "제로", imageUrl: "Image4")
-//        ]
-        
-        let currencies: [SettingCurrency] = [
-            SettingCurrency(code: "JPY", value: 914),
-            SettingCurrency(code: "EUR", value: 914),
-            SettingCurrency(code: "CHF", value: 232),
-            SettingCurrency(code: "a1dsa", value: 914),
-            SettingCurrency(code: "dsbWd", value: 914),
-            SettingCurrency(code: "CsdHF", value: 232),
-            SettingCurrency(code: "JedsdsPY", value: 914),
-            SettingCurrency(code: "EwdUR", value: 914),
-            SettingCurrency(code: "CdqssHF", value: 232),
-            SettingCurrency(code: "JwPsY", value: 914),
-            SettingCurrency(code: "EURsd", value: 914),
-            SettingCurrency(code: "CsdsHF", value: 232),
-            SettingCurrency(code: "JdqwPY", value: 914),
-            SettingCurrency(code: "EsvaUR", value: 914),
-            SettingCurrency(code: "CdHsdF", value: 232)
-        ]
-        
         action.onNext(.companions(companions))
-        action.onNext(.currencies(currencies))
+        
+        Task {
+            let currencyResult = try await currencyUseCase.getTripCurrencies(currentTripItem.id)
+                action.onNext(.currencies(currencyResult))
+        }
     }
 }

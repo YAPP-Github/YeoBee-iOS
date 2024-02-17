@@ -21,7 +21,7 @@ enum SettingSection: String, CaseIterable {
 
 enum SettingDataItem: Hashable {
     case companion(TripUserItem)
-    case currency(SettingCurrency)
+    case currency(Currency)
 }
 
 public final class SettingViewController: UIViewController {
@@ -96,7 +96,7 @@ public final class SettingViewController: UIViewController {
         settingTableView.dataSource = dataSource
     }
     
-    private func configureSnapshot(companions: [TripUserItem], currencies: [SettingCurrency]) {
+    private func configureSnapshot(companions: [TripUserItem], currencies: [Currency]) {
         var snapshot = NSDiffableDataSourceSnapshot<SettingSection, SettingDataItem>()
         snapshot.appendSections([.companion, .currency])
         snapshot.appendItems(companions.map { .companion($0) }, toSection: .companion)
