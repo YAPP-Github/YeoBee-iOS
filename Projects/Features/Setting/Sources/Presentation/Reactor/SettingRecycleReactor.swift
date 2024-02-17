@@ -10,6 +10,8 @@ import UIKit
 import DesignSystem
 import TravelRegistration
 import Entity
+import UseCase
+import ComposableArchitecture
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -18,22 +20,28 @@ public final class SettingRecycleReactor: Reactor {
     
     public enum Action {
         case textFieldText(text: String)
+        case modified(Bool)
     }
     
     public enum Mutation {
         case textFieldText(text: String)
+        case modified(Bool)
     }
     
     public struct State {
         var viewType: SettingRecycleType
         var limitedString = ""
         var effectivenessType: EffectivenessType = .none
+        var tripItem: TripItem
+        var tripUserItem: TripUserItem?
+        var modified: Bool = false
     }
     
+    @Dependency(\.tripUseCase) var tripUseCase
     public var initialState: State
     
-    public init(viewType: SettingRecycleType) {
-        self.initialState = State(viewType: viewType)
+    public init(viewType: SettingRecycleType, tripItem: TripItem, tripUserItem: TripUserItem? = nil) {
+        self.initialState = State(viewType: viewType, tripItem: tripItem, tripUserItem: tripUserItem)
     }
     
     // MARK: - Mutate
@@ -41,6 +49,8 @@ public final class SettingRecycleReactor: Reactor {
         switch action {
         case .textFieldText(text: let text):
             return .just(.textFieldText(text: text))
+        case .modified(let isSucess):
+            return .just(.modified(isSucess))
         }
     }
     
@@ -78,9 +88,52 @@ public final class SettingRecycleReactor: Reactor {
                     newState.effectivenessType = .valid
                 }
             }
+        case .modified(let isSucess):
+            newState.modified = isSucess
         }
         
         return newState
+    }
+    
+    func modifyTitleUseCase() {
+        let currentTripItem = currentState.tripItem
+        Task {
+            let tripUserRequests = currentTripItem.tripUserList.map { ModifyTripUserItemRequest(id: $0.id, name: $0.name ?? "") }
+            try await tripUseCase.putTrip(
+                currentTripItem.id,
+                currentState.limitedString,
+                currentTripItem.startDate,
+                currentTripItem.endDate,
+                tripUserRequests
+            )
+            return action.onNext(.modified(true))
+        }
+    }
+    
+    func modifyCompanionNameUseCase() {
+        var currentTripItem = currentState.tripItem
+        guard let currenttripUserItem = currentState.tripUserItem else { return }
+        
+        // 동행자 배열 안에서 이름 변경
+        for index in 0..<currentTripItem.tripUserList.count {
+            if currentTripItem.tripUserList[index].id == currenttripUserItem.id {
+                currentTripItem.tripUserList[index].name = currentState.limitedString
+            }
+        }
+        
+        let modifiedTripItem = currentTripItem
+        
+        Task {
+            let tripUserRequests = modifiedTripItem.tripUserList.map { ModifyTripUserItemRequest(id: $0.id, name: $0.name ?? "") }
+            try await tripUseCase.putTrip(
+                modifiedTripItem.id,
+                modifiedTripItem.title,
+                modifiedTripItem.startDate,
+                modifiedTripItem.endDate,
+                tripUserRequests
+            )
+            return action.onNext(.modified(true))
+        }
     }
     
     private func isValidName(_ text: String) -> Bool {

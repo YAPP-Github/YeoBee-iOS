@@ -72,7 +72,7 @@ public final class SettingReactor: Reactor {
         
         Task {
             let currencyResult = try await currencyUseCase.getTripCurrencies(currentTripItem.id)
-                action.onNext(.currencies(currencyResult))
+            action.onNext(.currencies(currencyResult))
         }
     }
 }

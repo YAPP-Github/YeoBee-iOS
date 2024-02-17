@@ -236,8 +236,9 @@ extension SettingViewController: SettingTableHeaderViewDelegate {
 // MARK: - 바텀시트
 extension SettingViewController: SettingBottomSheetViewControllerDelegate {
     func modifyTitleButtonTapped() {
-        let settingRecycleReactor = SettingRecycleReactor(viewType: .tripTitle)
+        let settingRecycleReactor = SettingRecycleReactor(viewType: .tripTitle, tripItem: reactor.currentState.tripItem)
         let settingRecycleViewController = SettingRecycleViewController(reactor: settingRecycleReactor)
+        settingRecycleViewController.delegate = self
         self.navigationController?.pushViewController(settingRecycleViewController, animated: true)
     }
     
@@ -251,8 +252,20 @@ extension SettingViewController: SettingBottomSheetViewControllerDelegate {
 // MARK: - 동행자 edit버튼 Tap
 extension SettingViewController: SettingCompanionCellDelegate {
     func editButtonTapped(companion: TripUserItem) {
-        let settingRecycleReactor = SettingRecycleReactor(viewType: .companionName)
+        let settingRecycleReactor = SettingRecycleReactor(
+            viewType: .companionName,
+            tripItem: reactor.currentState.tripItem,
+            tripUserItem: companion
+        )
         let settingRecycleViewController = SettingRecycleViewController(reactor: settingRecycleReactor)
+        settingRecycleViewController.delegate = self
         self.navigationController?.pushViewController(settingRecycleViewController, animated: true)
+    }
+}
+
+// MARK: - 수정된 이후
+extension SettingViewController: ModifiedSettingViewControllerDelegate {
+    func modified() {
+        print("재설정")
     }
 }

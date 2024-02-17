@@ -12,7 +12,13 @@ import Entity
 
 public enum TripService {
     case getTrip(_ tripId: Int)
-    case putTrip(_ tripId: Int)
+    case putTrip(
+        _ tripId: Int,
+        _ title: String,
+        _ startDate: String,
+        _ endDate: String,
+        _ tripUserList: [ModifyTripUserItemRequest]
+    )
     case deleteTrip(_ tripId: Int)
     case postTrip(
         _ title: String,
@@ -34,7 +40,7 @@ extension TripService: TargetType {
         switch self {
         case .getTrip(let tripId):
             return "/v1/trips/\(tripId)"
-        case .putTrip(let tripId):
+        case .putTrip(let tripId, _, _, _, _):
             return "/v1/trips/\(tripId)"
         case .deleteTrip(let tripId):
             return "/v1/trips/\(tripId)"
@@ -74,6 +80,14 @@ extension TripService: TargetType {
                 "pageSize": pageSize
             ]
             return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+        case .putTrip(_, let title, let startDate, let endDate, let tripUserList):
+            let modifyTripRequest = ModifyTripRequest(
+                title: title,
+                startDate: startDate,
+                endDate: endDate,
+                modifyTripUserList: tripUserList
+            )
+            return .requestJSONEncodable(modifyTripRequest)
         case .checkDateOverlap(let startDate, let endDate):
             let params: [String: Any] = [
                 "startDate": startDate,
@@ -88,7 +102,6 @@ extension TripService: TargetType {
                 countryList: countryList,
                 tripUserList: tripUserList
             )
-            
             return .requestJSONEncodable(registTripRequest)
         default:
             return .requestPlain
@@ -96,9 +109,10 @@ extension TripService: TargetType {
     }
 
     public var headers: [String : String]? {
-        return [
-            "Content-type": "application/json",
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZXhwIjoxNzA4MTg2MTA5fQ.CXKRiLdVMTxwOAQGYC0m1KLeAEup9sn-z-v5ttAo_BI"
-        ]
+        if let token = KeychainManager.shared.load(key: KeychainManager.accessToken) {
+            return ["Authorization": "Bearer \(token)"]
+        } else {
+            return nil
+        }
     }
 }

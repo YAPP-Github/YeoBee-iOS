@@ -14,6 +14,13 @@ import ComposableArchitecture
 
 public struct TripUseCase {
     public var getTrip: @Sendable (_ tripId: Int) async throws -> TripItem
+    public var putTrip: @Sendable (
+        _ tripId: Int,
+        _ title: String,
+        _ startDate: String,
+        _ endDate: String,
+        _ tripUserList: [ModifyTripUserItemRequest]
+    ) async throws -> TripItem
     public var getPastTrip: @Sendable (_ pageIndex: Int, _ pageSize: Int) async throws -> TripResponse
     public var getPresentTrip: @Sendable (_ pageIndex: Int, _ pageSize: Int) async throws -> TripResponse
     public var getFutureTrip: @Sendable (_ pageIndex: Int, _ pageSize: Int) async throws -> TripResponse
@@ -43,6 +50,8 @@ extension TripUseCase: DependencyKey {
         let tripRepository = TripRepository()
         return .init(getTrip: { tripId in
             return try await tripRepository.getTrip(tripId)
+        }, putTrip: { tripId, title, startDate, endDate, tripUserList in
+            return try await tripRepository.putTrip(tripId, title, startDate, endDate, tripUserList)
         }, getPastTrip: { pageIndex, pageSize in
             return try await tripRepository.getPastTrip(pageIndex, pageSize)
         }, getPresentTrip: { pageIndex, pageSize in

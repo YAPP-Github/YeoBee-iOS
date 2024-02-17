@@ -19,6 +19,7 @@ public final class SettingRecycleViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
     private let reactor: SettingRecycleReactor
+    weak var delegate: ModifiedSettingViewControllerDelegate?
     
     // MARK: - Properties
     private let titleLabel = YBLabel(font: .header2, textColor: .black)
@@ -113,11 +114,10 @@ extension SettingRecycleViewController: View {
             .bind { [weak self] _ in
                 guard let self else { return }
                 if self.reactor.currentState.viewType == .companionName {
-                    print("여행 제목 변경")
+                    self.reactor.modifyCompanionNameUseCase()
                 } else if self.reactor.currentState.viewType == .tripTitle {
-                    print("동행자 이름 수정")
+                    self.reactor.modifyTitleUseCase()
                 }
-                self.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)
     }
@@ -166,9 +166,21 @@ extension SettingRecycleViewController: View {
                 switch viewType {
                 case .tripTitle:
                     self?.titleLabel.text = "여행 제목을 수정해주세요."
+                    self?.nameOrTitleTextField.placeholder = self?.reactor.currentState.tripItem.title
                 case .companionName:
                     self?.title = "동행자 이름 수정"
                     self?.titleLabel.text = "이름 변경"
+                    self?.nameOrTitleTextField.placeholder = self?.reactor.currentState.tripUserItem?.name
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.modified }
+            .bind { [weak self] isSuccess in
+                if isSuccess {
+                    self?.delegate?.modified()
+                    self?.navigationController?.popViewController(animated: true)
                 }
             }
             .disposed(by: disposeBag)

@@ -14,6 +14,13 @@ import Dependencies
 
 public protocol TripRepositoryInterface {
     func getTrip(_ tripId: Int) async throws -> TripItem
+    func putTrip(
+        _ tripId: Int,
+        _ title: String,
+        _ startDate: String,
+        _ endDate: String,
+        _ tripUserList: [ModifyTripUserItemRequest]
+    ) async throws -> TripItem
     func getPastTrip(_ pageIndex: Int, _ pageSize: Int) async throws -> TripResponse
     func getPresentTrip(_ pageIndex: Int, _ pageSize: Int) async throws -> TripResponse
     func getFutureTrip(_ pageIndex: Int, _ pageSize: Int) async throws -> TripResponse
@@ -35,6 +42,17 @@ final public class TripRepository: TripRepositoryInterface {
 
     public func getTrip(_ tripId: Int) async throws -> TripItem {
         let result = await provider.request(.getTrip(tripId))
+        
+        switch result {
+        case let .success(response):
+            return try decode(data: response.data)
+        case .failure(let failure):
+            throw failure
+        }
+    }
+    
+    public func putTrip(_ tripId: Int, _ title: String, _ startDate: String, _ endDate: String, _ tripUserList: [ModifyTripUserItemRequest]) async throws -> TripItem {
+        let result = await provider.request(.putTrip(tripId, title, startDate, endDate, tripUserList))
         
         switch result {
         case let .success(response):
