@@ -20,6 +20,7 @@ public final class SettingCalendarViewController: UIViewController {
 
     public var disposeBag = DisposeBag()
     private let reactor: SettingCalendarReactor
+    weak var delegate: ModifiedSettingViewControllerDelegate?
     
     private var dateformatter: DateFormatter = {
         $0.dateFormat = "MM.dd E"
@@ -322,10 +323,7 @@ extension SettingCalendarViewController: View {
             .observe(on: MainScheduler.instance)
             .bind { [weak self] _ in
                 guard let self else { return }
-                if let startDate = self.reactor.currentState.startDate {
-                    let endDate = self.reactor.currentState.endDate ?? startDate
-                    self.navigationController?.popViewController(animated: true)
-                }
+                self.reactor.modifyDaysUseCase()
             }
             .disposed(by: disposeBag)
     }
@@ -359,6 +357,16 @@ extension SettingCalendarViewController: View {
                     self?.modifyButton.isEnabled = true
                     self?.modifyButton.setTitle("수정하기", for: .normal)
                     self?.modifyButton.setAppearance(appearance: .default)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.modified }
+            .bind { [weak self] isSuccess in
+                if isSuccess {
+                    self?.delegate?.modified()
+                    self?.navigationController?.popViewController(animated: true)
                 }
             }
             .disposed(by: disposeBag)

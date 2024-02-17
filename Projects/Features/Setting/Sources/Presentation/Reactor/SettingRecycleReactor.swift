@@ -97,6 +97,7 @@ public final class SettingRecycleReactor: Reactor {
     
     func modifyTitleUseCase() {
         let currentTripItem = currentState.tripItem
+        
         Task {
             let tripUserRequests = currentTripItem.tripUserList.map { ModifyTripUserItemRequest(id: $0.id, name: $0.name ?? "") }
             try await tripUseCase.putTrip(

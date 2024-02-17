@@ -243,8 +243,9 @@ extension SettingViewController: SettingBottomSheetViewControllerDelegate {
     }
     
     func modifyDateButtonTapped() {
-        let settingCalendarReactor = SettingCalendarReactor()
+        let settingCalendarReactor = SettingCalendarReactor(tripItem: reactor.currentState.tripItem)
         let settingCalendarViewController = SettingCalendarViewController(reactor: settingCalendarReactor)
+        settingCalendarViewController.delegate = self
         self.navigationController?.pushViewController(settingCalendarViewController, animated: true)
     }
 }
