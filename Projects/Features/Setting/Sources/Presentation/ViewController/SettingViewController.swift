@@ -52,7 +52,7 @@ public final class SettingViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        setView()
         addViews()
         setLayouts()
         setTableView()
@@ -63,6 +63,11 @@ public final class SettingViewController: UIViewController {
     }
     
     // MARK: - Set UI
+    private func setView() {
+        view.backgroundColor = .white
+        title = "여행 설정"
+    }
+    
     private func addViews() {
         view.addSubview(settingTableView)
     }
