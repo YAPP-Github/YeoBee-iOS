@@ -12,6 +12,7 @@ import Coordinator
 import Entity
 import TravelRegistration
 import Trip
+import MyPage
 
 final public class HomeCoordinator: HomeCoordinatorInterface {
     public var navigationController: UINavigationController
@@ -43,5 +44,10 @@ extension HomeCoordinator {
         tripCoordinator.parent = self
         addChild(tripCoordinator)
         tripCoordinator.start(animated: true)
+    }
+    
+    public func myPage() {
+        let myPageCoordinator = MyPageCoordinator(navigationController: navigationController)
+        myPageCoordinator.start(animated: true)
     }
 }

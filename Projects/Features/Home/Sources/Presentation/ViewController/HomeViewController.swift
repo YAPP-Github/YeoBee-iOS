@@ -13,6 +13,7 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 import Coordinator
+import MyPage
 
 public enum HomeSection: CaseIterable {
     case header
@@ -271,7 +272,7 @@ extension HomeViewController: View {
 // MARK: - 프로필 & 여행 등록하기
 extension HomeViewController: HomeCollectionHeaderViewCellDelegate {
     func profileButtonTapped() {
-        print("프로필로 이동")
+      navigationController?.pushViewController(MyPageViewController(), animated: true)
     }
     
     func addTripViewTapped() {
