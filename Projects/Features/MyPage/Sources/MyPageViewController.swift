@@ -101,6 +101,7 @@ public class MyPageViewController: UIViewController, View {
     let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
     let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
     self.navigationItem.leftBarButtonItem = backButton
+    self.navigationItem.title = "MY"
   }
   
   @objc private func backButtonTapped() {
