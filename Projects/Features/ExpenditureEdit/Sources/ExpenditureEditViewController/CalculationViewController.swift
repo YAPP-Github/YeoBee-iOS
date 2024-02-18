@@ -21,12 +21,18 @@ public final class CalculationViewController: UIViewController {
 
     private let calculationHostingController: CalculationHostingController
 
-    public init(coordinator: ExpenditureAddCoordinator, tripItem: TripItem, expenseDetail: ExpenseDetailItem) {
+    public init(
+        coordinator: ExpenditureAddCoordinator,
+        expenseType: ExpenditureType,
+        tripItem: TripItem,
+        expenseDetail: ExpenseDetailItem
+    ) {
         self.coordinator = coordinator
         self.calculationHostingController = CalculationHostingController(
             rootView: .init(
                 store: .init(
                     initialState: .init(
+                        expenseType: expenseType,
                         tripItem: tripItem,
                         expenseDetail: expenseDetail,
                         selectedPayer: nil

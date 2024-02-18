@@ -9,10 +9,6 @@ import Foundation
 import ComposableArchitecture
 import Entity
 
-public enum ExpenditureType: Equatable {
-    case expense, budget
-}
-
 public struct ExpenditureReducer: Reducer {
 
     let cooridinator: ExpenditureAddCoordinator
@@ -49,6 +45,7 @@ public struct ExpenditureReducer: Reducer {
         case expenditureEdit(ExpendpenditureEditReducer.Action)
         case expenditureBudgetEdit(ExpenditureBudgetEditReducer.Action)
         case setCurrencies([Currency])
+        case setCalculationData(ExpenseDetailItem, ExpenditureType)
     }
 
     @Dependency(\.currencyUseCase) var currencyUseCase
@@ -94,9 +91,32 @@ public struct ExpenditureReducer: Reducer {
                     let expenseText = state.expenditureEdit.expenditureCategory.text
                     let currencyCode = state.expenditureEdit.expenditureInput.selectedCurrency.code
                     let expenseDetail: ExpenseDetailItem = .init(name: expenseText, amount: amount, currency: currencyCode, payerUserId: nil, payerList: [])
-                    cooridinator.pushCalculation(tripItem: state.tripItem, expenseDetail: expenseDetail)
+                    cooridinator.pushCalculation(expenseType: .expense, tripItem: state.tripItem, expenseDetail: expenseDetail)
                 } else {
                     // 금액을 입력하지 않았습니다
+                }
+                return .none
+
+            case .expenditureBudgetEdit(.tappedCalculationButton):
+                let amountString = state.expenditureBudgetEdit.expenditureInput.text.replacingOccurrences(of: ",", with: "")
+                if let amount = Double(amountString) {
+                    let expenseText = state.expenditureBudgetEdit.expenditureInput.text
+                    let currencyCode = state.expenditureBudgetEdit.expenditureInput.selectedCurrency.code
+                    let expenseDetail: ExpenseDetailItem = .init(name: expenseText, amount: amount, currency: currencyCode, payerUserId: nil, payerList: [])
+                    cooridinator.pushCalculation(expenseType: .budget, tripItem: state.tripItem, expenseDetail: expenseDetail)
+                } else {
+                    // 금액을 입력하지 않았습니다
+                }
+                return .none
+
+            case .setCalculationData(let expenseDetailItem, let expenseType):
+                switch expenseType {
+                case .expense:
+                    state.expenditureEdit.expenseDetail = expenseDetailItem
+                    state.expenditureEdit.expenditureInput.text = expenseDetailItem.amount.formattedWithSeparator
+                case .budget:
+                    state.expenditureBudgetEdit.expenseDetail = expenseDetailItem
+                    state.expenditureBudgetEdit.expenditureInput.text = expenseDetailItem.amount.formattedWithSeparator
                 }
                 return .none
             default:

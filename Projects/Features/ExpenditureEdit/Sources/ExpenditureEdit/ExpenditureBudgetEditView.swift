@@ -71,7 +71,7 @@ extension ExpenditureBudgetEditView {
             WithViewStore(store, observe: \.expenditureTab) { viewStore in
                 if viewStore.state == .shared {
                     ExpenseCalculationButtonView {
-                        //
+                        viewStore.send(.tappedCalculationButton)
                     }
                     .padding(.horizontal, 24)
                 }

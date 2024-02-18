@@ -9,6 +9,7 @@ import SwiftUI
 import UIKit
 import ComposableArchitecture
 import DesignSystem
+import Entity
 
 final class ExpenditureAddHostingController: UIHostingController<ExpenditureAddView> {
 }

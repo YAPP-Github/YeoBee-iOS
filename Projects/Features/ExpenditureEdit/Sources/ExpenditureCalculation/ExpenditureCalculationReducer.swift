@@ -19,18 +19,23 @@ public struct ExpenditureCalculationReducer: Reducer {
         @BindingState var seletedCalculationType: CalculationType = .dutch
         var dutch: ExpenditureCalculationDutchReducer.State
         var direct: ExpenditureCalculationDirectReducer.State
+        let expenseType: ExpenditureType
 
         init(
+            expenseType: ExpenditureType,
             tripItem: TripItem,
             expenseDetail: ExpenseDetailItem,
             selectedPayer: TripUserItem?
         ) {
+            self.expenseType = expenseType
             self.dutch = .init(
+                expenseType: expenseType,
                 tripItem: tripItem,
                 expenseDetail: expenseDetail,
                 selectedPayer: selectedPayer
             )
             self.direct = .init(
+                expenseType: expenseType,
                 tripItem: tripItem,
                 expenseDetail: expenseDetail,
                 selectedPayer: selectedPayer
@@ -47,9 +52,16 @@ public struct ExpenditureCalculationReducer: Reducer {
     public var body: some ReducerOf<ExpenditureCalculationReducer> {
         BindingReducer()
 
-        Reduce { _, action in
+        Reduce { state, action in
             switch action {
-                default: return .none
+            case .direct(.tappedConfirmButton):
+                coordinator.setCalculationData(expenseDetail: state.direct.expenseDetail, expenseType: state.expenseType)
+                return .none
+            case .dutch(.tappedConfirmButton):
+                coordinator.setCalculationData(expenseDetail: state.dutch.expenseDetail, expenseType: state.expenseType)
+                return .none
+            default:
+                return .none
             }
         }
 

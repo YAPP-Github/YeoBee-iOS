@@ -58,10 +58,9 @@ extension ExpenditureCalculationView {
                     .tag(CalculationType.direct)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .ignoresSafeArea(.keyboard, edges: .bottom)
             }
             .padding(.horizontal, 24)
-            .padding(.vertical, 22)
+            .padding(.top, 22)
             .background(YBColor.gray1.swiftUIColor, ignoresSafeAreaEdges: [.all])
         }
     }

@@ -49,10 +49,19 @@ public struct ExpenseDetailItem: Codable, Equatable {
 }
 
 public struct Payer: Codable, Equatable {
-    public var id: Int
+    public var id: Int?
     public var userId: Int
-    public var tripUserId: Int
+    public var tripUserId: Int?
     public var tripUserName: String?
-    public var profileImageUrl: String
+    public var profileImageUrl: String?
     public var amount: Double
+
+    public init(id: Int? = nil, userId: Int, tripUserId: Int? = nil, tripUserName: String? = nil, profileImageUrl: String? = nil, amount: Double) {
+        self.id = id
+        self.userId = userId
+        self.tripUserId = tripUserId
+        self.tripUserName = tripUserName
+        self.profileImageUrl = profileImageUrl
+        self.amount = amount
+    }
 }

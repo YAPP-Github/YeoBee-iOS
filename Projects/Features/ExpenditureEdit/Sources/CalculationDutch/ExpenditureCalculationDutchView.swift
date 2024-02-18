@@ -16,8 +16,28 @@ struct ExpenditureCalculationDutchView: View {
     let store: StoreOf<ExpenditureCalculationDutchReducer>
 
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            contentView
+        ZStack {
+            WithViewStore(store, observe: \.isEnableRegisterButton) { viewStore in
+                ScrollView(showsIndicators: false) {
+                    VStack {
+                        contentView
+                        Button {
+                            viewStore.send(.tappedConfirmButton)
+                        } label: {
+                            Text("확인")
+                                .foregroundColor(viewStore.state ? .ybColor(.white) : .ybColor(.gray5))
+                                .font(.ybfont(.title1))
+                                .frame(height: 54)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .background(viewStore.state ? YBColor.black.swiftUIColor : YBColor.gray3.swiftUIColor)
+                        .cornerRadius(10)
+                        .padding(.top, 16)
+                        .padding(.bottom, 4)
+                        .background(YBColor.gray1.swiftUIColor)
+                    }
+                }
+            }
         }
     }
 }
@@ -31,7 +51,7 @@ extension ExpenditureCalculationDutchView {
                         .foregroundColor(.ybColor(.gray4))
                         .font(.ybfont(.body2))
                     Text(viewStore.expenseDetail.amount.formattedWithSeparator)
-                        .foregroundColor(.ybColor(.gray4))
+                        .foregroundColor(.ybColor(.gray5))
                         .font(.ybfont(.header1))
                 }
                 .padding(.bottom, 30)

@@ -21,6 +21,7 @@ public struct ExpenditureBudgetEditReducer: Reducer {
         var tripId: Int
         var editDate: Date
         let expenditureTab: ExpenditureTab
+        var expenseDetail: ExpenseDetailItem?
 
         init(tripId: Int, editDate: Date, expenditureTab: ExpenditureTab) {
             self.tripId = tripId
@@ -31,6 +32,7 @@ public struct ExpenditureBudgetEditReducer: Reducer {
 
     public enum Action: Equatable {
         case tappedRegisterButton
+        case tappedCalculationButton
         case dismiss
 
         case expenditureInput(ExpenditureInputReducer.Action)
@@ -56,9 +58,17 @@ public struct ExpenditureBudgetEditReducer: Reducer {
             }
 
             func isEnableRegisterBurron(state: inout State) -> Bool {
-                return state.expenditureContent.text.isEmpty == false &&
+                if state.expenditureTab == .individual {
+                    return state.expenditureContent.text.isEmpty == false &&
                     state.expenditureContent.isInvaildText == false &&
                     state.expenditureInput.text.isEmpty == false
+                } else {
+                    return state.expenditureContent.text.isEmpty == false &&
+                    state.expenditureContent.isInvaildText == false &&
+                    state.expenditureInput.text.isEmpty == false &&
+                    state.expenseDetail?.payerUserId != nil &&
+                    state.expenseDetail?.payerList != []
+                }
             }
 
             func registerExpense(state: inout State) -> Effect<Action> {
@@ -70,6 +80,10 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                     let expenseText = state.expenditureContent.text
                     let payedAt = state.editDate
                     let expenditureTab = state.expenditureTab
+                    let payerId = state.expenseDetail?.payerUserId
+                    let payerList: [PayerRequest] = state.expenseDetail?.payerList.compactMap { 
+                        .init(tripUserId: $0.userId, amount: $0.amount)
+                    } ?? []
                     return .run { send in
                         let _ = try await expenseUseCase.createExpense(.init(
                             tripId: tripId,
@@ -80,7 +94,8 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                             expenseMethod: paymentType,
                             expenseCategory: "INCOME",
                             name: expenseText,
-                            payerId: 1
+                            payerId: payerId,
+                            payerList: payerList
                         ))
                         await send(.dismiss)
                     } catch: { error, send in

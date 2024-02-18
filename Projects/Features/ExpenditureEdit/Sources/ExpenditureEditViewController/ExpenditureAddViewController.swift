@@ -113,4 +113,8 @@ extension ExpenditureAddViewController {
             store.send(.expenditureBudgetEdit(.expenditureInput(.setCurrency(currency))))
         }
     }
+
+    func setCalculationData(expenseDetail: ExpenseDetailItem, expenseType: ExpenditureType) {
+        store.send(.setCalculationData(expenseDetail, expenseType))
+    }
 }

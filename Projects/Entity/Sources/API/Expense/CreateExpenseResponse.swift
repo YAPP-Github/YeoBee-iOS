@@ -16,7 +16,7 @@ public struct CreateExpenseResponse: Codable {
     public var currencyCode: String
     public var expenseMethod: String
     public var name: String
-    public var payerId: Int
+    public var payerId: Int?
     public var payerList: [PayerResponse]
     public var imageList: [ImageRequest]
 }
