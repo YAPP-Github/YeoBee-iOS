@@ -39,7 +39,7 @@ public struct ExpenditureReducer: Reducer {
             dateFormatter.dateFormat = "YYYY-MM-dd"
             let startDate = dateFormatter.date(from: tripItem.startDate) ?? Date()
             let endDate = dateFormatter.date(from: tripItem.endDate) ?? Date()
-            let readyDate = Calendar.current.date(byAdding: .day, value: 1, to: startDate) ?? Date()
+            let readyDate = Calendar.current.date(byAdding: .day, value: -1, to: startDate) ?? Date()
             self.tripItem = tripItem
             self.startDate = startDate
             self.endDate = endDate
@@ -103,6 +103,7 @@ public struct ExpenditureReducer: Reducer {
                 }
 
             case .tripDate(.tappedTripReadyButton):
+                state.pageIndex = 0
                 return .send(.getExpenditure(state.readyDate))
 
             case let .tripDate(.tripDateItem(id: id, action: .tappedItem)):

@@ -31,6 +31,7 @@ public struct ExpendpenditureEditReducer: Reducer {
 
     public enum Action: Equatable {
         case tappedRegisterButton
+        case tappedCalculationButton
         case dismiss
 
         case expenditureInput(ExpenditureInputReducer.Action)

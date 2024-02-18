@@ -44,7 +44,7 @@ extension ExpenditureListView {
                     ) { store in
                         ExpenditureListItemView(store: store)
                     }
-                    
+                    Spacer()
                 }
             }
         }

@@ -88,6 +88,17 @@ public struct ExpenditureReducer: Reducer {
                     expenseType: .individualBudget
                 )
                 return .none
+            case .expenditureEdit(.tappedCalculationButton):
+                let amountString = state.expenditureEdit.expenditureInput.text.replacingOccurrences(of: ",", with: "")
+                if let amount = Double(amountString) {
+                    let expenseText = state.expenditureEdit.expenditureCategory.text
+                    let currencyCode = state.expenditureEdit.expenditureInput.selectedCurrency.code
+                    let expenseDetail: ExpenseDetailItem = .init(name: expenseText, amount: amount, currency: currencyCode, payerUserId: nil, payerList: [])
+                    cooridinator.pushCalculation(tripItem: state.tripItem, expenseDetail: expenseDetail)
+                } else {
+                    // 금액을 입력하지 않았습니다
+                }
+                return .none
             default:
                 return .none
             }
