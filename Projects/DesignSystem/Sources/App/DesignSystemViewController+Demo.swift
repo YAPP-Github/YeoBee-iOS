@@ -7,6 +7,7 @@ enum Component: String, CaseIterable {
     case divider = "divider"
     case segmentControl = "segmentControl"
     case bottomSheet = "bottomSheet"
+    case popup = "popup"
 }
 
 public class DesignSystemViewController: UITableViewController {
@@ -50,6 +51,8 @@ extension DesignSystemViewController {
             self.navigationController?.pushViewController(SegmentControlViewController(), animated: true)
         case .bottomSheet:
             self.navigationController?.pushViewController(BottomSheetViewController(), animated: true)
+        case .popup:
+            self.navigationController?.pushViewController(PopupViewController(), animated: true)
         }
     }
 }

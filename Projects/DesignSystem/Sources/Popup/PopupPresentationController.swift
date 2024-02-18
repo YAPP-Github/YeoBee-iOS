@@ -12,7 +12,7 @@ final internal class PopupPresentationController: UIPresentationController {
 
     fileprivate let dimmedBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = .ybColor(.gray3).withAlphaComponent(0.2)
+        view.backgroundColor = .ybColor(.black).withAlphaComponent(0.2)
         return view
     }()
 
@@ -54,7 +54,7 @@ class PopupTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegat
 
 extension UIViewController {
     func presentPopup(presentedViewController: UIViewController) {
-        let overlayTransitioningDelegate = BottomSheetTransitioningDelegate()
+        let overlayTransitioningDelegate = PopupTransitioningDelegate()
         presentedViewController.transitioningDelegate = overlayTransitioningDelegate
         presentedViewController.modalPresentationStyle = .custom
         present(presentedViewController, animated: true, completion: nil)

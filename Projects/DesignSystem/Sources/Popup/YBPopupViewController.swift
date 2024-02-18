@@ -12,60 +12,55 @@ import SnapKit
 
 public class YBPopupViewController: UIViewController {
 
+    // MARK: - Properties
+    public let popupType: YBPopupType
     fileprivate let sheetContentView = UIView()
-    fileprivate let indicatorView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .ybColor(.gray3)
-        return view
-    }()
     public let containerView = UIView()
 
+    // MARK: - Life Cycles
     public override func viewDidLoad() {
         super.viewDidLoad()
-
         setViews()
         setContraints()
     }
 
-    init() {
+    public init(popupType: YBPopupType) {
+        self.popupType = popupType
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - set UI
     public func setContraints() {
         view.addSubview(sheetContentView)
-        sheetContentView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-24)
-            make.leading.equalToSuperview().offset(24)
-            make.bottom.equalToSuperview().offset(-50)
-        }
-
-        sheetContentView.addSubview(indicatorView)
         sheetContentView.addSubview(containerView)
-        indicatorView.snp.makeConstraints { make in
-            make.width.equalTo(60)
-            make.height.equalTo(4)
-            make.top.equalToSuperview().offset(14)
-            make.centerX.equalToSuperview()
+        
+        switch popupType {
+        case .addCommonBudget, .addTotalBudget, .calendarWarning, .logout, .expenseDelete, .tripDelete:
+            sheetContentView.snp.makeConstraints { make in
+                make.height.equalTo(UIScreen.main.bounds.height * 0.358)
+                make.leading.trailing.equalToSuperview().inset(24)
+                make.center.equalToSuperview()
+            }
+        case .expenseSetting:
+            sheetContentView.snp.makeConstraints { make in
+                make.height.equalTo(UIScreen.main.bounds.height * 0.27)
+                make.leading.trailing.equalToSuperview().inset(24)
+                make.center.equalToSuperview()
+            }
         }
-
         containerView.snp.makeConstraints { make in
-            make.top.equalTo(indicatorView).offset(28)
-            make.trailing.equalToSuperview().offset(-24)
-            make.leading.equalToSuperview().offset(24)
-            make.bottom.equalToSuperview().offset(-50)
+            make.edges.equalToSuperview()
         }
     }
 
     public func setViews() {
         view.backgroundColor = .clear
-
         sheetContentView.backgroundColor = .white
         sheetContentView.layer.cornerRadius = 20
+        sheetContentView.clipsToBounds = true
     }
 }
-
