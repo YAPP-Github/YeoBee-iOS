@@ -108,8 +108,7 @@ extension ExpenditureCoordinator {
     public func tripSetting() {
         if let expenditureNavigationController {
             expenditureNavigationController.tabBarController?.tabBar.isHidden = true
-            let settingCoordinator = SettingCoordinator(navigationController: expenditureNavigationController)
-            // TODO: 현준님 여기서 멤버변수인 tripItem 가져다 쓰시면 됩니당
+            let settingCoordinator = SettingCoordinator(navigationController: expenditureNavigationController, tripItem: tripItem)
             settingCoordinator.parent = self
             addChild(settingCoordinator)
             settingCoordinator.start(animated: true)

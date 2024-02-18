@@ -13,7 +13,7 @@ import Entity
 public struct ExpenditureInputReducer: Reducer {
     public struct State: Equatable {
         @BindingState var text: String = ""
-        var selectedCurrency: Currency = .init(name: "원", code: "KRW", exchangeRate: .init(value: 1.00))
+        var selectedCurrency: Currency = .init(name: "원", code: "KRW", exchangeRate: .init(value: 1200.21, standard: 1))
         var currencies: [Currency] = []
     }
 

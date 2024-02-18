@@ -20,8 +20,8 @@ enum SettingSection: String, CaseIterable {
 }
 
 enum SettingDataItem: Hashable {
-    case companion(Companion)
-    case currency(SettingCurrency)
+    case companion(TripUserItem)
+    case currency(Currency)
 }
 
 public final class SettingViewController: UIViewController {
@@ -52,18 +52,22 @@ public final class SettingViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        setView()
         addViews()
         setLayouts()
         setTableView()
         configureBar()
         setDataSource()
         bind(reactor: reactor)
-        settingHeaderView.configure() // 임시 데이터 바인딩
-        reactor.settingUseCase() // 임시 데이터 바인딩
+        reactor.settingUseCase()
     }
     
     // MARK: - Set UI
+    private func setView() {
+        view.backgroundColor = .white
+        title = "여행 설정"
+    }
+    
     private func addViews() {
         view.addSubview(settingTableView)
     }
@@ -97,7 +101,7 @@ public final class SettingViewController: UIViewController {
         settingTableView.dataSource = dataSource
     }
     
-    private func configureSnapshot(companions: [Companion], currencies: [SettingCurrency]) {
+    private func configureSnapshot(companions: [TripUserItem], currencies: [Currency]) {
         var snapshot = NSDiffableDataSourceSnapshot<SettingSection, SettingDataItem>()
         snapshot.appendSections([.companion, .currency])
         snapshot.appendItems(companions.map { .companion($0) }, toSection: .companion)
@@ -127,7 +131,9 @@ public final class SettingViewController: UIViewController {
     }
     
     @objc private func trashButtonTapped() {
-        print("여행 삭제")
+        // MARK: - [TODO] 삭제 Alert
+        coordinator.coordinatorDidFinish()
+        coordinator.parent?.coordinatorDidFinish()
     }
 
     deinit {
@@ -198,6 +204,14 @@ extension SettingViewController: View {
     
     func bindState(reactor: SettingReactor) {
         reactor.state
+            .map { $0.tripItem }
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] tripItem in
+                self?.settingHeaderView.configure(tripItem: tripItem)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
             .map { $0.companions }
             .bind { [weak self] companions in
                 guard let self else { return }
@@ -229,23 +243,37 @@ extension SettingViewController: SettingTableHeaderViewDelegate {
 // MARK: - 바텀시트
 extension SettingViewController: SettingBottomSheetViewControllerDelegate {
     func modifyTitleButtonTapped() {
-        let settingRecycleReactor = SettingRecycleReactor(viewType: .tripTitle)
+        let settingRecycleReactor = SettingRecycleReactor(viewType: .tripTitle, tripItem: reactor.currentState.tripItem)
         let settingRecycleViewController = SettingRecycleViewController(reactor: settingRecycleReactor)
+        settingRecycleViewController.delegate = self
         self.navigationController?.pushViewController(settingRecycleViewController, animated: true)
     }
     
     func modifyDateButtonTapped() {
-        let settingCalendarReactor = SettingCalendarReactor()
+        let settingCalendarReactor = SettingCalendarReactor(tripItem: reactor.currentState.tripItem)
         let settingCalendarViewController = SettingCalendarViewController(reactor: settingCalendarReactor)
+        settingCalendarViewController.delegate = self
         self.navigationController?.pushViewController(settingCalendarViewController, animated: true)
     }
 }
 
 // MARK: - 동행자 edit버튼 Tap
 extension SettingViewController: SettingCompanionCellDelegate {
-    func editButtonTapped(companion: TravelRegistration.Companion) {
-        let settingRecycleReactor = SettingRecycleReactor(viewType: .companionName)
+    func editButtonTapped(companion: TripUserItem) {
+        let settingRecycleReactor = SettingRecycleReactor(
+            viewType: .companionName,
+            tripItem: reactor.currentState.tripItem,
+            tripUserItem: companion
+        )
         let settingRecycleViewController = SettingRecycleViewController(reactor: settingRecycleReactor)
+        settingRecycleViewController.delegate = self
         self.navigationController?.pushViewController(settingRecycleViewController, animated: true)
+    }
+}
+
+// MARK: - 수정된 이후 trip update
+extension SettingViewController: ModifiedSettingViewControllerDelegate {
+    func modified() {
+        reactor.updateSettingUseCase()
     }
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Currency: Codable, Equatable {
+public struct Currency: Codable, Hashable {
     public var name: String
     public var code: String
     public var exchangeRate: ExchangeRate
@@ -20,10 +20,12 @@ public struct Currency: Codable, Equatable {
     }
 }
 
-public struct ExchangeRate: Codable, Equatable {
+public struct ExchangeRate: Codable, Hashable {
     public var value: Double
+    public var standard: Int
 
-    public init(value: Double) {
+    public init(value: Double, standard: Int) {
         self.value = value
+        self.standard = standard
     }
 }

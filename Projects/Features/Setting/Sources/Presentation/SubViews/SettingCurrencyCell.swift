@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import Entity
 import DesignSystem
 
 class SettingCurrencyCell: UITableViewCell {
     static let identifier = "SettingCurrencyCell"
     
-    var currency: SettingCurrency? {
+    var currency: Currency? {
         didSet {
             configure()
         }
@@ -78,6 +79,6 @@ class SettingCurrencyCell: UITableViewCell {
     
     func configure() {
         guard let currency else { return }
-        currencyLabel.text = "1 \(currency.code) = \(currency.value)원"
+        currencyLabel.text = "\(currency.exchangeRate.standard) \(currency.code) = \(currency.exchangeRate.value)원"
     }
 }

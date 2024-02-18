@@ -10,6 +10,8 @@ import UIKit
 import DesignSystem
 import TravelRegistration
 import Entity
+import UseCase
+import ComposableArchitecture
 import ReactorKit
 import RxSwift
 import RxCocoa
@@ -17,24 +19,29 @@ import RxCocoa
 public final class SettingReactor: Reactor {
     
     public enum Action {
-        case companions([Companion])
-        case currencies([SettingCurrency])
+        case companions([TripUserItem])
+        case currencies([Currency])
+        case tripItem(TripItem)
     }
     
     public enum Mutation {
-        case companions([Companion])
-        case currencies([SettingCurrency])
+        case companions([TripUserItem])
+        case currencies([Currency])
+        case tripItem(TripItem)
     }
     
     public struct State {
-        var companions: [Companion] = []
-        var currencies: [SettingCurrency] = []
+        var companions: [TripUserItem] = []
+        var currencies: [Currency] = []
+        var tripItem: TripItem
     }
     
-    public var initialState: State = State()
+    @Dependency(\.tripUseCase) var tripUseCase
+    @Dependency(\.currencyUseCase) var currencyUseCase
+    public var initialState: State
     
-    public init() {
-        
+    public init(tripItem: TripItem) {
+        self.initialState = State(tripItem: tripItem)
     }
     
     // MARK: - Mutate
@@ -44,6 +51,8 @@ public final class SettingReactor: Reactor {
             return .just(.companions(companions))
         case .currencies(let currencies):
             return .just(.currencies(currencies))
+        case .tripItem(let tripItem):
+            return .just(.tripItem(tripItem))
         }
     }
     
@@ -53,41 +62,35 @@ public final class SettingReactor: Reactor {
         
         switch mutation {
         case .companions(let companions):
-            newState.companions.append(contentsOf: companions)
+            newState.companions = companions
         case .currencies(let currencies):
-            newState.currencies.append(contentsOf: currencies)
+            newState.currencies = currencies
+        case .tripItem(let tripItem):
+            newState.tripItem = tripItem
         }
         
         return newState
     }
     
     func settingUseCase() {
-        let companions: [Companion] = [
-            Companion(uuid: UUID(), name: "짱구", imageUrl: "Image1"),
-            Companion(uuid: UUID(), name: "제리", imageUrl: "Image2"),
-            Companion(uuid: UUID(), name: "태태", imageUrl: "Image3"),
-            Companion(uuid: UUID(), name: "제로", imageUrl: "Image4")
-        ]
-        
-        let currencies: [SettingCurrency] = [
-            SettingCurrency(code: "JPY", value: 914),
-            SettingCurrency(code: "EUR", value: 914),
-            SettingCurrency(code: "CHF", value: 232),
-            SettingCurrency(code: "a1dsa", value: 914),
-            SettingCurrency(code: "dsbWd", value: 914),
-            SettingCurrency(code: "CsdHF", value: 232),
-            SettingCurrency(code: "JedsdsPY", value: 914),
-            SettingCurrency(code: "EwdUR", value: 914),
-            SettingCurrency(code: "CdqssHF", value: 232),
-            SettingCurrency(code: "JwPsY", value: 914),
-            SettingCurrency(code: "EURsd", value: 914),
-            SettingCurrency(code: "CsdsHF", value: 232),
-            SettingCurrency(code: "JdqwPY", value: 914),
-            SettingCurrency(code: "EsvaUR", value: 914),
-            SettingCurrency(code: "CdHsdF", value: 232)
-        ]
-        
+        let currentTripItem = currentState.tripItem
+        let companions = currentTripItem.tripUserList
         action.onNext(.companions(companions))
-        action.onNext(.currencies(currencies))
+        
+        Task {
+            let currencyResult = try await currencyUseCase.getTripCurrencies(currentTripItem.id)
+            action.onNext(.currencies(currencyResult))
+        }
+    }
+    
+    func updateSettingUseCase() {
+        let currentTripItem = currentState.tripItem
+        
+        Task {
+            let tripResult = try await tripUseCase.getTrip(currentTripItem.id)
+            let companionsResult = tripResult.tripUserList
+            action.onNext(.tripItem(tripResult))
+            action.onNext(.companions(companionsResult))
+        }
     }
 }

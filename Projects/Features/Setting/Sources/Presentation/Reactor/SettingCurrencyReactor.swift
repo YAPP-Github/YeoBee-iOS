@@ -26,12 +26,12 @@ public final class SettingCurrencyReactor: Reactor {
     
     public struct State {
         var textFieldText: String = ""
-        var currency: SettingCurrency
+        var currency: Currency
     }
     
     public var initialState: State
     
-    public init(currency: SettingCurrency) {
+    public init(currency: Currency) {
         self.initialState = State(currency: currency)
     }
     

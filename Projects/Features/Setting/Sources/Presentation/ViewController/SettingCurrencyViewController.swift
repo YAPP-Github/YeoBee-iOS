@@ -128,7 +128,7 @@ extension SettingCurrencyViewController: View {
             .observe(on: MainScheduler.instance)
             .bind { [weak self] currency in
                 self?.settingCurrencyView.defaultCurrencyLabel.text = currency.code
-                self?.settingCurrencyView.wonCurrencyTextField.placeholder = "\(currency.value)"
+                self?.settingCurrencyView.wonCurrencyTextField.placeholder = "\(currency.exchangeRate.value)"
             }
             .disposed(by: disposeBag)
         
