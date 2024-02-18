@@ -32,9 +32,6 @@ struct ExpenseCalculationButtonView: View {
                 action()
             } label: {
                 HStack(spacing: 0) {
-                    Text("공동경비로 1/N")
-                        .foregroundColor(.ybColor(.gray5))
-                        .font(.ybfont(.body1))
                     DesignSystemAsset.Icons.next.swiftUIImage
                         .frame(width: 24, height: 24)
                         .foregroundColor(.ybColor(.gray4))

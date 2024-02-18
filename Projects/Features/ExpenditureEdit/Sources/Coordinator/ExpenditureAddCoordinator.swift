@@ -70,11 +70,27 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
     }
 
     deinit {
-        print("TravelRegistrationCoordinator is de-initialized.")
+        print("ExpenditureAddCoordinator is de-initialized.")
     }
 }
 
 extension ExpenditureAddCoordinator {
+
+    public func pushCalculation(expenseType: ExpenditureType, tripItem: TripItem,  expenseDetail: ExpenseDetailItem) {
+        let calculationViewController = CalculationViewController(
+            coordinator: self, 
+            expenseType: expenseType,
+            tripItem: tripItem,
+            expenseDetail: expenseDetail
+        )
+        expenditureEditNavigationController?.pushViewController(calculationViewController, animated: true)
+    }
+
+    public func setCalculationData(expenseDetail: ExpenseDetailItem, expenseType: ExpenditureType) {
+        expenditureAddViewController?.setCalculationData(expenseDetail: expenseDetail, expenseType: expenseType)
+        expenditureEditNavigationController?.popViewController(animated: true)
+    }
+
     public func showCurrencyBottomSheet(currenyList: [Currency], selectedCurrency: Currency, expenseType: ExpenseType) {
         let currencyBottomSheetViewController = CurrencyBottomSheetViewController(
             coordinator: self,

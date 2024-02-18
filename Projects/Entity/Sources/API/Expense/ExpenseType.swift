@@ -20,3 +20,7 @@ public enum ExpenditureTab: Equatable {
     case shared
     case individual
 }
+
+public enum ExpenditureType: Equatable {
+    case expense, budget
+}

@@ -14,7 +14,7 @@ public struct ExpenseDetailItem: Codable, Equatable {
     public var currency: String
     public var koreanAmount: Int?
 //    public var category: ExpendCategory
-    public var payerUserId: Int
+    public var payerUserId: Int?
     public var payerName: String?
     public var payerList: [Payer]
 
@@ -28,13 +28,40 @@ public struct ExpenseDetailItem: Codable, Equatable {
         case payerName
         case payerList
     }
+
+    public init(
+        name: String,
+        amount: Double,
+        currency: String,
+        koreanAmount: Int? = nil,
+        payerUserId: Int?,
+        payerName: String? = nil,
+        payerList: [Payer]
+    ) {
+        self.name = name
+        self.amount = amount
+        self.currency = currency
+        self.koreanAmount = koreanAmount
+        self.payerUserId = payerUserId
+        self.payerName = payerName
+        self.payerList = payerList
+    }
 }
 
 public struct Payer: Codable, Equatable {
-    public var id: Int
+    public var id: Int?
     public var userId: Int
-    public var tripUserId: Int
+    public var tripUserId: Int?
     public var tripUserName: String?
-    public var profileImageUrl: String
+    public var profileImageUrl: String?
     public var amount: Double
+
+    public init(id: Int? = nil, userId: Int, tripUserId: Int? = nil, tripUserName: String? = nil, profileImageUrl: String? = nil, amount: Double) {
+        self.id = id
+        self.userId = userId
+        self.tripUserId = tripUserId
+        self.tripUserName = tripUserName
+        self.profileImageUrl = profileImageUrl
+        self.amount = amount
+    }
 }

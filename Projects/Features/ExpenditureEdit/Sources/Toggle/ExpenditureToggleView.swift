@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DesignSystem
+import Entity
 
 struct ExpenditureToggleView: View {
     @Binding var expenditureTab: ExpenditureType

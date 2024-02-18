@@ -29,7 +29,7 @@ extension ExpenditureListItemView {
         var currency: String
         var price: String {
             let price =  expenseItem.amount
-            if price > 0 {
+            if expenseItem.category.rawValue == "INCOME" {
                 return "+ " + price.formattedWithSeparator
             } else {
                 return "- " + abs(price).formattedWithSeparator
@@ -66,7 +66,7 @@ extension ExpenditureListItemView {
                             HStack(spacing: 0) {
                                 Text(viewStore.price)
                                     .foregroundColor(
-                                        viewStore.expenseItem.amount < 0
+                                        viewStore.expenseItem.category.rawValue != "INCOME"
                                         ? .ybColor(.black)
                                         : .ybColor(.mainGreen)
                                     )
@@ -74,7 +74,7 @@ extension ExpenditureListItemView {
                                     .lineLimit(1)
                                 Text(viewStore.currency)
                                     .foregroundColor(
-                                        viewStore.expenseItem.amount < 0
+                                        viewStore.expenseItem.category.rawValue != "INCOME"
                                         ? .ybColor(.black)
                                         : .ybColor(.mainGreen)
                                     )

@@ -17,7 +17,7 @@ public struct CreateExpenseRequest: Codable {
     public var expenseMethod: String
     public var expenseCategory: String
     public var name: String
-    public var payerId: Int
+    public var payerId: Int?
     public var payerList: [PayerRequest]
     public var imageList: [ImageRequest]
 
@@ -30,7 +30,7 @@ public struct CreateExpenseRequest: Codable {
         expenseMethod: String,
         expenseCategory: String,
         name: String,
-        payerId: Int,
+        payerId: Int?,
         payerList: [PayerRequest] = [],
         imageList: [ImageRequest] = []
     ) {
@@ -50,5 +50,10 @@ public struct CreateExpenseRequest: Codable {
 
 public struct PayerRequest: Codable {
     public var tripUserId: Int
-    public var amount: Int
+    public var amount: Double
+
+    public init(tripUserId: Int, amount: Double) {
+        self.tripUserId = tripUserId
+        self.amount = amount
+    }
 }

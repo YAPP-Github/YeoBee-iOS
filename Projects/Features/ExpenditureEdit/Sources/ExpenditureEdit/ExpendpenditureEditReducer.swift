@@ -21,6 +21,7 @@ public struct ExpendpenditureEditReducer: Reducer {
         var tripItem: TripItem
         var editDate: Date
         let expenditureTab: ExpenditureTab
+        var expenseDetail: ExpenseDetailItem?
 
         init(tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab) {
             self.tripItem = tripItem
@@ -31,7 +32,10 @@ public struct ExpendpenditureEditReducer: Reducer {
 
     public enum Action: Equatable {
         case tappedRegisterButton
+        case tappedCalculationButton
         case dismiss
+
+        case setExpenditureDetail(ExpenseDetailItem)
 
         case expenditureInput(ExpenditureInputReducer.Action)
         case expenditurePayment(ExpenditurePaymentReducer.Action)
@@ -47,26 +51,40 @@ public struct ExpendpenditureEditReducer: Reducer {
                 state.isFocused = isFocused
                 state.scrollItem = "expenditureCategoryType"
                 return .none
+
             case .expenditureCategory(.category(_, .tappedCategory)):
                 state.isEnableRegisterButton = isEnableRegisterBurron(state: &state)
                 return .none
+
             case .expenditureInput(.binding(\.$text)):
                 state.isEnableRegisterButton = isEnableRegisterBurron(state: &state)
                 return .none
+
             case .expenditureCategory(.binding(\.$text)):
                 state.isEnableRegisterButton = isEnableRegisterBurron(state: &state)
                 return .none
+
             case .tappedRegisterButton:
                 return registerExpense(state: &state)
+
             default:
                 return .none
             }
 
             func isEnableRegisterBurron(state: inout State) -> Bool {
-                return state.expenditureCategory.selectedCategory != nil &&
-                    state.expenditureCategory.text.isEmpty == false &&
-                    state.expenditureCategory.isInvaildText == false &&
-                    state.expenditureInput.text.isEmpty == false
+                if state.expenditureTab == .individual {
+                    return state.expenditureCategory.selectedCategory != nil &&
+                        state.expenditureCategory.text.isEmpty == false &&
+                        state.expenditureCategory.isInvaildText == false &&
+                        state.expenditureInput.text.isEmpty == false
+                } else {
+                    return state.expenditureCategory.selectedCategory != nil &&
+                        state.expenditureCategory.text.isEmpty == false &&
+                        state.expenditureCategory.isInvaildText == false &&
+                        state.expenditureInput.text.isEmpty == false &&
+                        state.expenseDetail?.payerList != []
+                }
+
             }
 
             func registerExpense(state: inout State) -> Effect<Action> {
@@ -79,6 +97,10 @@ public struct ExpendpenditureEditReducer: Reducer {
                     let currencyCode = state.expenditureInput.selectedCurrency.code
                     let payedAt = state.editDate
                     let expenditureTab = state.expenditureTab
+                    let payerId = state.expenseDetail?.payerUserId
+                    let payerList: [PayerRequest] = state.expenseDetail?.payerList.compactMap { 
+                        .init(tripUserId: $0.userId, amount: $0.amount)
+                    } ?? []
                     return .run { send in
                         let _ = try await expenseUseCase.createExpense(.init(
                             tripId: tripId,
@@ -89,7 +111,8 @@ public struct ExpendpenditureEditReducer: Reducer {
                             expenseMethod: paymentType,
                             expenseCategory: category.requestText,
                             name: expenseText,
-                            payerId: 1
+                            payerId: payerId,
+                            payerList: payerList
                         ))
                         await send(.dismiss)
                     } catch: { error, send in
