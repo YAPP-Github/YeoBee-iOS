@@ -122,7 +122,7 @@ final class SettingTableHeaderView: UIView {
     
     func configure(tripItem: TripItem) {
         guard let firstCountry = tripItem.countryList.first,
-            let flagImageUrl = URL(string: firstCountry.flagImageUrl) else { return }
+              let flagImageUrl = URL(string: firstCountry.flagImageUrl) else { return }
         countryLabel.text = firstCountry.name
         titleLabel.text = tripItem.title
         
