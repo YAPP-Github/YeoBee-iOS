@@ -18,7 +18,7 @@ import Repository
 final class RootCoordinator: NSObject, Coordinator, ParentCoordinator {
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
-    var isTokenExpring: Bool
+    var isTokenExpiring: Bool
     var isOnboardingCompleted: Bool?
     
     init(navigationController: UINavigationController,
@@ -26,12 +26,12 @@ final class RootCoordinator: NSObject, Coordinator, ParentCoordinator {
          isOnboardingCompleted: Bool?
     ) {
         self.navigationController = navigationController
-        self.isTokenExpring = isTokenExpring
+        self.isTokenExpiring = isTokenExpring
         self.isOnboardingCompleted = isOnboardingCompleted
     }
 
     func start(animated: Bool) {
-        if isTokenExpring {
+        if isTokenExpiring {
             if let isOnboardingCompleted {
                 home(navigationController: navigationController)
             } else {
