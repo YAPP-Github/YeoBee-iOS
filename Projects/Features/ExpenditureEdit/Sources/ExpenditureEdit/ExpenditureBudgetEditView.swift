@@ -68,6 +68,14 @@ extension ExpenditureBudgetEditView {
                     action: Action.expenditureContent
                 )
             )
+            WithViewStore(store, observe: \.expenditureTab) { viewStore in
+                if viewStore.state == .shared {
+                    ExpenseCalculationButtonView {
+                        //
+                    }
+                    .padding(.horizontal, 24)
+                }
+            }
             Spacer()
         }
     }

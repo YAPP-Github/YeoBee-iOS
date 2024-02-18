@@ -7,6 +7,7 @@
 
 import Foundation
 import ComposableArchitecture
+import Entity
 
 public enum TotalPriceTab: Equatable {
     case expense, budget

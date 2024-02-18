@@ -13,6 +13,7 @@ import DesignSystem
 import SnapKit
 import ComposableArchitecture
 import Coordinator
+import Entity
 
 public final class TotalBudgetExpenditureViewController: UIViewController {
 

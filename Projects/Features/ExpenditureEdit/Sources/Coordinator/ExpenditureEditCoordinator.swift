@@ -23,19 +23,19 @@ final public class ExpenditureEditCoordinator: ExpenditureEditCoordinatorInterfa
     public var childCoordinators = [Coordinator]()
     public var parent: ExpenditureCoordinatorInterface?
     public weak var delegate: ExpenditureEditCoordinatorDelegate?
-    public let tripId: Int
+    public let tripItem: TripItem
     public let expenseDetail: ExpenseDetailItem
 
-    public init(navigationController: UINavigationController, tripId: Int, expenseDetail: ExpenseDetailItem) {
+    public init(navigationController: UINavigationController, tripItem: TripItem, expenseDetail: ExpenseDetailItem) {
         self.navigationController = navigationController
-        self.tripId = tripId
+        self.tripItem = tripItem
         self.expenseDetail = expenseDetail
     }
 
     public func start(animated: Bool) {
         let expenditureUpdateViewController = ExpenditureUpdateViewController(
             coordinator: self,
-            tripId: tripId,
+            tripItem: tripItem,
             expenseDetail: expenseDetail
         )
         expenditureEditNavigationController = UINavigationController(rootViewController: expenditureUpdateViewController)

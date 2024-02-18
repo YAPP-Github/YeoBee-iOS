@@ -7,18 +7,24 @@
 
 import Foundation
 import ComposableArchitecture
-
-public enum ExpenditureTab: Equatable {
-    case shared
-    case individual
-}
+import Entity
 
 public struct SharedExpenditureReducer: Reducer {
+    let cooridinator: ExpenditureCoordinator
+
+    init(cooridinator: ExpenditureCoordinator) {
+        self.cooridinator = cooridinator
+    }
 
     public struct State: Equatable {
         @BindingState var selectedTab: ExpenditureTab = .shared
-//        var sharedExpenditure = ExpenditureReducer.State(type: .shared, tripId: 1, startDate: Date(), endDate: Date())
-//        var individualExpenditure = ExpenditureReducer.State(type: .individual, tripId: 1, startDate: Date(), endDate: Date())
+        var sharedExpenditure: ExpenditureReducer.State
+        var individualExpenditure: ExpenditureReducer.State
+
+        init(tripItem: TripItem) {
+            self.sharedExpenditure = .init(type: .shared, tripItem: tripItem)
+            self.individualExpenditure = .init(type: .individual, tripItem: tripItem)
+        }
     }
 
     public enum Action: BindableAction {
@@ -39,12 +45,12 @@ public struct SharedExpenditureReducer: Reducer {
             }
         }
 
-//        Scope(state: \.sharedExpenditure, action: /Action.sharedExpenditure) {
-//            ExpenditureReducer(
-//        }
-//
-//        Scope(state: \.individualExpenditure, action: /Action.individualExpenditure) {
-//            ExpenditureReducer()
-//        }
+        Scope(state: \.sharedExpenditure, action: /Action.sharedExpenditure) {
+            ExpenditureReducer(cooridinator: cooridinator)
+        }
+
+        Scope(state: \.individualExpenditure, action: /Action.individualExpenditure) {
+            ExpenditureReducer(cooridinator: cooridinator)
+        }
     }
 }

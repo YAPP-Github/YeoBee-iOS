@@ -21,10 +21,15 @@ public final class ExpenditureAddViewController: UIViewController {
 
     private let expenditureHostingController: ExpenditureAddHostingController
 
-    public init(coordinator: ExpenditureAddCoordinator, tripId: Int, editDate: Date) {
+    public init(coordinator: ExpenditureAddCoordinator, tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab) {
         self.coordinator = coordinator
         let store: StoreOf<ExpenditureReducer> = .init(
-            initialState: .init(seletedExpenditureType: .shared, tripId: tripId, editDate: editDate),
+            initialState: .init(
+                expenditureTab: expenditureTab,
+                seletedExpenditureType: .expense,
+                tripItem: tripItem,
+                editDate: editDate
+            ),
             reducer: {
                 ExpenditureReducer(cooridinator: coordinator)
             }

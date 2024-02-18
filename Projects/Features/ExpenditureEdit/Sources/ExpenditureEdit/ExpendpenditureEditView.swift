@@ -61,12 +61,21 @@ extension ExpendpenditureEditView {
                     action: Action.expenditurePayment
                 )
             )
+
             ExpenditureCategoryView(
                 store: store.scope(
                     state: \.expenditureCategory,
                     action: Action.expenditureCategory
                 )
             )
+            WithViewStore(store, observe: \.expenditureTab) { viewStore in
+                if viewStore.state == .shared {
+                    ExpenseCalculationButtonView {
+                        //
+                    }
+                    .padding(.horizontal, 24)
+                }
+            }
             Spacer()
         }
         .frame(maxWidth: .infinity)
