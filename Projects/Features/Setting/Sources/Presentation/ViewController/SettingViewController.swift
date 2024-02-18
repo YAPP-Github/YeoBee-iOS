@@ -131,7 +131,9 @@ public final class SettingViewController: UIViewController {
     }
     
     @objc private func trashButtonTapped() {
-        print("여행 삭제")
+        // MARK: - [TODO] 삭제 Alert
+        coordinator.coordinatorDidFinish()
+        coordinator.parent?.coordinatorDidFinish()
     }
 
     deinit {

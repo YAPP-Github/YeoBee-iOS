@@ -62,9 +62,9 @@ public final class SettingReactor: Reactor {
         
         switch mutation {
         case .companions(let companions):
-            newState.companions.append(contentsOf: companions)
+            newState.companions = companions
         case .currencies(let currencies):
-            newState.currencies.append(contentsOf: currencies)
+            newState.currencies = currencies
         case .tripItem(let tripItem):
             newState.tripItem = tripItem
         }
@@ -88,7 +88,9 @@ public final class SettingReactor: Reactor {
         
         Task {
             let tripResult = try await tripUseCase.getTrip(currentTripItem.id)
+            let companionsResult = tripResult.tripUserList
             action.onNext(.tripItem(tripResult))
+            action.onNext(.companions(companionsResult))
         }
     }
 }

@@ -177,10 +177,11 @@ extension SettingRecycleViewController: View {
         
         reactor.state
             .map { $0.modified }
+            .distinctUntilChanged()
             .bind { [weak self] isSuccess in
                 if isSuccess {
-                    self?.delegate?.modified()
                     self?.navigationController?.popViewController(animated: true)
+                    self?.delegate?.modified()
                 }
             }
             .disposed(by: disposeBag)
