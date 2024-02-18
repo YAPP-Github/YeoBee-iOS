@@ -18,7 +18,7 @@ public struct ExpenditureCalculationReducer: Reducer {
     public struct State: Equatable {
         @BindingState var seletedCalculationType: CalculationType = .dutch
         var dutch: ExpenditureCalculationDutchReducer.State
-        var direct = ExpenditureCalculationDirectReducer.State()
+        var direct: ExpenditureCalculationDirectReducer.State
 
         init(
             tripItem: TripItem,
@@ -26,6 +26,11 @@ public struct ExpenditureCalculationReducer: Reducer {
             selectedPayer: TripUserItem?
         ) {
             self.dutch = .init(
+                tripItem: tripItem,
+                expenseDetail: expenseDetail,
+                selectedPayer: selectedPayer
+            )
+            self.direct = .init(
                 tripItem: tripItem,
                 expenseDetail: expenseDetail,
                 selectedPayer: selectedPayer
