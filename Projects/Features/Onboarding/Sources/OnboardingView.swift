@@ -31,6 +31,7 @@ struct OnboardingView: View {
                     manageView.tag(OnboardingTab.manage)
                     calculateView.tag(OnboardingTab.calculate)
                 }
+                .tabViewStyle(.page(indexDisplayMode: .always))
                 Button {
                     viewStore.send(.tappedNextButton(viewStore.onboadingTab))
                 } label: {

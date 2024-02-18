@@ -29,6 +29,16 @@ public struct OnboardingReducer: Reducer {
         BindingReducer()
         Reduce { state, action in
             switch action {
+            case .binding(\.$onboadingTab):
+                switch state.onboadingTab {
+                case .register:
+                    state.buttonText = "다음으로"
+                case .manage:
+                    state.buttonText = "다음으로"
+                case .calculate:
+                    state.buttonText = "시작하기"
+                }
+                return .none
             case let .tappedNextButton(tab):
                 switch tab {
                 case .register:
@@ -41,7 +51,8 @@ public struct OnboardingReducer: Reducer {
                     coordinator.home()
                 }
                 return .none
-            default:
+
+            case .binding:
                 return .none
             }
         }
