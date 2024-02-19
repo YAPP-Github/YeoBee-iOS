@@ -12,7 +12,7 @@ import DesignSystem
 class MyPageMenuCell: UITableViewCell {
     let reuseableIdentifier = "MyPageMenuCell"
     let titleLabel = YBLabel(font: .body1)
-    let nextImage: UIImageView = {
+    let nextImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = DesignSystemAsset.Icons.next.image
         return imageView
@@ -32,7 +32,7 @@ class MyPageMenuCell: UITableViewCell {
     private func setupViews() {
         versionLabel.isHidden = true
         contentView.addSubview(titleLabel)
-        contentView.addSubview(nextImage)
+        contentView.addSubview(nextImageView)
         contentView.addSubview(versionLabel)
     }
     
@@ -42,7 +42,7 @@ class MyPageMenuCell: UITableViewCell {
             make.centerY.equalToSuperview()
         }
         
-        nextImage.snp.makeConstraints { make in
+        nextImageView.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(24)
             make.width.equalTo(4)
             make.height.equalTo(8)
