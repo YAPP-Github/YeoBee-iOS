@@ -75,7 +75,9 @@ public final class SettingReactor: Reactor {
     func settingUseCase() {
         let currentTripItem = currentState.tripItem
         let companions = currentTripItem.tripUserList
-        action.onNext(.companions(companions))
+        if companions.count > 1 {
+            action.onNext(.companions(companions))
+        }
         
         Task {
             let currencyResult = try await currencyUseCase.getTripCurrencies(currentTripItem.id)
@@ -90,7 +92,9 @@ public final class SettingReactor: Reactor {
             let tripResult = try await tripUseCase.getTrip(currentTripItem.id)
             let companionsResult = tripResult.tripUserList
             action.onNext(.tripItem(tripResult))
-            action.onNext(.companions(companionsResult))
+            if companionsResult.count > 1 {
+                action.onNext(.companions(companionsResult))
+            }
         }
     }
 }
