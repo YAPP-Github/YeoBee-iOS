@@ -36,6 +36,7 @@ let project = Project(
             ],
             settings: .settings(base: [
                 "ASSETCATALOG_COMPILER_APPICON_NAME":"AppIcon",
+                "CODE_SIGN_ENTITLEMENTS": "YeoBee.entitlements"
               ])
         ),
         Project.target(

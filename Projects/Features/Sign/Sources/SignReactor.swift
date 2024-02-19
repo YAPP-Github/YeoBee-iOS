@@ -15,11 +15,13 @@ import KakaoSDKUser
 import Repository
 
 import YBNetwork
+import AuthenticationServices
 
 public final class SignReactor: Reactor {
     public enum Action  {
         case kakao
-        case apple
+        case appleLogin(code: Data, idToken: Data)
+        case appleLoginFailure
     }
     
     public enum Mutation {
@@ -57,20 +59,22 @@ public final class SignReactor: Reactor {
                     }
                     return Disposables.create()
                 }
-            case .apple:
+            case .appleLogin(let code, let idToken):
                 return Observable.create { observer in
-                    print("애플로그인")
-                    //                    let appleIDProvider = ASAuthorizationAppleIDProvider()
-                    //                    let request = appleIDProvider.createRequest()
-                    //                    request.requestedScopes = [.fullName, .email]
-                    //
-                    //                    let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-                    //                    authorizationController.delegate = self
-                    //                    authorizationController.presentationContextProvider = self
-                    //                    authorizationController.performRequests()
-                    //
+                    Task {
+                        do {
+                            let isSuccess = try await self.appleLogin(code: code, idToken: idToken)
+                            observer.onNext(.setLoginStatus(isSuccess))
+                        } catch {
+                            observer.onNext(.setLoginStatus(false))
+                        }
+                        observer.onCompleted()
+                    }
                     return Disposables.create()
                 }
+                
+            case .appleLoginFailure:
+                return Observable.just(.setLoginStatus(false))
         }
         
     }
@@ -110,8 +114,17 @@ public final class SignReactor: Reactor {
         }
         
         let tokens = try await authRepository.loginWithKakao(token: oauthToken.accessToken)
-        KeychainManager.shared.add(key: "accessToken", value: tokens.accessToken)
-        KeychainManager.shared.add(key: "refreshToken", value: tokens.refreshToken)
+        KeychainManager.shared.add(key: KeychainManager.accessToken, value: tokens.accessToken)
+        KeychainManager.shared.add(key: KeychainManager.refreshToken, value: tokens.refreshToken)
+        return true
+    }
+    
+    private func appleLogin(code:Data, idToken: Data) async throws -> Bool {
+        guard let idToken = String(data: idToken, encoding: .utf8), let code = String(data: code, encoding: .utf8) else { return false }
+        
+        let tokens = try await authRepository.loginWithApple(code: code, idToken: idToken)
+        KeychainManager.shared.add(key: KeychainManager.accessToken, value: tokens.accessToken)
+        KeychainManager.shared.add(key: KeychainManager.refreshToken, value: tokens.refreshToken)
         return true
     }
 }

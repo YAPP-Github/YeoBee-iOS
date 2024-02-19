@@ -14,10 +14,12 @@ import Coordinator
 import DesignSystem
 import SnapKit
 import YBNetwork
+import AuthenticationServices
 
 public final class SignViewController: UIViewController, View {
     public var coordinator: SignCoordinator?
     public var disposeBag: DisposeBag = DisposeBag()
+    var appleLoginContinuation: CheckedContinuation<Bool, Error>?
     
     let titleLabel = UILabel()
     let logoImageView = UIImageView()
@@ -47,10 +49,10 @@ public final class SignViewController: UIViewController, View {
             .disposed(by: disposeBag)
         
         appleLoginButton.rx.tap
-            .map{ SignReactor.Action.apple}
-            .bind(to: reactor.action)
+            .subscribe(onNext: { [weak self] _ in
+                self?.appleLogin()
+            })
             .disposed(by: disposeBag)
-        
     }
     
     func bindState(reactor: SignReactor) {
@@ -106,5 +108,37 @@ public final class SignViewController: UIViewController, View {
             make.centerX.equalTo(view.snp.centerX)
             make.width.equalTo(view.snp.width).offset(-48)
         }
+    }
+    
+    private func appleLogin() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+    }
+}
+
+extension SignViewController: ASAuthorizationControllerDelegate {
+    public func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let credential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            guard let idToken = credential.identityToken, let code = credential.authorizationCode else {
+                return
+            }
+            reactor?.action.onNext(.appleLogin(code: code, idToken: idToken))
+        }
+    }
+
+    public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        reactor?.action.onNext(.appleLoginFailure)
+    }
+}
+
+extension SignViewController: ASAuthorizationControllerPresentationContextProviding {
+    public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
     }
 }
