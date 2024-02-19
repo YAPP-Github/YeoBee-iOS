@@ -141,11 +141,11 @@ public class PopupViewController: DesignSystemBaseViewController {
 
 // MARK: - 여기서 popup action 처리
 extension PopupViewController: YBPopupViewControllerDelegate {
-    func cancelButtonTapped() {
+    public func cancelButtonTapped() {
         print("취소")
     }
     
-    func actionButtonTapped() {
+    public func actionButtonTapped() {
         print("액션")
     }
 }

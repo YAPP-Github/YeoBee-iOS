@@ -9,15 +9,14 @@
 import UIKit
 import SnapKit
 
-protocol YBPopupViewControllerDelegate: AnyObject {
+public protocol YBPopupViewControllerDelegate: AnyObject {
     func cancelButtonTapped()
     func actionButtonTapped()
 }
 
 final public class YBPopupTypeViewController: YBPopupViewController {
     
-    weak var delegate: YBPopupViewControllerDelegate?
-    
+    public weak var delegate: YBPopupViewControllerDelegate?
     
     // MARK: - Properties
     private let popupIconImageView = UIImageView()

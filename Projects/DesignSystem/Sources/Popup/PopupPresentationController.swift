@@ -53,7 +53,7 @@ class PopupTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegat
 }
 
 extension UIViewController {
-    func presentPopup(presentedViewController: UIViewController) {
+    public func presentPopup(presentedViewController: UIViewController) {
         let overlayTransitioningDelegate = PopupTransitioningDelegate()
         presentedViewController.transitioningDelegate = overlayTransitioningDelegate
         presentedViewController.modalPresentationStyle = .custom
