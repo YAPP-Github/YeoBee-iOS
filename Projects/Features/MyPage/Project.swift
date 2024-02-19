@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "Home",
+    name: "MyPage",
     organizationName: "YeoBee.com",
     options: .options(
         automaticSchemesOptions: .disabled
@@ -14,58 +14,54 @@ let project = Project(
     ]),
     targets: [
         Project.target(
-            name: "Home",
+            name: "MyPage",
             product: .framework,
             sources: .sources,
             dependencies: [
                 .designSystem,
                 .RxSwift,
                 .RxCocoa,
-                .RxGesture,
                 .reactorKit,
-                .travelRegistration,
-                .trip,
-                .kingfisher,
-                .myPage
+                .kingfisher
             ]
         ),
         Project.target(
-            name: "HomeDemo",
+            name: "MyPageDemo",
             product: .app,
             sources: .demoSources,
             dependencies: [
-                .target(name: "Home")
+                .target(name: "MyPage")
             ]
         ),
         Project.target(
-            name: "HomeTests",
+            name: "MyPageTests",
             product: .unitTests,
             sources: .tests,
             dependencies: [
-                .target(name: "Home")
+                .target(name: "MyPage")
             ]
         )
     ],
     schemes: [
         Scheme(
-            name: "HomeDemo",
+            name: "MyPageDemo",
             shared: true,
             buildAction: BuildAction(
-                targets: ["HomeDemo"]
+                targets: ["MyPageDemo"]
             ),
-            testAction: .targets(["HomeTests"]),
+            testAction: .targets(["MyPageTests"]),
             runAction: .runAction(configuration: .debug),
             archiveAction: .archiveAction(configuration: .debug),
             profileAction: .profileAction(configuration: .debug),
             analyzeAction: .analyzeAction(configuration: .debug)
         ),
         Scheme(
-            name: "Home",
+            name: "MyPage",
             shared: true,
             buildAction: BuildAction(
-                targets: ["Home"]
+                targets: ["MyPage"]
             ),
-            testAction: .targets(["HomeTests"]),
+            testAction: .targets(["MyPageTests"]),
             runAction: .runAction(configuration: .release),
             archiveAction: .archiveAction(configuration: .release),
             profileAction: .profileAction(configuration: .release),

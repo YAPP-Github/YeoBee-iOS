@@ -53,6 +53,9 @@ public extension TargetDependency {
     static let ybdependency: TargetDependency = .project(
         target: "YBDependency",
         path: .relativeToRoot("Projects/YBDependency"))
+    static let myPage: TargetDependency = .project(
+        target: "MyPage",
+        path: .relativeToRoot("Projects/Features/MyPage"))
 }
 
 // MARK: Package

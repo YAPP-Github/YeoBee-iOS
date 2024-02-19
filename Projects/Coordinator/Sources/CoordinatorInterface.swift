@@ -35,3 +35,5 @@ public protocol ExpenditureEditCoordinatorInterface: ParentCoordinator, ChildCoo
 public protocol CreateAccountCoordinatorInterface: Coordinator { }
 
 public protocol OnboardingCoordinatorInterface: Coordinator { }
+
+public protocol MyPageCoordinatorInterface: Coordinator { }
