@@ -21,21 +21,21 @@ final public class MyPageCoordinator: MyPageCoordinatorInterface {
     }
     
     public func start(animated: Bool = false) {
-            let myPageViewController = MyPageViewController()
-            let reactor = MyPageReactor()
-            myPageViewController.reactor = reactor
-            myPageViewController.coordinator = self
+        let myPageViewController = MyPageViewController()
+        let reactor = MyPageReactor()
+        myPageViewController.reactor = reactor
+        myPageViewController.coordinator = self
     }
     
     public func popDidFinish() {
         navigationController.popViewController(animated: true)
     }
     
-//    public func login() {
-//        let signCoordinator = SignCoordinator(navigationController: self.navigationController)
-//        signCoordinator.start(animated: true)
-//    }
-//    
+    //    public func login() {
+    //        let signCoordinator = SignCoordinator(navigationController: self.navigationController)
+    //        signCoordinator.start(animated: true)
+    //    }
+    //    
     deinit {
         print("CreateAccountCoordinator is de-initialized.")
     }

@@ -32,7 +32,7 @@ public final class MyPageReactor: Reactor {
     // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-       
+                
         }
     }
     
@@ -41,7 +41,7 @@ public final class MyPageReactor: Reactor {
         var newState = state
         
         switch mutation {
-       
+                
         }
         
         return newState
