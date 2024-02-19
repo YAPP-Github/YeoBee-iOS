@@ -12,6 +12,10 @@ import Entity
 import Expenditure
 import DesignSystem
 
+public protocol TripCoordinatorDelegate: AnyObject {
+    func deletedTrip()
+}
+
 final public class TripCoordinator: TripCoordinatorInterface {
     public var navigationController: UINavigationController
     public var viewControllerRef: UIViewController?
@@ -19,6 +23,7 @@ final public class TripCoordinator: TripCoordinatorInterface {
     public var childCoordinators = [Coordinator]()
     public var parent: HomeCoordinatorInterface?
     public let tripItem: TripItem
+    public weak var delegate: TripCoordinatorDelegate?
 
     public init(navigationController: UINavigationController, tripItem: TripItem) {
         self.navigationController = navigationController
@@ -27,6 +32,7 @@ final public class TripCoordinator: TripCoordinatorInterface {
 
     public func start(animated: Bool = false) {
         let expenditureCoordinator = ExpenditureCoordinator(navigationController: UINavigationController(), tripItem: tripItem)
+        expenditureCoordinator.delegate = self
         expenditureCoordinator.parent = self
         addChild(expenditureCoordinator)
 
@@ -51,5 +57,11 @@ final public class TripCoordinator: TripCoordinatorInterface {
 
     deinit {
         print("TripCoordinator is de-initialized.")
+    }
+}
+
+extension TripCoordinator: ExpenditureCoordinatorDelegate {
+    public func deletedTrip() {
+        delegate?.deletedTrip()
     }
 }

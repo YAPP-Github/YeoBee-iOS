@@ -16,6 +16,7 @@ import MyPage
 
 public protocol HomeCoordinatorDelegate: AnyObject {
     func finishedRegistration()
+    func deletedTrip()
 }
 
 final public class HomeCoordinator: HomeCoordinatorInterface {
@@ -46,6 +47,7 @@ extension HomeCoordinator {
 
     public func trip(tripItem: TripItem) {
         let tripCoordinator = TripCoordinator(navigationController: navigationController, tripItem: tripItem)
+        tripCoordinator.delegate = self
         tripCoordinator.parent = self
         addChild(tripCoordinator)
         tripCoordinator.start(animated: true)
@@ -60,5 +62,11 @@ extension HomeCoordinator {
 extension HomeCoordinator: TravelRegistrationCoordinatorDelegate {
     public func finishedRegistration() {
         delegate?.finishedRegistration()
+    }
+}
+
+extension HomeCoordinator: TripCoordinatorDelegate {
+    public func deletedTrip() {
+        delegate?.deletedTrip()
     }
 }

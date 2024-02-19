@@ -11,12 +11,17 @@ import UIKit
 import Coordinator
 import Entity
 
+public protocol SettingCoordinatorDelegate: AnyObject {
+    func deletedTrip()
+}
+
 final public class SettingCoordinator: SettingCoordinatorInterface {
     public var navigationController: UINavigationController
     public var viewControllerRef: UIViewController?
     public var childCoordinators = [Coordinator]()
     public var parent: ExpenditureCoordinatorInterface?
     public let tripItem: TripItem
+    public weak var delegate: SettingCoordinatorDelegate?
 
     public init(navigationController: UINavigationController, tripItem: TripItem) {
         self.navigationController = navigationController
@@ -34,6 +39,12 @@ final public class SettingCoordinator: SettingCoordinatorInterface {
         navigationController.popViewController(animated: true)
         navigationController.tabBarController?.tabBar.isHidden = false
         parent?.childDidFinish(self)
+    }
+    
+    public func deletedTrip() {
+        delegate?.deletedTrip()
+        coordinatorDidFinish()
+        parent?.coordinatorDidFinish()
     }
 
     deinit {

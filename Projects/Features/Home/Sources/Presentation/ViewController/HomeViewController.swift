@@ -320,10 +320,16 @@ extension HomeViewController: HomeSectionHeaderViewDelegate {
 // MARK: - 여행 등록 완료 후
 extension HomeViewController: HomeCoordinatorDelegate {
     public func finishedRegistration() {
-        reactor.homeTripUseCase()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.reactor.homeTripUseCase()
             let toast = Toast.text(icon: .complete, "새로운 여행이 등록 되었어요!")
             toast.show()
+        }
+    }
+    
+    public func deletedTrip() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.reactor.homeTripUseCase()
         }
     }
 }
