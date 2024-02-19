@@ -22,18 +22,21 @@ public final class SettingReactor: Reactor {
         case companions([TripUserItem])
         case currencies([Currency])
         case tripItem(TripItem)
+        case deleteTrip(Bool)
     }
     
     public enum Mutation {
         case companions([TripUserItem])
         case currencies([Currency])
         case tripItem(TripItem)
+        case deleteTrip(Bool)
     }
     
     public struct State {
         var companions: [TripUserItem] = []
         var currencies: [Currency] = []
         var tripItem: TripItem
+        var deletedTrip: Bool = false
     }
     
     @Dependency(\.tripUseCase) var tripUseCase
@@ -53,6 +56,8 @@ public final class SettingReactor: Reactor {
             return .just(.currencies(currencies))
         case .tripItem(let tripItem):
             return .just(.tripItem(tripItem))
+        case .deleteTrip(let isDeleted):
+            return .just(.deleteTrip(isDeleted))
         }
     }
     
@@ -67,6 +72,8 @@ public final class SettingReactor: Reactor {
             newState.currencies = currencies
         case .tripItem(let tripItem):
             newState.tripItem = tripItem
+        case .deleteTrip(let isDeleted):
+            newState.deletedTrip = isDeleted
         }
         
         return newState
@@ -95,6 +102,15 @@ public final class SettingReactor: Reactor {
             if companionsResult.count > 1 {
                 action.onNext(.companions(companionsResult))
             }
+        }
+    }
+    
+    func deleteTripUseCase() {
+        let currentTripItem = currentState.tripItem
+        
+        Task {
+            let deleteTripResult = try await tripUseCase.deleteTrip(currentTripItem.id)
+            action.onNext(.deleteTrip(deleteTripResult))
         }
     }
 }
