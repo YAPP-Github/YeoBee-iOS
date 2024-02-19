@@ -272,7 +272,7 @@ extension HomeViewController: View {
 // MARK: - 프로필 & 여행 등록하기
 extension HomeViewController: HomeCollectionHeaderViewCellDelegate {
     func profileButtonTapped() {
-      navigationController?.pushViewController(MyPageViewController(), animated: true)
+        coordinator?.myPage()
     }
     
     func addTripViewTapped() {

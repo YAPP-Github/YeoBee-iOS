@@ -25,6 +25,7 @@ final public class MyPageCoordinator: MyPageCoordinatorInterface {
         let reactor = MyPageReactor()
         myPageViewController.reactor = reactor
         myPageViewController.coordinator = self
+        navigationController.pushViewController(MyPageViewController(), animated: true)
     }
     
     public func popDidFinish() {
