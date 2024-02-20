@@ -57,13 +57,11 @@ final class RevokeViewController: UIViewController, View {
     }
     
     private func changeButtons(isChecked: Bool) {
-        if isChecked {
-            self.checkButton.setImage(DesignSystemAsset.Icons.checkedwithcircle.image, for: .normal)
-            self.revokeButton.setAppearance(appearance: .default)
-        } else {
-            self.checkButton.setImage(DesignSystemAsset.Icons.uncheckwithcircle.image, for: .normal)
-            self.revokeButton.setAppearance(appearance: .defaultDisable)
-        }
+        let checkImage = isChecked ? DesignSystemAsset.Icons.checkedwithcircle.image : DesignSystemAsset.Icons.uncheckwithcircle.image
+        let buttonAppearance = isChecked ? YBTextButton.Appearance.default : YBTextButton.Appearance.defaultDisable
+        
+        self.checkButton.setImage(checkImage, for: .normal)
+        self.revokeButton.setAppearance(appearance: buttonAppearance)
     }
     
     private func setupViews() {
