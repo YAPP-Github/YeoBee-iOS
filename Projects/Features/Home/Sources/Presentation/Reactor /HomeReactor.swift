@@ -9,6 +9,7 @@
 import UIKit
 import UseCase
 import Entity
+import YBNetwork
 import ComposableArchitecture
 
 import ReactorKit
@@ -82,6 +83,10 @@ public final class HomeReactor: Reactor {
         Task {       
             let userResult = try await userInfoUseCase.fetchUserInfo()
             self.action.onNext(.userInfo(userResult))
+            
+            if KeychainManager.shared.load(key: "userId") == nil {
+                KeychainManager.shared.add(key: "userId", value: "\(userResult.id)")
+            }
         }
         
         Task {
