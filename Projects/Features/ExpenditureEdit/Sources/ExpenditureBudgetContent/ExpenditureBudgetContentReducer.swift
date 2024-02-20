@@ -30,6 +30,9 @@ public struct ExpenditureBudgetContentReducer: Reducer {
             case .binding(\.$text):
                 state.isInvaildText = vaildText(state.text)
                 return .none
+            case let .setTextField(text):
+                state.text = text
+                return .none
 
             default:
                 return .none

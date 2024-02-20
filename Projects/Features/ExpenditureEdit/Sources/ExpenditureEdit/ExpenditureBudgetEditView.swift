@@ -43,6 +43,7 @@ struct ExpenditureBudgetEditView: View {
             }
             .frame(maxWidth: .infinity)
             .background(YBColor.gray1.swiftUIColor)
+            .onAppear { store.send(.onAppear) }
         }
     }
 }
@@ -68,12 +69,24 @@ extension ExpenditureBudgetEditView {
                     action: Action.expenditureContent
                 )
             )
-            WithViewStore(store, observe: \.expenditureTab) { viewStore in
-                if viewStore.state == .shared {
-                    ExpenseCalculationButtonView {
-                        viewStore.send(.tappedCalculationButton)
+            WithViewStore(store, observe: { $0 }) { viewStore in
+                if viewStore.expenditureTab == .shared {
+                    if viewStore.expenseDetail == nil {
+                        ExpenseCalculationButtonView(text: "") {
+                            viewStore.send(.tappedCalculationButton)
+                        }
+                        .padding(.horizontal, 24)
+                    } else if let payerName = viewStore.expenseDetail?.payerName {
+                        ExpenseCalculationButtonView(text: "\(payerName) 결제") {
+                            viewStore.send(.tappedCalculationButton)
+                        }
+                        .padding(.horizontal, 24)
+                    } else {
+                        ExpenseCalculationButtonView(text: "공동경비 결제") {
+                            viewStore.send(.tappedCalculationButton)
+                        }
+                        .padding(.horizontal, 24)
                     }
-                    .padding(.horizontal, 24)
                 }
             }
             Spacer()

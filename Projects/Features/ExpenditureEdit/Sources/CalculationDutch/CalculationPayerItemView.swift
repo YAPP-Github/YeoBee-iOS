@@ -24,6 +24,10 @@ struct CalculationPayerItemView: View {
                     if let profileImageUrl = viewStore.user.profileImageUrl {
                         AsyncImage(url: URL(string: profileImageUrl), scale: 15)
                             .frame(width: 44, height: 44)
+                    } else if viewStore.user.id == 0 {
+                        DesignSystemAsset.Icons.sharedBudget.swiftUIImage
+                            .resizable()
+                            .frame(width: 44, height: 44)
                     } else {
                         DesignSystemAsset.Icons.face0.swiftUIImage
                             .resizable()

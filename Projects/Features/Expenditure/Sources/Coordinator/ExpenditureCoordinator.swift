@@ -72,10 +72,12 @@ extension ExpenditureCoordinator {
 
     public func expenditureAdd(tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab) {
         let expenditureAddCoordinator = ExpenditureAddCoordinator(
-            navigationController: expenditureNavigationController!,
+            navigationController: expenditureNavigationController!, 
+            expenseItem: nil,
             tripItem: tripItem,
             editDate: editDate,
-            expenditureTab: expenditureTab
+            expenditureTab: expenditureTab,
+            expenseDetail: nil
         )
         expenditureAddCoordinator.parent = self
         expenditureAddCoordinator.delegate = self
@@ -83,15 +85,22 @@ extension ExpenditureCoordinator {
         expenditureAddCoordinator.start(animated: true)
     }
 
-    public func expenditureEdit(expenseDetail: ExpenseDetailItem) {
-        let expenditureEditCoordinator = ExpenditureEditCoordinator(
-            navigationController: expenditureNavigationController!,
+    public func expenditureEdit(expenseItem: ExpenseItem, expenseDetail: ExpenseDetailItem, expenditureTab: ExpenditureTab) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        let editDate = dateFormatter.date(from: expenseDetail.payedAt) ?? Date()
+        let expenditureAddCoordinator = ExpenditureAddCoordinator(
+            navigationController: expenditureNavigationController!, 
+            expenseItem: expenseItem,
             tripItem: tripItem,
+            editDate: editDate,
+            expenditureTab: expenditureTab,
             expenseDetail: expenseDetail
         )
-        expenditureEditCoordinator.parent = self
-        addChild(expenditureEditCoordinator)
-        expenditureEditCoordinator.start(animated: true)
+        expenditureAddCoordinator.parent = self
+        expenditureAddCoordinator.delegate = self
+        addChild(expenditureAddCoordinator)
+        expenditureAddCoordinator.start(animated: true)
     }
 
     public func totalExpenditureList() {
@@ -109,9 +118,10 @@ extension ExpenditureCoordinator {
 //        expenditureNavigationController?.pushViewController(totalBudgetExpenditureViewController, animated: true)
     }
 
-    public func expenditureDetail(expenseItem: ExpenseItem) {
+    public func expenditureDetail(expenseType: ExpenditureTab, expenseItem: ExpenseItem) {
         let expenditureDetailViewController = ExpenditureDetailViewController(
             coordinator: self,
+            expenseType: expenseType,
             expenseItem: expenseItem
         )
         expenditureNavigationController?.tabBarController?.tabBar.isHidden = true

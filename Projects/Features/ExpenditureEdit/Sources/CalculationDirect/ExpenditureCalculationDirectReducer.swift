@@ -22,7 +22,7 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
         var payableList: [TripUserItem]
         var selectedPayer: TripUserItem?
         var isInitialShow: Bool = true
-        var isEnableConfirmButton: Bool
+        var isEnableConfirmButton: Bool = true
 
         init(
             expenseType: ExpenditureType,
@@ -39,17 +39,15 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
             var payableList: [TripUserItem] = []
             if expenseType == .expense {
                 payableList = [.init(id: 0, userId: 0, name: "공동경비")] + tripItem.tripUserList
-            } else {
-                payableList = tripItem.tripUserList
             }
             self.payableList = payableList
             if let selectedPayer {
-                self.isEnableConfirmButton = true
+                if expenseType == .expense { self.isEnableConfirmButton = true }
                 payableList.forEach { tripUser in
                     self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == selectedPayer.id))
                 }
             } else {
-                self.isEnableConfirmButton = false
+                if expenseType == .expense { self.isEnableConfirmButton = false }
                 payableList.forEach { tripUser in
                     self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: false))
                 }
@@ -80,9 +78,10 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
                 return .none
 
             case let .payerItem(id: _, action: .tappedPayrtItem(tripUserItem)):
-                state.isEnableConfirmButton = true
+                if state.expenseType == .expense { state.isEnableConfirmButton = true }
                 state.selectedPayer = tripUserItem
                 state.expenseDetail.payerUserId = tripUserItem.id
+                state.expenseDetail.payerName = tripUserItem.name
                 state.payableList.forEach { tripUser in
                     state.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == tripUserItem.id))
                 }
@@ -95,7 +94,7 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
                     let amountString = tripUser.text.replacingOccurrences(of: ",", with: "")
                     if let amount = Double(amountString) {
                         totalPrice += amount
-                        expenseList.append(.init(userId: tripUser.id, amount: amount))
+                        expenseList.append(.init(tripUserId: tripUser.id, amount: amount))
                     }
                 }
                 state.expenseDetail.payerList = expenseList

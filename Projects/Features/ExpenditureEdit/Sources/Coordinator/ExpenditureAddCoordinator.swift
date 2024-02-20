@@ -24,28 +24,36 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
     public var parent: ExpenditureCoordinatorInterface?
     public weak var delegate: ExpenditureAddCoordinatorDelegate?
     public var expenditureAddViewController: ExpenditureAddViewController?
+    public let expenseItem: ExpenseItem?
     public let tripItem: TripItem
     public let editDate: Date
     public let expenditureTab: ExpenditureTab
+    public let expenseDetail: ExpenseDetailItem?
 
     public init(
         navigationController: UINavigationController,
+        expenseItem: ExpenseItem?,
         tripItem: TripItem,
         editDate: Date,
-        expenditureTab: ExpenditureTab
+        expenditureTab: ExpenditureTab,
+        expenseDetail: ExpenseDetailItem?
     ) {
         self.navigationController = navigationController
+        self.expenseItem = expenseItem
         self.tripItem = tripItem
         self.editDate = editDate
         self.expenditureTab = expenditureTab
+        self.expenseDetail = expenseDetail
     }
 
     public func start(animated: Bool) {
         let expenditureAddViewController = ExpenditureAddViewController(
-            coordinator: self,
+            coordinator: self, 
+            expenseItem: expenseItem,
             tripItem: tripItem,
             editDate: editDate, 
-            expenditureTab: expenditureTab
+            expenditureTab: expenditureTab,
+            expenseDetail: expenseDetail
         )
         self.expenditureAddViewController = expenditureAddViewController
         expenditureEditNavigationController = UINavigationController(rootViewController: expenditureAddViewController)

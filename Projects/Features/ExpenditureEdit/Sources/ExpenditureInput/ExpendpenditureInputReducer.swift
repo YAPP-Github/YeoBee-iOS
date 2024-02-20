@@ -13,7 +13,7 @@ import Entity
 public struct ExpenditureInputReducer: Reducer {
     public struct State: Equatable {
         @BindingState var text: String = ""
-        var selectedCurrency: Currency = .init(name: "원", code: "KRW", exchangeRate: .init(value: 1200.21, standard: 1))
+        var selectedCurrency: Currency = .init(name: "원", code: "KRW", exchangeRate: .init(value: 1, standard: 1))
         var currencies: [Currency] = []
     }
 
@@ -21,6 +21,8 @@ public struct ExpenditureInputReducer: Reducer {
         case setCurrency(Currency)
         case binding(BindingAction<State>)
         case tappedCurrencyButton(Currency)
+        case setInput(String, Currency?)
+        case setText(String)
     }
 
     enum DebounceId: Hashable { case id }
@@ -32,6 +34,15 @@ public struct ExpenditureInputReducer: Reducer {
             switch action {
             case let .setCurrency(currency):
                 state.selectedCurrency = currency
+                return .none
+
+            case .setInput(let text, let currency):
+                state.text = text
+                state.selectedCurrency = currency ?? .init(name: "원", code: "KRW", exchangeRate: .init(value: 1, standard: 1))
+                return .none
+
+            case let .setText(text):
+                state.text =  text
                 return .none
 
             case .binding(\.$text):

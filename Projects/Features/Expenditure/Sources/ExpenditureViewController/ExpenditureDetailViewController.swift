@@ -18,19 +18,21 @@ import Entity
 public final class ExpenditureDetailViewController: UIViewController {
 
     let coordinator: ExpenditureCoordinator
+    let expenseType: ExpenditureTab
     let expenseItem: ExpenseItem
 
     // MARK: View
 
     private let expenditureDetailHostingController: ExpenditureDetailHostingController
 
-    public init(coordinator: ExpenditureCoordinator, expenseItem: ExpenseItem) {
+    public init(coordinator: ExpenditureCoordinator, expenseType: ExpenditureTab, expenseItem: ExpenseItem) {
+        self.expenseType = expenseType
         self.expenseItem = expenseItem
         self.coordinator = coordinator
         self.expenditureDetailHostingController = ExpenditureDetailHostingController(
             rootView: ExpenditureDetailView(
                 store: .init(
-                    initialState: .init(expenseItem: expenseItem),
+                    initialState: .init(expenditureTab: expenseType, expenseItem: expenseItem),
                     reducer: {
                         ExpenditureDetailReducer(cooridinator: coordinator)
                     }
@@ -53,7 +55,7 @@ public final class ExpenditureDetailViewController: UIViewController {
     }
 
     func setupViews() {
-        title = expenseItem.amount > 0 ? "내 예산 상세" : "지출 상세"
+        title = expenseItem.category == .income ? expenseType == .individual ? "내 예산 상세" : "공동경비 상세" : "지출 상세"
         view.backgroundColor = .ybColor(.white)
     }
 

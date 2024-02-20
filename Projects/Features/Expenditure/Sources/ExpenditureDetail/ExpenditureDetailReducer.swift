@@ -19,10 +19,12 @@ public struct ExpenditureDetailReducer: Reducer {
 
     public struct State: Equatable {
         let expenseItem: ExpenseItem
+        let expenditureTab: ExpenditureTab
         var expenseDetailItem: ExpenseDetailItem?
         var isInitialShow: Bool = true
 
-        init(expenseItem: ExpenseItem) {
+        init(expenditureTab: ExpenditureTab, expenseItem: ExpenseItem) {
+            self.expenditureTab = expenditureTab
             self.expenseItem = expenseItem
         }
     }
@@ -40,11 +42,7 @@ public struct ExpenditureDetailReducer: Reducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                if state.isInitialShow {
-                    state.isInitialShow = false
-                    return .send(.getExpenseDetail)
-                }
-                return .none
+                return .send(.getExpenseDetail)
 
             case .getExpenseDetail:
                 return .run { [expenseId = state.expenseItem.id] send in
@@ -59,10 +57,9 @@ public struct ExpenditureDetailReducer: Reducer {
 
             case .tappedEditButton:
                 if let expenseDetail = state.expenseDetailItem {
-                    cooridinator.expenditureEdit(expenseDetail: expenseDetail)
+                    cooridinator.expenditureEdit(expenseItem: state.expenseItem, expenseDetail: expenseDetail, expenditureTab: state.expenditureTab)
                 }
                 return .none
-
             }
         }
     }

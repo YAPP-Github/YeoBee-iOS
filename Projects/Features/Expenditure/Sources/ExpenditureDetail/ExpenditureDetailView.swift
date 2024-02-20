@@ -65,35 +65,61 @@ extension ExpenditureDetailView {
     }
 
     func expenditureInfoView(expenseItem: ExpenseItem) -> some View {
-        VStack(spacing: 20) {
-            HStack {
-                Text("지출형태")
-                    .foregroundColor(.ybColor(.gray6))
-                    .font(.ybfont(.body1))
-                Spacer()
-                Text("카드")
-                    .foregroundColor(.ybColor(.gray5))
-                    .font(.ybfont(.body1))
-            }
-            if expenseItem.amount < 0 {
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            VStack(spacing: 20) {
                 HStack {
-                    Text("카테고리")
+                    Text("지출형태")
                         .foregroundColor(.ybColor(.gray6))
                         .font(.ybfont(.body1))
                     Spacer()
-                    Text(expenseItem.category.text)
+                    Text(viewStore.expenseDetailItem?.method == "CASH" ? "현금" : "카드")
                         .foregroundColor(.ybColor(.gray5))
                         .font(.ybfont(.body1))
                 }
-            }
-            HStack {
-                Text(expenseItem.amount < 0 ? "지출내용" : "예산내용")
-                    .foregroundColor(.ybColor(.gray6))
-                    .font(.ybfont(.body1))
-                Spacer()
-                Text(expenseItem.name)
-                    .foregroundColor(.ybColor(.gray5))
-                    .font(.ybfont(.body1))
+                if expenseItem.category != .income {
+                    HStack {
+                        Text("카테고리")
+                            .foregroundColor(.ybColor(.gray6))
+                            .font(.ybfont(.body1))
+                        Spacer()
+                        Text(expenseItem.category.text)
+                            .foregroundColor(.ybColor(.gray5))
+                            .font(.ybfont(.body1))
+                    }
+                }
+                HStack {
+                    Text(expenseItem.category != .income ? "지출내용" : "예산내용")
+                        .foregroundColor(.ybColor(.gray6))
+                        .font(.ybfont(.body1))
+                    Spacer()
+                    Text(expenseItem.name)
+                        .foregroundColor(.ybColor(.gray5))
+                        .font(.ybfont(.body1))
+                }
+                if let payerName =  viewStore.expenseDetailItem?.payerName {
+                    HStack {
+                        Text("결제자")
+                            .foregroundColor(.ybColor(.gray6))
+                            .font(.ybfont(.body1))
+                        Spacer()
+                        Text(payerName)
+                            .foregroundColor(.ybColor(.gray5))
+                            .font(.ybfont(.body1))
+                    }
+                }
+                if let payers = viewStore.expenseDetailItem?.payerList,
+                   let firstPayer = payers.first {
+                    let payerListString = payers.count > 1 ? "\(firstPayer.tripUserName ?? "") 외 \(payers.count - 1)명" : firstPayer.tripUserName ?? ""
+                    HStack {
+                        Text("돈 낸 사람")
+                            .foregroundColor(.ybColor(.gray6))
+                            .font(.ybfont(.body1))
+                        Spacer()
+                        Text(payerListString)
+                            .foregroundColor(.ybColor(.gray5))
+                            .font(.ybfont(.body1))
+                    }
+                }
             }
         }
     }
