@@ -17,8 +17,8 @@ import SnapKit
 
 public final class EditMyProfileViewController: UIViewController, View {
     public var disposeBag: DisposeBag = DisposeBag()
-    
-    let profileImageView = UIImageView(image: DesignSystemAsset.Icons.airplane.image)
+    //TODO: 프로필 이미지 기능 추가시 아래 이미지 수정
+    let profileImageView = UIImageView(image: DesignSystemAsset.Icons.face0.image)
     let nameLabel = YBLabel(text: "이름", font: .title1)
     let linkedAccountLabel = YBLabel(text: "연결된 계정", font: .title1)
     let nicknameTextField = YBTextField()
