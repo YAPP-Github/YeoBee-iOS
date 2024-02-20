@@ -349,6 +349,13 @@ extension MyPageViewController: UITableViewDelegate {
         return footerView
     }
     
+    @objc func revokeButtonTapped() {
+        let destination = RevokeViewController()
+        let reactor = RevokeViewReactor()
+        destination.reactor = reactor
+        self.navigationController?.pushViewController(destination, animated: true)
+    }
+    
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true) // 선택 효과 제거
         
