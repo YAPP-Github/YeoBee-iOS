@@ -71,10 +71,12 @@ class HomeCollectionHeaderViewCell: UICollectionViewCell {
     }
     
     func configure(fetchUserResponse: FetchUserResponse) {
-        guard let profileImageUrl = URL(string: fetchUserResponse.profileImage ?? "\(YeoBeeAPI.shared.baseImageURL ?? "")/static/user/profile/profile0.png") else { return }
-        
+        if let profileImageUrl = URL(string: fetchUserResponse.profileImage ?? "") {
+            profileButton.profileImageView.kf.setImage(with: profileImageUrl)
+        } else {
+            profileButton.profileImageView.image = DesignSystemAsset.Icons.face0.image
+        }
         profileButton.profileNameLabel.text = fetchUserResponse.nickname
-        profileButton.profileImageView.kf.setImage(with: profileImageUrl)
     }
     
     private func bind() {

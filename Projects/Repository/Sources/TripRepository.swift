@@ -111,9 +111,9 @@ final public class TripRepository: TripRepositoryInterface {
         let result = await provider.request(.deleteTrip(tripId))
         
         switch result {
-        case .success(_):
+        case .success:
             return true
-        case .failure(_):
+        case .failure:
             return false
         }
     }
@@ -129,7 +129,6 @@ final public class TripRepository: TripRepositoryInterface {
         
         switch result {
         case let .success(response):
-            print("success: \(response.data)")
             return try decode(data: response.data)
         case .failure(let failure):
             throw failure
