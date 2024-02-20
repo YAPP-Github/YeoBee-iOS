@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 
 import DesignSystem
+import Repository
 
 public class MyPageViewController: UIViewController, View {
     
@@ -334,7 +335,7 @@ extension MyPageViewController: UITableViewDelegate {
         logoutButton.setTitle("로그아웃", for: .normal)
         logoutButton.setTitleColor(YBColor.gray5.color, for: .normal)
         logoutButton.titleLabel?.font = YBFont.body3.font
-//        logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
+        logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         
         let revokeButton = UIButton(type: .system)
         revokeButton.frame = CGRect(x: 20, y: 50, width: 56, height: 40)
@@ -347,6 +348,12 @@ extension MyPageViewController: UITableViewDelegate {
         footerView.addSubview(revokeButton)
         
         return footerView
+    }
+    
+    @objc func logoutButtonTapped() {
+        let popupController = YBPopupTypeViewController(popupType: .logout)
+        popupController.delegate = self
+        self.presentPopup(presentedViewController: popupController)
     }
     
     @objc func revokeButtonTapped() {
@@ -369,5 +376,17 @@ extension MyPageViewController: UITableViewDelegate {
         if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url)
         }
+    }
+}
+
+extension MyPageViewController: YBPopupViewControllerDelegate {
+    public func cancelButtonTapped() {
+        return
+    }
+    
+    public func actionButtonTapped() {
+//        TokenRepository.shared.deleteTokens()
+//        let initViewController = SignViewController()
+//        self.navigationController?.setViewControllers([initViewController], animated: true)
     }
 }
