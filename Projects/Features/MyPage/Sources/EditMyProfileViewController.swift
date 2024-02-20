@@ -76,6 +76,15 @@ public final class EditMyProfileViewController: UIViewController, View {
                 self?.errorDescriptionLabel.text = errorMessage
             }
             .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isEditSuccess } //TODO: updateUserInfo 2번 호출되는문제 해결 필요
+            .distinctUntilChanged()
+            .bind { [weak self] isSuccess in
+                if isSuccess {
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            }
+            .disposed(by: disposeBag)
     }
     
     private func configureBar() {

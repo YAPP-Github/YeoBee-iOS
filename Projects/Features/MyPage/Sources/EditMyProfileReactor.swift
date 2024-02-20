@@ -24,6 +24,7 @@ public final class EditMyProfileReactor: Reactor {
         case setNicknameEmpty(Bool)
         case setNickname(String, Bool)
         case setErrorMessage(String?)
+        case editNicknameSuccess(Bool)
     }
     
     public struct State {
@@ -31,6 +32,7 @@ public final class EditMyProfileReactor: Reactor {
         var nickname: String
         var errorMessage: String?
         var userInfo: FetchUserResponse?
+        var isEditSuccess: Bool
     }
     
     public let initialState: State
@@ -39,7 +41,8 @@ public final class EditMyProfileReactor: Reactor {
         self.initialState = .init(
             isNicknameEmpty: true,
             nickname: "",
-            userInfo: userInfo
+            userInfo: userInfo,
+            isEditSuccess: false
         )
     }
     
@@ -57,6 +60,7 @@ public final class EditMyProfileReactor: Reactor {
                         observer.onNext(.setErrorMessage(nil))
                         Task { @MainActor in
                             try await self.updateUserInfo()
+                            observer.onNext(.editNicknameSuccess(true))
                         }
                     }
                     return Disposables.create()
@@ -74,6 +78,8 @@ public final class EditMyProfileReactor: Reactor {
                 newState.isNicknameEmpty = isEmpty
             case .setErrorMessage(let message):
                 newState.errorMessage = message
+            case .editNicknameSuccess(let isSuccess):
+                newState.isEditSuccess = isSuccess
         }
         return newState
     }
