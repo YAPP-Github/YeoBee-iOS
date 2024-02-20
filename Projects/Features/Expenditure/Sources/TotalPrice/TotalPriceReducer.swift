@@ -12,15 +12,13 @@ import Entity
 public struct TotalPriceReducer: Reducer {
     public struct State: Equatable {
         var expenseType: ExpenditureTab
-        var totalPriceType: TotalPriceTab
         var totalExpandPrice: Int = 1000
         var totalBudgetPrice: Int = 0
         var remainBudgetPrice: Int = 0
         var isTappable: Bool
 
-        init(expenseType: ExpenditureTab, totalPriceType: TotalPriceTab, isTappable: Bool) {
+        init(expenseType: ExpenditureTab, isTappable: Bool) {
             self.expenseType = expenseType
-            self.totalPriceType = totalPriceType
             self.isTappable = isTappable
         }
     }

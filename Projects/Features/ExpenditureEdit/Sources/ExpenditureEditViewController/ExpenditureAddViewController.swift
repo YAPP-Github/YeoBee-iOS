@@ -21,14 +21,21 @@ public final class ExpenditureAddViewController: UIViewController {
 
     private let expenditureHostingController: ExpenditureAddHostingController
 
-    public init(coordinator: ExpenditureAddCoordinator, tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab) {
+    public init(
+        coordinator: ExpenditureAddCoordinator,
+        tripItem: TripItem,
+        editDate: Date,
+        expenditureTab: ExpenditureTab,
+        expenseDetail: ExpenseDetailItem?
+    ) {
         self.coordinator = coordinator
         let store: StoreOf<ExpenditureReducer> = .init(
             initialState: .init(
                 expenditureTab: expenditureTab,
                 seletedExpenditureType: .expense,
                 tripItem: tripItem,
-                editDate: editDate
+                editDate: editDate,
+                expenseDetail: expenseDetail
             ),
             reducer: {
                 ExpenditureReducer(cooridinator: coordinator)
@@ -110,6 +117,10 @@ extension ExpenditureAddViewController {
         if case expenseType = .individual {
             store.send(.expenditureEdit(.expenditureInput(.setCurrency(currency))))
         } else if case expenseType = .individualBudget {
+            store.send(.expenditureBudgetEdit(.expenditureInput(.setCurrency(currency))))
+        } else if case expenseType = .shared {
+            store.send(.expenditureEdit(.expenditureInput(.setCurrency(currency))))
+        } else if case expenseType = .sharedBudgetIncome {
             store.send(.expenditureBudgetEdit(.expenditureInput(.setCurrency(currency))))
         }
     }

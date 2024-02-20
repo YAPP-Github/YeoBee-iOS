@@ -21,7 +21,6 @@ struct ExpenditureUpdateView: View {
 
     var body: some View {
         containerView
-            .onAppear { store.send(.onAppear) }
     }
 }
 
@@ -29,22 +28,20 @@ extension ExpenditureUpdateView {
 
     @MainActor
     var containerView: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            VStack(spacing: 10) {
-                SwitchStore(store.scope(state: \.expenditureEditRoute, action: { $0 })) { _ in
-                    CaseLet(
-                        /ExpenditureUpdateReducer.State.ExpenditureEditRoute.expenditureEdit,
-                        action: ExpenditureUpdateReducer.Action.expenditureEdit,
-                        then: ExpendpenditureEditView.init
-                    )
-//                    CaseLet(
-//                        /ExpenditureUpdateReducer.State.ExpenditureEditRoute.expenditureBudgetEdit,
-//                        action: ExpenditureUpdateReducer.Action.expenditureBudgetEdit,
-//                        then: ExpenditureBudgetEditView.init
-//                    )
+        VStack(spacing: 10) {
+            SwitchStore(store) {
+              switch $0 {
+              case .expenditureEdit:
+                CaseLet(/ExpenditureUpdateReducer.State.expenditureEdit, action: ExpenditureUpdateReducer.Action.expenditureEdit) { store in
+                    ExpendpenditureEditView(store: store)
                 }
+              case .expenditureBudgetEdit:
+                CaseLet(/ExpenditureUpdateReducer.State.expenditureBudgetEdit, action: ExpenditureUpdateReducer.Action.expenditureBudgetEdit) { store in
+                    ExpenditureBudgetEditView(store: store)
+                }
+              }
             }
-            .background(YBColor.gray1.swiftUIColor, ignoresSafeAreaEdges: [.all])
         }
+        .background(YBColor.gray1.swiftUIColor, ignoresSafeAreaEdges: [.all])
     }
 }

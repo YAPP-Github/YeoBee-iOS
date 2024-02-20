@@ -18,7 +18,7 @@ public struct ExpenditureCalculationDutchReducer: Reducer {
         var dutchAmount: Double = .zero
         var payableList: [TripUserItem]
         var selectedPayer: TripUserItem?
-        var isEnableRegisterButton: Bool
+        var isEnableRegisterButton: Bool = true
 
         init(
             expenseType: ExpenditureType,
@@ -34,17 +34,15 @@ public struct ExpenditureCalculationDutchReducer: Reducer {
             var payableList: [TripUserItem] = []
             if expenseType == .expense {
                 payableList = [.init(id: 0, userId: 0, name: "공동경비")] + tripItem.tripUserList
-            } else {
-                payableList = tripItem.tripUserList
             }
             self.payableList = payableList
             if let selectedPayer {
-                self.isEnableRegisterButton = true
+                if expenseType == .expense { self.isEnableRegisterButton = true }
                 payableList.forEach { tripUser in
                     self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == selectedPayer.id))
                 }
             } else {
-                self.isEnableRegisterButton = false
+                if expenseType == .expense { self.isEnableRegisterButton = false }
                 payableList.forEach { tripUser in
                     self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: false))
                 }
@@ -63,14 +61,14 @@ public struct ExpenditureCalculationDutchReducer: Reducer {
             switch action {
             case let .payerItem(id: _, action: .tappedPayrtItem(tripUserItem)):
                 var expenseList: [Payer] = []
-                state.isEnableRegisterButton = true
+                if state.expenseType == .expense { state.isEnableRegisterButton = true }
                 state.selectedPayer = tripUserItem
                 state.expenseDetail.payerUserId = tripUserItem.id == 0 ? nil : tripUserItem.id
                 state.payableList.forEach { tripUser in
                     state.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == tripUserItem.id))
                 }
                 state.tripItem.tripUserList.forEach { tripUser in
-                    expenseList.append(.init(userId: tripUser.id, amount: state.dutchAmount))
+                    expenseList.append(.init(tripUserId: tripUser.id, amount: state.dutchAmount))
                 }
                 state.expenseDetail.payerList = expenseList
                 return .none

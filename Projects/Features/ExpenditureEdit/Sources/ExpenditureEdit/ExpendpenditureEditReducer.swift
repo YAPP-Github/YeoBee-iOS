@@ -22,19 +22,26 @@ public struct ExpendpenditureEditReducer: Reducer {
         var editDate: Date
         let expenditureTab: ExpenditureTab
         var expenseDetail: ExpenseDetailItem?
+        var currencies: [Currency] = []
+        var isAdd: Bool
 
-        init(tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab) {
+        init(tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab, isAdd: Bool, expenseDetail: ExpenseDetailItem?) {
             self.tripItem = tripItem
             self.editDate = editDate
             self.expenditureTab = expenditureTab
+            self.isAdd = isAdd
+            self.expenseDetail = expenseDetail
         }
     }
 
     public enum Action: Equatable {
+        case onAppear
         case tappedRegisterButton
         case tappedCalculationButton
         case dismiss
 
+        case setCurrencies([Currency])
+        case setEditExpense(ExpenseDetailItem, [Currency])
         case setExpenditureDetail(ExpenseDetailItem)
 
         case expenditureInput(ExpenditureInputReducer.Action)
@@ -43,10 +50,26 @@ public struct ExpendpenditureEditReducer: Reducer {
     }
 
     @Dependency(\.expenseUseCase) var expenseUseCase
+    @Dependency(\.currencyUseCase) var currencyUseCase
 
     public var body: some ReducerOf<ExpendpenditureEditReducer> {
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                return .run { [tripId = state.tripItem.id, state] send in
+                    let currencies = try await currencyUseCase.getTripCurrencies(tripId)
+                    if let expenseDetail = state.expenseDetail {
+                        await send(.setEditExpense(expenseDetail, currencies))
+                    }
+                    await send(.setCurrencies(currencies))
+                } catch: { error, send in
+                    print(error)
+                }
+
+            case let .setCurrencies(currencyList):
+                state.currencies = currencyList
+                return .none
+
             case let .expenditureCategory(.setFocusState(isFocused)):
                 state.isFocused = isFocused
                 state.scrollItem = "expenditureCategoryType"
@@ -67,6 +90,18 @@ public struct ExpendpenditureEditReducer: Reducer {
             case .tappedRegisterButton:
                 return registerExpense(state: &state)
 
+            case let .setExpenditureDetail(expenseDetailItem):
+                state.expenseDetail = expenseDetailItem
+                return .none
+
+            case let .setEditExpense(expenseDetail, currencies):
+                let currency = currencies.filter { $0.code == expenseDetail.currency }.first
+                return .run { send in
+                    await send(.expenditureInput(.setInput(expenseDetail.amount.formattedWithSeparator, currency)))
+                    await send(.expenditureCategory(.setCategory(expenseDetail.category.convert, expenseDetail.name)))
+                    await send(.expenditurePayment(.setPayment(expenseDetail.method == "CASH" ? .cash : .card)))
+                }
+
             default:
                 return .none
             }
@@ -84,7 +119,6 @@ public struct ExpendpenditureEditReducer: Reducer {
                         state.expenditureInput.text.isEmpty == false &&
                         state.expenseDetail?.payerList != []
                 }
-
             }
 
             func registerExpense(state: inout State) -> Effect<Action> {
@@ -98,22 +132,26 @@ public struct ExpendpenditureEditReducer: Reducer {
                     let payedAt = state.editDate
                     let expenditureTab = state.expenditureTab
                     let payerId = state.expenseDetail?.payerUserId
-                    let payerList: [PayerRequest] = state.expenseDetail?.payerList.compactMap { 
-                        .init(tripUserId: $0.userId, amount: $0.amount)
+                    let payerList: [PayerRequest] = state.expenseDetail?.payerList.compactMap {
+                        .init(tripUserId: $0.tripUserId, amount: $0.amount)
                     } ?? []
-                    return .run { send in
-                        let _ = try await expenseUseCase.createExpense(.init(
-                            tripId: tripId,
-                            payedAt: ISO8601DateFormatter().string(from: payedAt),
-                            expenseType: expenditureTab == .shared ? "SHARED" : "INDIVIDUAL",
-                            amount: amount,
-                            currencyCode: currencyCode,
-                            expenseMethod: paymentType,
-                            expenseCategory: category.requestText,
-                            name: expenseText,
-                            payerId: payerId,
-                            payerList: payerList
-                        ))
+                    return .run { [isAdd = state.isAdd] send in
+                        if isAdd {
+                            let _ = try await expenseUseCase.createExpense(.init(
+                                tripId: tripId,
+                                payedAt: ISO8601DateFormatter().string(from: payedAt),
+                                expenseType: expenditureTab == .shared ? "SHARED" : "INDIVIDUAL",
+                                amount: amount,
+                                currencyCode: currencyCode,
+                                expenseMethod: paymentType,
+                                expenseCategory: category.requestText,
+                                name: expenseText,
+                                payerId: payerId,
+                                payerList: payerList
+                            ))
+                        } else {
+                            print("수정 완")
+                        }
                         await send(.dismiss)
                     } catch: { error, send in
                         print(error)
@@ -158,6 +196,22 @@ extension Category {
         case .shopping: "SHOPPING"
         case .air: "FLIGHT"
         case .etc: "ETC"
+        }
+    }
+}
+
+extension ExpendCategory {
+    var convert: Category {
+        switch self {
+        case .transport: Category.transition
+        case .food: Category.eating
+        case .lodge: Category.stay
+        case .travel: Category.travel
+        case .activity: Category.activity
+        case .flight: Category.air
+        case .shopping: Category.shopping
+        case .etc: Category.etc
+        case .income: Category.travel
         }
     }
 }

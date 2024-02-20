@@ -43,6 +43,7 @@ struct ExpenditureBudgetEditView: View {
             }
             .frame(maxWidth: .infinity)
             .background(YBColor.gray1.swiftUIColor)
+            .onAppear { store.send(.onAppear) }
         }
     }
 }

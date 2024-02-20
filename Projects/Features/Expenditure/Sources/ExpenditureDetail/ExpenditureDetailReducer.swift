@@ -19,10 +19,12 @@ public struct ExpenditureDetailReducer: Reducer {
 
     public struct State: Equatable {
         let expenseItem: ExpenseItem
+        let expenditureTab: ExpenditureTab
         var expenseDetailItem: ExpenseDetailItem?
         var isInitialShow: Bool = true
 
-        init(expenseItem: ExpenseItem) {
+        init(expenditureTab: ExpenditureTab, expenseItem: ExpenseItem) {
+            self.expenditureTab = expenditureTab
             self.expenseItem = expenseItem
         }
     }
@@ -59,10 +61,9 @@ public struct ExpenditureDetailReducer: Reducer {
 
             case .tappedEditButton:
                 if let expenseDetail = state.expenseDetailItem {
-                    cooridinator.expenditureEdit(expenseDetail: expenseDetail)
+                    cooridinator.expenditureEdit(expenseDetail: expenseDetail, expenditureTab: state.expenditureTab)
                 }
                 return .none
-
             }
         }
     }

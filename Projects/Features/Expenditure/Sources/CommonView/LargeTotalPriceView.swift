@@ -48,5 +48,6 @@ struct LargeTotalPriceView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .disabled(true)
     }
 }

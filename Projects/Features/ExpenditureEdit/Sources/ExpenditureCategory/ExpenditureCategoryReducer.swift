@@ -27,6 +27,7 @@ public struct ExpenditureCategoryReducer: Reducer {
         case setTextField(String)
         case binding(BindingAction<State>)
         case setFocusState(Bool)
+        case setCategory(Category, String)
     }
 
     public var body: some ReducerOf<ExpenditureCategoryReducer> {
@@ -46,6 +47,14 @@ public struct ExpenditureCategoryReducer: Reducer {
                 
             case .binding(\.$text):
                 state.isInvaildText = vaildText(state.text)
+                return .none
+
+            case .setCategory(let selectedCategory, let text):
+                Category.allCases.forEach { category in
+                    state.categoryItems.updateOrAppend(.init(category: category, isSelected: category == selectedCategory))
+                }
+                state.selectedCategory = selectedCategory
+                state.text = text
                 return .none
 
             default:

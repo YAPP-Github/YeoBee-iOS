@@ -25,18 +25,26 @@ final public class ExpenditureEditCoordinator: ExpenditureEditCoordinatorInterfa
     public weak var delegate: ExpenditureEditCoordinatorDelegate?
     public let tripItem: TripItem
     public let expenseDetail: ExpenseDetailItem
+    public let expenditureTab: ExpenditureTab
 
-    public init(navigationController: UINavigationController, tripItem: TripItem, expenseDetail: ExpenseDetailItem) {
+    public init(
+        navigationController: UINavigationController,
+        tripItem: TripItem,
+        expenseDetail: ExpenseDetailItem,
+        expenditureTab: ExpenditureTab
+    ) {
         self.navigationController = navigationController
         self.tripItem = tripItem
         self.expenseDetail = expenseDetail
+        self.expenditureTab = expenditureTab
     }
 
     public func start(animated: Bool) {
         let expenditureUpdateViewController = ExpenditureUpdateViewController(
             coordinator: self,
             tripItem: tripItem,
-            expenseDetail: expenseDetail
+            expenseDetail: expenseDetail,
+            expenditureTab: expenditureTab
         )
         expenditureEditNavigationController = UINavigationController(rootViewController: expenditureUpdateViewController)
         expenditureEditNavigationController?.modalPresentationStyle = .overFullScreen
@@ -61,3 +69,39 @@ final public class ExpenditureEditCoordinator: ExpenditureEditCoordinatorInterfa
         print("TravelRegistrationCoordinator is de-initialized.")
     }
 }
+
+//extension ExpenditureEditCoordinator {
+//
+//    public func pushCalculation(expenseType: ExpenditureType, tripItem: TripItem,  expenseDetail: ExpenseDetailItem) {
+//        let calculationViewController = CalculationViewController(
+//            coordinator: self,
+//            expenseType: expenseType,
+//            tripItem: tripItem,
+//            expenseDetail: expenseDetail
+//        )
+//        expenditureEditNavigationController?.pushViewController(calculationViewController, animated: true)
+//    }
+//
+//    public func setCalculationData(expenseDetail: ExpenseDetailItem, expenseType: ExpenditureType) {
+//        expenditureAddViewController?.setCalculationData(expenseDetail: expenseDetail, expenseType: expenseType)
+//        expenditureEditNavigationController?.popViewController(animated: true)
+//    }
+//
+//    public func showCurrencyBottomSheet(currenyList: [Currency], selectedCurrency: Currency, expenseType: ExpenseType) {
+//        let currencyBottomSheetViewController = CurrencyBottomSheetViewController(
+//            coordinator: self,
+//            currenyList: currenyList,
+//            selectedCurrency: selectedCurrency,
+//            expenseType: expenseType
+//        )
+//        expenditureEditNavigationController?.presentBottomSheet(
+//            presentedViewController: currencyBottomSheetViewController,
+//            height: 310
+//        )
+//    }
+//
+//    public func selectCurrency(curreny: Currency, expenseType: ExpenseType) {
+//        expenditureAddViewController?.selectCurrency(currency: curreny, expenseType: expenseType)
+//        expenditureEditNavigationController?.dismiss(animated: true)
+//    }
+//}

@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 
 import DesignSystem
+import Entity
 
 struct TotalPriceView: View {
     typealias State = TotalPriceReducer.State
@@ -20,7 +21,7 @@ struct TotalPriceView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack {
                 if viewStore.totalBudgetPrice <= 0 {
-                    totalExpandPriceView(price: viewStore.totalExpandPrice, type: viewStore.totalPriceType, isTappable: viewStore.isTappable)
+                    totalExpandPriceView(price: viewStore.totalExpandPrice, type: viewStore.expenseType, isTappable: viewStore.isTappable)
                 } else {
                     budgetPriceView(
                         totalExpandPrice: viewStore.totalExpandPrice,
@@ -35,9 +36,9 @@ struct TotalPriceView: View {
 }
 
 extension TotalPriceView {
-    func totalExpandPriceView(price: Int, type: TotalPriceTab , isTappable: Bool) -> some View {
+    func totalExpandPriceView(price: Int, type: ExpenditureTab , isTappable: Bool) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            LargeTotalPriceView(title: type == .budget ? "총쓴돈" : "총예산", price: price, isTappable: isTappable) {
+            LargeTotalPriceView(title: "총쓴돈", price: price, isTappable: isTappable) {
                 store.send(.tappedTotalPrice)
             }
             .disabled(!isTappable)

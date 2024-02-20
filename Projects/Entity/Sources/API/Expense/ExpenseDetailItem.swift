@@ -12,8 +12,10 @@ public struct ExpenseDetailItem: Codable, Equatable {
     public var name: String
     public var amount: Double
     public var currency: String
+    public var method: String
     public var koreanAmount: Int?
-//    public var category: ExpendCategory
+    public var payedAt: String
+    public var category: ExpendCategory
     public var payerUserId: Int?
     public var payerName: String?
     public var payerList: [Payer]
@@ -23,10 +25,12 @@ public struct ExpenseDetailItem: Codable, Equatable {
         case amount
         case currency = "currencyCode"
         case koreanAmount
-//        case category = "expenseCategoryName"
+        case payedAt
+        case category = "expenseCategory"
         case payerUserId
         case payerName
         case payerList
+        case method = "expenseMethod"
     }
 
     public init(
@@ -34,29 +38,35 @@ public struct ExpenseDetailItem: Codable, Equatable {
         amount: Double,
         currency: String,
         koreanAmount: Int? = nil,
+        payedAt: String,
+        category: ExpendCategory,
         payerUserId: Int?,
         payerName: String? = nil,
-        payerList: [Payer]
+        payerList: [Payer],
+        method: String
     ) {
         self.name = name
         self.amount = amount
         self.currency = currency
         self.koreanAmount = koreanAmount
+        self.payedAt = payedAt
         self.payerUserId = payerUserId
+        self.category = category
         self.payerName = payerName
         self.payerList = payerList
+        self.method = method
     }
 }
 
 public struct Payer: Codable, Equatable {
     public var id: Int?
-    public var userId: Int
-    public var tripUserId: Int?
+    public var userId: Int?
+    public var tripUserId: Int
     public var tripUserName: String?
     public var profileImageUrl: String?
     public var amount: Double
 
-    public init(id: Int? = nil, userId: Int, tripUserId: Int? = nil, tripUserName: String? = nil, profileImageUrl: String? = nil, amount: Double) {
+    public init(id: Int? = nil, userId: Int? = nil, tripUserId: Int, tripUserName: String? = nil, profileImageUrl: String? = nil, amount: Double) {
         self.id = id
         self.userId = userId
         self.tripUserId = tripUserId

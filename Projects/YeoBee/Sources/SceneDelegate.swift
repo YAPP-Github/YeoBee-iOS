@@ -6,6 +6,10 @@
 //
 
 import UIKit
+import Expenditure
+import ComposableArchitecture
+import UseCase
+import Repository
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -16,7 +20,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: windowScene)
+
+        let navigationController = UINavigationController()
+        let tokenRepository = TokenRepository.shared
+
+        navigationController.hidesBottomBarWhenPushed = true
+
+        Task {
+            let isTokenExpiring = try await tokenRepository.isTokenExpiring()
+            var isOnboardingCompleted: Bool? = nil
+            if isTokenExpiring {
+                isOnboardingCompleted = try await UserInfoRepository().isOnboardingCompleted()
+            }
+            DispatchQueue.main.async {
+                let coordinator = RootCoordinator(
+                    navigationController: navigationController,
+                    isTokenExpring: isTokenExpiring,
+                    isOnboardingCompleted: true
+                )
+                coordinator.start(animated: false)
+
+                self.window?.overrideUserInterfaceStyle = .light
+                self.window?.rootViewController = navigationController
+                self.window?.makeKeyAndVisible()
+            }
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

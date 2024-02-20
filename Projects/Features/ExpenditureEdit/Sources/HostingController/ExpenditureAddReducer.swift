@@ -8,6 +8,7 @@
 import Foundation
 import ComposableArchitecture
 import Entity
+import DesignSystem
 
 public struct ExpenditureReducer: Reducer {
 
@@ -22,25 +23,38 @@ public struct ExpenditureReducer: Reducer {
         var expenditureEdit: ExpendpenditureEditReducer.State
         var expenditureBudgetEdit: ExpenditureBudgetEditReducer.State
         var tripItem: TripItem
-        var currencies: [Currency] = []
         let expenditureTab: ExpenditureTab
+        let expenseDetail: ExpenseDetailItem?
 
         public init(
             expenditureTab: ExpenditureTab,
             seletedExpenditureType: ExpenditureType,
             tripItem: TripItem,
-            editDate: Date
+            editDate: Date,
+            expenseDetail: ExpenseDetailItem?
         ) {
-            self.expenditureEdit = .init(tripItem: tripItem, editDate: editDate, expenditureTab: expenditureTab)
-            self.expenditureBudgetEdit = .init(tripId: tripItem.id, editDate: editDate, expenditureTab: expenditureTab)
+            self.expenditureEdit = .init(
+                tripItem: tripItem,
+                editDate: editDate,
+                expenditureTab: expenditureTab,
+                isAdd: expenseDetail == nil,
+                expenseDetail: expenseDetail
+            )
+            self.expenditureBudgetEdit = .init(
+                tripItem: tripItem,
+                editDate: editDate,
+                expenditureTab: expenditureTab,
+                isAdd: expenseDetail == nil,
+                expenseDetail: expenseDetail
+            )
             self.seletedExpenditureType = seletedExpenditureType
             self.tripItem = tripItem
             self.expenditureTab = expenditureTab
+            self.expenseDetail = expenseDetail
         }
     }
 
     public enum Action: BindableAction, Equatable {
-        case onAppear
         case binding(BindingAction<ExpenditureReducer.State>)
         case expenditureEdit(ExpendpenditureEditReducer.Action)
         case expenditureBudgetEdit(ExpenditureBudgetEditReducer.Action)
@@ -55,16 +69,6 @@ public struct ExpenditureReducer: Reducer {
 
         Reduce { state, action in
             switch action {
-            case .onAppear:
-                return .run { [tripId = state.tripItem.id] send in
-                    let currencies = try await currencyUseCase.getTripCurrencies(tripId)
-                    await send(.setCurrencies(currencies))
-                } catch: { error, send in
-                    print(error)
-                }
-            case let .setCurrencies(currencyList):
-                state.currencies = currencyList
-                return .none
             case .expenditureEdit(.dismiss):
                 cooridinator.dismissRegisterExpense()
                 return .none
@@ -72,17 +76,19 @@ public struct ExpenditureReducer: Reducer {
                 cooridinator.dismissRegisterExpense()
                 return .none
             case let .expenditureEdit(.expenditureInput(.tappedCurrencyButton(currency))):
+                let currencies = state.expenditureEdit.currencies
                 cooridinator.showCurrencyBottomSheet(
-                    currenyList: state.currencies,
+                    currenyList: currencies,
                     selectedCurrency: currency,
-                    expenseType: .individual
+                    expenseType: state.expenditureTab == .individual ? .individual : .shared
                 )
                 return .none
             case let .expenditureBudgetEdit(.expenditureInput(.tappedCurrencyButton(currency))):
+                let currencies = state.expenditureBudgetEdit.currencies
                 cooridinator.showCurrencyBottomSheet(
-                    currenyList: state.currencies,
+                    currenyList: currencies,
                     selectedCurrency: currency,
-                    expenseType: .individualBudget
+                    expenseType: state.expenditureTab == .individual ? .individualBudget : .sharedBudgetIncome
                 )
                 return .none
             case .expenditureEdit(.tappedCalculationButton):
@@ -90,10 +96,20 @@ public struct ExpenditureReducer: Reducer {
                 if let amount = Double(amountString) {
                     let expenseText = state.expenditureEdit.expenditureCategory.text
                     let currencyCode = state.expenditureEdit.expenditureInput.selectedCurrency.code
-                    let expenseDetail: ExpenseDetailItem = .init(name: expenseText, amount: amount, currency: currencyCode, payerUserId: nil, payerList: [])
+                    let expenseDetail: ExpenseDetailItem = .init(
+                        name: expenseText,
+                        amount: amount,
+                        currency: currencyCode,
+                        payedAt: "",
+                        category: .etc, 
+                        payerUserId: nil,
+                        payerList: [],
+                        method: ""
+                    )
                     cooridinator.pushCalculation(expenseType: .expense, tripItem: state.tripItem, expenseDetail: expenseDetail)
                 } else {
-                    // 금액을 입력하지 않았습니다
+                    let toast = Toast.text(icon: .warning, "금액을 입력해주세요.")
+                    toast.show()
                 }
                 return .none
 
@@ -102,10 +118,20 @@ public struct ExpenditureReducer: Reducer {
                 if let amount = Double(amountString) {
                     let expenseText = state.expenditureBudgetEdit.expenditureInput.text
                     let currencyCode = state.expenditureBudgetEdit.expenditureInput.selectedCurrency.code
-                    let expenseDetail: ExpenseDetailItem = .init(name: expenseText, amount: amount, currency: currencyCode, payerUserId: nil, payerList: [])
+                    let expenseDetail: ExpenseDetailItem = .init(
+                        name: expenseText,
+                        amount: amount,
+                        currency: currencyCode,
+                        payedAt: "",
+                        category: .etc,
+                        payerUserId: nil,
+                        payerList: [],
+                        method: ""
+                    )
                     cooridinator.pushCalculation(expenseType: .budget, tripItem: state.tripItem, expenseDetail: expenseDetail)
                 } else {
-                    // 금액을 입력하지 않았습니다
+                    let toast = Toast.text(icon: .warning, "금액을 입력해주세요.")
+                    toast.show()
                 }
                 return .none
 

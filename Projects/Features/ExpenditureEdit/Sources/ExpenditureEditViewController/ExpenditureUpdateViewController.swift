@@ -21,12 +21,17 @@ public final class ExpenditureUpdateViewController: UIViewController {
 
     private let expenditureHostingController: ExpenditureUpdateHostingController
 
-    public init(coordinator: ExpenditureEditCoordinator, tripItem: TripItem, expenseDetail: ExpenseDetailItem) {
+    public init(
+        coordinator: ExpenditureEditCoordinator,
+        tripItem: TripItem,
+        expenseDetail: ExpenseDetailItem,
+        expenditureTab: ExpenditureTab
+    ) {
         self.coordinator = coordinator
         self.expenditureHostingController = ExpenditureUpdateHostingController(
             rootView: ExpenditureUpdateView(
                 store: .init(
-                    initialState: .init(seletedExpenditureType: .individual, tripItem: tripItem, expenseDetail: expenseDetail),
+                    initialState: .init(expenditureTab: .individual, tripItem: tripItem, expenseDetail: expenseDetail),
                     reducer: {
                         ExpenditureUpdateReducer(cooridinator: coordinator)
                     }

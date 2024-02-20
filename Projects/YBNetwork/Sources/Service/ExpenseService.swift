@@ -61,7 +61,7 @@ extension ExpenseService: TargetType {
                 "pageIndex": pageIndex,
                 "pageSize": pageSize
             ]
-            if let type { params["type"] = type }
+            if let type { params["expenseType"] = type }
             if let date { params["payedAt"] = payedAtDateFormatter.string(from: date) }
             if let method { params["method"] = method }
             if let unitId { params["unitId"] = unitId }

@@ -47,8 +47,7 @@ public struct ExpenditureReducer: Reducer {
             self.tripDate = TripDateReducer.State(startDate: startDate, endDate: endDate)
             self.totalPrice = .init(
                 expenseType: type,
-                totalPriceType: .expense,
-                isTappable: true
+                isTappable: false
             )
         }
     }
@@ -130,7 +129,7 @@ public struct ExpenditureReducer: Reducer {
                     let (expenseItems, isLastPage) = try await expenseUseCase.getExpenseList(
                         tripId,
                         tripDate,
-                        expenseType == .individual ? .individual : .shared,
+                        expenseType == .individual ? .individualAll : .sharedAll,
                         expenseMethod,
                         pageIndex
                     )
@@ -159,9 +158,24 @@ public struct ExpenditureReducer: Reducer {
                 return .none
 
             case .getBudget:
-                return .run { [tripId = state.tripItem.id] send in
-                    if let budget = try await tripCalculationUseCase.getBudget(tripId).individualBudget {
-                        await send(.totalPrice(.setTotalPrice(budget.budgetExpense, budget.budgetIncome, budget.leftBudget)))
+                return .run { [tripId = state.tripItem.id, type = state.type] send in
+                    let budget = try await tripCalculationUseCase.getBudget(tripId)
+                    if type == .individual {
+                        if let individualBudget = budget.individualBudget {
+                            await send(.totalPrice(.setTotalPrice(
+                                individualBudget.budgetExpense,
+                                individualBudget.budgetIncome,
+                                individualBudget.leftBudget)
+                            ))
+                        }
+                    } else {
+                        if let sharedBudget = budget.sharedBudget {
+                            await send(.totalPrice(.setTotalPrice(
+                                sharedBudget.budgetExpense,
+                                sharedBudget.budgetIncome,
+                                sharedBudget.leftBudget)
+                            ))
+                        }
                     }
                 } catch: { error, send in
                     print(error)
@@ -172,7 +186,7 @@ public struct ExpenditureReducer: Reducer {
                 return .none
 
             case let .expenditureList(.expenditureListItem(id: _, action: .tappedExpenditureItem(expenseItem))):
-                cooridinator.expenditureDetail(expenseItem: expenseItem)
+                cooridinator.expenditureDetail(expenseType: state.type, expenseItem: expenseItem)
                 return .none
 
             case .appendExpenditures:

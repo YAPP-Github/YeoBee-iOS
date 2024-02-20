@@ -8,6 +8,7 @@
 import Foundation
 import ComposableArchitecture
 import Entity
+import DesignSystem
 
 public struct ExpenditureUpdateReducer: Reducer {
 
@@ -17,63 +18,138 @@ public struct ExpenditureUpdateReducer: Reducer {
         self.cooridinator = cooridinator
     }
 
-    public struct State: Equatable {
+    public enum State: Equatable {
+        case expenditureEdit(ExpendpenditureEditReducer.State)
+        case expenditureBudgetEdit(ExpenditureBudgetEditReducer.State)
 
-        enum ExpenditureEditRoute: Equatable {
-            case expenditureEdit(ExpendpenditureEditReducer.State)
-            case expenditureBudgetEdit(ExpenditureBudgetEditReducer.State)
-        }
-        var expenditureEditRoute: ExpenditureEditRoute
-        var tripItem: TripItem
-
-        public init(seletedExpenditureType: ExpenseType, tripItem: TripItem, expenseDetail: ExpenseDetailItem) {
-            switch seletedExpenditureType {
-            case .individual, .shared:
-                self.expenditureEditRoute = .expenditureEdit(.init(tripItem: tripItem, editDate: Date(), expenditureTab: .individual))
-            case .individualBudget, .sharedBudgetIncome:
-                self.expenditureEditRoute = .expenditureBudgetEdit(.init(tripId: tripItem.id, editDate: Date(), expenditureTab: .individual))
+        public init(expenditureTab: ExpenditureTab, tripItem: TripItem, expenseDetail: ExpenseDetailItem) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            let editDate = dateFormatter.date(from: expenseDetail.payedAt) ?? Date()
+            if expenseDetail.category == .income {
+                self = .expenditureBudgetEdit(.init(
+                    tripItem: tripItem,
+                    editDate: editDate,
+                    expenditureTab: expenditureTab,
+                    isAdd: true,
+                    expenseDetail: expenseDetail
+                ))
+            } else {
+                self = .expenditureEdit(.init(
+                    tripItem: tripItem,
+                    editDate: editDate,
+                    expenditureTab: expenditureTab,
+                    isAdd: true,
+                    expenseDetail: expenseDetail
+                ))
             }
-            self.tripItem = tripItem
         }
     }
 
-    public enum Action: BindableAction, Equatable {
-        case onAppear
-        case binding(BindingAction<ExpenditureReducer.State>)
+    public enum Action: Equatable {
         case expenditureEdit(ExpendpenditureEditReducer.Action)
         case expenditureBudgetEdit(ExpenditureBudgetEditReducer.Action)
+        case setCurrencies([Currency])
+        case setCalculationData(ExpenseDetailItem, ExpenditureType)
     }
-
-    @Dependency(\.currencyUseCase) var currencyUseCase
 
     public var body: some ReducerOf<ExpenditureUpdateReducer> {
         Reduce { state, action in
             switch action {
-            case .onAppear:
-                return .run { [tripId = state.tripItem.id] send in
-                    let currencies = try await currencyUseCase.getTripCurrencies(tripId)
-                }
             case .expenditureEdit(.dismiss):
                 cooridinator.dismissRegisterExpense()
                 return .none
             case .expenditureBudgetEdit(.dismiss):
                 cooridinator.dismissRegisterExpense()
                 return .none
+//            case let .expenditureEdit(.expenditureInput(.tappedCurrencyButton(currency))):
+//                if case let .expenditureEdit(editState) = state {
+//                    let currencies = editState.currencies
+//                    cooridinator.showCurrencyBottomSheet(
+//                        currenyList: currencies,
+//                        selectedCurrency: currency,
+//                        expenseType: state.expenditureTab == .individual ? .individual : .shared
+//                    )
+//                }
+//
+//                return .none
+//            case let .expenditureBudgetEdit(.expenditureInput(.tappedCurrencyButton(currency))):
+//                if case let .expenditureBudgetEdit(budgetEditState) = state {
+//                    let currencies = budgetEditState.currencies
+//                    cooridinator.showCurrencyBottomSheet(
+//                        currenyList: currencies,
+//                        selectedCurrency: currency,
+//                        expenseType: .individualBudget
+//                    )
+//                }
+//                return .none
+//            case .expenditureEdit(.tappedCalculationButton):
+//                if case let .expenditureEdit(editState) = state {
+//                    let amountString = editState.expenditureInput.text.replacingOccurrences(of: ",", with: "")
+//                    if let amount = Double(amountString) {
+//                        let expenseText = editState.expenditureCategory.text
+//                        let currencyCode = editState.expenditureInput.selectedCurrency.code
+//                        let expenseDetail: ExpenseDetailItem = .init(
+//                            name: expenseText,
+//                            amount: amount,
+//                            currency: currencyCode,
+//                            payedAt: "",
+//                            category: .etc,
+//                            payerUserId: nil,
+//                            payerList: []
+//                        )
+//                        cooridinator.pushCalculation(expenseType: .expense, tripItem: state.tripItem, expenseDetail: expenseDetail)
+//                    } else {
+//                        let toast = Toast.text(icon: .warning, "금액을 입력해주세요.")
+//                        toast.show()
+//                    }
+//                }
+//                return .none
+//
+//            case .expenditureBudgetEdit(.tappedCalculationButton):
+//                if case let .expenditureBudgetEdit(budgetEditState) = state {
+//                    let amountString = budgetEditState.expenditureInput.text.replacingOccurrences(of: ",", with: "")
+//                    if let amount = Double(amountString) {
+//                        let expenseText = budgetEditState.expenditureInput.text
+//                        let currencyCode = budgetEditState.expenditureInput.selectedCurrency.code
+//                        let expenseDetail: ExpenseDetailItem = .init(
+//                            name: expenseText,
+//                            amount: amount,
+//                            currency: currencyCode,
+//                            payedAt: "",
+//                            category: .etc,
+//                            payerUserId: nil,
+//                            payerList: []
+//                        )
+//                        cooridinator.pushCalculation(expenseType: .budget, tripItem: state.tripItem, expenseDetail: expenseDetail)
+//                    } else {
+//                        let toast = Toast.text(icon: .warning, "금액을 입력해주세요.")
+//                        toast.show()
+//                    }
+//                }
+//                return .none
+//
+//            case .setCalculationData(let expenseDetailItem, let expenseType):
+//                switch expenseType {
+//                case .expense:
+//                    state.expenditureEdit.expenseDetail = expenseDetailItem
+//                    state.expenditureEdit.expenditureInput.text = expenseDetailItem.amount.formattedWithSeparator
+//                case .budget:
+//                    state.expenditureBudgetEdit.expenseDetail = expenseDetailItem
+//                    state.expenditureBudgetEdit.expenditureInput.text = expenseDetailItem.amount.formattedWithSeparator
+//                }
+//                return .none
             default:
                 return .none
             }
         }
 
-        Scope(state: \.expenditureEditRoute, action: /.self) {
-            Scope(state: /State.ExpenditureEditRoute.expenditureEdit, action: /Action.expenditureEdit) {
-                ExpendpenditureEditReducer()
-            }
+        Scope(state: /State.expenditureEdit, action: /Action.expenditureEdit) {
+            ExpendpenditureEditReducer()
         }
 
-        Scope(state: \.expenditureEditRoute, action: /.self) {
-            Scope(state: /State.ExpenditureEditRoute.expenditureBudgetEdit, action: /Action.expenditureBudgetEdit) {
-                ExpenditureBudgetEditReducer()
-            }
+        Scope(state: /State.expenditureBudgetEdit, action: /Action.expenditureBudgetEdit) {
+            ExpenditureBudgetEditReducer()
         }
     }
 }

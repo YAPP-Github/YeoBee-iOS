@@ -17,7 +17,6 @@ public struct TotalExpenditureListReducer: Reducer {
         init(expenditureType: ExpenditureTab, totalPriceType: TotalPriceTab) {
             self.totalPrice = .init(
                 expenseType: expenditureType,
-                totalPriceType: totalPriceType,
                 isTappable: false
             )
         }

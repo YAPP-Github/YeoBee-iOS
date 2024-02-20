@@ -16,11 +16,18 @@ extension Project {
             "UILaunchStoryboardName": "LaunchScreen",
             "BASE_IMAGE_URL": "$(BASE_IMAGE_URL)",
             "BASE_URL": "$(BASE_URL)",
+            "UIApplicationSceneManifest" : [
+                "UIApplicationSupportsMultipleScenes": true,
+                "UISceneConfigurations":[
+                    "UIWindowSceneSessionRoleApplication":[["UISceneConfigurationName":"Default Configuration", "UISceneDelegateClassName":"$(PRODUCT_MODULE_NAME).SceneDelegate"]
+                                                          ]
+                ]
+            ],
             "LSApplicationQueriesSchemes": [
-                  "kakaokompassauth",
-                  "kakaolink",
-                  "kakao$(KAKAO_NATIVE_APP_KEY)"
-                ],
+                "kakaokompassauth",
+                "kakaolink",
+                "kakao$(KAKAO_NATIVE_APP_KEY)"
+            ],
                 "KAKAO_NATIVE_APP_KEY": "$(KAKAO_NATIVE_APP_KEY)",
                 "CFBundleURLTypes": [
                   [

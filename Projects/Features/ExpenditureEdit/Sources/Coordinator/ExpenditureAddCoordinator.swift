@@ -27,17 +27,20 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
     public let tripItem: TripItem
     public let editDate: Date
     public let expenditureTab: ExpenditureTab
+    public let expenseDetail: ExpenseDetailItem?
 
     public init(
         navigationController: UINavigationController,
         tripItem: TripItem,
         editDate: Date,
-        expenditureTab: ExpenditureTab
+        expenditureTab: ExpenditureTab,
+        expenseDetail: ExpenseDetailItem?
     ) {
         self.navigationController = navigationController
         self.tripItem = tripItem
         self.editDate = editDate
         self.expenditureTab = expenditureTab
+        self.expenseDetail = expenseDetail
     }
 
     public func start(animated: Bool) {
@@ -45,7 +48,8 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
             coordinator: self,
             tripItem: tripItem,
             editDate: editDate, 
-            expenditureTab: expenditureTab
+            expenditureTab: expenditureTab,
+            expenseDetail: expenseDetail
         )
         self.expenditureAddViewController = expenditureAddViewController
         expenditureEditNavigationController = UINavigationController(rootViewController: expenditureAddViewController)
