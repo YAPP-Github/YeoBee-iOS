@@ -81,6 +81,7 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
                 if state.expenseType == .expense { state.isEnableConfirmButton = true }
                 state.selectedPayer = tripUserItem
                 state.expenseDetail.payerUserId = tripUserItem.id
+                state.expenseDetail.payerName = tripUserItem.name
                 state.payableList.forEach { tripUser in
                     state.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == tripUserItem.id))
                 }

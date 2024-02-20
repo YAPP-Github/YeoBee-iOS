@@ -14,7 +14,7 @@ public enum CurrencyService {
 }
 
 extension CurrencyService: TargetType {
-    public var baseURL: URL { return URL(string: YeoBeeAPI.shared.baseURL ?? "")!}
+    public var baseURL: URL { return URL(string: YeoBeeAPI.shared.baseURL ?? "")! }
 
     public var path: String {
         switch self {

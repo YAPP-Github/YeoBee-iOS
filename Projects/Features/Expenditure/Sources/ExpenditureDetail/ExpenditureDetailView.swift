@@ -72,7 +72,7 @@ extension ExpenditureDetailView {
                         .foregroundColor(.ybColor(.gray6))
                         .font(.ybfont(.body1))
                     Spacer()
-                    Text("카드")
+                    Text(viewStore.expenseDetailItem?.method == "CASH" ? "현금" : "카드")
                         .foregroundColor(.ybColor(.gray5))
                         .font(.ybfont(.body1))
                 }

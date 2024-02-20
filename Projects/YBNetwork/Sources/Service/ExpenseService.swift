@@ -21,7 +21,8 @@ public enum ExpenseService {
     )
     case fetchDetail(Int)
     case create(Codable)
-    //    case delete
+    case delete(Int)
+    case update(Int, Codable)
 }
 
 extension ExpenseService: TargetType {
@@ -35,8 +36,10 @@ extension ExpenseService: TargetType {
             return "/v1/expenses/\(expenseId)"
         case .create:
             return "/v1/expenses"
-            //        case .delete:
-            //            return "v1/expense"
+        case let .delete(expenseId):
+            return "v1/expense/\(expenseId)"
+        case let .update(expenseId, _):
+            return "v1/expense/\(expenseId)"
         }
     }
     
@@ -48,8 +51,10 @@ extension ExpenseService: TargetType {
             return .get
         case .create:
             return .post
-            //        case .delete:
-            //            return .delete
+        case .delete:
+            return .delete
+        case .update:
+            return .put
         }
     }
 
@@ -70,8 +75,10 @@ extension ExpenseService: TargetType {
             return .requestPlain
         case let .create(data):
             return .requestJSONEncodable(data)
-            //        case .delete:
-            //            <#code#>
+        case .delete:
+            return .requestPlain
+        case let .update(_, data):
+            return .requestJSONEncodable(data)
         }
     }
     

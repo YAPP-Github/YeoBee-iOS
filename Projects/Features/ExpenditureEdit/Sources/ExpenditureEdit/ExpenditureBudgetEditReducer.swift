@@ -19,17 +19,23 @@ public struct ExpenditureBudgetEditReducer: Reducer {
         var scrollItem: String = ""
         var isEnableRegisterButton: Bool = false
         var tripItem: TripItem
+        var expenseItem: ExpenseItem?
         var editDate: Date
         let expenditureTab: ExpenditureTab
         var expenseDetail: ExpenseDetailItem?
         var currencies: [Currency] = []
-        var isAdd: Bool
 
-        init(tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab, isAdd: Bool, expenseDetail: ExpenseDetailItem?) {
+        init(
+            expenseItem: ExpenseItem?,
+            tripItem: TripItem,
+            editDate: Date,
+            expenditureTab: ExpenditureTab,
+            expenseDetail: ExpenseDetailItem?
+        ) {
+            self.expenseItem = expenseItem
             self.tripItem = tripItem
             self.editDate = editDate
             self.expenditureTab = expenditureTab
-            self.isAdd = isAdd
             self.expenseDetail = expenseDetail
         }
     }
@@ -83,6 +89,7 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                 let currency = currencies.filter { $0.code == expenseDetail.currency }.first
                 return .run { send in
                     await send(.expenditureInput(.setInput(expenseDetail.amount.formattedWithSeparator, currency)))
+                    await send(.expenditureContent(.setTextField(expenseDetail.name)))
                     await send(.expenditurePayment(.setPayment(expenseDetail.method == "CASH" ? .cash : .card)))
                 }
 
@@ -116,11 +123,13 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                     let payerList: [PayerRequest] = state.expenseDetail?.payerList.compactMap { 
                         .init(tripUserId: $0.tripUserId, amount: $0.amount)
                     } ?? []
-                    return .run { [isAdd = state.isAdd] send in
-                        if isAdd {
-                            let _ = try await expenseUseCase.createExpense(.init(
+                    return .run { [state] send in
+                        let payedDate = Calendar.current.date(byAdding: .hour, value: 9, to: payedAt) ?? Date()
+                        print(payedDate)
+                        if let expenseItem = state.expenseItem {
+                            let _ = try await expenseUseCase.updateExpense(expenseItem.id, .init(
                                 tripId: tripId,
-                                payedAt: ISO8601DateFormatter().string(from: payedAt),
+                                payedAt: ISO8601DateFormatter().string(from: payedDate),
                                 expenseType: expenditureTab == .shared ? "SHARED_BUDGET_INCOME" : "INDIVIDUAL_BUDGET_INCOME",
                                 amount: amount,
                                 currencyCode: currencyCode,
@@ -131,7 +140,18 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                                 payerList: payerList
                             ))
                         } else {
-                            print("수정 완")
+                            let _ = try await expenseUseCase.createExpense(.init(
+                                tripId: tripId,
+                                payedAt: ISO8601DateFormatter().string(from: payedDate),
+                                expenseType: expenditureTab == .shared ? "SHARED_BUDGET_INCOME" : "INDIVIDUAL_BUDGET_INCOME",
+                                amount: amount,
+                                currencyCode: currencyCode,
+                                expenseMethod: paymentType,
+                                expenseCategory: "INCOME",
+                                name: expenseText,
+                                payerId: payerId,
+                                payerList: payerList
+                            ))
                         }
 
                         await send(.dismiss)

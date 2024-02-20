@@ -42,11 +42,7 @@ public struct ExpenditureDetailReducer: Reducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                if state.isInitialShow {
-                    state.isInitialShow = false
-                    return .send(.getExpenseDetail)
-                }
-                return .none
+                return .send(.getExpenseDetail)
 
             case .getExpenseDetail:
                 return .run { [expenseId = state.expenseItem.id] send in
@@ -61,7 +57,7 @@ public struct ExpenditureDetailReducer: Reducer {
 
             case .tappedEditButton:
                 if let expenseDetail = state.expenseDetailItem {
-                    cooridinator.expenditureEdit(expenseDetail: expenseDetail, expenditureTab: state.expenditureTab)
+                    cooridinator.expenditureEdit(expenseItem: state.expenseItem, expenseDetail: expenseDetail, expenditureTab: state.expenditureTab)
                 }
                 return .none
             }

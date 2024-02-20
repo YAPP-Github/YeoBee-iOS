@@ -72,7 +72,8 @@ extension ExpenditureCoordinator {
 
     public func expenditureAdd(tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab) {
         let expenditureAddCoordinator = ExpenditureAddCoordinator(
-            navigationController: expenditureNavigationController!,
+            navigationController: expenditureNavigationController!, 
+            expenseItem: nil,
             tripItem: tripItem,
             editDate: editDate,
             expenditureTab: expenditureTab,
@@ -84,12 +85,13 @@ extension ExpenditureCoordinator {
         expenditureAddCoordinator.start(animated: true)
     }
 
-    public func expenditureEdit(expenseDetail: ExpenseDetailItem, expenditureTab: ExpenditureTab) {
+    public func expenditureEdit(expenseItem: ExpenseItem, expenseDetail: ExpenseDetailItem, expenditureTab: ExpenditureTab) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         let editDate = dateFormatter.date(from: expenseDetail.payedAt) ?? Date()
         let expenditureAddCoordinator = ExpenditureAddCoordinator(
-            navigationController: expenditureNavigationController!,
+            navigationController: expenditureNavigationController!, 
+            expenseItem: expenseItem,
             tripItem: tripItem,
             editDate: editDate,
             expenditureTab: expenditureTab,

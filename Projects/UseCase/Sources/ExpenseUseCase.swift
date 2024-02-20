@@ -20,6 +20,8 @@ public struct ExpenseUseCase {
         _ pageIndex: Int
     ) async throws -> ([ExpenseItem], Bool)
     public var createExpense: @Sendable (_ createExpense: CreateExpenseRequest) async throws -> CreateExpenseResponse
+    public var updateExpense: @Sendable (_ expenseId: Int, _ updateExpense: CreateExpenseRequest) async throws -> CreateExpenseResponse
+    public var deleteExpense: @Sendable (_ expenseId: Int) async throws -> String
     public var getExpenseDetail: @Sendable (_ expenseId: Int) async throws -> ExpenseDetailItem
 }
 
@@ -53,6 +55,10 @@ extension ExpenseUseCase: DependencyKey {
         }, createExpense: { request in
             let data = try await expenseRepository.createExpense(request: request)
             return data
+        }, updateExpense: { expenseId, request in
+            return try await expenseRepository.updateExpense(expenseId: expenseId, request: request)
+        }, deleteExpense: { expenseId in
+            return try await expenseRepository.deleteExpense(expenseId: expenseId)
         }, getExpenseDetail: { expenseId in
             return try await expenseRepository.getExpenseDetail(expenseId: expenseId)
         })

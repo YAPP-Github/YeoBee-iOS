@@ -11,9 +11,11 @@ import DesignSystem
 
 struct ExpenseCalculationButtonView: View {
 
+    let text: String
     let action: () -> Void
 
-    init(action: @escaping () -> Void) {
+    init(text: String, action: @escaping () -> Void) {
+        self.text = text
         self.action = action
     }
 
@@ -32,6 +34,9 @@ struct ExpenseCalculationButtonView: View {
                 action()
             } label: {
                 HStack(spacing: 0) {
+                    Text(text)
+                        .foregroundColor(.ybColor(.gray5))
+                        .font(.ybfont(.body1))
                     DesignSystemAsset.Icons.next.swiftUIImage
                         .frame(width: 24, height: 24)
                         .foregroundColor(.ybColor(.gray4))

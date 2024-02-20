@@ -24,5 +24,5 @@ public struct CreateExpenseResponse: Codable {
 public struct PayerResponse: Codable {
     public var id: Int
     public var tripUserId: Int
-    public var amount: Int
+    public var amount: Double
 }

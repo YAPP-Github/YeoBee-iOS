@@ -19,17 +19,17 @@ public struct ExpendpenditureEditReducer: Reducer {
         var scrollItem: String = ""
         var isEnableRegisterButton: Bool = false
         var tripItem: TripItem
+        var expenseItem: ExpenseItem?
         var editDate: Date
         let expenditureTab: ExpenditureTab
         var expenseDetail: ExpenseDetailItem?
         var currencies: [Currency] = []
-        var isAdd: Bool
 
-        init(tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab, isAdd: Bool, expenseDetail: ExpenseDetailItem?) {
+        init(expenseItem: ExpenseItem?, tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab, expenseDetail: ExpenseDetailItem?) {
+            self.expenseItem = expenseItem
             self.tripItem = tripItem
             self.editDate = editDate
             self.expenditureTab = expenditureTab
-            self.isAdd = isAdd
             self.expenseDetail = expenseDetail
         }
     }
@@ -91,7 +91,13 @@ public struct ExpendpenditureEditReducer: Reducer {
                 return registerExpense(state: &state)
 
             case let .setExpenditureDetail(expenseDetailItem):
-                state.expenseDetail = expenseDetailItem
+                if let expenseDetail = state.expenseDetail {
+                    state.expenseDetail?.payerList = expenseDetailItem.payerList
+                    state.expenseDetail?.payerName = expenseDetailItem.payerName
+                    state.expenseDetail?.payerUserId = expenseDetailItem.payerUserId
+                } else {
+                    state.expenseDetail = expenseDetailItem
+                }
                 return .none
 
             case let .setEditExpense(expenseDetail, currencies):
@@ -135,11 +141,13 @@ public struct ExpendpenditureEditReducer: Reducer {
                     let payerList: [PayerRequest] = state.expenseDetail?.payerList.compactMap {
                         .init(tripUserId: $0.tripUserId, amount: $0.amount)
                     } ?? []
-                    return .run { [isAdd = state.isAdd] send in
-                        if isAdd {
-                            let _ = try await expenseUseCase.createExpense(.init(
+                    return .run { [state] send in
+                        let payedDate = Calendar.current.date(byAdding: .hour, value: 9, to: payedAt) ?? Date()
+                        print(payedDate)
+                        if let expenseItem = state.expenseItem {
+                            let _ = try await expenseUseCase.updateExpense(expenseItem.id, .init(
                                 tripId: tripId,
-                                payedAt: ISO8601DateFormatter().string(from: payedAt),
+                                payedAt: ISO8601DateFormatter().string(from: payedDate),
                                 expenseType: expenditureTab == .shared ? "SHARED" : "INDIVIDUAL",
                                 amount: amount,
                                 currencyCode: currencyCode,
@@ -150,7 +158,18 @@ public struct ExpendpenditureEditReducer: Reducer {
                                 payerList: payerList
                             ))
                         } else {
-                            print("수정 완")
+                            let _ = try await expenseUseCase.createExpense(.init(
+                                tripId: tripId,
+                                payedAt: ISO8601DateFormatter().string(from: payedDate),
+                                expenseType: expenditureTab == .shared ? "SHARED" : "INDIVIDUAL",
+                                amount: amount,
+                                currencyCode: currencyCode,
+                                expenseMethod: paymentType,
+                                expenseCategory: category.requestText,
+                                name: expenseText,
+                                payerId: payerId,
+                                payerList: payerList
+                            ))
                         }
                         await send(.dismiss)
                     } catch: { error, send in

@@ -23,6 +23,7 @@ public final class ExpenditureAddViewController: UIViewController {
 
     public init(
         coordinator: ExpenditureAddCoordinator,
+        expenseItem: ExpenseItem?,
         tripItem: TripItem,
         editDate: Date,
         expenditureTab: ExpenditureTab,
@@ -32,7 +33,8 @@ public final class ExpenditureAddViewController: UIViewController {
         let store: StoreOf<ExpenditureReducer> = .init(
             initialState: .init(
                 expenditureTab: expenditureTab,
-                seletedExpenditureType: .expense,
+                seletedExpenditureType: expenseDetail?.category == .income ? .budget : .expense,
+                expenseItem: expenseItem,
                 tripItem: tripItem,
                 editDate: editDate,
                 expenseDetail: expenseDetail

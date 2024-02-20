@@ -16,6 +16,8 @@ public protocol ExpenseRepositoryInterface {
     func getExpenseList(request: FetchExpenseListRequest) async throws -> FetchExpenseListResponse
     func getExpenseDetail(expenseId: Int) async throws -> ExpenseDetailItem
     func createExpense(request: CreateExpenseRequest) async throws -> CreateExpenseResponse
+    func deleteExpense(expenseId: Int) async throws -> String
+    func updateExpense(expenseId: Int, request: CreateExpenseRequest) async throws -> CreateExpenseResponse
 }
 
 final public class ExpenseRepository: ExpenseRepositoryInterface {
@@ -59,6 +61,30 @@ final public class ExpenseRepository: ExpenseRepositoryInterface {
     public func createExpense(request: CreateExpenseRequest) async throws -> CreateExpenseResponse {
         let result = await provider.request(
             .create(request)
+        )
+        switch result {
+        case let .success(response):
+            return try decode(data: response.data)
+        case .failure(let failure):
+            throw failure
+        }
+    }
+
+    public func deleteExpense(expenseId: Int) async throws -> String {
+        let result = await provider.request(
+            .delete(expenseId)
+        )
+        switch result {
+        case .success:
+            return ""
+        case .failure(let failure):
+            throw failure
+        }
+    }
+
+    public func updateExpense(expenseId: Int, request: CreateExpenseRequest) async throws -> CreateExpenseResponse {
+        let result = await provider.request(
+            .update(expenseId, request)
         )
         switch result {
         case let .success(response):

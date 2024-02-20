@@ -22,6 +22,7 @@ public struct ExpenditureInputReducer: Reducer {
         case binding(BindingAction<State>)
         case tappedCurrencyButton(Currency)
         case setInput(String, Currency?)
+        case setText(String)
     }
 
     enum DebounceId: Hashable { case id }
@@ -38,6 +39,10 @@ public struct ExpenditureInputReducer: Reducer {
             case .setInput(let text, let currency):
                 state.text = text
                 state.selectedCurrency = currency ?? .init(name: "원", code: "KRW", exchangeRate: .init(value: 1, standard: 1))
+                return .none
+
+            case let .setText(text):
+                state.text =  text
                 return .none
 
             case .binding(\.$text):

@@ -64,6 +64,7 @@ public struct ExpenditureCalculationDutchReducer: Reducer {
                 if state.expenseType == .expense { state.isEnableRegisterButton = true }
                 state.selectedPayer = tripUserItem
                 state.expenseDetail.payerUserId = tripUserItem.id == 0 ? nil : tripUserItem.id
+                state.expenseDetail.payerName = tripUserItem.name == "공동경비" ? nil : tripUserItem.name
                 state.payableList.forEach { tripUser in
                     state.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == tripUserItem.id))
                 }

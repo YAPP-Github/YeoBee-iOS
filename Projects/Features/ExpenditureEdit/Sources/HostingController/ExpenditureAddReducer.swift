@@ -29,22 +29,23 @@ public struct ExpenditureReducer: Reducer {
         public init(
             expenditureTab: ExpenditureTab,
             seletedExpenditureType: ExpenditureType,
+            expenseItem: ExpenseItem?,
             tripItem: TripItem,
             editDate: Date,
             expenseDetail: ExpenseDetailItem?
         ) {
             self.expenditureEdit = .init(
+                expenseItem: expenseItem,
                 tripItem: tripItem,
                 editDate: editDate,
                 expenditureTab: expenditureTab,
-                isAdd: expenseDetail == nil,
                 expenseDetail: expenseDetail
             )
             self.expenditureBudgetEdit = .init(
+                expenseItem: expenseItem,
                 tripItem: tripItem,
                 editDate: editDate,
                 expenditureTab: expenditureTab,
-                isAdd: expenseDetail == nil,
                 expenseDetail: expenseDetail
             )
             self.seletedExpenditureType = seletedExpenditureType
@@ -138,13 +139,17 @@ public struct ExpenditureReducer: Reducer {
             case .setCalculationData(let expenseDetailItem, let expenseType):
                 switch expenseType {
                 case .expense:
-                    state.expenditureEdit.expenseDetail = expenseDetailItem
-                    state.expenditureEdit.expenditureInput.text = expenseDetailItem.amount.formattedWithSeparator
+                    return .run { send in
+                        await send(.expenditureEdit(.setExpenditureDetail(expenseDetailItem)))
+                        await send(.expenditureEdit(.expenditureInput(.setText(expenseDetailItem.amount.formattedWithSeparator))))
+                    }
                 case .budget:
-                    state.expenditureBudgetEdit.expenseDetail = expenseDetailItem
-                    state.expenditureBudgetEdit.expenditureInput.text = expenseDetailItem.amount.formattedWithSeparator
+                    return .run { send in
+                        await send(.expenditureEdit(.setExpenditureDetail(expenseDetailItem)))
+                        await send(.expenditureEdit(.expenditureInput(.setText(expenseDetailItem.amount.formattedWithSeparator))))
+                    }
                 }
-                return .none
+
             default:
                 return .none
             }
