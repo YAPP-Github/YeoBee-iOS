@@ -14,6 +14,7 @@ extension Project {
             "CFBundleVersion": "1",
             "UIMainStoryboardFile": "",
             "UILaunchStoryboardName": "LaunchScreen",
+            "BASE_IMAGE_URL": "$(BASE_IMAGE_URL)",
             "BASE_URL": "$(BASE_URL)",
             "LSApplicationQueriesSchemes": [
                   "kakaokompassauth",

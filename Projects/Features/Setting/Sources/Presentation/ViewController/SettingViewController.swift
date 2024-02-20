@@ -245,7 +245,7 @@ extension SettingViewController: SettingTableHeaderViewDelegate {
     func modifyButtonTapped() {
         let settingBottomSheetViewController = SettingBottomSheetViewController()
         settingBottomSheetViewController.delegate = self
-        presentBottomSheet(presentedViewController: settingBottomSheetViewController, height: 250)
+        presentBottomSheet(presentedViewController: settingBottomSheetViewController, height: 180)
     }
 }
 
