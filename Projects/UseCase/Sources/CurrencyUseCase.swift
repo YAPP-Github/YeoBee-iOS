@@ -14,6 +14,11 @@ import ComposableArchitecture
 
 public struct CurrencyUseCase {
     public var getTripCurrencies: @Sendable (_ tripId: Int) async throws -> [Currency]
+    public var putTripCurrencies: @Sendable (
+        _ tripId: Int,
+        _ currencyCode: String,
+        _ exchangeRate: ExchangeRate
+    ) async throws -> Bool
 }
 
 extension CurrencyUseCase: TestDependencyKey {
@@ -32,6 +37,8 @@ extension CurrencyUseCase: DependencyKey {
         let currencyRepository = CurrencyRepository()
         return .init(getTripCurrencies: { tripId in
             return try await currencyRepository.getTripCurrency(tripId: tripId).currencyList
+        }, putTripCurrencies: { tripId, currencyCode, exchangeRate in
+            return try await currencyRepository.putTripCurrency(tripId, currencyCode, exchangeRate)
         })
     }
 }

@@ -86,10 +86,7 @@ public final class SettingReactor: Reactor {
             action.onNext(.companions(companions))
         }
         
-        Task {
-            let currencyResult = try await currencyUseCase.getTripCurrencies(currentTripItem.id)
-            action.onNext(.currencies(currencyResult))
-        }
+        updateCurrencyUseCase()
     }
     
     func updateSettingUseCase() {
@@ -102,6 +99,15 @@ public final class SettingReactor: Reactor {
             if companionsResult.count > 1 {
                 action.onNext(.companions(companionsResult))
             }
+        }
+    }
+    
+    func updateCurrencyUseCase() {
+        let currentTripItemId = currentState.tripItem.id
+        
+        Task {
+            let currencyResult = try await currencyUseCase.getTripCurrencies(currentTripItemId)
+            action.onNext(.currencies(currencyResult))
         }
     }
     

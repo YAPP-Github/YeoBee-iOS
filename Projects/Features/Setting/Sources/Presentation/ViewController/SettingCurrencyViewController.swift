@@ -18,6 +18,7 @@ public final class SettingCurrencyViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
     private let reactor: SettingCurrencyReactor
+    weak var delegate: ModifiedSettingViewControllerDelegate?
     
     // MARK: - Properties
     private let titleLabel = YBLabel(text: "적용된 환율", font: .header2, textColor: .black)
@@ -88,7 +89,7 @@ public final class SettingCurrencyViewController: UIViewController {
     private func configureBar() {
         let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
-        self.navigationItem.leftBarButtonItem = backButton
+        self.navigationItem.backBarButtonItem = backButton
     }
     
     @objc private func backButtonTapped() {
@@ -116,8 +117,7 @@ extension SettingCurrencyViewController: View {
         modifyButton.rx.tap
             .observe(on: MainScheduler.instance)
             .bind { [weak self] in
-                print("환율 수정")
-                self?.navigationController?.popViewController(animated: true)
+                self?.reactor.putCurrencyUseCase()
             }
             .disposed(by: disposeBag)
     }
@@ -133,17 +133,28 @@ extension SettingCurrencyViewController: View {
             .disposed(by: disposeBag)
         
         reactor.state
-            .map { $0.textFieldText }
+            .map { $0.isModifyButtonValid }
             .observe(on: MainScheduler.instance)
-            .bind { [weak self] text in
-                if text.isEmpty {
-                    self?.modifyButton.isEnabled = false
-                    self?.modifyButton.setTitle("수정하기", for: .normal)
-                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
-                } else {
+            .bind { [weak self] isValid in
+                if isValid {
                     self?.modifyButton.isEnabled = true
                     self?.modifyButton.setTitle("수정하기", for: .normal)
                     self?.modifyButton.setAppearance(appearance: .default)
+                } else {
+                    self?.modifyButton.isEnabled = false
+                    self?.modifyButton.setTitle("수정하기", for: .normal)
+                    self?.modifyButton.setAppearance(appearance: .defaultDisable)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.isModified }
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] isSuccess in
+                if isSuccess {
+                    self?.delegate?.modifiedCurrency()
+                    self?.navigationController?.popViewController(animated: true)
                 }
             }
             .disposed(by: disposeBag)
