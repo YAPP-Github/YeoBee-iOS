@@ -30,14 +30,14 @@ public class SettingBottomSheetViewController: YBBottomSheetViewController {
         return $0
     }(UIButton())
     
-    private let modifyDateButton: UIButton = {
-        $0.setTitle("날짜 수정", for: .normal)
-        $0.setTitleColor(YBColor.gray6.color, for: .normal)
-        $0.titleLabel?.font = YBFont.body1.font
-        $0.contentHorizontalAlignment = .left
-        $0.addTarget(self, action: #selector(modifyDateButtonTapped), for: .touchUpInside)
-        return $0
-    }(UIButton())
+//    private let modifyDateButton: UIButton = {
+//        $0.setTitle("날짜 수정", for: .normal)
+//        $0.setTitleColor(YBColor.gray6.color, for: .normal)
+//        $0.titleLabel?.font = YBFont.body1.font
+//        $0.contentHorizontalAlignment = .left
+//        $0.addTarget(self, action: #selector(modifyDateButtonTapped), for: .touchUpInside)
+//        return $0
+//    }(UIButton())
     
     // MARK: - Life Cycles
     public override func viewDidLoad() {
@@ -61,7 +61,7 @@ public class SettingBottomSheetViewController: YBBottomSheetViewController {
     private func setLayouts() {
         containerView.addSubview(settingTitleLabel)
         containerView.addSubview(modifyTitleButton)
-        containerView.addSubview(modifyDateButton)
+//        containerView.addSubview(modifyDateButton)
         
         settingTitleLabel.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
@@ -71,11 +71,11 @@ public class SettingBottomSheetViewController: YBBottomSheetViewController {
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(25)
         }
-        modifyDateButton.snp.makeConstraints { make in
-            make.top.equalTo(modifyTitleButton.snp.bottom).inset(-16)
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(25)
-        }
+//        modifyDateButton.snp.makeConstraints { make in
+//            make.top.equalTo(modifyTitleButton.snp.bottom).inset(-16)
+//            make.leading.trailing.equalToSuperview()
+//            make.height.equalTo(25)
+//        }
     }
     
     // MARK: - Handler

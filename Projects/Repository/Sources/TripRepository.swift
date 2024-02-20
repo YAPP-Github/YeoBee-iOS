@@ -25,6 +25,7 @@ public protocol TripRepositoryInterface {
     func getPresentTrip(_ pageIndex: Int, _ pageSize: Int) async throws -> TripResponse
     func getFutureTrip(_ pageIndex: Int, _ pageSize: Int) async throws -> TripResponse
     func checkDateOverlap(_ startDate: String, _ endDate: String) async throws -> TripDateValidationResponse
+    func deleteTrip(_ tripId: Int) async throws -> Bool
     func postTrip(
         _ title: String,
         _ startDate: String,
@@ -106,6 +107,17 @@ final public class TripRepository: TripRepositoryInterface {
         }
     }
     
+    public func deleteTrip(_ tripId: Int) async throws -> Bool {
+        let result = await provider.request(.deleteTrip(tripId))
+        
+        switch result {
+        case .success:
+            return true
+        case .failure:
+            return false
+        }
+    }
+    
     public func postTrip(
         _ title: String,
         _ startDate: String,
@@ -117,7 +129,6 @@ final public class TripRepository: TripRepositoryInterface {
         
         switch result {
         case let .success(response):
-            print("success: \(response.data)")
             return try decode(data: response.data)
         case .failure(let failure):
             throw failure

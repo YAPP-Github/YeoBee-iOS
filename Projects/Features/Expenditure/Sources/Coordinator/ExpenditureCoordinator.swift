@@ -18,6 +18,10 @@ import Dependencies
 import YBDependency
 import UseCase
 
+public protocol ExpenditureCoordinatorDelegate: AnyObject {
+    func deletedTrip()
+}
+
 final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInterface {
     public var viewControllerRef: UIViewController?
     public var childCoordinators = [Coordinator]()
@@ -28,6 +32,7 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
 
     public var parent: TripCoordinatorInterface?
     public let tripItem: TripItem
+    public weak var delegate: ExpenditureCoordinatorDelegate?
 
     public init(navigationController: UINavigationController, tripItem: TripItem) {
         self.navigationController = navigationController
@@ -117,6 +122,7 @@ extension ExpenditureCoordinator {
         if let expenditureNavigationController {
             expenditureNavigationController.tabBarController?.tabBar.isHidden = true
             let settingCoordinator = SettingCoordinator(navigationController: expenditureNavigationController, tripItem: tripItem)
+            settingCoordinator.delegate = self
             settingCoordinator.parent = self
             addChild(settingCoordinator)
             settingCoordinator.start(animated: true)
@@ -143,5 +149,12 @@ extension ExpenditureCoordinator {
 extension ExpenditureCoordinator: ExpenditureAddCoordinatorDelegate {
     public func dismissRegisterExpense(editDate: Date) {
         expenditureViewController?.getExpenseList(editDate: editDate)
+    }
+}
+
+// MARK: - 여행 삭제 후
+extension ExpenditureCoordinator: SettingCoordinatorDelegate {
+    public func deletedTrip() {
+        delegate?.deletedTrip()
     }
 }

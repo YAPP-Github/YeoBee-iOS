@@ -131,9 +131,9 @@ public final class SettingViewController: UIViewController {
     }
     
     @objc private func trashButtonTapped() {
-        // MARK: - [TODO] 삭제 Alert
-        coordinator.coordinatorDidFinish()
-        coordinator.parent?.coordinatorDidFinish()
+        let popupViewController = YBPopupTypeViewController(popupType: .tripDelete)
+        popupViewController.delegate = self
+        presentPopup(presentedViewController: popupViewController)
     }
 
     deinit {
@@ -228,6 +228,15 @@ extension SettingViewController: View {
                 self.configureSnapshot(companions: currentCompanion, currencies: currencies)
             }
             .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.deletedTrip }
+            .bind { [weak self] isDeleted in
+                if isDeleted {
+                    self?.coordinator.deletedTrip()
+                }
+            }
+            .disposed(by: disposeBag)
     }
 }
 
@@ -236,7 +245,7 @@ extension SettingViewController: SettingTableHeaderViewDelegate {
     func modifyButtonTapped() {
         let settingBottomSheetViewController = SettingBottomSheetViewController()
         settingBottomSheetViewController.delegate = self
-        presentBottomSheet(presentedViewController: settingBottomSheetViewController, height: 250)
+        presentBottomSheet(presentedViewController: settingBottomSheetViewController, height: 180)
     }
 }
 
@@ -275,5 +284,16 @@ extension SettingViewController: SettingCompanionCellDelegate {
 extension SettingViewController: ModifiedSettingViewControllerDelegate {
     func modified() {
         reactor.updateSettingUseCase()
+    }
+}
+
+// MARK: - 여행 삭제 popup
+extension SettingViewController: YBPopupViewControllerDelegate {
+    public func cancelButtonTapped() {
+        return
+    }
+    
+    public func actionButtonTapped() {
+        reactor.deleteTripUseCase()
     }
 }

@@ -93,12 +93,15 @@ class CompanionTableViewCell: UITableViewCell {
     }
     
     func configure() {
-        guard let companion = companion,
-              let imageUrl = URL(string: companion.imageUrl) else { return }
+        guard let companion = companion else { return }
         
+        if let profileImageUrl = URL(string: companion.imageUrl) {
+            profileImageView.kf.indicatorType = .activity
+            profileImageView.kf.setImage(with: profileImageUrl)
+        } else {
+            profileImageView.image = DesignSystemAsset.Icons.face0.image
+        }
         profileNameLabel.text = companion.name
-        profileImageView.kf.indicatorType = .activity
-        profileImageView.kf.setImage(with: imageUrl)
     }
     
     private func bind() {

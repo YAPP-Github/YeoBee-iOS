@@ -378,11 +378,24 @@ extension CalendarViewController: View {
         reactor.state
             .map { $0.checkedDateValidation }
             .observe(on: MainScheduler.instance)
-            .bind { isOverlap in
+            .bind { [weak self] isOverlap in
                 if isOverlap {
-                    print("여행이 겹쳤어요 - alert")
+                    let popupController = YBPopupTypeViewController(popupType: .calendarWarning)
+                    popupController.delegate = self
+                    self?.presentPopup(presentedViewController: popupController)
                 }
             }
             .disposed(by: disposeBag)
+    }
+}
+
+extension CalendarViewController: YBPopupViewControllerDelegate {
+    public func cancelButtonTapped() {
+        clearSelectedDates(in: calendarView.calendar)
+        configureVisibleCells()
+    }
+    
+    public func actionButtonTapped() {
+        return
     }
 }
