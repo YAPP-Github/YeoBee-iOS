@@ -9,6 +9,9 @@ import SwiftUI
 import ComposableArchitecture
 import DesignSystem
 
+final class AgreeSheetHostingController: UIHostingController<AgreeSheetView> {
+}
+
 struct AgreeSheetView: View {
     typealias State = AgreeSheetReducer.State
     typealias Action = AgreeSheetReducer.Action
@@ -37,7 +40,7 @@ struct AgreeSheetView: View {
                     YBDividerView()
                     HStack(spacing: 10) {
                         Button {
-                            viewStore.send(.tappedMarkeing(!viewStore.privateData))
+                            viewStore.send(.tappedPrivate(!viewStore.privateData))
                         } label: {
                             if viewStore.privateData {
                                 DesignSystemAsset.Icons.checkFill.swiftUIImage
@@ -63,7 +66,7 @@ struct AgreeSheetView: View {
                     }
                     HStack(spacing: 10) {
                         Button {
-                            viewStore.send(.tappedMarkeing(!viewStore.serviceData))
+                            viewStore.send(.tappedService(!viewStore.serviceData))
                         } label: {
                             if viewStore.serviceData {
                                 DesignSystemAsset.Icons.checkFill.swiftUIImage
@@ -86,32 +89,22 @@ struct AgreeSheetView: View {
                                 .frame(width: 28, height: 28)
                         }
                     }
-                    HStack(spacing: 10) {
-                        Button {
-                            viewStore.send(.tappedMarkeing(!viewStore.marketingDate))
-                        } label: {
-                            if viewStore.marketingDate {
-                                DesignSystemAsset.Icons.checkFill.swiftUIImage
-                                    .frame(width: 28, height: 28)
-                            } else {
-                                DesignSystemAsset.Icons.uncheck.swiftUIImage
-                                    .frame(width: 28, height: 28)
-                            }
-                            Text("마케팅 수신 동의 (선택)")
-                                .foregroundColor(.ybColor(.gray6))
-                                .font(.ybfont(.body2))
-                        }
-                        Button {
-                            let url = URL(string: "https://m.cafe.naver.com/ca-fe/web/cafes/31153021/articles/7?fromList=true&menuId=10&tc=cafe_article_list")
-                            if let url {
-                                UIApplication.shared.open(url)
-                            }
-                        } label: {
-                            DesignSystemAsset.Icons.next.swiftUIImage
-                                .frame(width: 28, height: 28)
-                        }
-                    }
                 }
+                Button {
+                    viewStore.send(.tappedConfirmButton)
+                } label: {
+                    Text("등록하기")
+                        .foregroundColor(viewStore.isEnabledCompletedButton ? .ybColor(.white) : .ybColor(.gray5))
+                        .font(.ybfont(.title1))
+                        .frame(height: 54)
+                        .frame(maxWidth: .infinity)
+                }
+                .disabled(viewStore.isEnabledCompletedButton == false)
+                .background(viewStore.isEnabledCompletedButton ? YBColor.black.swiftUIColor : YBColor.gray3.swiftUIColor)
+                .cornerRadius(10)
+                .padding(.horizontal, 24)
+                .padding(.top, 16)
+                .padding(.bottom, 4)
             }
         }
     }

@@ -38,7 +38,14 @@ final public class CreateAccountCoordinator: CreateAccountCoordinatorInterface {
         let onboardingCoordinator = OnboardingCoordinator(navigationController: self.navigationController)
         onboardingCoordinator.start(animated: true)
     }
-    
+
+    public func showAgreeSheet() {
+        let agreeBottomSheetViewController = AgreeBottomSheetViewController(
+            coordinator: self
+        )
+        navigationController.presentBottomSheet(presentedViewController: agreeBottomSheetViewController, height: 360)
+    }
+
     deinit {
         print("CreateAccountCoordinator is de-initialized.")
     }

@@ -41,11 +41,12 @@ final public class SignCoordinator: SignCoordinatorInterface {
         self.addChild(createCoodinator)
         createCoodinator.start(animated: true)
     }
-  
-  public func home() {
-    let homeCoordinator = HomeCoordinator(navigationController: self.navigationController)
-    self.addChild(homeCoordinator)
-    homeCoordinator.start(animated: true)
-  }
+
+    public func home() {
+        let homeCoordinator = HomeCoordinator(navigationController: self.navigationController)
+        self.addChild(homeCoordinator)
+        homeCoordinator.start(animated: true)
+    }
+
 }
 

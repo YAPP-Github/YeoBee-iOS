@@ -9,19 +9,27 @@ import Combine
 import ComposableArchitecture
 
 public struct AgreeSheetReducer: Reducer {
+
+    let coordinator: CreateAccountCoordinator
+
+    init(coordinator: CreateAccountCoordinator) {
+        self.coordinator = coordinator
+    }
+    
     public struct State: Equatable {
         var totalChecking: Bool = false
         var privateData: Bool = false
         var serviceData: Bool = false
-        var marketingDate: Bool = false
         var isEnabledCompletedButton: Bool = false
+
+        init() { }
     }
 
     public enum Action {
         case tappedTotal(Bool)
         case tappedPrivate(Bool)
         case tappedService(Bool)
-        case tappedMarkeing(Bool)
+        case tappedConfirmButton
     }
 
     public var body: some ReducerOf<AgreeSheetReducer> {
@@ -31,7 +39,6 @@ public struct AgreeSheetReducer: Reducer {
                 state.totalChecking = isCheck
                 state.privateData = isCheck
                 state.serviceData = isCheck
-                state.marketingDate = isCheck
                 state.isEnabledCompletedButton = isEnableCompleteButton(state: &state)
                 return .none
 
@@ -46,11 +53,8 @@ public struct AgreeSheetReducer: Reducer {
                 state.totalChecking = isEnableTotalChecking(state: &state)
                 state.isEnabledCompletedButton = isEnableCompleteButton(state: &state)
                 return .none
-
-            case let .tappedMarkeing(isCheck):
-                state.privateData = isCheck
-                state.totalChecking = isEnableTotalChecking(state: &state)
-                state.isEnabledCompletedButton = isEnableCompleteButton(state: &state)
+            case .tappedConfirmButton:
+                coordinator.onboarding()
                 return .none
             }
         }
@@ -58,8 +62,7 @@ public struct AgreeSheetReducer: Reducer {
 
     func isEnableTotalChecking(state: inout State) -> Bool {
         return state.privateData &&
-        state.serviceData &&
-        state.marketingDate
+        state.serviceData
     }
 
     func isEnableCompleteButton(state: inout State) -> Bool {
