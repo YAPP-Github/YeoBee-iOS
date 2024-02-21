@@ -32,4 +32,16 @@ final public class TripCalculationRepository: TripCalculationRepositoryInterface
             throw error
         }
     }
+
+    public func getCalculation(tripId: Int) async throws -> Calculations {
+         let result = await provider.request(
+            .calculation(tripId: tripId)
+        )
+        switch result {
+        case let .success(response):
+            return try decode(data: response.data)
+        case let .failure(error):
+            throw error
+        }
+    }
 }

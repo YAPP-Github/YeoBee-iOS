@@ -14,6 +14,7 @@ import ComposableArchitecture
 
 public struct TripCalculationUseCase {
     public var getBudget: @Sendable (_ tripId: Int) async throws -> Budgets
+    public var getCalculation: @Sendable (_ tripId: Int) async throws -> [Calculation]
 }
 
 extension TripCalculationUseCase: TestDependencyKey {
@@ -35,7 +36,13 @@ extension TripCalculationUseCase: DependencyKey {
                 tripId: tripId
             )
             return data
-        })
+        }, getCalculation: { tripId in
+            let data = try await tripCalculationRepository.getCalculation(
+                tripId: tripId
+            )
+            return data.calculationList
+        }
+        )
     }
 }
 
