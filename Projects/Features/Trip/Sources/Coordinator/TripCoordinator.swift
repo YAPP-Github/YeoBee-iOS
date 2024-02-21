@@ -48,7 +48,7 @@ final public class TripCoordinator: TripCoordinatorInterface {
         guard let calculationNavigationController = calculationCoordinator.calculationNavigationController else { return  }
 
         calculationNavigationController.tabBarItem.title = "정산"
-        calculationNavigationController.tabBarItem.image = DesignSystemAsset.Icons.accountBook.image
+        calculationNavigationController.tabBarItem.image = DesignSystemAsset.Icons.calculate.image
         calculationNavigationController.toolbar.barTintColor = YBColor.black.color
         calculationNavigationController.tabBarItem.badgeColor = YBColor.gray5.color
         calculationNavigationController.toolbar.tintColor = YBColor.black.color
