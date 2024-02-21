@@ -8,9 +8,10 @@
 
 import Foundation
 
-public struct CreateExpenseResponse: Codable {
+public struct CreateExpenseResponse: Codable, Equatable {
+    public var id: Int
     public var tripId: Int
-    public var payedAt: String
+    public var payedAt: String?
     public var expenseType: ExpenseType
     public var amount: Double
     public var currencyCode: String
@@ -21,7 +22,7 @@ public struct CreateExpenseResponse: Codable {
     public var imageList: [ImageRequest]
 }
 
-public struct PayerResponse: Codable {
+public struct PayerResponse: Codable, Equatable {
     public var id: Int
     public var tripUserId: Int
     public var amount: Double

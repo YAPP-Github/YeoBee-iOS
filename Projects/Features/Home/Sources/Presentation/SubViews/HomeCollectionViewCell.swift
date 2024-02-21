@@ -32,7 +32,6 @@ final class HomeCollectionViewCell: UICollectionViewCell {
     
     private let countryLabel = YBLabel(font: .header2, textColor: .white)
     private let otherCountryLabel = YBLabel(font: .body1, textColor: .white)
-    
     private let stackView: UIStackView = {
         $0.axis = .horizontal
         $0.spacing = 10
@@ -129,16 +128,17 @@ final class HomeCollectionViewCell: UICollectionViewCell {
             otherCountryLabel.text = ""
         }
         
-        // 동행자 1명 이상
-        if tripItem.tripUserList.count > 1 {
-            let tripUsersView = TripUsersHostingController(rootView: TripUsersView(tripUsers: tripItem.tripUserList)).view
-            tripUsersView?.backgroundColor = .clear
-            backgroundImageView.addSubview(tripUsersView ?? UIView())
-            tripUsersView?.snp.makeConstraints { make in
-                make.top.equalToSuperview().inset(22)
-                make.trailing.equalTo(backgroundImageView.snp.trailing).inset(82)
-            }
-        }
+//        // 동행자 1명 이상
+//        if tripItem.tripUserList.count > 1 {
+//            let tripUsersView = TripUsersHostingController(rootView: TripUsersView(tripUsers: tripItem.tripUserList)).view
+//            tripUser = tripUsersView
+//            tripUser?.backgroundColor = .clear
+//            backgroundImageView.addSubview(tripUser ?? UIView())
+//            tripUser?.snp.makeConstraints { make in
+//                make.top.equalToSuperview().inset(22)
+//                make.trailing.equalTo(backgroundImageView.snp.trailing).inset(82)
+//            }
+//        }
         
         guard let coverImageUrl = URL(string: firstCountry.coverImageUrl ?? "") else { return }
         backgroundImageView.kf.setImage(with: coverImageUrl)

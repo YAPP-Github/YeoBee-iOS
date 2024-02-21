@@ -24,19 +24,23 @@ public struct ExpenditureBudgetEditReducer: Reducer {
         let expenditureTab: ExpenditureTab
         var expenseDetail: ExpenseDetailItem?
         var currencies: [Currency] = []
+        var isInitialShow: Bool = true
+        var hasSharedBudget: Bool
 
         init(
             expenseItem: ExpenseItem?,
             tripItem: TripItem,
             editDate: Date,
             expenditureTab: ExpenditureTab,
-            expenseDetail: ExpenseDetailItem?
+            expenseDetail: ExpenseDetailItem?,
+            hasSharedBudget: Bool
         ) {
             self.expenseItem = expenseItem
             self.tripItem = tripItem
             self.editDate = editDate
             self.expenditureTab = expenditureTab
             self.expenseDetail = expenseDetail
+            self.hasSharedBudget = hasSharedBudget
         }
     }
 
@@ -45,6 +49,7 @@ public struct ExpenditureBudgetEditReducer: Reducer {
         case tappedRegisterButton
         case tappedCalculationButton
         case dismiss
+        case updateDimiss(CreateExpenseResponse)
 
         case setCurrencies([Currency])
         case setExpenditureDetail(ExpenseDetailItem)
@@ -62,15 +67,19 @@ public struct ExpenditureBudgetEditReducer: Reducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .run { [tripId = state.tripItem.id, state] send in
-                    let currencies = try await currencyUseCase.getTripCurrencies(tripId)
-                    if let expenseDetail = state.expenseDetail {
-                        await send(.setEditExpense(expenseDetail, currencies))
+                if state.isInitialShow {
+                    state.isInitialShow = false
+                    return .run { [tripId = state.tripItem.id, state] send in
+                        let currencies = try await currencyUseCase.getTripCurrencies(tripId)
+                        if let expenseDetail = state.expenseDetail {
+                            await send(.setEditExpense(expenseDetail, currencies))
+                        }
+                        await send(.setCurrencies(currencies))
+                    } catch: { error, send in
+                        print(error)
                     }
-                    await send(.setCurrencies(currencies))
-                } catch: { error, send in
-                    print(error)
                 }
+                return .none
 
             case let .setCurrencies(currencyList):
                 state.currencies = currencyList
@@ -79,14 +88,17 @@ public struct ExpenditureBudgetEditReducer: Reducer {
             case .expenditureInput(.binding(\.$text)):
                 state.isEnableRegisterButton = isEnableRegisterBurron(state: &state)
                 return .none
+
             case .expenditureContent(.binding(\.$text)):
                 state.isEnableRegisterButton = isEnableRegisterBurron(state: &state)
                 return .none
+
             case .tappedRegisterButton:
                 return registerExpense(state: &state)
 
             case let .setEditExpense(expenseDetail, currencies):
                 let currency = currencies.filter { $0.code == expenseDetail.currency }.first
+                state.expenseDetail = expenseDetail
                 return .run { send in
                     await send(.expenditureInput(.setInput(expenseDetail.amount.formattedWithSeparator, currency)))
                     await send(.expenditureContent(.setTextField(expenseDetail.name)))
@@ -106,6 +118,7 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                     return state.expenditureContent.text.isEmpty == false &&
                     state.expenditureContent.isInvaildText == false &&
                     state.expenditureInput.text.isEmpty == false &&
+                    state.expenseDetail != nil &&
                     state.expenseDetail?.payerList != []
                 }
             }
@@ -119,15 +132,14 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                     let expenseText = state.expenditureContent.text
                     let payedAt = state.editDate
                     let expenditureTab = state.expenditureTab
-                    let payerId = state.expenseDetail?.payerUserId
+                    let payerId = state.expenseDetail?.payerId
                     let payerList: [PayerRequest] = state.expenseDetail?.payerList.compactMap { 
                         .init(tripUserId: $0.tripUserId, amount: $0.amount)
                     } ?? []
                     return .run { [state] send in
                         let payedDate = Calendar.current.date(byAdding: .hour, value: 9, to: payedAt) ?? Date()
-                        print(payedDate)
                         if let expenseItem = state.expenseItem {
-                            let _ = try await expenseUseCase.updateExpense(expenseItem.id, .init(
+                            let result = try await expenseUseCase.updateExpense(expenseItem.id, .init(
                                 tripId: tripId,
                                 payedAt: ISO8601DateFormatter().string(from: payedDate),
                                 expenseType: expenditureTab == .shared ? "SHARED_BUDGET_INCOME" : "INDIVIDUAL_BUDGET_INCOME",
@@ -139,6 +151,7 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                                 payerId: payerId,
                                 payerList: payerList
                             ))
+                            await send(.updateDimiss(result))
                         } else {
                             let _ = try await expenseUseCase.createExpense(.init(
                                 tripId: tripId,
@@ -152,9 +165,8 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                                 payerId: payerId,
                                 payerList: payerList
                             ))
+                            await send(.dismiss)
                         }
-
-                        await send(.dismiss)
                     } catch: { error, send in
                         print(error)
                     }

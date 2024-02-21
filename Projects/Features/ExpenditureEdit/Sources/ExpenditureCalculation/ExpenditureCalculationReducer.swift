@@ -25,20 +25,23 @@ public struct ExpenditureCalculationReducer: Reducer {
             expenseType: ExpenditureType,
             tripItem: TripItem,
             expenseDetail: ExpenseDetailItem,
-            selectedPayer: TripUserItem?
+            selectedPayer: TripUserItem?,
+            hasSharedBudget: Bool
         ) {
             self.expenseType = expenseType
             self.dutch = .init(
                 expenseType: expenseType,
                 tripItem: tripItem,
                 expenseDetail: expenseDetail,
-                selectedPayer: selectedPayer
+                selectedPayer: selectedPayer,
+                hasSharedBudget: hasSharedBudget
             )
             self.direct = .init(
                 expenseType: expenseType,
                 tripItem: tripItem,
                 expenseDetail: expenseDetail,
-                selectedPayer: selectedPayer
+                selectedPayer: selectedPayer,
+                hasSharedBudget: hasSharedBudget
             )
         }
     }

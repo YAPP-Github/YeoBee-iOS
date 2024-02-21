@@ -72,17 +72,19 @@ extension ExpenditureDetailView {
                         .foregroundColor(.ybColor(.gray6))
                         .font(.ybfont(.body1))
                     Spacer()
-                    Text(viewStore.expenseDetailItem?.method == "CASH" ? "현금" : "카드")
-                        .foregroundColor(.ybColor(.gray5))
-                        .font(.ybfont(.body1))
+                    if let method = viewStore.expenseDetailItem?.method {
+                        Text(method == "CASH" ? "현금" : "카드")
+                            .foregroundColor(.ybColor(.gray5))
+                            .font(.ybfont(.body1))
+                    }
                 }
-                if expenseItem.category != .income {
+                if viewStore.expenseDetailItem?.category != .income {
                     HStack {
                         Text("카테고리")
                             .foregroundColor(.ybColor(.gray6))
                             .font(.ybfont(.body1))
                         Spacer()
-                        Text(expenseItem.category.text)
+                        Text(viewStore.expenseDetailItem?.category.text ?? viewStore.expenseItem.category.text)
                             .foregroundColor(.ybColor(.gray5))
                             .font(.ybfont(.body1))
                     }
@@ -92,7 +94,7 @@ extension ExpenditureDetailView {
                         .foregroundColor(.ybColor(.gray6))
                         .font(.ybfont(.body1))
                     Spacer()
-                    Text(expenseItem.name)
+                    Text(viewStore.expenseDetailItem?.name ?? expenseItem.name)
                         .foregroundColor(.ybColor(.gray5))
                         .font(.ybfont(.body1))
                 }

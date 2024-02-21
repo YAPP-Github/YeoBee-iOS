@@ -17,6 +17,7 @@ public struct ExpenseDetailItem: Codable, Equatable {
     public var payedAt: String
     public var category: ExpendCategory
     public var payerUserId: Int?
+    public var payerId: Int?
     public var payerName: String?
     public var payerList: [Payer]
 
@@ -41,6 +42,7 @@ public struct ExpenseDetailItem: Codable, Equatable {
         payedAt: String,
         category: ExpendCategory,
         payerUserId: Int?,
+        payerId: Int?,
         payerName: String? = nil,
         payerList: [Payer],
         method: String
@@ -51,6 +53,7 @@ public struct ExpenseDetailItem: Codable, Equatable {
         self.koreanAmount = koreanAmount
         self.payedAt = payedAt
         self.payerUserId = payerUserId
+        self.payerId = payerId
         self.category = category
         self.payerName = payerName
         self.payerList = payerList

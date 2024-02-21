@@ -27,7 +27,8 @@ public final class ExpenditureAddViewController: UIViewController {
         tripItem: TripItem,
         editDate: Date,
         expenditureTab: ExpenditureTab,
-        expenseDetail: ExpenseDetailItem?
+        expenseDetail: ExpenseDetailItem?,
+        hasSharedBudget: Bool
     ) {
         self.coordinator = coordinator
         let store: StoreOf<ExpenditureReducer> = .init(
@@ -37,7 +38,8 @@ public final class ExpenditureAddViewController: UIViewController {
                 expenseItem: expenseItem,
                 tripItem: tripItem,
                 editDate: editDate,
-                expenseDetail: expenseDetail
+                expenseDetail: expenseDetail,
+                hasSharedBudget: hasSharedBudget
             ),
             reducer: {
                 ExpenditureReducer(cooridinator: coordinator)
