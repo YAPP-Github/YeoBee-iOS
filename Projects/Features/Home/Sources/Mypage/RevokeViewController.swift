@@ -10,9 +10,11 @@ import UIKit
 import DesignSystem
 import ReactorKit
 import RxCocoa
+import Repository
 
 final class RevokeViewController: UIViewController, View {
     public var disposeBag: DisposeBag = DisposeBag()
+    public var coordinator: RevokeCoordinator?
     
     let titleLabel = YBLabel(text: "여비를 탈퇴하시기 전 확인해주세요.", font: .header2)
     let hStackView: UIStackView = {
@@ -45,6 +47,11 @@ final class RevokeViewController: UIViewController, View {
             .map { Reactor.Action.toggleCheckButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        revokeButton.rx.tap
+            .map { Reactor.Action.confirmRevoke }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     func bindState(reactor: RevokeViewReactor) {
@@ -54,6 +61,19 @@ final class RevokeViewController: UIViewController, View {
                 self?.revokeButton.isEnabled = isChecked
             })
             .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isConfirm }
+            .subscribe(onNext: { isConfirm in
+                if isConfirm {
+                    var statusCode = 0
+                    Task {
+                        statusCode = try await LoginRepository().revoke()
+                    }
+                    if statusCode == 200 {
+                    self.coordinator?.revokeComplete()
+                    }
+                }
+            })
     }
     
     private func changeButtons(isChecked: Bool) {
