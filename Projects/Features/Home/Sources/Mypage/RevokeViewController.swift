@@ -15,10 +15,10 @@ import Repository
 final class RevokeViewController: UIViewController, View {
     public var disposeBag: DisposeBag = DisposeBag()
     public var coordinator: RevokeCoordinator?
-
+    
     let titleLabel = YBLabel(text: "여비를 탈퇴하시기 전 확인해주세요.", font: .header2)
     let hStackView: UIStackView = {
-       let stackView = UIStackView()
+        let stackView = UIStackView()
         stackView.axis = .horizontal
         return stackView
     }()
@@ -47,7 +47,7 @@ final class RevokeViewController: UIViewController, View {
             .map { Reactor.Action.toggleCheckButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-
+        
         revokeButton.rx.tap
             .map { Reactor.Action.confirmRevoke }
             .bind(to: reactor.action)
@@ -70,7 +70,8 @@ final class RevokeViewController: UIViewController, View {
                         statusCode = try await LoginRepository().revoke()
                     }
                     if statusCode == 200 {
-                    self.coordinator?.revokeComplete()
+                        TokenRepository.shared.deleteTokens()
+                        self.coordinator?.revokeComplete()
                     }
                 }
             })
@@ -146,5 +147,5 @@ final class RevokeViewController: UIViewController, View {
     @objc private func backButtonTapped() {
         self.navigationController?.popViewController(animated: true)
     }
-
+    
 }
