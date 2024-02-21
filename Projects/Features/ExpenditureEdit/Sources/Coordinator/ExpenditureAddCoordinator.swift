@@ -67,8 +67,8 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
     }
 
     public func dismissRegisterExpense() {
-        coordinatorDidFinish()
         delegate?.dismissRegisterExpense(editDate: editDate)
+        coordinatorDidFinish()
     }
 
     public func dismissUpdateExpense(expenseItem: ExpenseItem) {

@@ -44,6 +44,8 @@ public final class ExpenditureDetailViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @Dependency(\.expenseUseCase) var expenseUseCase
+
     public override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -65,7 +67,11 @@ public final class ExpenditureDetailViewController: UIViewController {
         let backImage = DesignSystemAsset.Icons.back.image
             .withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        let deleteImage = DesignSystemAsset.Icons.trash.image
+            .withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
+        let deleteButton = UIBarButtonItem(image: deleteImage, style: .plain, target: self, action: #selector(deleteButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
+        self.navigationItem.rightBarButtonItem = deleteButton
     }
 
     @objc func backButtonTapped() {
@@ -74,6 +80,20 @@ public final class ExpenditureDetailViewController: UIViewController {
             isEdit = false
         } else {
             coordinator.popDidFinish()
+        }
+    }
+
+    @objc func deleteButtonTapped() {
+        Task {
+            do {
+                let _ = try await expenseUseCase.deleteExpense(expenseItem.id)
+
+                await MainActor.run {
+                    coordinator.popDetail()
+                }
+            } catch {
+                print(error)
+            }
         }
     }
 

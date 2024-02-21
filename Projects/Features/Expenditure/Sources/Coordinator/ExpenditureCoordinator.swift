@@ -191,7 +191,12 @@ extension ExpenditureCoordinator: ExpenditureAddCoordinatorDelegate {
     }
     
     public func dismissRegisterExpense(editDate: Date) {
-        expenditureViewController?.getExpenseList(editDate: editDate)
+
+        if tripItem.tripUserList.count > 1 {
+            sharedExpenditureViewController?.getExpenseList(editDate: editDate)
+        } else {
+            expenditureViewController?.getExpenseList(editDate: editDate)
+        }
     }
 }
 
