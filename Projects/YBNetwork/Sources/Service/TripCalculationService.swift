@@ -11,6 +11,7 @@ import Moya
 
 public enum TripCalculationService {
     case getBudget(tripId: Int)
+    case calculation(tripId: Int)
 }
 
 extension TripCalculationService: TargetType {
@@ -20,6 +21,8 @@ extension TripCalculationService: TargetType {
         switch self {
         case let .getBudget(tripId):
             return "/v1/trips/\(tripId)/budget"
+        case let .calculation(tripId):
+            return "/v1/trips/\(tripId)/calculation"
         }
     }
 
@@ -27,12 +30,16 @@ extension TripCalculationService: TargetType {
         switch self {
         case .getBudget:
             return .get
+        case .calculation:
+            return .get
         }
     }
 
     public var task: Task {
         switch self {
         case .getBudget:
+            return .requestPlain
+        case .calculation:
             return .requestPlain
         }
     }
