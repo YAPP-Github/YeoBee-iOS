@@ -99,6 +99,10 @@ public final class ExpenditureViewController: UIViewController {
         store.send(.setExpenseFilter(selectedExpenseFilter))
     }
 
+    public func setRefreshData() {
+        store.send(.refresh)
+    }
+
     deinit {
         print("ExpenditureViewController is de-initialized.")
     }

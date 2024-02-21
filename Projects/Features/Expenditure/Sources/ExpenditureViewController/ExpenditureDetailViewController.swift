@@ -20,27 +20,31 @@ public final class ExpenditureDetailViewController: UIViewController {
     let coordinator: ExpenditureCoordinator
     let expenseType: ExpenditureTab
     let expenseItem: ExpenseItem
+    let store: StoreOf<ExpenditureDetailReducer>
+    var isEdit: Bool = false
 
     // MARK: View
 
     private let expenditureDetailHostingController: ExpenditureDetailHostingController
 
-    public init(coordinator: ExpenditureCoordinator, expenseType: ExpenditureTab, expenseItem: ExpenseItem) {
+    public init(coordinator: ExpenditureCoordinator, expenseType: ExpenditureTab, expenseItem: ExpenseItem, hasSharedBudget: Bool) {
         self.expenseType = expenseType
         self.expenseItem = expenseItem
         self.coordinator = coordinator
+        let store: StoreOf<ExpenditureDetailReducer> = .init(
+            initialState: .init(expenditureTab: expenseType, expenseItem: expenseItem, hasSharedBudget: hasSharedBudget),
+            reducer: {
+                ExpenditureDetailReducer(cooridinator: coordinator)
+            }
+        )
+        self.store = store
         self.expenditureDetailHostingController = ExpenditureDetailHostingController(
-            rootView: ExpenditureDetailView(
-                store: .init(
-                    initialState: .init(expenditureTab: expenseType, expenseItem: expenseItem),
-                    reducer: {
-                        ExpenditureDetailReducer(cooridinator: coordinator)
-                    }
-                )
-            )
+            rootView: ExpenditureDetailView(store: store)
         )
         super.init(nibName: nil, bundle: nil)
     }
+
+    @Dependency(\.expenseUseCase) var expenseUseCase
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,11 +67,34 @@ public final class ExpenditureDetailViewController: UIViewController {
         let backImage = DesignSystemAsset.Icons.back.image
             .withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
+        let deleteImage = DesignSystemAsset.Icons.trash.image
+            .withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
+        let deleteButton = UIBarButtonItem(image: deleteImage, style: .plain, target: self, action: #selector(deleteButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
+        self.navigationItem.rightBarButtonItem = deleteButton
     }
 
     @objc func backButtonTapped() {
-        coordinator.popDidFinish()
+        if isEdit {
+            coordinator.popDetail()
+            isEdit = false
+        } else {
+            coordinator.popDidFinish()
+        }
+    }
+
+    @objc func deleteButtonTapped() {
+        Task {
+            do {
+                let _ = try await expenseUseCase.deleteExpense(expenseItem.id)
+
+                await MainActor.run {
+                    coordinator.popDetail()
+                }
+            } catch {
+                print(error)
+            }
+        }
     }
 
     func setLayouts() {
@@ -78,6 +105,11 @@ public final class ExpenditureDetailViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.horizontalEdges.equalToSuperview()
         }
+    }
+
+    public func setUpdateExpenditureDetail(expenseItem: ExpenseItem) {
+        isEdit = true
+        store.send(.setExpenseItem(expenseItem))
     }
 
     deinit {

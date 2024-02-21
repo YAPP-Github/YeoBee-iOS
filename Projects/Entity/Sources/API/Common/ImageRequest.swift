@@ -8,6 +8,6 @@
 
 import Foundation
 
-public struct ImageRequest: Codable {
+public struct ImageRequest: Codable, Equatable {
     public var imageUrl: String
 }

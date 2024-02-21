@@ -15,7 +15,7 @@ import Repository
 final class RevokeViewController: UIViewController, View {
     public var disposeBag: DisposeBag = DisposeBag()
     public var coordinator: RevokeCoordinator?
-    
+
     let titleLabel = YBLabel(text: "여비를 탈퇴하시기 전 확인해주세요.", font: .header2)
     let hStackView: UIStackView = {
        let stackView = UIStackView()
@@ -47,7 +47,7 @@ final class RevokeViewController: UIViewController, View {
             .map { Reactor.Action.toggleCheckButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-        
+
         revokeButton.rx.tap
             .map { Reactor.Action.confirmRevoke }
             .bind(to: reactor.action)

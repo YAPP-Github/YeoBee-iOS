@@ -28,7 +28,8 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
             expenseType: ExpenditureType,
             tripItem: TripItem,
             expenseDetail: ExpenseDetailItem,
-            selectedPayer: TripUserItem?
+            selectedPayer: TripUserItem?,
+            hasSharedBudget: Bool
         ) {
             self.expenseType = expenseType
             self.tripItem = tripItem
@@ -38,7 +39,10 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
 
             var payableList: [TripUserItem] = []
             if expenseType == .expense {
-                payableList = [.init(id: 0, userId: 0, name: "공동경비")] + tripItem.tripUserList
+                if hasSharedBudget {
+                    payableList += [.init(id: 0, userId: 0, name: "공동경비")]
+                }
+                payableList += tripItem.tripUserList
             }
             self.payableList = payableList
             if let selectedPayer {

@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Entity
+import DesignSystem
 
 final class TripUsersHostingController: UIHostingController<TripUsersView> {
 }
@@ -37,9 +38,16 @@ struct TripUsersView: View {
             Color.white
                 .clipShape(Circle())
                 .frame(width: 28, height: 28)
-            AsyncImage(url: URL(string: tripUserItem.profileImageUrl ?? ""), scale: 26)
-                .clipShape(Circle())
-                .frame(width: 26, height: 26)
+            if let profileImageUrl = tripUserItem.profileImageUrl {
+                AsyncImage(url: URL(string: profileImageUrl), scale: 26)
+                    .clipShape(Circle())
+                    .frame(width: 26, height: 26)
+            } else {
+                DesignSystemAsset.Icons.face0.swiftUIImage
+                    .resizable()
+                    .frame(width: 26, height: 26)
+            }
+
         }
     }
 

@@ -78,6 +78,16 @@ public final class SharedExpenditureViewController: UIViewController {
         coordinator.tripSetting()
     }
 
+    public func setRefreshData() {
+        store.send(.individualExpenditure(.refresh))
+        store.send(.sharedExpenditure(.refresh))
+    }
+
+    public func getExpenseList(editDate: Date) {
+        store.send(.individualExpenditure(.getExpenseList(editDate)))
+        store.send(.sharedExpenditure(.getExpenseList(editDate)))
+    }
+
     func setLayouts() {
         view.addSubview(sharedExpenditureHostingController.view)
 

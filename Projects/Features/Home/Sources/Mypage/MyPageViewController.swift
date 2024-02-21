@@ -83,6 +83,7 @@ public class MyPageViewController: UIViewController, View {
         myPageMenuTableView.delegate = self
         navigationController?.isNavigationBarHidden = false
         
+        view.backgroundColor = YBColor.gray1.color
         bind(reactor: reactor)
         setupViews()
         setLayouts()
