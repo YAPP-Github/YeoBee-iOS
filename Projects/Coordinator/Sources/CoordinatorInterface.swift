@@ -39,3 +39,5 @@ public protocol OnboardingCoordinatorInterface: Coordinator { }
 public protocol MyPageCoordinatorInterface: Coordinator { }
 
 public protocol CalculationCoordinatorInterface: Coordinator { }
+
+public protocol RevokeCoordinatorInterface: Coordinator { }
