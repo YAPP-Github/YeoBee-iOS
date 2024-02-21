@@ -7,12 +7,16 @@
 
 import UIKit
 import ReactorKit
+import RxSwift
+import RxCocoa
+
 import DesignSystem
 
 public class MyPageViewController: UIViewController, View {
     
     public var disposeBag = DisposeBag()
     public var coordinator: MyPageCoordinator?
+    private let reactor = MyPageReactor()
     
     private let supportMenus = ["리뷰 작성하기", "공지사항", "문의하기", "버전 정보"]
     private let supportMenuURLs = ["https://naver.com","https://m.cafe.naver.com/ca-fe/web/cafes/31153021/menus/7","https://m.cafe.naver.com/ca-fe/web/cafes/31153021/menus/1"]
@@ -41,11 +45,12 @@ public class MyPageViewController: UIViewController, View {
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 28
-        imageView.image = DesignSystemAsset.Icons.airplane.image
+        //TODO: 프로필 이미지 기능 추가시 아래 이미지 수정
+        imageView.image = DesignSystemAsset.Icons.face0.image
         return imageView
     }()
-    // TODO 양송이 > 유저이름 변경
-    private let nameButton = MyPageProfileButton(frame: CGRect(x: 0, y: 0, width: 81, height: 30), nickname: "양송이")
+    
+    private let nameButton = MyPageProfileButton(frame: CGRect(x: 0, y: 0, width: 81, height: 30), nickname: "")
     private let tripDescriptionLabel = YBLabel(font: .body2, textColor: .gray6)
     private let tripLabel = YBLabel(text: "여행", font: .body3, textColor: .gray4)
     private let tripCountLabel = YBLabel(font: .body3, textColor: .mainGreen)
@@ -67,6 +72,10 @@ public class MyPageViewController: UIViewController, View {
         return imageView
     }()
     
+    override public func viewWillAppear(_ animated: Bool) {
+        reactor.fetchUserInfo()
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         myPageMenuTableView.dataSource = self
@@ -74,9 +83,16 @@ public class MyPageViewController: UIViewController, View {
         navigationController?.isNavigationBarHidden = false
         
         view.backgroundColor = YBColor.gray1.color
+        bind(reactor: reactor)
         setupViews()
         setLayouts()
         configureBar()
+        nameButton.onTap = { [weak self] in
+            let editProfileVC = EditMyProfileViewController()
+            let reactor = EditMyProfileReactor(userInfo: self?.reactor.currentState.userInfo)
+            editProfileVC.reactor = reactor
+            self?.navigationController?.pushViewController(editProfileVC, animated: true)
+        }
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -93,7 +109,23 @@ public class MyPageViewController: UIViewController, View {
     }
     
     func bindState(reactor: MyPageReactor) {
+        reactor.state.map { $0.userInfo?.nickname }
+            .filter { $0 != nil }
+            .bind { [weak self] nickname in
+                DispatchQueue.main.async {
+                    self?.nameButton.nickname = nickname ?? ""
+                }
+            }
+            .disposed(by: disposeBag)
         
+        reactor.state.map { $0.userInfo?.tripCount }
+            .bind { [weak self] tripCount in
+                DispatchQueue.main.async {
+                    self?.tripCountLabel.text = "\(tripCount ?? 0)개국"
+                    self?.tripDescriptionLabel.text = reactor.tripDescription()
+                }
+            }
+            .disposed(by: disposeBag)
     }
     
     private func configureBar() {
@@ -114,12 +146,15 @@ public class MyPageViewController: UIViewController, View {
         }
     }
     
+//    @objc func rebokeButtonTapped() {
+//        self.navigationController?.pushViewController(<#T##viewController: UIViewController##UIViewController#>, animated: <#T##Bool#>)
+//    }
+    
     private func setupViews() {
         myPageMenuTableView.register(MyPageMenuCell.self, forCellReuseIdentifier: MyPageMenuCell().reuseableIdentifier)
         myPageMenuTableView.separatorStyle = .none
         
-        tripDescriptionLabel.text = "당신은 여비 입문중!"
-        tripCountLabel.text = "1개국"
+        nameButton.setTitle(reactor.currentState.userInfo?.nickname, for: .normal)
         
         proposeTitleLabel.numberOfLines = 0
         proposeTitleLabel.setLineHeight(lineHeight: 22.5)
@@ -222,7 +257,6 @@ public class MyPageViewController: UIViewController, View {
             make.top.equalTo(proposeContentView.snp.top).offset(20)
             make.trailing.equalTo(proposeContentView.snp.trailing).offset(-24)
             make.size.equalTo(86)
-            
         }
         
         myPageMenuTableView.snp.makeConstraints { make in
@@ -295,24 +329,22 @@ extension MyPageViewController: UITableViewDelegate {
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 100))
         footerView.backgroundColor = .white
         
-        // 첫 번째 버튼 (상단)
-        let topButton = UIButton(type: .system)
-        topButton.frame = CGRect(x: 20, y: 10, width: 56, height: 40)
-        topButton.setTitle("로그아웃", for: .normal)
-        topButton.setTitleColor(YBColor.gray5.color, for: .normal)
-        topButton.titleLabel?.font = YBFont.body3.font
-        // topButton.addTarget(self, action: #selector(topButtonTapped), for: .touchUpInside)
+        let logoutButton = UIButton(type: .system)
+        logoutButton.frame = CGRect(x: 20, y: 10, width: 56, height: 40)
+        logoutButton.setTitle("로그아웃", for: .normal)
+        logoutButton.setTitleColor(YBColor.gray5.color, for: .normal)
+        logoutButton.titleLabel?.font = YBFont.body3.font
+//        logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         
-        // 두 번째 버튼 (하단)
-        let bottomButton = UIButton(type: .system)
-        bottomButton.frame = CGRect(x: 20, y: 50, width: 56, height: 40)
-        bottomButton.setTitle("회원탈퇴", for: .normal)
-        bottomButton.setTitleColor(YBColor.gray5.color, for: .normal)
-        bottomButton.titleLabel?.font = YBFont.body3.font
-        // bottomButton.addTarget(self, action: #selector(bottomButtonTapped), for: .touchUpInside)
+        let revokeButton = UIButton(type: .system)
+        revokeButton.frame = CGRect(x: 20, y: 50, width: 56, height: 40)
+        revokeButton.setTitle("회원탈퇴", for: .normal)
+        revokeButton.setTitleColor(YBColor.gray5.color, for: .normal)
+        revokeButton.titleLabel?.font = YBFont.body3.font
+//        revokeButton.addTarget(self, action: #selector(revokeButtonTapped), for: .touchUpInside)
         
-        footerView.addSubview(topButton)
-        footerView.addSubview(bottomButton)
+        footerView.addSubview(logoutButton)
+        footerView.addSubview(revokeButton)
         
         return footerView
     }

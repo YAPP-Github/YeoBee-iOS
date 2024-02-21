@@ -11,9 +11,14 @@ import DesignSystem
 import SnapKit
 
 final class MyPageProfileButton: UIButton {
-    private var nickname: String
-    private let profileNameLabel = YBLabel(text: "양송이", font: .header2, textColor: .black)
+    var nickname: String {
+            didSet {
+                profileNameLabel.text = nickname
+            }
+        }
+    private let profileNameLabel = YBLabel(text: "", font: .header2, textColor: .black)
     private let chevronImageView = UIImageView(image: DesignSystemAsset.Icons.next.image)
+    var onTap: (() -> Void)?
     
     // MARK: - Init
     init(frame: CGRect, nickname: String) {
@@ -21,6 +26,7 @@ final class MyPageProfileButton: UIButton {
         super.init(frame: frame)
         addViews()
         setLayouts()
+        addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
     @available(*, unavailable)
@@ -32,11 +38,9 @@ final class MyPageProfileButton: UIButton {
     private func addViews() {
         addSubview(profileNameLabel)
         addSubview(chevronImageView)
-        
     }
     
     private func setLayouts() {
-        
         profileNameLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
         }
@@ -45,4 +49,8 @@ final class MyPageProfileButton: UIButton {
             make.centerY.equalTo(profileNameLabel.snp.centerY)
         }
     }
+    
+    @objc private func buttonTapped() {
+           onTap?()
+       }
 }

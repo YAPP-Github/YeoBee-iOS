@@ -22,7 +22,8 @@ let project = Project(
                 .RxSwift,
                 .RxCocoa,
                 .reactorKit,
-                .kingfisher
+                .kingfisher,
+                .usecase
             ]
         ),
         Project.target(

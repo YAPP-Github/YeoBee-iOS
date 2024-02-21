@@ -14,4 +14,5 @@ public struct FetchUserResponse: Codable, Hashable {
     public var profileImage: String?
     public var authProviderType: AuthProviderType
     public var userState: UserState
+    public var tripCount: Int
 }
