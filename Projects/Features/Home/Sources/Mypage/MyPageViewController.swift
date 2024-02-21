@@ -147,14 +147,12 @@ public class MyPageViewController: UIViewController, View {
         }
     }
     
-//    @objc func rebokeButtonTapped() {
-//        self.navigationController?.pushViewController(<#T##viewController: UIViewController##UIViewController#>, animated: <#T##Bool#>)
-//    }
-    
     private func setupViews() {
+        view.backgroundColor = YBColor.gray1.color
         myPageMenuTableView.register(MyPageMenuCell.self, forCellReuseIdentifier: MyPageMenuCell().reuseableIdentifier)
         myPageMenuTableView.separatorStyle = .none
         
+        myInfoContentView.backgroundColor = .white
         nameButton.setTitle(reactor.currentState.userInfo?.nickname, for: .normal)
         
         proposeTitleLabel.numberOfLines = 0
@@ -342,7 +340,7 @@ extension MyPageViewController: UITableViewDelegate {
         revokeButton.setTitle("회원탈퇴", for: .normal)
         revokeButton.setTitleColor(YBColor.gray5.color, for: .normal)
         revokeButton.titleLabel?.font = YBFont.body3.font
-//        revokeButton.addTarget(self, action: #selector(revokeButtonTapped), for: .touchUpInside)
+        revokeButton.addTarget(self, action: #selector(revokeButtonTapped), for: .touchUpInside)
         
         footerView.addSubview(logoutButton)
         footerView.addSubview(revokeButton)
@@ -357,10 +355,7 @@ extension MyPageViewController: UITableViewDelegate {
     }
     
     @objc func revokeButtonTapped() {
-        let destination = RevokeViewController()
-        let reactor = RevokeViewReactor()
-        destination.reactor = reactor
-        self.navigationController?.pushViewController(destination, animated: true)
+        coordinator?.revoke()
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

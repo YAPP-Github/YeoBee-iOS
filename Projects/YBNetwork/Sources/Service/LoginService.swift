@@ -12,6 +12,7 @@ import Moya
 public enum LoginService {
     case kakaoLogin(token: String)
     case appleLogin(code: String, idToken: String)
+    case revoke
 }
 
 extension LoginService: TargetType {
@@ -23,6 +24,8 @@ extension LoginService: TargetType {
                 return "/v1/auth/login/kakao"
             case .appleLogin:
                 return "/v1/auth/login/apple"
+            case .revoke:
+                return "/v1/auth/revoke"
         }
     }
     
@@ -30,6 +33,8 @@ extension LoginService: TargetType {
         switch self {
             case .kakaoLogin, .appleLogin:
                 return .post
+            case .revoke:
+                return .delete
         }
     }
     
@@ -39,11 +44,19 @@ extension LoginService: TargetType {
                 return .requestParameters(parameters: ["oauthToken": token], encoding: JSONEncoding.default)
             case .appleLogin(let code, let idToken):
                 return .requestParameters(parameters: ["code": code, "idToken": idToken], encoding: JSONEncoding.default)
+            case .revoke:
+                return .requestPlain
         }
     }
     
     public var headers: [String : String]? {
-        return ["Content-type": "application/json"]
+        let token = KeychainManager.shared.load(key: KeychainManager.accessToken)
+        switch self {
+            case .revoke:
+                return ["Content-type": "application/json", "Authorization": "Bearer \(token)"]
+            default:
+                return ["Content-type": "application/json"]
+        }
     }
     
 }

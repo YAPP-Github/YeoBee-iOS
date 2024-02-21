@@ -14,7 +14,7 @@ import Entity
 public protocol LoginRepositoryInterface {
     func loginWithKakao(token: String) async throws -> AuthTokenResponse
     func loginWithApple(code: String, idToken: String) async throws -> AuthTokenResponse
-    func logout()
+    func revoke() async throws -> Int
 }
 
 final public class LoginRepository: LoginRepositoryInterface {
@@ -37,7 +37,13 @@ final public class LoginRepository: LoginRepositoryInterface {
         return authTokenResponse
     }
     
-    public func logout() {
-        // logout 기능
+    public func revoke() async throws -> Int {
+        let response = try await provider.request(.revoke)
+        switch response {
+            case .success(let response):
+                return response.statusCode
+            case .failure(let error):
+                throw error
+        }
     }
 }

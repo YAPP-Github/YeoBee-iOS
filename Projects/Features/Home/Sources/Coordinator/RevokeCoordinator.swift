@@ -1,8 +1,8 @@
 //
-//  MyPageCoordinator.swift
-//  Mypage
+//  RevokeCoordinator.swift
+//  Home
 //
-//  Created by 김태형 on 2/15/24.
+//  Created by 김태형 on 2/22/24.
 //  Copyright © 2024 YeoBee.com. All rights reserved.
 //
 
@@ -10,7 +10,7 @@ import Coordinator
 import UIKit
 import Entity
 
-final public class MyPageCoordinator: MyPageCoordinatorInterface {
+final public class RevokeCoordinator: RevokeCoordinatorInterface {
     public var navigationController: UINavigationController
     public var myPageNavigationController: UINavigationController?
     public var viewControllerRef: UIViewController?
@@ -22,35 +22,28 @@ final public class MyPageCoordinator: MyPageCoordinatorInterface {
     }
     
     public func start(animated: Bool = false) {
-        let myPageViewController = MyPageViewController()
-        let reactor = MyPageReactor()
-        myPageViewController.reactor = reactor
-        myPageViewController.coordinator = self
-        navigationController.pushViewController(myPageViewController, animated: true)
+        let revokeViewController = RevokeViewController()
+        let reactor = RevokeViewReactor()
+        revokeViewController.reactor = reactor
+        revokeViewController.coordinator = self
+        navigationController.pushViewController(revokeViewController, animated: true)
     }
     
     public func popDidFinish() {
         navigationController.popViewController(animated: true)
     }
     
-    public func editProfile(userInfo: FetchUserResponse?) {
-        let editProfileVC = EditMyProfileViewController()
-        let reactor = EditMyProfileReactor(userInfo: userInfo)
-        editProfileVC.reactor = reactor
-        self.navigationController.pushViewController(editProfileVC, animated: true)
-    }
-
     public func login() {
         let signCoordinator = SignCoordinator(navigationController: self.navigationController)
         signCoordinator.addChild(self)
         signCoordinator.startWithInit()
     }
     
-    public func revoke() {
-        let revokeCoordinator = RevokeCoordinator(navigationController: self.navigationController)
-        revokeCoordinator.start()
+    public func revokeComplete() {
+        let revokeCompleteCoordinator = RevokeCompleteCoordinator(navigationController: self.navigationController)
+        revokeCompleteCoordinator.start()
     }
-
+    
     deinit {
         print("CreateAccountCoordinator is de-initialized.")
     }
