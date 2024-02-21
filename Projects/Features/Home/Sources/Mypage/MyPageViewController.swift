@@ -19,8 +19,8 @@ public class MyPageViewController: UIViewController, View {
     public var coordinator: MyPageCoordinator?
     private let reactor = MyPageReactor()
     
-    private let supportMenus = ["리뷰 작성하기", "공지사항", "문의하기", "버전 정보"]
-    private let supportMenuURLs = ["https://naver.com","https://m.cafe.naver.com/ca-fe/web/cafes/31153021/menus/7","https://m.cafe.naver.com/ca-fe/web/cafes/31153021/menus/1"]
+    private let supportMenus = ["공지사항", "문의하기", "버전 정보"]
+    private let supportMenuURLs = ["https://m.cafe.naver.com/ca-fe/web/cafes/31153021/menus/7","https://m.cafe.naver.com/ca-fe/web/cafes/31153021/menus/1"]
     private let termsMenus = ["개인정보 처리방침", "이용약관"]
     private let termsMenuURLs = ["https://m.cafe.naver.com/ca-fe/web/cafes/yeobee/articles/2?useCafeId=false&tc", "https://m.cafe.naver.com/ca-fe/web/cafes/31153021/articles/6?fromList=true&menuId=10&tc=cafe_article_list"]
     
@@ -291,8 +291,8 @@ extension MyPageViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-            case 0: return 4
-            case 1: return 2
+            case 0: return supportMenus.count
+            case 1: return termsMenus.count
             default: return 0
         }
     }

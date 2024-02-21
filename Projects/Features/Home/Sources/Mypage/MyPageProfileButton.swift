@@ -12,10 +12,10 @@ import SnapKit
 
 final class MyPageProfileButton: UIButton {
     var nickname: String {
-            didSet {
-                profileNameLabel.text = nickname
-            }
+        didSet {
+            profileNameLabel.text = nickname
         }
+    }
     private let profileNameLabel = YBLabel(text: "", font: .header2, textColor: .black)
     private let chevronImageView = UIImageView(image: DesignSystemAsset.Icons.next.image)
     var onTap: (() -> Void)?
@@ -51,6 +51,6 @@ final class MyPageProfileButton: UIButton {
     }
     
     @objc private func buttonTapped() {
-           onTap?()
-       }
+        onTap?()
+    }
 }
