@@ -7,7 +7,6 @@
 //
 
 import UIKit
-
 import Coordinator
 
 final public class SignCoordinator: SignCoordinatorInterface {
@@ -22,16 +21,31 @@ final public class SignCoordinator: SignCoordinatorInterface {
     public func start(animated: Bool = false) {
         let signViewController = SignViewController()
         viewControllerRef = signViewController
-        let signReactor = SignReactor(isLoginSuccess: false)
+        let signReactor = SignReactor()
         signViewController.reactor = signReactor
         signViewController.coordinator = self
         navigationController.pushViewController(signViewController, animated: animated)
     }
 
-    public func createAccount() {   
+  public func startWithInit(animated: Bool = false) {
+      let signViewController = SignViewController()
+      viewControllerRef = signViewController
+      let signReactor = SignReactor()
+      signViewController.reactor = signReactor
+      signViewController.coordinator = self
+    navigationController.setViewControllers([signViewController], animated: true)
+  }
+  
+    public func createAccount() {
         let createCoodinator = CreateAccountCoordinator(navigationController: self.navigationController)
         self.addChild(createCoodinator)
         createCoodinator.start(animated: true)
     }
+  
+  public func home() {
+    let homeCoordinator = HomeCoordinator(navigationController: self.navigationController)
+    self.addChild(homeCoordinator)
+    homeCoordinator.start(animated: true)
+  }
 }
 

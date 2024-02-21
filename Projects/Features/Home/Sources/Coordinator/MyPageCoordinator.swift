@@ -26,7 +26,7 @@ final public class MyPageCoordinator: MyPageCoordinatorInterface {
         let reactor = MyPageReactor()
         myPageViewController.reactor = reactor
         myPageViewController.coordinator = self
-        navigationController.pushViewController(MyPageViewController(), animated: true)
+        navigationController.pushViewController(myPageViewController, animated: true)
     }
     
     public func popDidFinish() {
@@ -39,11 +39,12 @@ final public class MyPageCoordinator: MyPageCoordinatorInterface {
         editProfileVC.reactor = reactor
         self.navigationController.pushViewController(editProfileVC, animated: true)
     }
-    //    public func login() {
-    //        let signCoordinator = SignCoordinator(navigationController: self.navigationController)
-    //        signCoordinator.start(animated: true)
-    //    }
-    //    
+    public func login() {
+        let signCoordinator = SignCoordinator(navigationController: self.navigationController)
+        signCoordinator.addChild(self)
+        signCoordinator.startWithInit()
+    }
+    
     deinit {
         print("CreateAccountCoordinator is de-initialized.")
     }

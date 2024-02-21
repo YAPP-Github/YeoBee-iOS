@@ -13,7 +13,6 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 import Coordinator
-import MyPage
 
 public enum HomeSection: CaseIterable {
     case header

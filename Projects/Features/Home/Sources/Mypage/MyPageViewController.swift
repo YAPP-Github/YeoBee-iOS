@@ -385,8 +385,7 @@ extension MyPageViewController: YBPopupViewControllerDelegate {
     }
     
     public func actionButtonTapped() {
-//        TokenRepository.shared.deleteTokens()
-//        let initViewController = SignViewController()
-//        self.navigationController?.setViewControllers([initViewController], animated: true)
+        TokenRepository.shared.deleteTokens()
+        coordinator?.login()
     }
 }

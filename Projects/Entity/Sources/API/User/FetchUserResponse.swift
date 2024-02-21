@@ -10,7 +10,7 @@ import Foundation
 
 public struct FetchUserResponse: Codable, Hashable {
     public var id: Int
-    public var nickname: String
+    public var nickname: String?
     public var profileImage: String?
     public var authProviderType: AuthProviderType
     public var userState: UserState

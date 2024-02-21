@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 import Coordinator
-import Sign
 import Home
 import YBNetwork
 import Repository
@@ -32,7 +31,7 @@ final class RootCoordinator: NSObject, Coordinator, ParentCoordinator {
 
     func start(animated: Bool) {
         if isTokenExpiring {
-            if let isOnboardingCompleted {
+            if isOnboardingCompleted ?? false {
                 home(navigationController: navigationController)
             } else {
                 createAccount(navigationController: navigationController)

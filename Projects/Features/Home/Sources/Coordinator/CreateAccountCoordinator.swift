@@ -9,7 +9,6 @@
 import UIKit
 
 import Coordinator
-import Onboarding
 
 final public class CreateAccountCoordinator: CreateAccountCoordinatorInterface {
     public var navigationController: UINavigationController

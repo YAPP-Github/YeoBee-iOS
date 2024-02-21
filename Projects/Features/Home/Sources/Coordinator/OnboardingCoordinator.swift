@@ -7,9 +7,7 @@
 //
 
 import UIKit
-
 import Coordinator
-import Home
 
 final public class OnboardingCoordinator: OnboardingCoordinatorInterface {
     public var navigationController: UINavigationController
