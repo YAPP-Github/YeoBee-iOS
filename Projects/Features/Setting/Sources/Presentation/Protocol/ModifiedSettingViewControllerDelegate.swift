@@ -9,5 +9,6 @@
 import Foundation
 
 protocol ModifiedSettingViewControllerDelegate: AnyObject {
-    func modified()
+    func modifiedCommon()
+    func modifiedCurrency()
 }

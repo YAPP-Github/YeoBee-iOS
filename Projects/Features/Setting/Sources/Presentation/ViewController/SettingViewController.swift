@@ -182,11 +182,13 @@ extension SettingViewController: UITableViewDelegate {
         case .companion:
             break
         case .currency:
-            if case let .currency(currency) = snapshot.itemIdentifiers(inSection: .currency)[indexPath.item] {
-                let settingCurrencyReactor = SettingCurrencyReactor(currency: currency)
-                let settingCurrencyViewController = SettingCurrencyViewController(reactor: settingCurrencyReactor)
-                self.navigationController?.pushViewController(settingCurrencyViewController, animated: true)
-            }
+            break
+//            if case let .currency(currency) = snapshot.itemIdentifiers(inSection: .currency)[indexPath.item] {
+//                let currentTripItem = reactor.currentState.tripItem
+//                let settingCurrencyReactor = SettingCurrencyReactor(currency: currency, tripItem: currentTripItem)
+//                let settingCurrencyViewController = SettingCurrencyViewController(reactor: settingCurrencyReactor)
+//                self.navigationController?.pushViewController(settingCurrencyViewController, animated: true)
+//            }
         }
     }
 }
@@ -282,8 +284,12 @@ extension SettingViewController: SettingCompanionCellDelegate {
 
 // MARK: - 수정된 이후 trip update
 extension SettingViewController: ModifiedSettingViewControllerDelegate {
-    func modified() {
+    func modifiedCommon() {
         reactor.updateSettingUseCase()
+    }
+
+    func modifiedCurrency() {
+        reactor.updateCurrencyUseCase()
     }
 }
 

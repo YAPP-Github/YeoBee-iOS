@@ -365,7 +365,7 @@ extension SettingCalendarViewController: View {
             .map { $0.modified }
             .bind { [weak self] isSuccess in
                 if isSuccess {
-                    self?.delegate?.modified()
+                    self?.delegate?.modifiedCommon()
                     self?.navigationController?.popViewController(animated: true)
                 }
             }

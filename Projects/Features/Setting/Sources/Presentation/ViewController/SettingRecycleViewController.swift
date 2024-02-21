@@ -181,7 +181,7 @@ extension SettingRecycleViewController: View {
             .bind { [weak self] isSuccess in
                 if isSuccess {
                     self?.navigationController?.popViewController(animated: true)
-                    self?.delegate?.modified()
+                    self?.delegate?.modifiedCommon()
                 }
             }
             .disposed(by: disposeBag)

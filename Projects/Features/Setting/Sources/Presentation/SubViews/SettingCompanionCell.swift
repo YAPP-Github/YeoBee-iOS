@@ -88,13 +88,22 @@ class SettingCompanionCell: UITableViewCell {
     }
     
     func configure() {
-        guard let companion,
-              let imageUrl = URL(string: companion.profileImageUrl ?? "\(YeoBeeAPI.shared.baseImageURL ?? "")/static/user/profile/profile0.png") else { return }
-        
-        // MARK: [TODO] 자신의 ID keychain에 저장해서 companion의 ID와 같은 경우 editButton hidden 처리
+        guard let companion else { return }
         profileNameLabel.text = companion.name
-        profileImageView.kf.indicatorType = .activity
-        profileImageView.kf.setImage(with: imageUrl)
+        
+        if let profileImageUrl = URL(string: companion.profileImageUrl ?? "") {
+            profileImageView.kf.indicatorType = .activity
+            profileImageView.kf.setImage(with: profileImageUrl)
+        } else {
+            profileImageView.image = DesignSystemAsset.Icons.face0.image
+        }
+        
+        // 자신의 ID와 companion의 ID와 같은 경우 (동행자 자신인 경우)
+        if let userId = companion.userId {
+            if String(userId) == KeychainManager.shared.load(key: KeychainManager.userId) {
+                self.editButton.isHidden = true
+            }
+        }
     }
     
     @objc func editButtonTapped() {

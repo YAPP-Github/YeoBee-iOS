@@ -7,10 +7,12 @@
 //
 
 import Foundation
+import Entity
 import Moya
 
 public enum CurrencyService {
     case getTripCurrencies(tripId: Int)
+    case putTripCurrencies(tripId: Int, currencyCode: String, exchangeRate: ExchangeRate)
 }
 
 extension CurrencyService: TargetType {
@@ -20,6 +22,8 @@ extension CurrencyService: TargetType {
         switch self {
         case .getTripCurrencies:
             return "/v1/currencies"
+        case .putTripCurrencies(let tripId, let currencyCode, _):
+            return "/v1/currencies/\(currencyCode)/rate"
         }
     }
 
@@ -27,6 +31,8 @@ extension CurrencyService: TargetType {
         switch self {
         case .getTripCurrencies:
             return .get
+        case .putTripCurrencies:
+            return .put
         }
     }
 
@@ -34,6 +40,22 @@ extension CurrencyService: TargetType {
         switch self {
         case let .getTripCurrencies(tripId):
             return .requestParameters(parameters: ["tripId": tripId], encoding: URLEncoding.queryString)
+        case let .putTripCurrencies(tripId, currencyCode, exchangeRate):
+            let params: [String: Any] = [
+                "tripId": tripId,
+                "currencyCode": currencyCode
+            ]
+            
+            let exchangeRateResult: [String: Any] = [
+                "value": exchangeRate.value,
+                "standard": exchangeRate.standard
+            ]
+            
+            return .requestCompositeParameters(
+                bodyParameters: exchangeRateResult,
+                bodyEncoding: URLEncoding.httpBody,
+                urlParameters: params
+            )
         }
     }
 

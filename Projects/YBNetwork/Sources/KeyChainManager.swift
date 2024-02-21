@@ -26,6 +26,7 @@ public final class KeychainManager: KeychainManagerInterface {
     public static let refreshToken: String = "refreshToken"
     public static let accessTokenExpiredTime: String = "accessTokenExpiredTime"
     public static let refreshTokenExpiredTime: String = "refreshTokenExpiredTime"
+    public static let userId: String = "userId"
     
     private init() {}
     
