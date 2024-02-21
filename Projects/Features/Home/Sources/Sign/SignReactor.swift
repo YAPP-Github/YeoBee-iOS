@@ -22,24 +22,21 @@ public final class SignReactor: Reactor {
         case kakao
         case appleLogin(code: Data, idToken: Data)
         case appleLoginFailure
+        case loginSuccess
     }
     
     public enum Mutation {
-        case setLoginStatus(Bool)
+        case setOnboardingCompleted(Bool)
     }
     
     public struct State {
-        var isLoginSuccess: Bool
+        var isOnBoardingCompleted: Bool?
     }
     
     public let initialState: State
     
-    public init(
-        isLoginSuccess: Bool
-    ) {
-        self.initialState = .init(
-            isLoginSuccess: isLoginSuccess
-        )
+    public init() {
+        self.initialState = .init()
     }
     
     let authRepository = LoginRepository()
@@ -50,10 +47,11 @@ public final class SignReactor: Reactor {
                 return Observable.create { observer in
                     Task {
                         do {
-                            let isSuccess = try await self.kakaoLogin()
-                            observer.onNext(.setLoginStatus(isSuccess))
+                            try await self.kakaoLogin()
+                            let isOnboardingCompleted = try await UserInfoRepository().isOnboardingCompleted()
+                            observer.onNext(.setOnboardingCompleted(isOnboardingCompleted))
                         } catch {
-                            observer.onNext(.setLoginStatus(false))
+                            //TODO: 에러처리
                         }
                         observer.onCompleted()
                     }
@@ -63,10 +61,11 @@ public final class SignReactor: Reactor {
                 return Observable.create { observer in
                     Task {
                         do {
-                            let isSuccess = try await self.appleLogin(code: code, idToken: idToken)
-                            observer.onNext(.setLoginStatus(isSuccess))
+                            try await self.appleLogin(code: code, idToken: idToken)
+                            let isOnboardingCompleted = try await UserInfoRepository().isOnboardingCompleted()
+                            observer.onNext(.setOnboardingCompleted(isOnboardingCompleted))
                         } catch {
-                            observer.onNext(.setLoginStatus(false))
+                            //TODO: 에러처리
                         }
                         observer.onCompleted()
                     }
@@ -74,7 +73,10 @@ public final class SignReactor: Reactor {
                 }
                 
             case .appleLoginFailure:
-                return Observable.just(.setLoginStatus(false))
+                return Observable.empty()
+                
+            case .loginSuccess:
+                return Observable.just(.setOnboardingCompleted(true))
         }
         
     }
@@ -83,8 +85,8 @@ public final class SignReactor: Reactor {
         var newState = state
         
         switch mutation {
-            case .setLoginStatus(let isSuccess):
-                newState.isLoginSuccess = isSuccess
+            case .setOnboardingCompleted(let isCompleted):
+                newState.isOnBoardingCompleted = isCompleted
         }
         
         return newState

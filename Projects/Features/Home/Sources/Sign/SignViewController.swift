@@ -56,15 +56,16 @@ public final class SignViewController: UIViewController, View {
     }
     
     func bindState(reactor: SignReactor) {
-        reactor.state.map { $0.isLoginSuccess }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext : { [weak self] isSuccess in
-                if isSuccess {
-                    self?.coordinator?.createAccount()
-                } else {
-                    //오류 Alert
-                }
-            }).disposed(by: disposeBag)
+      reactor.state.map { $0.isOnBoardingCompleted ?? false }
+        .distinctUntilChanged()
+        .observe(on: MainScheduler.instance)
+        .subscribe(onNext: { isComplete in
+          if isComplete {
+            self.coordinator?.home()
+          } else {
+            self.coordinator?.createAccount()
+          }
+        })
     }
     
     private func setupViews() {
