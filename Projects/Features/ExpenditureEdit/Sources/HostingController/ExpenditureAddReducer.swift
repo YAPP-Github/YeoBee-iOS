@@ -32,21 +32,24 @@ public struct ExpenditureReducer: Reducer {
             expenseItem: ExpenseItem?,
             tripItem: TripItem,
             editDate: Date,
-            expenseDetail: ExpenseDetailItem?
+            expenseDetail: ExpenseDetailItem?,
+            hasSharedBudget: Bool
         ) {
             self.expenditureEdit = .init(
                 expenseItem: expenseItem,
                 tripItem: tripItem,
                 editDate: editDate,
                 expenditureTab: expenditureTab,
-                expenseDetail: expenseDetail
+                expenseDetail: expenseDetail,
+                hasSharedBudget: hasSharedBudget
             )
             self.expenditureBudgetEdit = .init(
                 expenseItem: expenseItem,
                 tripItem: tripItem,
                 editDate: editDate,
                 expenditureTab: expenditureTab,
-                expenseDetail: expenseDetail
+                expenseDetail: expenseDetail,
+                hasSharedBudget: hasSharedBudget
             )
             self.seletedExpenditureType = seletedExpenditureType
             self.tripItem = tripItem
@@ -72,6 +75,14 @@ public struct ExpenditureReducer: Reducer {
             switch action {
             case .expenditureEdit(.dismiss):
                 cooridinator.dismissRegisterExpense()
+                return .none
+            case let .expenditureEdit(.updateDimiss(response)):
+                let expenseItem = ExpenseItem(id: response.id, name: response.name, amount: response.amount, currency: response.currencyCode, category: .etc)
+                cooridinator.dismissUpdateExpense(expenseItem: expenseItem)
+                return .none
+            case let .expenditureBudgetEdit(.updateDimiss(response)):
+                let expenseItem = ExpenseItem(id: response.id, name: response.name, amount: response.amount, currency: response.currencyCode, category: .etc)
+                cooridinator.dismissUpdateExpense(expenseItem: expenseItem)
                 return .none
             case .expenditureBudgetEdit(.dismiss):
                 cooridinator.dismissRegisterExpense()
@@ -104,6 +115,7 @@ public struct ExpenditureReducer: Reducer {
                         payedAt: "",
                         category: .etc, 
                         payerUserId: nil,
+                        payerId: nil, 
                         payerList: [],
                         method: ""
                     )
@@ -126,6 +138,7 @@ public struct ExpenditureReducer: Reducer {
                         payedAt: "",
                         category: .etc,
                         payerUserId: nil,
+                        payerId: nil,
                         payerList: [],
                         method: ""
                     )

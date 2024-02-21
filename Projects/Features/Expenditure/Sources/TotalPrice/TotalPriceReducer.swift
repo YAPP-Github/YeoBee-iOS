@@ -12,9 +12,10 @@ import Entity
 public struct TotalPriceReducer: Reducer {
     public struct State: Equatable {
         var expenseType: ExpenditureTab
-        var totalExpandPrice: Int = 1000
+        var totalExpandPrice: Int = 0
         var totalBudgetPrice: Int = 0
         var remainBudgetPrice: Int = 0
+        var totalExpense: Int = 0
         var isTappable: Bool
 
         init(expenseType: ExpenditureTab, isTappable: Bool) {
@@ -24,7 +25,7 @@ public struct TotalPriceReducer: Reducer {
     }
 
     public enum Action {
-        case setTotalPrice(Int, Int?, Int?)
+        case setTotalPrice(Int, Int?, Int?, Int)
         case tappedTotalPrice
         case tappedBubgetPrice
     }
@@ -32,10 +33,14 @@ public struct TotalPriceReducer: Reducer {
     public var body: some ReducerOf<TotalPriceReducer> {
         Reduce { state, action in
             switch action {
-            case let .setTotalPrice(totalExpandPrice, totalBudgetPrice, remainBudgetPrice):
+            case let .setTotalPrice(totalExpandPrice, totalBudgetPrice, remainBudgetPrice, totalExpense):
                 state.totalExpandPrice = abs(totalExpandPrice)
                 state.totalBudgetPrice = abs(totalBudgetPrice ?? 0) 
-                state.remainBudgetPrice = abs(remainBudgetPrice ?? 0)
+                if let remainBudgetPrice {
+                    state.remainBudgetPrice = abs(remainBudgetPrice)
+                } else {
+                    state.totalExpandPrice = abs(totalExpense)
+                }
                 return .none
             case .tappedTotalPrice:
                 return .none

@@ -32,6 +32,7 @@ public struct ExpenditureReducer: Reducer {
         var endDate: Date
         var readyDate: Date
         var selectedDate: Date?
+        var hasSharedBudget: Bool = false
 
         init(type: ExpenditureTab, tripItem: TripItem) {
             self.type = type
@@ -54,17 +55,19 @@ public struct ExpenditureReducer: Reducer {
 
     public enum Action {
         case onAppear
+        case refresh
         case getExpenseList(Date)
         case totalPrice(TotalPriceReducer.Action)
         case tripDate(TripDateReducer.Action)
         case expenditureList(ExpenditureListReducer.Action)
         case tappedAddButton
         case tappedFilterButton(PaymentMethod?)
-        case getExpenditure(Date)
+        case getExpenditure(Date, Bool)
         case getBudget
         case appendExpenditures
         case setLastPage(Bool)
         case setExpenseFilter(PaymentMethod?)
+        case setSharedBudget(Bool)
     }
 
     @Dependency(\.expenseUseCase) var expenseUseCase
@@ -88,37 +91,47 @@ public struct ExpenditureReducer: Reducer {
                     }
                     return .run { send in
                         await send(.tripDate(.selectDate(selectDate)))
-                        await send(.getExpenditure(selectDate))
+                        await send(.getExpenditure(selectDate, true))
                         await send(.getBudget)
                     }
                 } else {
                     return .none
                 }
 
+            case .refresh:
+                if let selectedDate = state.selectedDate {
+                    return .run { send in
+                        await send(.tripDate(.selectDate(selectedDate)))
+                        await send(.getExpenditure(selectedDate, true))
+                        await send(.getBudget)
+                    }
+                }
+                return .none
+
             case let .getExpenseList(selectDate):
                 return .run { send in
                     await send(.tripDate(.selectDate(selectDate)))
-                    await send(.getExpenditure(selectDate))
+                    await send(.getExpenditure(selectDate, true))
+                    await send(.getBudget)
                 }
 
             case .tripDate(.tappedTripReadyButton):
                 state.pageIndex = 0
-                return .send(.getExpenditure(state.readyDate))
+                return .send(.getExpenditure(state.readyDate, true))
 
             case let .tripDate(.tripDateItem(id: id, action: .tappedItem)):
                 guard let tripDate = state.tripDate.tripDateItems[id: id]?.date else { return .none }
-                return .send(.getExpenditure(tripDate))
+                return .send(.getExpenditure(tripDate, true))
 
-            case let .getExpenditure(tripDate):
-                var isReset: Bool = false
-                if state.currentDate == nil || tripDate != state.currentDate {
+            case .getExpenditure(let tripDate, let isReset):
+                if isReset {
                     state.pageIndex = 0
                     state.currentDate = tripDate
                     state.isLastPage = false
-                    isReset = true
                 } else {
                     state.pageIndex += 1
                 }
+                state.selectedDate = tripDate
                 return .run { [
                     pageIndex = state.pageIndex,
                     isReset,
@@ -145,7 +158,8 @@ public struct ExpenditureReducer: Reducer {
                 cooridinator.expenditureAdd(
                     tripItem: state.tripItem,
                     editDate: selectedDate,
-                    expenditureTab: state.type
+                    expenditureTab: state.type,
+                    hasSharedBudget: state.hasSharedBudget
                 )
                 return .none
 
@@ -165,7 +179,8 @@ public struct ExpenditureReducer: Reducer {
                             await send(.totalPrice(.setTotalPrice(
                                 individualBudget.budgetExpense,
                                 individualBudget.budgetIncome,
-                                individualBudget.leftBudget)
+                                individualBudget.leftBudget,
+                                0)
                             ))
                         }
                     } else {
@@ -173,8 +188,11 @@ public struct ExpenditureReducer: Reducer {
                             await send(.totalPrice(.setTotalPrice(
                                 sharedBudget.budgetExpense,
                                 sharedBudget.budgetIncome,
-                                sharedBudget.leftBudget)
+                                sharedBudget.leftBudget,
+                                sharedBudget.totalExpense
+                                )
                             ))
+                            await send(.setSharedBudget(sharedBudget.leftBudget != nil))
                         }
                     }
                 } catch: { error, send in
@@ -186,12 +204,12 @@ public struct ExpenditureReducer: Reducer {
                 return .none
 
             case let .expenditureList(.expenditureListItem(id: _, action: .tappedExpenditureItem(expenseItem))):
-                cooridinator.expenditureDetail(expenseType: state.type, expenseItem: expenseItem)
+                cooridinator.expenditureDetail(expenseType: state.type, expenseItem: expenseItem, hasSharedBudget: state.hasSharedBudget)
                 return .none
 
             case .appendExpenditures:
                 if let currentDate = state.currentDate, state.isLastPage == false {
-                    return .send(.getExpenditure(currentDate))
+                    return .send(.getExpenditure(currentDate, false))
                 }
                 return .none
 
@@ -203,9 +221,12 @@ public struct ExpenditureReducer: Reducer {
             case let .setExpenseFilter(expenseFilter):
                 state.currentFilter = expenseFilter
                 if let currentDate = state.currentDate {
-                    state.pageIndex = -1
-                    return .send(.getExpenditure(currentDate))
+                    return .send(.getExpenditure(currentDate, true))
                 }
+                return .none
+
+            case let .setSharedBudget(hasSharedBudget):
+                state.hasSharedBudget = hasSharedBudget
                 return .none
 
             default:

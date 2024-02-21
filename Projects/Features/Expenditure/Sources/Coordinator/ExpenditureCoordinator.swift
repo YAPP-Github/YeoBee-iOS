@@ -28,6 +28,7 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
     public var navigationController: UINavigationController
     public var expenditureNavigationController: UINavigationController?
     public var expenditureViewController: ExpenditureViewController?
+    public var expenditureDetailViewController: ExpenditureDetailViewController?
     public var sharedExpenditureViewController: SharedExpenditureViewController?
 
     public var parent: TripCoordinatorInterface?
@@ -56,6 +57,12 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
         expenditureNavigationController?.popViewController(animated: true)
     }
 
+    public func popDetail() {
+        setRefresh()
+        expenditureNavigationController?.tabBarController?.tabBar.isHidden = false
+        expenditureNavigationController?.popViewController(animated: true)
+    }
+
     public func coordinatorDidFinish() {
         expenditureViewController = nil
         expenditureNavigationController = nil
@@ -70,14 +77,20 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
 
 extension ExpenditureCoordinator {
 
-    public func expenditureAdd(tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab) {
+    public func expenditureAdd(
+        tripItem: TripItem,
+        editDate: Date,
+        expenditureTab: ExpenditureTab,
+        hasSharedBudget: Bool
+    ) {
         let expenditureAddCoordinator = ExpenditureAddCoordinator(
             navigationController: expenditureNavigationController!, 
             expenseItem: nil,
             tripItem: tripItem,
             editDate: editDate,
             expenditureTab: expenditureTab,
-            expenseDetail: nil
+            expenseDetail: nil,
+            hasSharedBudget: hasSharedBudget
         )
         expenditureAddCoordinator.parent = self
         expenditureAddCoordinator.delegate = self
@@ -85,7 +98,12 @@ extension ExpenditureCoordinator {
         expenditureAddCoordinator.start(animated: true)
     }
 
-    public func expenditureEdit(expenseItem: ExpenseItem, expenseDetail: ExpenseDetailItem, expenditureTab: ExpenditureTab) {
+    public func expenditureEdit(
+        expenseItem: ExpenseItem,
+        expenseDetail: ExpenseDetailItem,
+        expenditureTab: ExpenditureTab,
+        hasSharedBudget: Bool
+    ) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         let editDate = dateFormatter.date(from: expenseDetail.payedAt) ?? Date()
@@ -95,7 +113,8 @@ extension ExpenditureCoordinator {
             tripItem: tripItem,
             editDate: editDate,
             expenditureTab: expenditureTab,
-            expenseDetail: expenseDetail
+            expenseDetail: expenseDetail,
+            hasSharedBudget: hasSharedBudget
         )
         expenditureAddCoordinator.parent = self
         expenditureAddCoordinator.delegate = self
@@ -118,12 +137,14 @@ extension ExpenditureCoordinator {
 //        expenditureNavigationController?.pushViewController(totalBudgetExpenditureViewController, animated: true)
     }
 
-    public func expenditureDetail(expenseType: ExpenditureTab, expenseItem: ExpenseItem) {
+    public func expenditureDetail(expenseType: ExpenditureTab, expenseItem: ExpenseItem, hasSharedBudget: Bool) {
         let expenditureDetailViewController = ExpenditureDetailViewController(
             coordinator: self,
             expenseType: expenseType,
-            expenseItem: expenseItem
+            expenseItem: expenseItem,
+            hasSharedBudget: hasSharedBudget
         )
+        self.expenditureDetailViewController = expenditureDetailViewController
         expenditureNavigationController?.tabBarController?.tabBar.isHidden = true
         expenditureNavigationController?.pushViewController(expenditureDetailViewController, animated: true)
     }
@@ -154,9 +175,21 @@ extension ExpenditureCoordinator {
         expenditureViewController?.selectExpenseFilter(selectedExpenseFilter: selectedExpenseFilter)
         expenditureNavigationController?.dismiss(animated: true)
     }
+
+    public func setRefresh() {
+        if tripItem.tripUserList.count > 1 {
+            sharedExpenditureViewController?.setRefreshData()
+        } else {
+            expenditureViewController?.setRefreshData()
+        }
+    }
 }
 
 extension ExpenditureCoordinator: ExpenditureAddCoordinatorDelegate {
+    public func dismissUpdateExpense(expenseItem: ExpenseItem) {
+        expenditureDetailViewController?.setUpdateExpenditureDetail(expenseItem: expenseItem)
+    }
+    
     public func dismissRegisterExpense(editDate: Date) {
         expenditureViewController?.getExpenseList(editDate: editDate)
     }

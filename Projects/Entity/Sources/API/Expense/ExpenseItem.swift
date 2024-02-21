@@ -16,6 +16,15 @@ public struct ExpenseItem: Codable, Equatable {
     public var koreanAmount: Int?
     public var category: ExpendCategory
 
+    public init(id: Int, name: String, amount: Double, currency: String, koreanAmount: Int? = nil, category: ExpendCategory) {
+        self.id = id
+        self.name = name
+        self.amount = amount
+        self.currency = currency
+        self.koreanAmount = koreanAmount
+        self.category = category
+    }
+
     enum CodingKeys: String, CodingKey {
         case id
         case name

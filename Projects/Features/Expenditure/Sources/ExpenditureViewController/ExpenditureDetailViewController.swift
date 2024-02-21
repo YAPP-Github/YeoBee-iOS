@@ -20,24 +20,26 @@ public final class ExpenditureDetailViewController: UIViewController {
     let coordinator: ExpenditureCoordinator
     let expenseType: ExpenditureTab
     let expenseItem: ExpenseItem
+    let store: StoreOf<ExpenditureDetailReducer>
+    var isEdit: Bool = false
 
     // MARK: View
 
     private let expenditureDetailHostingController: ExpenditureDetailHostingController
 
-    public init(coordinator: ExpenditureCoordinator, expenseType: ExpenditureTab, expenseItem: ExpenseItem) {
+    public init(coordinator: ExpenditureCoordinator, expenseType: ExpenditureTab, expenseItem: ExpenseItem, hasSharedBudget: Bool) {
         self.expenseType = expenseType
         self.expenseItem = expenseItem
         self.coordinator = coordinator
+        let store: StoreOf<ExpenditureDetailReducer> = .init(
+            initialState: .init(expenditureTab: expenseType, expenseItem: expenseItem, hasSharedBudget: hasSharedBudget),
+            reducer: {
+                ExpenditureDetailReducer(cooridinator: coordinator)
+            }
+        )
+        self.store = store
         self.expenditureDetailHostingController = ExpenditureDetailHostingController(
-            rootView: ExpenditureDetailView(
-                store: .init(
-                    initialState: .init(expenditureTab: expenseType, expenseItem: expenseItem),
-                    reducer: {
-                        ExpenditureDetailReducer(cooridinator: coordinator)
-                    }
-                )
-            )
+            rootView: ExpenditureDetailView(store: store)
         )
         super.init(nibName: nil, bundle: nil)
     }
@@ -67,7 +69,12 @@ public final class ExpenditureDetailViewController: UIViewController {
     }
 
     @objc func backButtonTapped() {
-        coordinator.popDidFinish()
+        if isEdit {
+            coordinator.popDetail()
+            isEdit = false
+        } else {
+            coordinator.popDidFinish()
+        }
     }
 
     func setLayouts() {
@@ -78,6 +85,11 @@ public final class ExpenditureDetailViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.horizontalEdges.equalToSuperview()
         }
+    }
+
+    public func setUpdateExpenditureDetail(expenseItem: ExpenseItem) {
+        isEdit = true
+        store.send(.setExpenseItem(expenseItem))
     }
 
     deinit {

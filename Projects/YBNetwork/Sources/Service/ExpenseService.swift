@@ -37,9 +37,9 @@ extension ExpenseService: TargetType {
         case .create:
             return "/v1/expenses"
         case let .delete(expenseId):
-            return "v1/expense/\(expenseId)"
+            return "v1/expenses/\(expenseId)"
         case let .update(expenseId, _):
-            return "v1/expense/\(expenseId)"
+            return "v1/expenses/\(expenseId)"
         }
     }
     

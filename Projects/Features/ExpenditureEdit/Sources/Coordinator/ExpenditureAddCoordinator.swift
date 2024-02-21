@@ -14,6 +14,7 @@ import Entity
 
 public protocol ExpenditureAddCoordinatorDelegate: NSObject {
     func dismissRegisterExpense(editDate: Date)
+    func dismissUpdateExpense(expenseItem: ExpenseItem)
 }
 
 final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface {
@@ -29,6 +30,7 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
     public let editDate: Date
     public let expenditureTab: ExpenditureTab
     public let expenseDetail: ExpenseDetailItem?
+    public let hasSharedBudget: Bool
 
     public init(
         navigationController: UINavigationController,
@@ -36,7 +38,8 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
         tripItem: TripItem,
         editDate: Date,
         expenditureTab: ExpenditureTab,
-        expenseDetail: ExpenseDetailItem?
+        expenseDetail: ExpenseDetailItem?,
+        hasSharedBudget: Bool
     ) {
         self.navigationController = navigationController
         self.expenseItem = expenseItem
@@ -44,6 +47,7 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
         self.editDate = editDate
         self.expenditureTab = expenditureTab
         self.expenseDetail = expenseDetail
+        self.hasSharedBudget = hasSharedBudget
     }
 
     public func start(animated: Bool) {
@@ -53,7 +57,8 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
             tripItem: tripItem,
             editDate: editDate, 
             expenditureTab: expenditureTab,
-            expenseDetail: expenseDetail
+            expenseDetail: expenseDetail,
+            hasSharedBudget: hasSharedBudget
         )
         self.expenditureAddViewController = expenditureAddViewController
         expenditureEditNavigationController = UINavigationController(rootViewController: expenditureAddViewController)
@@ -64,6 +69,11 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
     public func dismissRegisterExpense() {
         coordinatorDidFinish()
         delegate?.dismissRegisterExpense(editDate: editDate)
+    }
+
+    public func dismissUpdateExpense(expenseItem: ExpenseItem) {
+        coordinatorDidFinish()
+        delegate?.dismissUpdateExpense(expenseItem: expenseItem)
     }
 
     public func popDidFinish() {
@@ -89,7 +99,8 @@ extension ExpenditureAddCoordinator {
             coordinator: self, 
             expenseType: expenseType,
             tripItem: tripItem,
-            expenseDetail: expenseDetail
+            expenseDetail: expenseDetail,
+            hasSharedBudget: hasSharedBudget
         )
         expenditureEditNavigationController?.pushViewController(calculationViewController, animated: true)
     }

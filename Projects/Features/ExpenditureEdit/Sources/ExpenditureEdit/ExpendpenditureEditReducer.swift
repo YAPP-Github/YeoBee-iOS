@@ -23,14 +23,19 @@ public struct ExpendpenditureEditReducer: Reducer {
         var editDate: Date
         let expenditureTab: ExpenditureTab
         var expenseDetail: ExpenseDetailItem?
+        var firstExpenseDetail: ExpenseDetailItem?
         var currencies: [Currency] = []
+        var isInitialShow: Bool = true
+        var hasSharedBudget: Bool
 
-        init(expenseItem: ExpenseItem?, tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab, expenseDetail: ExpenseDetailItem?) {
+        init(expenseItem: ExpenseItem?, tripItem: TripItem, editDate: Date, expenditureTab: ExpenditureTab, expenseDetail: ExpenseDetailItem?, hasSharedBudget: Bool) {
             self.expenseItem = expenseItem
             self.tripItem = tripItem
             self.editDate = editDate
             self.expenditureTab = expenditureTab
             self.expenseDetail = expenseDetail
+            self.firstExpenseDetail = expenseDetail
+            self.hasSharedBudget = hasSharedBudget
         }
     }
 
@@ -39,6 +44,7 @@ public struct ExpendpenditureEditReducer: Reducer {
         case tappedRegisterButton
         case tappedCalculationButton
         case dismiss
+        case updateDimiss(CreateExpenseResponse)
 
         case setCurrencies([Currency])
         case setEditExpense(ExpenseDetailItem, [Currency])
@@ -56,15 +62,20 @@ public struct ExpendpenditureEditReducer: Reducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .run { [tripId = state.tripItem.id, state] send in
-                    let currencies = try await currencyUseCase.getTripCurrencies(tripId)
-                    if let expenseDetail = state.expenseDetail {
-                        await send(.setEditExpense(expenseDetail, currencies))
+                if state.isInitialShow {
+                    state.isInitialShow = false
+                    return .run { [tripId = state.tripItem.id, state] send in
+                        let currencies = try await currencyUseCase.getTripCurrencies(tripId)
+                        if let expenseDetail = state.expenseDetail {
+                            await send(.setEditExpense(expenseDetail, currencies))
+                        }
+                        await send(.setCurrencies(currencies))
+                    } catch: { error, send in
+                        print(error)
                     }
-                    await send(.setCurrencies(currencies))
-                } catch: { error, send in
-                    print(error)
                 }
+                return .none
+
 
             case let .setCurrencies(currencyList):
                 state.currencies = currencyList
@@ -123,6 +134,7 @@ public struct ExpendpenditureEditReducer: Reducer {
                         state.expenditureCategory.text.isEmpty == false &&
                         state.expenditureCategory.isInvaildText == false &&
                         state.expenditureInput.text.isEmpty == false &&
+                        state.expenseDetail != nil &&
                         state.expenseDetail?.payerList != []
                 }
             }
@@ -145,7 +157,7 @@ public struct ExpendpenditureEditReducer: Reducer {
                         let payedDate = Calendar.current.date(byAdding: .hour, value: 9, to: payedAt) ?? Date()
                         print(payedDate)
                         if let expenseItem = state.expenseItem {
-                            let _ = try await expenseUseCase.updateExpense(expenseItem.id, .init(
+                            let result = try await expenseUseCase.updateExpense(expenseItem.id, .init(
                                 tripId: tripId,
                                 payedAt: ISO8601DateFormatter().string(from: payedDate),
                                 expenseType: expenditureTab == .shared ? "SHARED" : "INDIVIDUAL",
@@ -157,6 +169,7 @@ public struct ExpendpenditureEditReducer: Reducer {
                                 payerId: payerId,
                                 payerList: payerList
                             ))
+                            await send(.updateDimiss(result))
                         } else {
                             let _ = try await expenseUseCase.createExpense(.init(
                                 tripId: tripId,
@@ -170,8 +183,8 @@ public struct ExpendpenditureEditReducer: Reducer {
                                 payerId: payerId,
                                 payerList: payerList
                             ))
+                            await send(.dismiss)
                         }
-                        await send(.dismiss)
                     } catch: { error, send in
                         print(error)
                     }
