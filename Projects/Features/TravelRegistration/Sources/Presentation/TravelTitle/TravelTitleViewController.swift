@@ -158,10 +158,8 @@ extension TravelTitleViewController: View {
             .map { $0.postValidation }
             .bind { [weak self] isSuccess in
                 if isSuccess {
-                    self?.navigationController?.dismiss(animated: true)
                     self?.coordinator.finishedRegistration()
-                } else {
-                    print("post 실패")
+                    self?.navigationController?.dismiss(animated: true)
                 }
             }
             .disposed(by: disposeBag)

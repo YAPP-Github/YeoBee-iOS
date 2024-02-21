@@ -310,6 +310,7 @@ extension HomeViewController: HomeSectionHeaderViewDelegate {
                 
                 let moreTripReactor = MoreTripReactor(tripType: tripTypeCase)
                 let moreTripViewController = MoreTripViewController(coordinator: coordinator, reactor: moreTripReactor)
+                moreTripViewController.delegate = self
                 navigationController?.isNavigationBarHidden = false
                 navigationController?.pushViewController(moreTripViewController, animated: true)
             }
@@ -317,19 +318,28 @@ extension HomeViewController: HomeSectionHeaderViewDelegate {
     }
 }
 
-// MARK: - 여행 등록 완료 후
+// MARK: - 여행 등록 & 삭제 완료 후
 extension HomeViewController: HomeCoordinatorDelegate {
     public func finishedRegistration() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.reactor.homeTripUseCase()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             let toast = Toast.text(icon: .complete, "새로운 여행이 등록 되었어요!")
             toast.show()
+            self.reactor.homeTripUseCase()
         }
     }
     
     public func deletedTrip() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.reactor.homeTripUseCase()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            self.reactor.homeTripUseCase()
+        }
+    }
+}
+
+// MARK: - 더보기에서 들어가 삭제된 경우
+extension HomeViewController: MoreTripViewControllerDelegate {
+    func updateHomeTrip() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            self.reactor.homeTripUseCase()
         }
     }
 }
