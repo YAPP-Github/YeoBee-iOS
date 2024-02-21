@@ -100,7 +100,7 @@ class SettingCompanionCell: UITableViewCell {
         
         // 자신의 ID와 companion의 ID와 같은 경우 (동행자 자신인 경우)
         if let userId = companion.userId {
-            if String(userId) == KeychainManager.shared.load(key: "userId") {
+            if String(userId) == KeychainManager.shared.load(key: KeychainManager.userId) {
                 self.editButton.isHidden = true
             }
         }

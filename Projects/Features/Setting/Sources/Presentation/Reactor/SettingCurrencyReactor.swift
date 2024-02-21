@@ -48,8 +48,8 @@ public final class SettingCurrencyReactor: Reactor {
         switch action {
         case .textFieldText(text: let text):
             return .just(.textFieldText(text: text))
-        case .modified(let isSucess):
-            return .just(.modified(isSucess))
+        case .modified(let isSuccess):
+            return .just(.modified(isSuccess))
         }
     }
     
@@ -65,8 +65,8 @@ public final class SettingCurrencyReactor: Reactor {
                 newState.isModifyButtonValid = false
             }
             newState.textFieldText = text
-        case .modified(let isSucess):
-            newState.isModified = isSucess
+        case .modified(let isSuccess):
+            newState.isModified = isSuccess
         }
         
         return newState

@@ -84,8 +84,8 @@ public final class HomeReactor: Reactor {
             let userResult = try await userInfoUseCase.fetchUserInfo()
             self.action.onNext(.userInfo(userResult))
             
-            if KeychainManager.shared.load(key: "userId") == nil {
-                KeychainManager.shared.add(key: "userId", value: "\(userResult.id)")
+            if KeychainManager.shared.load(key: KeychainManager.userId) == nil {
+                KeychainManager.shared.add(key: KeychainManager.userId, value: "\(userResult.id)")
             }
         }
         
