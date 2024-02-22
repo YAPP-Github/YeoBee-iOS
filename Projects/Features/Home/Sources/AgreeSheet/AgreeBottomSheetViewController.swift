@@ -20,13 +20,14 @@ public class AgreeBottomSheetViewController: YBBottomSheetViewController {
     private let agreeSheetHostingController: AgreeSheetHostingController
 
     public init(
-        coordinator: CreateAccountCoordinator
+        coordinator: CreateAccountCoordinator,
+        nickName: String
     ) {
         self.coordinator = coordinator
         self.agreeSheetHostingController = AgreeSheetHostingController(
             rootView: .init(
                 store: .init(
-                    initialState: .init(),
+                    initialState: .init(nickName: nickName),
                     reducer: {
                         AgreeSheetReducer(coordinator: coordinator)
                     }

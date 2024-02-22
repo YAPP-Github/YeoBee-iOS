@@ -82,7 +82,7 @@ public final class CreateAccountViewController: UIViewController, View {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isCompleted in
                 if isCompleted {
-                    self?.coordinator?.showAgreeSheet()
+                    self?.coordinator?.showAgreeSheet(nickName: reactor.currentState.nickname)
                 } else {
                     // Error 처리
                 }

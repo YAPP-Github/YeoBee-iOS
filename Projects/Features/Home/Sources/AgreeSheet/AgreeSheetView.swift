@@ -23,19 +23,23 @@ struct AgreeSheetView: View {
             VStack(alignment: .leading, spacing: 20) {
                 Text("약관에 동의해주세요")
                     .foregroundColor(.ybColor(.black))
-                    .font(.ybfont(.header1))
+                    .font(.ybfont(.title1))
                 VStack(alignment: .leading, spacing: 14) {
                     HStack(spacing: 10) {
-                        if viewStore.totalChecking {
-                            DesignSystemAsset.Icons.checkFill.swiftUIImage
-                                .frame(width: 28, height: 28)
-                        } else {
-                            DesignSystemAsset.Icons.uncheck.swiftUIImage
-                                .frame(width: 28, height: 28)
+                        Button {
+                            viewStore.send(.tappedTotal(!viewStore.totalChecking))
+                        } label: {
+                            if viewStore.totalChecking {
+                                DesignSystemAsset.Icons.checkFill.swiftUIImage
+                                    .frame(width: 28, height: 28)
+                            } else {
+                                DesignSystemAsset.Icons.uncheck.swiftUIImage
+                                    .frame(width: 28, height: 28)
+                            }
+                            Text("약관 전체 동의")
+                                .foregroundColor(.ybColor(.gray6))
+                                .font(.ybfont(.body1))
                         }
-                        Text("약관 전체 동의")
-                            .foregroundColor(.ybColor(.gray6))
-                            .font(.ybfont(.body1))
                     }
                     YBDividerView()
                     HStack(spacing: 10) {
@@ -79,6 +83,7 @@ struct AgreeSheetView: View {
                                 .foregroundColor(.ybColor(.gray6))
                                 .font(.ybfont(.body2))
                         }
+                        Spacer()
                         Button {
                             let url = URL(string: "https://m.cafe.naver.com/ca-fe/web/cafes/31153021/articles/6?fromList=true&menuId=10&tc=cafe_article_list")
                             if let url {
@@ -102,7 +107,6 @@ struct AgreeSheetView: View {
                 .disabled(viewStore.isEnabledCompletedButton == false)
                 .background(viewStore.isEnabledCompletedButton ? YBColor.black.swiftUIColor : YBColor.gray3.swiftUIColor)
                 .cornerRadius(10)
-                .padding(.horizontal, 24)
                 .padding(.top, 16)
                 .padding(.bottom, 4)
             }

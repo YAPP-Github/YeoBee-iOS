@@ -46,8 +46,8 @@ struct OnboardingView: View {
                 .padding(.horizontal, 24)
                 .padding(.top, 16)
                 .padding(.bottom, 4)
-                .background(YBColor.gray1.swiftUIColor)
             }
+            .background(YBColor.gray1.swiftUIColor)
         }
     }
 }
@@ -60,8 +60,8 @@ extension OnboardingView {
                     .foregroundColor(.ybColor(.black))
                     .font(.ybfont(.header1))
                 Text("여행 경비를 손쉽게 추적하세요\n최대 10명까지, 각자의 지출을 한눈에!")
-                    .foregroundColor(.ybColor(.black))
-                    .font(.ybfont(.header1))
+                    .foregroundColor(.ybColor(.gray5))
+                    .font(.ybfont(.body1))
                     .multilineTextAlignment(.center)
             }
             Spacer()
@@ -69,11 +69,11 @@ extension OnboardingView {
                 .frame(width: 327, height: 219)
                 .padding(.bottom, 40)
         }
-        .background { YBColor.white.swiftUIColor }
-        .padding(.horizontal, 24)
         .padding(.top, 96)
-        .frame(height: 450)
+        .background { YBColor.white.swiftUIColor }
         .cornerRadius(20)
+        .padding(.horizontal, 24)
+        .frame(height: 450)
     }
 
     var manageView: some View {
@@ -83,8 +83,8 @@ extension OnboardingView {
                     .foregroundColor(.ybColor(.black))
                     .font(.ybfont(.header1))
                 Text("예산의 특징에 따라 나누어 관리해요\n실시간으로 잔고 내역을 한눈에!")
-                    .foregroundColor(.ybColor(.black))
-                    .font(.ybfont(.header1))
+                    .foregroundColor(.ybColor(.gray5))
+                    .font(.ybfont(.body1))
                     .multilineTextAlignment(.center)
             }
             Spacer()
@@ -92,11 +92,11 @@ extension OnboardingView {
                 .frame(width: 327, height: 199)
                 .padding(.bottom, 40)
         }
-        .background { YBColor.white.swiftUIColor }
-        .padding(.horizontal, 24)
         .padding(.top, 96)
-        .frame(height: 450)
+        .background { YBColor.white.swiftUIColor }
         .cornerRadius(20)
+        .padding(.horizontal, 24)
+        .frame(height: 450)
     }
 
     var calculateView: some View {
@@ -106,8 +106,8 @@ extension OnboardingView {
                     .foregroundColor(.ybColor(.black))
                     .font(.ybfont(.header1))
                 Text("간편하게 정산된 금액만 확인해요\n여행의 마지막은 깔끔한 정산!")
-                    .foregroundColor(.ybColor(.black))
-                    .font(.ybfont(.header1))
+                    .foregroundColor(.ybColor(.gray5))
+                    .font(.ybfont(.body1))
                     .multilineTextAlignment(.center)
             }
             Spacer()
@@ -115,10 +115,10 @@ extension OnboardingView {
                 .frame(width: 327, height: 183)
                 .padding(.bottom, 40)
         }
-        .background { YBColor.white.swiftUIColor }
-        .padding(.horizontal, 24)
         .padding(.top, 96)
-        .frame(height: 450)
+        .background { YBColor.white.swiftUIColor }
         .cornerRadius(20)
+        .padding(.horizontal, 24)
+        .frame(height: 450)
     }
 }

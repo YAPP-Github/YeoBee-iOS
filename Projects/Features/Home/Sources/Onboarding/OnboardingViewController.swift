@@ -33,12 +33,21 @@ public final class OnboardingViewController: UIViewController {
                 )
             )
         )
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
-
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+
+        view.addSubview(onboardingSheetHostingController.view)
+
+        onboardingSheetHostingController.view.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.horizontalEdges.equalToSuperview()
+        }
+
+        view.backgroundColor = .ybColor(.gray1)
         navigationController?.navigationBar.isHidden = true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }

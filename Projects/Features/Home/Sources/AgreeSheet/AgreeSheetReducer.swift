@@ -7,6 +7,7 @@
 
 import Combine
 import ComposableArchitecture
+import Entity
 
 public struct AgreeSheetReducer: Reducer {
 
@@ -21,8 +22,11 @@ public struct AgreeSheetReducer: Reducer {
         var privateData: Bool = false
         var serviceData: Bool = false
         var isEnabledCompletedButton: Bool = false
+        var nickName: String
 
-        init() { }
+        init(nickName: String) {
+            self.nickName = nickName
+        }
     }
 
     public enum Action {
@@ -30,7 +34,10 @@ public struct AgreeSheetReducer: Reducer {
         case tappedPrivate(Bool)
         case tappedService(Bool)
         case tappedConfirmButton
+        case showOnboarding
     }
+
+    @Dependency(\.userInfoUseCase) var userInfoUseCase
 
     public var body: some ReducerOf<AgreeSheetReducer> {
         Reduce { state, action in
@@ -49,11 +56,23 @@ public struct AgreeSheetReducer: Reducer {
                 return .none
 
             case let .tappedService(isCheck):
-                state.privateData = isCheck
+                state.serviceData = isCheck
                 state.totalChecking = isEnableTotalChecking(state: &state)
                 state.isEnabledCompletedButton = isEnableCompleteButton(state: &state)
                 return .none
             case .tappedConfirmButton:
+                coordinator.onboarding()
+                return .run { [nickName = state.nickName] send in
+                    let request = UpdateUserInfoRequest(nickname: nickName)
+                    let stateRequest = UpdateUserStateRequest(userState: .onboardingCompleted)
+                    try await userInfoUseCase.updateUserInfo(request)
+                    try await userInfoUseCase.updateUserState(stateRequest)
+                    await send(.showOnboarding)
+                } catch: { error, send in
+                    print(error)
+                }
+
+            case .showOnboarding:
                 coordinator.onboarding()
                 return .none
             }
