@@ -65,13 +65,12 @@ final class RevokeViewController: UIViewController, View {
         reactor.state.map { $0.isConfirm }
             .subscribe(onNext: { isConfirm in
                 if isConfirm {
-                    var statusCode = 0
                     Task {
-                        statusCode = try await LoginRepository().revoke()
-                    }
-                    if statusCode == 200 {
-                        TokenRepository.shared.deleteTokens()
-                        self.coordinator?.revokeComplete()
+                        let statusCode = try await LoginRepository().revoke()
+                        if statusCode == 204 {
+                            TokenRepository.shared.deleteTokens()
+                            self.coordinator?.revokeComplete()
+                        }
                     }
                 }
             })

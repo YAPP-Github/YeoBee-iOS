@@ -57,7 +57,6 @@ public final class SignViewController: UIViewController, View {
     
     func bindState(reactor: SignReactor) {
       reactor.state.map { $0.isOnBoardingCompleted ?? false }
-        .distinctUntilChanged()
         .observe(on: MainScheduler.instance)
         .subscribe(onNext: { isComplete in
           if isComplete {
