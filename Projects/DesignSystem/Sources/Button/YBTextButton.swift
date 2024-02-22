@@ -85,7 +85,8 @@ extension YBTextButton.Appearance {
     var backgroundColor: YBColor {
         switch self {
         case .default: return .black
-        case .defaultDisable, .selectDisable: return .gray3
+        case .defaultDisable: return .gray3
+        case .selectDisable: return .gray2
         case .select: return .gray6
         }
     }
