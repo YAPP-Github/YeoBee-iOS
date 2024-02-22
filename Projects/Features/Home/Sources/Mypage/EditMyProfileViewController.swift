@@ -30,7 +30,7 @@ public final class EditMyProfileViewController: UIViewController, View {
     }()
     let socialTypeLabel = YBLabel(font: .title1)
     let errorDescriptionLabel = YBLabel(text: "", font: .body4, textColor: .mainRed)
-    let editButton = YBTextButton(text: "수정하기", appearance: .selectDisable, size: .medium)
+    let editButton = YBTextButton(text: "수정하기", appearance: .defaultDisable, size: .medium)
     
     public override func viewDidLoad() {
         super.viewDidLoad()

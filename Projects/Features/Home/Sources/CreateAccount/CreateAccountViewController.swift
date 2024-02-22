@@ -22,7 +22,7 @@ public final class CreateAccountViewController: UIViewController, View {
     let nicknameLabel = YBLabel(text: "닉네임을 입력해주세요", font: .header2)
     let nicknameTextField = YBTextField()
     let errorDescriptionLabel = YBLabel(text: "", font: .body4, textColor: .mainRed)
-    let confirmButton = YBTextButton(text: "시작하기", appearance: .selectDisable, size: .medium)
+    let confirmButton = YBTextButton(text: "시작하기", appearance: .defaultDisable, size: .medium)
     
     public override func viewDidLoad() {
         super.viewDidLoad()
