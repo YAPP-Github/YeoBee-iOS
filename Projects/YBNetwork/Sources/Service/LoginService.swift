@@ -50,7 +50,7 @@ extension LoginService: TargetType {
     }
     
     public var headers: [String : String]? {
-        let token = KeychainManager.shared.load(key: KeychainManager.accessToken)
+        guard let token = KeychainManager.shared.load(key: KeychainManager.accessToken) else { return ["Content-type": "application/json"] }
         switch self {
             case .revoke:
                 return ["Content-type": "application/json", "Authorization": "Bearer \(token)"]
