@@ -88,6 +88,7 @@ final public class TokenRepository {
     public func deleteTokens() {
         keychainManager.delete(key: KeychainManager.accessToken)
         keychainManager.delete(key: KeychainManager.refreshToken)
+        keychainManager.delete(key: KeychainManager.userId)
     }
 }
 
