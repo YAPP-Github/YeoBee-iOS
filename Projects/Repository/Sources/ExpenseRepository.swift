@@ -10,7 +10,6 @@ import Foundation
 import Moya
 import YBNetwork
 import Entity
-import Dependencies
 
 public protocol ExpenseRepositoryInterface {
     func getExpenseList(request: FetchExpenseListRequest) async throws -> FetchExpenseListResponse
