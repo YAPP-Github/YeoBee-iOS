@@ -80,6 +80,5 @@ class SettingCurrencyCell: UITableViewCell {
     func configure() {
         guard let currency else { return }
         currencyLabel.text = "\(currency.exchangeRate.standard) \(currency.code) = \(currency.exchangeRate.value)원"
-        nextButton.isHidden = true
     }
 }

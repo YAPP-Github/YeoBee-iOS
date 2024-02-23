@@ -29,3 +29,15 @@ public struct ExchangeRate: Codable, Hashable {
         self.standard = standard
     }
 }
+
+public struct ExchangeRateRqeust: Codable {
+    public var value: Double
+    public var standard: Int
+    public var tripId: Int
+
+    public init(value: Double, standard: Int, tripId: Int) {
+        self.value = value
+        self.standard = standard
+        self.tripId = tripId
+    }
+}

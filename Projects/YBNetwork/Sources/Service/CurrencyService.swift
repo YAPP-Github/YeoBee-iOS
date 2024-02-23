@@ -22,7 +22,7 @@ extension CurrencyService: TargetType {
         switch self {
         case .getTripCurrencies:
             return "/v1/currencies"
-        case .putTripCurrencies(let tripId, let currencyCode, _):
+        case .putTripCurrencies(_, let currencyCode, _):
             return "/v1/currencies/\(currencyCode)/rate"
         }
     }
@@ -40,28 +40,20 @@ extension CurrencyService: TargetType {
         switch self {
         case let .getTripCurrencies(tripId):
             return .requestParameters(parameters: ["tripId": tripId], encoding: URLEncoding.queryString)
-        case let .putTripCurrencies(tripId, currencyCode, exchangeRate):
-            let params: [String: Any] = [
-                "tripId": tripId,
-                "currencyCode": currencyCode
-            ]
-            
-            let exchangeRateResult: [String: Any] = [
-                "value": exchangeRate.value,
-                "standard": exchangeRate.standard
-            ]
-            
-            return .requestCompositeParameters(
-                bodyParameters: exchangeRateResult,
-                bodyEncoding: URLEncoding.httpBody,
-                urlParameters: params
+        case let .putTripCurrencies(tripId, _, exchangeRate):
+            let exchangeRateResult = ExchangeRateRqeust(
+                value: exchangeRate.value,
+                standard: exchangeRate.standard,
+                tripId: tripId
             )
+            
+            return .requestJSONEncodable(exchangeRateResult)
         }
     }
 
     public var headers: [String : String]? {
         if let token = KeychainManager.shared.load(key: KeychainManager.accessToken) {
-            return ["Authorization": "Bearer \(token)"]
+            return ["Content-type": "application/json", "Authorization": "Bearer \(token)"]
         } else {
             return nil
         }
