@@ -89,7 +89,7 @@ public final class SettingCurrencyViewController: UIViewController {
     private func configureBar() {
         let backImage = UIImage(systemName: "chevron.backward")?.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
-        self.navigationItem.backBarButtonItem = backButton
+        self.navigationItem.leftBarButtonItem = backButton
     }
     
     @objc private func backButtonTapped() {

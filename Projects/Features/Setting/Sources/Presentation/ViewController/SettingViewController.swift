@@ -182,13 +182,12 @@ extension SettingViewController: UITableViewDelegate {
         case .companion:
             break
         case .currency:
-            break
-//            if case let .currency(currency) = snapshot.itemIdentifiers(inSection: .currency)[indexPath.item] {
-//                let currentTripItem = reactor.currentState.tripItem
-//                let settingCurrencyReactor = SettingCurrencyReactor(currency: currency, tripItem: currentTripItem)
-//                let settingCurrencyViewController = SettingCurrencyViewController(reactor: settingCurrencyReactor)
-//                self.navigationController?.pushViewController(settingCurrencyViewController, animated: true)
-//            }
+            if case let .currency(currency) = snapshot.itemIdentifiers(inSection: .currency)[indexPath.item] {
+                let currentTripItem = reactor.currentState.tripItem
+                let settingCurrencyReactor = SettingCurrencyReactor(currency: currency, tripItem: currentTripItem)
+                let settingCurrencyViewController = SettingCurrencyViewController(reactor: settingCurrencyReactor)
+                self.navigationController?.pushViewController(settingCurrencyViewController, animated: true)
+            }
         }
     }
 }
