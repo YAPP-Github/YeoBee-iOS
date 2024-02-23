@@ -30,46 +30,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
+        let navigationController = UINavigationController(rootViewController: SplashViewController())
         
-        let navigationController = UINavigationController()
-        let tokenRepository = TokenRepository.shared
-        
-        navigationController.hidesBottomBarWhenPushed = true
-        
-        Task {
-            let isTokenExpiring = try await tokenRepository.isTokenExpiring()
-            var isOnboardingCompleted: Bool? = nil
-            do {
-                isOnboardingCompleted = try await UserInfoRepository().isOnboardingCompleted()
-                DispatchQueue.main.async {
-                    let coordinator = RootCoordinator(
-                        navigationController: navigationController,
-                        isTokenExpring: isTokenExpiring,
-                        isOnboardingCompleted: isOnboardingCompleted
-                    )
-                    coordinator.start(animated: false)
-                    
-                    self.window?.overrideUserInterfaceStyle = .light
-                    self.window?.rootViewController = navigationController
-                    self.window?.makeKeyAndVisible()
-                }
-                
-            } catch {
-                DispatchQueue.main.async {
-                    let coordinator = RootCoordinator(
-                        navigationController: navigationController,
-                        isTokenExpring: false,
-                        isOnboardingCompleted: false
-                    )
-                    coordinator.sign(navigationController: navigationController)
-                    
-                    self.window?.overrideUserInterfaceStyle = .light
-                    self.window?.rootViewController = navigationController
-                    self.window?.makeKeyAndVisible()
-                }
-                return // 이후 코드 실행 방지
-            }
-        }
+        self.window?.overrideUserInterfaceStyle = .light
+        self.window?.rootViewController = navigationController
+        self.window?.makeKeyAndVisible()
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

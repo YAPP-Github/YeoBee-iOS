@@ -137,6 +137,7 @@ public class MyPageViewController: UIViewController, View {
         
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = YBColor.white.color
+        appearance.shadowColor = nil
         // 타이틀 색상도 변경 가능
         
         self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
@@ -270,7 +271,7 @@ public class MyPageViewController: UIViewController, View {
             make.leading.equalToSuperview().offset(24)
             make.trailing.equalToSuperview().offset(-24)
             make.bottom.equalToSuperview().offset(-20)
-            make.height.equalTo(460)
+            make.height.equalTo(440)
         }
         
         profileImageView.snp.makeConstraints { make in

@@ -13,8 +13,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
-        // 런치 스크린
-        Thread.sleep(forTimeInterval: 1.5)
         
         let appkey = Bundle.main.object(forInfoDictionaryKey: "KAKAO_NATIVE_APP_KEY") as? String ?? ""
         KakaoSDK.initSDK(appKey: appkey)
