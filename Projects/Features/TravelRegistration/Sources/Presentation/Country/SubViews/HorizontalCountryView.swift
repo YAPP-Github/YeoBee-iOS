@@ -22,7 +22,6 @@ class HorizontalCountryView: UIScrollView {
         $0.backgroundColor = .clear
         return $0
     }(UIStackView())
-    private let dividerView = YBDivider(height: 0.6, color: .gray3)
     
     var selectedButton: UIButton?
     var disposeBag = DisposeBag()
@@ -58,15 +57,11 @@ class HorizontalCountryView: UIScrollView {
     
     private func addViews() {
         addSubview(stackView)
-        addSubview(dividerView)
     }
     private func setLayout() {
         stackView.snp.makeConstraints { make in
-            make.top.bottom.centerY.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(24)
-        }
-        dividerView.snp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalToSuperview().inset(13)
+            make.leading.trailing.bottom.equalToSuperview().inset(24)
         }
     }
     

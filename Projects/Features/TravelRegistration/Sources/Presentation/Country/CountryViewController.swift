@@ -40,7 +40,8 @@ public final class CountryViewController: UIViewController {
     private let countryTableView = CountryTableView()
     private let horizontalCountryView = HorizontalCountryView()
     private let selectedCountryView = SelectedCountryView()
-    private let dividerView = YBDivider(height: 0.6, color: .gray3)
+    private let topDividerView = YBDivider(height: 0.6, color: .gray3)
+    private let bottomDividerView = YBDivider(height: 0.6, color: .gray3)
     private let nextButton = YBTextButton(text: "다음으로", appearance: .defaultDisable, size: .medium)
     private let emptyView = YBEmptyView(title: "검색 결과가 없어요.")
     
@@ -74,7 +75,8 @@ public final class CountryViewController: UIViewController {
             horizontalCountryView,
             countryTableView,
             selectedCountryView,
-            dividerView,
+            topDividerView,
+            bottomDividerView,
             nextButton,
             emptyView
         ].forEach {
@@ -86,25 +88,29 @@ public final class CountryViewController: UIViewController {
         horizontalCountryView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(80)
+            make.height.equalTo(73)
         }
         nextButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
             make.leading.trailing.equalToSuperview().inset(24)
         }
-        dividerView.snp.makeConstraints { make in
+        topDividerView.snp.makeConstraints { make in
+            make.top.equalTo(horizontalCountryView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+        }
+        bottomDividerView.snp.makeConstraints { make in
             make.bottom.equalTo(nextButton.snp.top).inset(-16)
             make.leading.trailing.equalToSuperview()
         }
         selectedCountryView.snp.makeConstraints { make in
-            make.bottom.equalTo(dividerView.snp.top)
+            make.bottom.equalTo(bottomDividerView.snp.top)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(111)
         }
         countryTableView.snp.makeConstraints { make in
             make.top.equalTo(horizontalCountryView.snp.bottom)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(dividerView.snp.top)
+            make.bottom.equalTo(bottomDividerView.snp.top)
         }
         emptyView.snp.makeConstraints { make in
             make.edges.equalTo(countryTableView.snp.edges)
@@ -117,7 +123,7 @@ public final class CountryViewController: UIViewController {
             countryTableView.snp.remakeConstraints { make in
                 make.top.equalTo(horizontalCountryView.snp.bottom)
                 make.leading.trailing.equalToSuperview()
-                make.bottom.equalTo(dividerView.snp.top)
+                make.bottom.equalTo(bottomDividerView.snp.top)
             }
         } else {
             selectedCountryView.alpha = 1
