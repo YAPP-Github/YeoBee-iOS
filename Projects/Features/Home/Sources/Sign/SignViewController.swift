@@ -70,6 +70,8 @@ public final class SignViewController: UIViewController, View {
     }
     
     private func setupViews() {
+        stackView.axis = .vertical
+        stackView.alignment = .center
         titleLabel.text = "여행 경비 정산 가계부"
         titleLabel.font = .ybfont(.header2)
         view.backgroundColor = YBColor.white.color
