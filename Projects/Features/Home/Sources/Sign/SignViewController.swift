@@ -69,11 +69,12 @@ public final class SignViewController: UIViewController, View {
     }
     
     private func setupViews() {
-        titleLabel.text = "모두를 위한 여행 정산 가계부"
-        titleLabel.font = .ybfont(.title1)
+        titleLabel.text = "여행 경비 정산 가계부"
+        titleLabel.font = .ybfont(.header2)
         view.backgroundColor = YBColor.white.color
         illustImageView.image = DesignSystemAsset.Icons.illust.image
         logoImageView.image = DesignSystemAsset.Icons.logo.image
+        navigationController?.isNavigationBarHidden = true
     }
     
     private func setLayouts() {
