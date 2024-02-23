@@ -134,6 +134,13 @@ public class MyPageViewController: UIViewController, View {
         let backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
         self.navigationItem.title = "MY"
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = YBColor.white.color
+        // 타이틀 색상도 변경 가능
+        
+        self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        self.navigationController?.navigationBar.standardAppearance = appearance
     }
     
     @objc private func backButtonTapped() {
