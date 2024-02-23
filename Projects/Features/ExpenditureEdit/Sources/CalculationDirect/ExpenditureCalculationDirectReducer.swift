@@ -20,7 +20,6 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
         var tripUserListItems: IdentifiedArrayOf<CalculationUserInputReducer.State> = []
         var dutchAmount: Double = .zero
         var payableList: [TripUserItem]
-        var selectedPayer: TripUserItem?
         var isInitialShow: Bool = true
         var isEnableConfirmButton: Bool = true
 
@@ -28,15 +27,22 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
             expenseType: ExpenditureType,
             tripItem: TripItem,
             expenseDetail: ExpenseDetailItem,
-            selectedPayer: TripUserItem?,
+            selectedPayerId: Int?,
             hasSharedBudget: Bool
         ) {
+            let calculationType = expenseDetail.calculationType
             self.expenseType = expenseType
+            self.dutchAmount =  expenseDetail.amount / Double(tripItem.tripUserList.count)
             self.tripItem = tripItem
             self.totalAmount = expenseDetail.amount
-            self.expenseDetail = expenseDetail
-            self.selectedPayer = selectedPayer
-
+            var expenseDetailItem = expenseDetail
+            expenseDetailItem.calculationType = "CUSTOM"
+            if let selectedPayerId {
+                expenseDetailItem.payerId = selectedPayerId
+            } else {
+                expenseDetailItem.payerId = nil
+            }
+            self.expenseDetail = expenseDetailItem
             var payableList: [TripUserItem] = []
             if expenseType == .expense {
                 if hasSharedBudget {
@@ -45,21 +51,31 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
                 payableList += tripItem.tripUserList
             }
             self.payableList = payableList
-            if let selectedPayer {
+            if let selectedPayerId {
                 if expenseType == .expense { self.isEnableConfirmButton = true }
                 payableList.forEach { tripUser in
-                    self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == selectedPayer.id))
+                    self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == selectedPayerId))
                 }
             } else {
                 if expenseType == .expense { self.isEnableConfirmButton = false }
                 payableList.forEach { tripUser in
-                    self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: false))
+                    self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == 0))
                 }
             }
             tripItem.tripUserList.forEach { tripUser in
-                self.tripUserListItems.updateOrAppend(.init(user: tripUser))
+                if calculationType == "CUSTOM" {
+                    self.tripUserListItems.updateOrAppend(.init(
+                        user: tripUser,
+                        text: expenseDetailItem.payerList.filter({ $0.tripUserId == tripUser.id }).first?.amount.formattedWithSeparator ?? "")
+                    )
+                } else {
+                    self.tripUserListItems.updateOrAppend(.init(
+                        user: tripUser,
+                        text: "")
+                    )
+                }
+
             }
-            self.dutchAmount =  expenseDetail.amount / Double(tripItem.tripUserList.count)
         }
     }
 
@@ -83,8 +99,7 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
 
             case let .payerItem(id: _, action: .tappedPayrtItem(tripUserItem)):
                 if state.expenseType == .expense { state.isEnableConfirmButton = true }
-                state.selectedPayer = tripUserItem
-                state.expenseDetail.payerUserId = tripUserItem.id
+                state.expenseDetail.payerId = tripUserItem.id == 0 ? nil : tripUserItem.id
                 state.expenseDetail.payerName = tripUserItem.name
                 state.payableList.forEach { tripUser in
                     state.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == tripUserItem.id))

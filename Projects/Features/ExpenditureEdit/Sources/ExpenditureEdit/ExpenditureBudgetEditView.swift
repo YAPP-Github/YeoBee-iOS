@@ -18,7 +18,7 @@ struct ExpenditureBudgetEditView: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .bottom) {
-                WithViewStore(store, observe: \.isEnableRegisterButton) { viewstore in
+                WithViewStore(store, observe: { $0 }) { viewstore in
                     ScrollView(showsIndicators: false) {
                         containerView
                             .padding(.top, 10)
@@ -27,13 +27,14 @@ struct ExpenditureBudgetEditView: View {
                     Button {
                         viewstore.send(.tappedRegisterButton)
                     } label: {
-                        Text("등록하기")
-                            .foregroundColor(viewstore.state ? .ybColor(.white) : .ybColor(.gray5))
+                        Text(viewstore.expenseItem != nil ? "수정하기" : "등록하기")
+                            .foregroundColor(viewstore.isEnableRegisterButton ? .ybColor(.white) : .ybColor(.gray5))
                             .font(.ybfont(.title1))
                             .frame(height: 54)
                             .frame(maxWidth: .infinity)
                     }
-                    .background(viewstore.state ? YBColor.black.swiftUIColor : YBColor.gray3.swiftUIColor)
+                    .disabled(viewstore.isEnableRegisterButton == false)
+                    .background(viewstore.isEnableRegisterButton ? YBColor.black.swiftUIColor : YBColor.gray3.swiftUIColor)
                     .cornerRadius(10)
                     .padding(.horizontal, 24)
                     .padding(.top, 16)
@@ -71,18 +72,13 @@ extension ExpenditureBudgetEditView {
             )
             WithViewStore(store, observe: { $0 }) { viewStore in
                 if viewStore.expenditureTab == .shared {
-                    if viewStore.expenseDetail == nil {
-                        ExpenseCalculationButtonView(text: "") {
-                            viewStore.send(.tappedCalculationButton)
-                        }
-                        .padding(.horizontal, 24)
-                    } else if let payerName = viewStore.expenseDetail?.payerName {
-                        ExpenseCalculationButtonView(text: "\(payerName) 결제") {
+                    if viewStore.expenseDetail.calculationType == "EQUAL" {
+                        ExpenseCalculationButtonView(text: "동행인과 N/1") {
                             viewStore.send(.tappedCalculationButton)
                         }
                         .padding(.horizontal, 24)
                     } else {
-                        ExpenseCalculationButtonView(text: "공동경비 결제") {
+                        ExpenseCalculationButtonView(text: "직접정산") {
                             viewStore.send(.tappedCalculationButton)
                         }
                         .padding(.horizontal, 24)

@@ -98,7 +98,9 @@ extension ExpenditureDetailView {
                         .foregroundColor(.ybColor(.gray5))
                         .font(.ybfont(.body1))
                 }
-                if let payerName =  viewStore.expenseDetailItem?.payerName {
+                if let payerName =  viewStore.expenseDetailItem?.payerName,
+                   viewStore.expenseDetailItem?.category != .income
+                {
                     HStack {
                         Text("결제자")
                             .foregroundColor(.ybColor(.gray6))

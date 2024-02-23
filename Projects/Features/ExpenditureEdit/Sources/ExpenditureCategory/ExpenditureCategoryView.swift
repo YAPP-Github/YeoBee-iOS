@@ -53,7 +53,7 @@ extension ExpenditureCategoryView {
             WithViewStore(store, observe: { $0 }) { viewStore in
                 HStack(alignment: .top, spacing: 10) {
                     HStack(spacing: 0) {
-                        Text("지출항목")
+                        Text("지출내용")
                             .foregroundColor(.ybColor(.black))
                             .font(.ybfont(.title1))
                         Text("*")
@@ -78,6 +78,5 @@ extension ExpenditureCategoryView {
                 .padding(.horizontal, 24)
             }
         }
-
     }
 }

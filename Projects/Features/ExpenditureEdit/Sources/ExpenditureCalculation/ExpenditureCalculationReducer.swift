@@ -28,19 +28,28 @@ public struct ExpenditureCalculationReducer: Reducer {
             selectedPayer: TripUserItem?,
             hasSharedBudget: Bool
         ) {
+            var expenseDetailItem = expenseDetail
+            self.seletedCalculationType = expenseDetail.calculationType == "EQUAL" ? .dutch : .direct
+            if expenseDetail.calculationType == "CUSTOM" {
+                let totalAmount = expenseDetail.payerList.reduce(0) { $0 + $1.amount }
+                if totalAmount != expenseDetail.amount {
+                    self.seletedCalculationType = .dutch
+                    expenseDetailItem.calculationType = "EQUAL"
+                }
+             }
             self.expenseType = expenseType
             self.dutch = .init(
                 expenseType: expenseType,
                 tripItem: tripItem,
-                expenseDetail: expenseDetail,
-                selectedPayer: selectedPayer,
+                expenseDetail: expenseDetailItem,
+                selectedPayerId: expenseDetail.payerId,
                 hasSharedBudget: hasSharedBudget
             )
             self.direct = .init(
                 expenseType: expenseType,
                 tripItem: tripItem,
-                expenseDetail: expenseDetail,
-                selectedPayer: selectedPayer,
+                expenseDetail: expenseDetailItem,
+                selectedPayerId: expenseDetail.payerId,
                 hasSharedBudget: hasSharedBudget
             )
         }

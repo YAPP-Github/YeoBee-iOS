@@ -90,7 +90,8 @@ extension ExpenditureCoordinator {
             editDate: editDate,
             expenditureTab: expenditureTab,
             expenseDetail: nil,
-            hasSharedBudget: hasSharedBudget
+            hasSharedBudget: hasSharedBudget,
+            isUpdate: false
         )
         expenditureAddCoordinator.parent = self
         expenditureAddCoordinator.delegate = self
@@ -114,7 +115,8 @@ extension ExpenditureCoordinator {
             editDate: editDate,
             expenditureTab: expenditureTab,
             expenseDetail: expenseDetail,
-            hasSharedBudget: hasSharedBudget
+            hasSharedBudget: hasSharedBudget,
+            isUpdate: true
         )
         expenditureAddCoordinator.parent = self
         expenditureAddCoordinator.delegate = self

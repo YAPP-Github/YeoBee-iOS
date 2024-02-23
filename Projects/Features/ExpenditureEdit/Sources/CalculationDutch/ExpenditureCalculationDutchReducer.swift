@@ -17,21 +17,17 @@ public struct ExpenditureCalculationDutchReducer: Reducer {
         var payerListItems: IdentifiedArrayOf<CalculationPayerItemReducer.State> = []
         var dutchAmount: Double = .zero
         var payableList: [TripUserItem]
-        var selectedPayer: TripUserItem?
         var isEnableRegisterButton: Bool = true
 
         init(
             expenseType: ExpenditureType,
             tripItem: TripItem,
             expenseDetail: ExpenseDetailItem,
-            selectedPayer: TripUserItem?,
+            selectedPayerId: Int?,
             hasSharedBudget: Bool
         ) {
             self.expenseType = expenseType
             self.tripItem = tripItem
-            self.expenseDetail = expenseDetail
-            self.selectedPayer = selectedPayer
-
             var payableList: [TripUserItem] = []
             if expenseType == .expense {
                 if hasSharedBudget {
@@ -40,18 +36,30 @@ public struct ExpenditureCalculationDutchReducer: Reducer {
                 payableList += tripItem.tripUserList
             }
             self.payableList = payableList
-            if let selectedPayer {
-                if expenseType == .expense { self.isEnableRegisterButton = true }
+            let dutchAmount =  expenseDetail.amount / Double(tripItem.tripUserList.count)
+            var expenseList: [Payer] = []
+            tripItem.tripUserList.forEach { tripUser in
+                expenseList.append(.init(tripUserId: tripUser.id, amount: dutchAmount))
+            }
+            var expenseDetailItem = expenseDetail
+            expenseDetailItem.calculationType = "EQUAL"
+            expenseDetailItem.payerList = expenseList
+            if let selectedPayerId {
+                expenseDetailItem.payerId = selectedPayerId
+            } else {
+                expenseDetailItem.payerId = nil
+            }
+            self.expenseDetail = expenseDetailItem
+            self.dutchAmount = dutchAmount
+            if let selectedPayerId {
                 payableList.forEach { tripUser in
-                    self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == selectedPayer.id))
+                    self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == selectedPayerId))
                 }
             } else {
-                if expenseType == .expense { self.isEnableRegisterButton = false }
                 payableList.forEach { tripUser in
-                    self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: false))
+                    self.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == 0))
                 }
             }
-            self.dutchAmount =  expenseDetail.amount / Double(tripItem.tripUserList.count)
         }
     }
 
@@ -66,9 +74,9 @@ public struct ExpenditureCalculationDutchReducer: Reducer {
             case let .payerItem(id: _, action: .tappedPayrtItem(tripUserItem)):
                 var expenseList: [Payer] = []
                 if state.expenseType == .expense { state.isEnableRegisterButton = true }
-                state.selectedPayer = tripUserItem
-                state.expenseDetail.payerUserId = tripUserItem.id == 0 ? nil : tripUserItem.id
+                state.expenseDetail.payerId = tripUserItem.id == 0 ? nil : tripUserItem.id
                 state.expenseDetail.payerName = tripUserItem.name == "공동경비" ? nil : tripUserItem.name
+                state.expenseDetail.calculationType = "EQUAL"
                 state.payableList.forEach { tripUser in
                     state.payerListItems.updateOrAppend(.init(user: tripUser, isChecked: tripUser.id == tripUserItem.id))
                 }

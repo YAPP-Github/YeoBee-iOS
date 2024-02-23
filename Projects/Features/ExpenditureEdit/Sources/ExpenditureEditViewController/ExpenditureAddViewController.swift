@@ -28,7 +28,8 @@ public final class ExpenditureAddViewController: UIViewController {
         editDate: Date,
         expenditureTab: ExpenditureTab,
         expenseDetail: ExpenseDetailItem?,
-        hasSharedBudget: Bool
+        hasSharedBudget: Bool,
+        isUpdate: Bool
     ) {
         self.coordinator = coordinator
         let store: StoreOf<ExpenditureReducer> = .init(
@@ -39,7 +40,8 @@ public final class ExpenditureAddViewController: UIViewController {
                 tripItem: tripItem,
                 editDate: editDate,
                 expenseDetail: expenseDetail,
-                hasSharedBudget: hasSharedBudget
+                hasSharedBudget: hasSharedBudget,
+                isUpdate: isUpdate
             ),
             reducer: {
                 ExpenditureReducer(cooridinator: coordinator)
@@ -119,13 +121,13 @@ public final class ExpenditureAddViewController: UIViewController {
 extension ExpenditureAddViewController {
     func selectCurrency(currency: Currency, expenseType: ExpenseType?) {
         if case expenseType = .individual {
-            store.send(.expenditureEdit(.expenditureInput(.setCurrency(currency))))
+            store.send(.expenditureEdit(.expenditureInput(.setCurrency(currency))), animation: .default)
         } else if case expenseType = .individualBudget {
-            store.send(.expenditureBudgetEdit(.expenditureInput(.setCurrency(currency))))
+            store.send(.expenditureBudgetEdit(.expenditureInput(.setCurrency(currency))), animation: .default)
         } else if case expenseType = .shared {
-            store.send(.expenditureEdit(.expenditureInput(.setCurrency(currency))))
+            store.send(.expenditureEdit(.expenditureInput(.setCurrency(currency))), animation: .default)
         } else if case expenseType = .sharedBudgetIncome {
-            store.send(.expenditureBudgetEdit(.expenditureInput(.setCurrency(currency))))
+            store.send(.expenditureBudgetEdit(.expenditureInput(.setCurrency(currency))), animation: .default)
         }
     }
 

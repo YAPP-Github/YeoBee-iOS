@@ -31,6 +31,7 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
     public let expenditureTab: ExpenditureTab
     public let expenseDetail: ExpenseDetailItem?
     public let hasSharedBudget: Bool
+    public let isUpdate: Bool
 
     public init(
         navigationController: UINavigationController,
@@ -39,7 +40,8 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
         editDate: Date,
         expenditureTab: ExpenditureTab,
         expenseDetail: ExpenseDetailItem?,
-        hasSharedBudget: Bool
+        hasSharedBudget: Bool,
+        isUpdate: Bool
     ) {
         self.navigationController = navigationController
         self.expenseItem = expenseItem
@@ -48,6 +50,7 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
         self.expenditureTab = expenditureTab
         self.expenseDetail = expenseDetail
         self.hasSharedBudget = hasSharedBudget
+        self.isUpdate = isUpdate
     }
 
     public func start(animated: Bool) {
@@ -58,7 +61,8 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
             editDate: editDate, 
             expenditureTab: expenditureTab,
             expenseDetail: expenseDetail,
-            hasSharedBudget: hasSharedBudget
+            hasSharedBudget: hasSharedBudget,
+            isUpdate: isUpdate
         )
         self.expenditureAddViewController = expenditureAddViewController
         expenditureEditNavigationController = UINavigationController(rootViewController: expenditureAddViewController)

@@ -22,10 +22,11 @@ public struct ExpenditureBudgetEditReducer: Reducer {
         var expenseItem: ExpenseItem?
         var editDate: Date
         let expenditureTab: ExpenditureTab
-        var expenseDetail: ExpenseDetailItem?
+        var expenseDetail: ExpenseDetailItem
         var currencies: [Currency] = []
         var isInitialShow: Bool = true
         var hasSharedBudget: Bool
+        var isUpdate: Bool
 
         init(
             expenseItem: ExpenseItem?,
@@ -33,14 +34,36 @@ public struct ExpenditureBudgetEditReducer: Reducer {
             editDate: Date,
             expenditureTab: ExpenditureTab,
             expenseDetail: ExpenseDetailItem?,
-            hasSharedBudget: Bool
+            hasSharedBudget: Bool,
+            isUpdate: Bool
         ) {
             self.expenseItem = expenseItem
             self.tripItem = tripItem
             self.editDate = editDate
             self.expenditureTab = expenditureTab
-            self.expenseDetail = expenseDetail
             self.hasSharedBudget = hasSharedBudget
+            self.isUpdate = isUpdate
+            if let expenseDetail {
+                self.expenseDetail = expenseDetail
+            } else {
+                var expenseList: [Payer] = []
+                tripItem.tripUserList.forEach { tripUser in
+                    expenseList.append(.init(tripUserId: tripUser.id, amount: 0))
+                }
+                let expenseDetail: ExpenseDetailItem = .init(
+                    name: "",
+                    amount: 0,
+                    currency: "",
+                    payedAt: "",
+                    category: .etc,
+                    payerUserId: nil,
+                    payerId: hasSharedBudget ? nil : tripItem.tripUserList.first?.id,
+                    payerList: expenseList,
+                    method: "",
+                    calculationType: "EQUAL"
+                )
+                self.expenseDetail = expenseDetail
+            }
         }
     }
 
@@ -71,8 +94,8 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                     state.isInitialShow = false
                     return .run { [tripId = state.tripItem.id, state] send in
                         let currencies = try await currencyUseCase.getTripCurrencies(tripId)
-                        if let expenseDetail = state.expenseDetail {
-                            await send(.setEditExpense(expenseDetail, currencies))
+                        if state.isUpdate {
+                            await send(.setEditExpense(state.expenseDetail, currencies))
                         }
                         await send(.setCurrencies(currencies))
                     } catch: { error, send in
@@ -105,6 +128,17 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                     await send(.expenditurePayment(.setPayment(expenseDetail.method == "CASH" ? .cash : .card)))
                 }
 
+            case let .setExpenditureDetail(expenseDetailItem):
+                if state.isUpdate {
+                    state.expenseDetail.calculationType = expenseDetailItem.calculationType
+                    state.expenseDetail.payerList = expenseDetailItem.payerList
+                    state.expenseDetail.payerName = expenseDetailItem.payerName
+                    state.expenseDetail.payerId = expenseDetailItem.payerId
+                } else {
+                    state.expenseDetail = expenseDetailItem
+                }
+                return .none
+
             default:
                 return .none
             }
@@ -118,8 +152,7 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                     return state.expenditureContent.text.isEmpty == false &&
                     state.expenditureContent.isInvaildText == false &&
                     state.expenditureInput.text.isEmpty == false &&
-                    state.expenseDetail != nil &&
-                    state.expenseDetail?.payerList != []
+                    state.expenseDetail.payerList != []
                 }
             }
 
@@ -132,13 +165,20 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                     let expenseText = state.expenditureContent.text
                     let payedAt = state.editDate
                     let expenditureTab = state.expenditureTab
-                    let payerId = state.expenseDetail?.payerId
-                    let payerList: [PayerRequest] = state.expenseDetail?.payerList.compactMap { 
-                        .init(tripUserId: $0.tripUserId, amount: $0.amount)
-                    } ?? []
+                    let payerId = state.expenseDetail.payerId
+                    let calculationType = state.expenseDetail.calculationType
+                    let payerList: [PayerRequest] = state.expenseDetail.payerList.compactMap {
+                        if $0.amount == 0 {
+                            let dutchAmount =  amount / Double(state.expenseDetail.payerList.count)
+                            return .init(tripUserId: $0.tripUserId, amount: dutchAmount)
+                        } else {
+                            return .init(tripUserId: $0.tripUserId, amount: $0.amount)
+                        }
+                    }
                     return .run { [state] send in
                         let payedDate = Calendar.current.date(byAdding: .hour, value: 9, to: payedAt) ?? Date()
-                        if let expenseItem = state.expenseItem {
+                        if let expenseItem = state.expenseItem,
+                           state.isUpdate {
                             let result = try await expenseUseCase.updateExpense(expenseItem.id, .init(
                                 tripId: tripId,
                                 payedAt: ISO8601DateFormatter().string(from: payedDate),
@@ -149,7 +189,8 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                                 expenseCategory: "INCOME",
                                 name: expenseText,
                                 payerId: payerId,
-                                payerList: payerList
+                                payerList: payerList,
+                                calculationType: expenditureTab == .shared ? calculationType : "NONE"
                             ))
                             await send(.updateDimiss(result))
                         } else {
@@ -163,7 +204,8 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                                 expenseCategory: "INCOME",
                                 name: expenseText,
                                 payerId: payerId,
-                                payerList: payerList
+                                payerList: payerList,
+                                calculationType: expenditureTab == .shared ? calculationType : "NONE"
                             ))
                             await send(.dismiss)
                         }
