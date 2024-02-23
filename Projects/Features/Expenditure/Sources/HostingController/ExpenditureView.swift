@@ -93,13 +93,6 @@ struct ExpenditureView: View {
                         )
                         .padding(.bottom, 26)
                         .installHeight()
-                        WithViewStore(store, observe: \.currentFilter) { viewStore in
-                            FilterButtonView(title: viewStore.state?.rawValue ?? "전체보기") {
-                                store.send(.tappedFilterButton(viewStore.state))
-                            }
-                            .padding(.bottom, 20)
-                        }
-                        .installHeight()
                         ExpenditureListView(
                             store: store.scope(
                                 state: \.expenditureList,
