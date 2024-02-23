@@ -40,7 +40,7 @@ class SplashViewController: UIViewController {
         guard let splashNavigationController = self.navigationController else {
             return
         }
-      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
           Task {
               let isTokenExpiring = try await self.tokenRepository.isTokenExpiring()
               var isOnboardingCompleted: Bool? = nil
