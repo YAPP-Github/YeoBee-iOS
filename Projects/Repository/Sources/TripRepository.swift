@@ -10,7 +10,6 @@ import Foundation
 import Moya
 import YBNetwork
 import Entity
-import Dependencies
 
 public protocol TripRepositoryInterface {
     func getTrip(_ tripId: Int) async throws -> TripItem

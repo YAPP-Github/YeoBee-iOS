@@ -20,10 +20,7 @@ final public class OnboardingCoordinator: OnboardingCoordinatorInterface {
     }
 
     public func start(animated: Bool) {
-        let onboardingViewController = OnboardingViewController()
-        let reactor = OnboardingReactor()
-        onboardingViewController.reactor = reactor
-        onboardingViewController.coordinator = self
+        let onboardingViewController = OnboardingViewController(coordinator: self)
         navigationController.pushViewController(onboardingViewController, animated: true)
     }
 

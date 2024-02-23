@@ -52,7 +52,7 @@ extension Project {
             platform: .iOS,
             product: product,
             bundleId: "\(name.lowercased()).com",
-            deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
+            deploymentTarget: .iOS(targetVersion: "17.0", devices: [.iphone]),
             infoPlist: .extendingDefault(with: infoPlist),
             sources: sources,
             resources: resources,

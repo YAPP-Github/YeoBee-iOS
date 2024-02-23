@@ -51,18 +51,7 @@ public final class CreateAccountReactor: Reactor {
             case .updateNickname(let nickname):
                 return Observable.just(Mutation.setNickname(nickname, nickname.isEmpty))
             case .confirmButtonTapped:
-                return Observable.create { observer in
-                    if let errorMessage = self.isValidNickname(self.currentState.nickname) {
-                        observer.onNext(.setErrorMessage(errorMessage))
-                    } else {
-                        observer.onNext(.setErrorMessage(nil))
-                        Task { @MainActor in
-                            try await self.updateUserInfo()
-                            observer.onNext(.onBoarding)
-                        }
-                    }
-                    return Disposables.create()
-                }
+            return Observable.just(.onBoarding)
         }
     }
     

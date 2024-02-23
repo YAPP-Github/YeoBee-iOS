@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "travel_bee.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
