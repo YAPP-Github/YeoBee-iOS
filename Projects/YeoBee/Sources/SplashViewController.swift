@@ -13,9 +13,16 @@ import Repository
 class SplashViewController: UIViewController {
     let tokenRepository = TokenRepository.shared
     
-    let imageView: UIImageView = {
+    let stackView = UIStackView()
+    let titleLabel = YBLabel(text: "여행 경비 기록부터 정산까지", font: .title1, textColor: .gray6)
+    let logoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = DesignSystemAsset.Icons.launchScreen.image
+        imageView.image = DesignSystemAsset.Icons.logo.image
+        return imageView
+    }()
+    let illustImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = DesignSystemAsset.Icons.focusBee.image
         return imageView
     }()
     
@@ -29,10 +36,35 @@ class SplashViewController: UIViewController {
    
     
     private func setLayouts() {
-        view.addSubview(imageView)
-        
-        imageView.snp.makeConstraints { make in
-            make.center.equalTo(view.snp.center)
+        stackView.axis = .vertical
+        stackView.alignment = .center
+
+        view.addSubview(stackView)
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(logoImageView)
+        stackView.addArrangedSubview(illustImageView)
+
+        stackView.setCustomSpacing(20, after: titleLabel)
+        stackView.setCustomSpacing(70, after: logoImageView)
+
+        stackView.snp.makeConstraints { make in
+            make.centerY.equalTo(view.snp.centerY)
+            make.centerX.equalTo(view.snp.centerX)
+        }
+
+        titleLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(30)
+        }
+
+        logoImageView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(52)
+        }
+
+        illustImageView.snp.makeConstraints { make in
+            make.height.width.equalTo(120)
+            make.centerX.equalToSuperview()
         }
     }
     

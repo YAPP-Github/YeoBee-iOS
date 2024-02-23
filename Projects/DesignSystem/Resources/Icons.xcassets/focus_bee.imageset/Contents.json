@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "bee.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

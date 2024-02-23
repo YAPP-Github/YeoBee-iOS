@@ -73,7 +73,7 @@ public final class HomeViewController: UIViewController {
     private func setLayout() {
         homeCollectionView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.bottom.equalToSuperview()
         }
         emptyTripView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).inset(200)
