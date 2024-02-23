@@ -89,7 +89,10 @@ public final class ExpenditureDetailViewController: UIViewController {
                 let _ = try await expenseUseCase.deleteExpense(expenseItem.id)
 
                 await MainActor.run {
-                    coordinator.popDetail()
+
+                    let popupController = YBPopupTypeViewController(popupType: .expenseDelete)
+                    popupController.delegate = self
+                    self.presentPopup(presentedViewController: popupController)
                 }
             } catch {
                 print(error)
@@ -114,6 +117,16 @@ public final class ExpenditureDetailViewController: UIViewController {
 
     deinit {
         print("ExpenditureDetailViewController is de-initialized.")
+    }
+}
+
+extension ExpenditureDetailViewController: YBPopupViewControllerDelegate {
+    public func cancelButtonTapped() {
+        return
+    }
+    
+    public func actionButtonTapped() {
+        coordinator.popDetail()
     }
 }
 

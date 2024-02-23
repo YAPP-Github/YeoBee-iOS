@@ -20,6 +20,7 @@ public struct CreateExpenseResponse: Codable, Equatable {
     public var payerId: Int?
     public var payerList: [PayerResponse]
     public var imageList: [ImageRequest]
+    public var calculationType: String
 }
 
 public struct PayerResponse: Codable, Equatable {

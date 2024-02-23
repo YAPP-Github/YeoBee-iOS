@@ -20,6 +20,7 @@ public struct CreateExpenseRequest: Codable {
     public var payerId: Int?
     public var payerList: [PayerRequest]
     public var imageList: [ImageRequest]
+    public var calculationType: String
 
     public init(
         tripId: Int,
@@ -32,7 +33,8 @@ public struct CreateExpenseRequest: Codable {
         name: String,
         payerId: Int?,
         payerList: [PayerRequest] = [],
-        imageList: [ImageRequest] = []
+        imageList: [ImageRequest] = [],
+        calculationType: String
     ) {
         self.tripId = tripId
         self.payedAt = payedAt
@@ -45,6 +47,7 @@ public struct CreateExpenseRequest: Codable {
         self.payerId = payerId
         self.payerList = payerList
         self.imageList = imageList
+        self.calculationType = calculationType
     }
 }
 

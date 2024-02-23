@@ -30,7 +30,7 @@ extension ExpenditureBudgetContentView {
             WithViewStore(store, observe: { $0 }) { viewStore in
                 HStack(alignment: .top, spacing: 10) {
                     HStack(spacing: 0) {
-                        Text("항목입력")
+                        Text("경비내용")
                             .foregroundColor(.ybColor(.black))
                             .font(.ybfont(.title1))
                         Text("*")

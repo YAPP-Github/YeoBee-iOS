@@ -34,13 +34,9 @@ public struct TotalPriceReducer: Reducer {
         Reduce { state, action in
             switch action {
             case let .setTotalPrice(totalExpandPrice, totalBudgetPrice, remainBudgetPrice, totalExpense):
-                state.totalExpandPrice = abs(totalExpandPrice)
-                state.totalBudgetPrice = abs(totalBudgetPrice ?? 0) 
-                if let remainBudgetPrice {
-                    state.remainBudgetPrice = abs(remainBudgetPrice)
-                } else {
-                    state.totalExpandPrice = abs(totalExpense)
-                }
+                state.totalExpandPrice = state.expenseType == .individual ? totalExpandPrice : totalExpense
+                state.totalBudgetPrice = totalBudgetPrice ?? 0
+                state.remainBudgetPrice = remainBudgetPrice ?? 0
                 return .none
             case .tappedTotalPrice:
                 return .none

@@ -15,8 +15,9 @@ public struct CalculationUserInputReducer: Reducer {
         let user: TripUserItem
         @BindingState var text: String = ""
 
-        init(user: TripUserItem) {
+        init(user: TripUserItem, text: String) {
             self.user = user
+            self.text = text
         }
     }
 

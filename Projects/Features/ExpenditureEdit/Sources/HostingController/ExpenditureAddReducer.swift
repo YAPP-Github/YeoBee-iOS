@@ -33,7 +33,8 @@ public struct ExpenditureReducer: Reducer {
             tripItem: TripItem,
             editDate: Date,
             expenseDetail: ExpenseDetailItem?,
-            hasSharedBudget: Bool
+            hasSharedBudget: Bool,
+            isUpdate: Bool
         ) {
             self.expenditureEdit = .init(
                 expenseItem: expenseItem,
@@ -41,7 +42,8 @@ public struct ExpenditureReducer: Reducer {
                 editDate: editDate,
                 expenditureTab: expenditureTab,
                 expenseDetail: expenseDetail,
-                hasSharedBudget: hasSharedBudget
+                hasSharedBudget: hasSharedBudget,
+                isUpdate: isUpdate
             )
             self.expenditureBudgetEdit = .init(
                 expenseItem: expenseItem,
@@ -49,7 +51,8 @@ public struct ExpenditureReducer: Reducer {
                 editDate: editDate,
                 expenditureTab: expenditureTab,
                 expenseDetail: expenseDetail,
-                hasSharedBudget: hasSharedBudget
+                hasSharedBudget: hasSharedBudget,
+                isUpdate: isUpdate
             )
             self.seletedExpenditureType = seletedExpenditureType
             self.tripItem = tripItem
@@ -108,17 +111,10 @@ public struct ExpenditureReducer: Reducer {
                 if let amount = Double(amountString) {
                     let expenseText = state.expenditureEdit.expenditureCategory.text
                     let currencyCode = state.expenditureEdit.expenditureInput.selectedCurrency.code
-                    let expenseDetail: ExpenseDetailItem = .init(
-                        name: expenseText,
-                        amount: amount,
-                        currency: currencyCode,
-                        payedAt: "",
-                        category: .etc, 
-                        payerUserId: nil,
-                        payerId: nil, 
-                        payerList: [],
-                        method: ""
-                    )
+                    var expenseDetail: ExpenseDetailItem = state.expenditureEdit.expenseDetail
+                    expenseDetail.name = expenseText
+                    expenseDetail.currency = currencyCode
+                    expenseDetail.amount = amount
                     cooridinator.pushCalculation(expenseType: .expense, tripItem: state.tripItem, expenseDetail: expenseDetail)
                 } else {
                     let toast = Toast.text(icon: .warning, "금액을 입력해주세요.")
@@ -131,17 +127,10 @@ public struct ExpenditureReducer: Reducer {
                 if let amount = Double(amountString) {
                     let expenseText = state.expenditureBudgetEdit.expenditureInput.text
                     let currencyCode = state.expenditureBudgetEdit.expenditureInput.selectedCurrency.code
-                    let expenseDetail: ExpenseDetailItem = .init(
-                        name: expenseText,
-                        amount: amount,
-                        currency: currencyCode,
-                        payedAt: "",
-                        category: .etc,
-                        payerUserId: nil,
-                        payerId: nil,
-                        payerList: [],
-                        method: ""
-                    )
+                    var expenseDetail: ExpenseDetailItem = state.expenditureBudgetEdit.expenseDetail
+                    expenseDetail.name = expenseText
+                    expenseDetail.currency = currencyCode
+                    expenseDetail.amount = amount
                     cooridinator.pushCalculation(expenseType: .budget, tripItem: state.tripItem, expenseDetail: expenseDetail)
                 } else {
                     let toast = Toast.text(icon: .warning, "금액을 입력해주세요.")
@@ -158,8 +147,8 @@ public struct ExpenditureReducer: Reducer {
                     }
                 case .budget:
                     return .run { send in
-                        await send(.expenditureEdit(.setExpenditureDetail(expenseDetailItem)))
-                        await send(.expenditureEdit(.expenditureInput(.setText(expenseDetailItem.amount.formattedWithSeparator))))
+                        await send(.expenditureBudgetEdit(.setExpenditureDetail(expenseDetailItem)))
+                        await send(.expenditureBudgetEdit(.expenditureInput(.setText(expenseDetailItem.amount.formattedWithSeparator))))
                     }
                 }
 

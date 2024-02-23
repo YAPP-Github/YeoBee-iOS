@@ -9,6 +9,7 @@ import SwiftUI
 import UIKit
 import ComposableArchitecture
 import DesignSystem
+import Combine
 
 final class ExpenditureHostingController: UIHostingController<ExpenditureView> {
 }
@@ -37,7 +38,7 @@ struct PaginationScrollView<Content: View>: View {
     @ViewBuilder var content: Content
     var body: some View {
         GeometryReader { containerGeometry in
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 content
                     .background(alignment: .bottom) {
                         GeometryReader { geometry in
@@ -65,6 +66,7 @@ struct ExpenditureView: View {
     let store: StoreOf<ExpenditureReducer>
 
     @SwiftUI.State private var heightSum: CGFloat = 0.0
+    @SwiftUI.State private var isPressed: Bool = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -90,13 +92,6 @@ struct ExpenditureView: View {
                             )
                         )
                         .padding(.bottom, 26)
-                        .installHeight()
-                        WithViewStore(store, observe: \.currentFilter) { viewStore in
-                            FilterButtonView(title: viewStore.state?.rawValue ?? "전체보기") {
-                                store.send(.tappedFilterButton(viewStore.state))
-                            }
-                            .padding(.bottom, 20)
-                        }
                         .installHeight()
                         ExpenditureListView(
                             store: store.scope(

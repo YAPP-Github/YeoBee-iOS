@@ -20,6 +20,7 @@ public struct ExpenseDetailItem: Codable, Equatable {
     public var payerId: Int?
     public var payerName: String?
     public var payerList: [Payer]
+    public var calculationType: String
 
     enum CodingKeys: String, CodingKey {
         case name
@@ -32,6 +33,8 @@ public struct ExpenseDetailItem: Codable, Equatable {
         case payerName
         case payerList
         case method = "expenseMethod"
+        case calculationType
+        case payerId
     }
 
     public init(
@@ -45,7 +48,8 @@ public struct ExpenseDetailItem: Codable, Equatable {
         payerId: Int?,
         payerName: String? = nil,
         payerList: [Payer],
-        method: String
+        method: String,
+        calculationType: String
     ) {
         self.name = name
         self.amount = amount
@@ -58,6 +62,7 @@ public struct ExpenseDetailItem: Codable, Equatable {
         self.payerName = payerName
         self.payerList = payerList
         self.method = method
+        self.calculationType = calculationType
     }
 }
 
