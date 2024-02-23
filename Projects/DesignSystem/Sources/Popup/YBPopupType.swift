@@ -15,7 +15,7 @@ public enum YBPopupType {
     case logout
     case expenseDelete
     case tripDelete
-    case expenseSetting
+    case currencySetting
 }
 
 extension YBPopupType {
@@ -27,7 +27,7 @@ extension YBPopupType {
         case .logout: DesignSystemAsset.Icons.lock.image
         case .expenseDelete: DesignSystemAsset.Icons.trashBadge.image
         case .tripDelete: DesignSystemAsset.Icons.trashBadge.image
-        case .expenseSetting: nil
+        case .currencySetting: nil
         }
     }
 
@@ -39,7 +39,7 @@ extension YBPopupType {
         case .logout: return "정말 로그아웃 하시겠어요?"
         case .expenseDelete: return "정말 삭제 하시겠어요?"
         case .tripDelete: return "정말 여행을 삭제하시겠어요?"
-        case .expenseSetting: return "환율을 변경하면 이전 항목까지\n 전부 변경된 값으로 저장돼요."
+        case .currencySetting: return "환율을 변경하면 이전 항목까지\n 전부 변경된 값으로 저장돼요."
         }
     }
 
@@ -51,7 +51,7 @@ extension YBPopupType {
         case .logout: return "로그아웃 시 서비스 이용이 불가해요."
         case .expenseDelete: return "삭제한 후에는 복구가 불가해요."
         case .tripDelete: return "삭제한 후에는 복구가 불가해요."
-        case .expenseSetting: return "계속해서 변경하시겠어요?"
+        case .currencySetting: return "계속해서 변경하시겠어요?"
         }
     }
 }

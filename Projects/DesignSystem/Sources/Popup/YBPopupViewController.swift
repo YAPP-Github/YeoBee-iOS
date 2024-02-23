@@ -41,13 +41,13 @@ public class YBPopupViewController: UIViewController {
         switch popupType {
         case .addCommonBudget, .addTotalBudget, .calendarWarning, .logout, .expenseDelete, .tripDelete:
             sheetContentView.snp.makeConstraints { make in
-                make.height.equalTo(UIScreen.main.bounds.height * 0.358)
+                make.height.equalTo(291)
                 make.leading.trailing.equalToSuperview().inset(24)
                 make.center.equalToSuperview()
             }
-        case .expenseSetting:
+        case .currencySetting:
             sheetContentView.snp.makeConstraints { make in
-                make.height.equalTo(UIScreen.main.bounds.height * 0.27)
+                make.height.equalTo(236)
                 make.leading.trailing.equalToSuperview().inset(24)
                 make.center.equalToSuperview()
             }
