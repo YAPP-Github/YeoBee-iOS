@@ -21,6 +21,7 @@ public final class SignViewController: UIViewController, View {
     public var disposeBag: DisposeBag = DisposeBag()
     var appleLoginContinuation: CheckedContinuation<Bool, Error>?
     
+    let stackView = UIStackView()
     let titleLabel = UILabel()
     let logoImageView = UIImageView()
     let illustImageView = UIImageView()
@@ -78,37 +79,48 @@ public final class SignViewController: UIViewController, View {
     }
     
     private func setLayouts() {
-        view.addSubview(titleLabel)
-        view.addSubview(logoImageView)
-        view.addSubview(illustImageView)
-        view.addSubview(kakaoLoginButton)
-        view.addSubview(appleLoginButton)
+        view.addSubview(stackView)
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(logoImageView)
+        stackView.addArrangedSubview(illustImageView)
+        stackView.addArrangedSubview(kakaoLoginButton)
+        stackView.addArrangedSubview(appleLoginButton)
         
+        stackView.setCustomSpacing(20, after: titleLabel)
+        stackView.setCustomSpacing(85, after: logoImageView)
+        stackView.setCustomSpacing(40, after: illustImageView)
+        stackView.setCustomSpacing(20, after: kakaoLoginButton)
+        
+        stackView.snp.makeConstraints { make in
+            make.centerY.equalTo(view.snp.centerY)
+        }
+    
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(146)
             make.centerX.equalToSuperview()
+            make.height.equalTo(30)
         }
         
         logoImageView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
+            make.height.equalTo(52)
         }
         
         illustImageView.snp.makeConstraints { make in
+            make.height.equalTo(167)
             make.centerX.equalToSuperview()
-            make.top.equalTo(logoImageView.snp.bottom).offset(89)
+            make.width.equalTo(200)
         }
         
         kakaoLoginButton.snp.makeConstraints { make in
-            make.top.equalTo(illustImageView.snp.bottom).offset(40)
             make.centerX.equalTo(view.snp.centerX)
             make.width.equalTo(view.snp.width).offset(-48)
+            make.height.equalTo(54)
         }
         
         appleLoginButton.snp.makeConstraints { make in
-            make.top.equalTo(kakaoLoginButton.snp.bottom).offset(20)
             make.centerX.equalTo(view.snp.centerX)
             make.width.equalTo(view.snp.width).offset(-48)
+            make.height.equalTo(54)
         }
     }
     
