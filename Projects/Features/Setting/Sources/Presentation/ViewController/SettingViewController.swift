@@ -128,7 +128,7 @@ public final class SettingViewController: UIViewController {
     }
     
     @objc private func deleteButtonTapped() {
-        coordinator.updateTripItem(tripItem: self.reactor.currentState.tripItem)
+        coordinator.coordinatorDidFinish()
     }
     
     @objc private func trashButtonTapped() {
