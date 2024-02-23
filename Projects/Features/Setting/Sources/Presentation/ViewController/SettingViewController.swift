@@ -74,7 +74,8 @@ public final class SettingViewController: UIViewController {
     
     private func setLayouts() {
         settingTableView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalToSuperview()
             make.leading.trailing.equalToSuperview()
         }
     }
@@ -127,7 +128,7 @@ public final class SettingViewController: UIViewController {
     }
     
     @objc private func deleteButtonTapped() {
-        coordinator.coordinatorDidFinish()
+        coordinator.updateTripItem(tripItem: self.reactor.currentState.tripItem)
     }
     
     @objc private func trashButtonTapped() {
