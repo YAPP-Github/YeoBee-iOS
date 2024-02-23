@@ -202,7 +202,7 @@ extension ExpenditureCoordinator: ExpenditureAddCoordinatorDelegate {
 
 // MARK: - 여행 삭제 후
 extension ExpenditureCoordinator: SettingCoordinatorDelegate {
-    public func deletedTrip() {
+    public func didFinishedCoordinator() {
         delegate?.deletedTrip()
     }
 }
