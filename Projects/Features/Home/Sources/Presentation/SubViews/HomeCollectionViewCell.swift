@@ -115,7 +115,7 @@ final class HomeCollectionViewCell: UICollectionViewCell {
               let flagImageUrl = URL(string: firstCountry.flagImageUrl) else { return }
         
         titleLabel.text = tripItem.title
-        dateLabel.text = "\(tripItem.startDate) - \(tripItem.endDate)"
+        dateLabel.text = "\(changeDateFormat(tripItem.startDate)) - \(changeDateFormat(tripItem.endDate))"
         countryLabel.text = firstCountry.name
         backgroundImageView.kf.indicatorType = .activity
         countryImageView.kf.indicatorType = .activity
@@ -142,5 +142,18 @@ final class HomeCollectionViewCell: UICollectionViewCell {
         
         guard let coverImageUrl = URL(string: firstCountry.coverImageUrl ?? "") else { return }
         backgroundImageView.kf.setImage(with: coverImageUrl)
+    }
+    
+    func changeDateFormat(_ dateString: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        if let date = dateFormatter.date(from: dateString) {
+            dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+            let newDateString = dateFormatter.string(from: date)
+            return newDateString
+        } else {
+            return dateString
+        }
     }
 }
