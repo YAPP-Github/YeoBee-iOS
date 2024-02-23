@@ -74,17 +74,12 @@ public final class SettingCurrencyReactor: Reactor {
     
     func putCurrencyUseCase() {
         Task {
-            do {
-                let currencyResult = try await currencyUseCase.putTripCurrencies(
-                    currentState.tripItem.id,
-                    currentState.currency.code,
-                    ExchangeRate(value: Double(currentState.textFieldText) ?? 0, standard: currentState.currency.exchangeRate.standard)
-                )
-                print("currencyResult: \(currencyResult)")
-                action.onNext(.modified(currencyResult))
-            } catch {
-                print("error: \(error.localizedDescription)")
-            }
+            let currencyResult = try await currencyUseCase.putTripCurrencies(
+                currentState.tripItem.id,
+                currentState.currency.code,
+                ExchangeRate(value: Double(currentState.textFieldText) ?? 0, standard: currentState.currency.exchangeRate.standard)
+            )
+            action.onNext(.modified(currencyResult))
         }
     }
     

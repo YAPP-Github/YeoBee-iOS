@@ -186,6 +186,7 @@ extension SettingViewController: UITableViewDelegate {
                 let currentTripItem = reactor.currentState.tripItem
                 let settingCurrencyReactor = SettingCurrencyReactor(currency: currency, tripItem: currentTripItem)
                 let settingCurrencyViewController = SettingCurrencyViewController(reactor: settingCurrencyReactor)
+                settingCurrencyViewController.delegate = self
                 self.navigationController?.pushViewController(settingCurrencyViewController, animated: true)
             }
         }
@@ -284,11 +285,16 @@ extension SettingViewController: SettingCompanionCellDelegate {
 // MARK: - 수정된 이후 trip update
 extension SettingViewController: ModifiedSettingViewControllerDelegate {
     func modifiedCommon() {
-        reactor.updateSettingUseCase()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            self.reactor.updateSettingUseCase()
+        }
+        
     }
 
     func modifiedCurrency() {
-        reactor.updateCurrencyUseCase()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            self.reactor.updateCurrencyUseCase()
+        }
     }
 }
 
@@ -299,6 +305,8 @@ extension SettingViewController: YBPopupViewControllerDelegate {
     }
     
     public func actionButtonTapped() {
-        reactor.deleteTripUseCase()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            self.reactor.deleteTripUseCase()
+        }
     }
 }
