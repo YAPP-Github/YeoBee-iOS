@@ -69,7 +69,7 @@ final public class YBPopupTypeViewController: YBPopupViewController {
         case .tripDelete:
             cancelButton.setTitle("취소하기", for: .normal)
             actionButton.setTitle("삭제하기", for: .normal)
-        case .expenseSetting:
+        case .currencySetting:
             cancelButton.setTitle("취소하기", for: .normal)
             actionButton.setTitle("변경하기", for: .normal)
             titleMessageLabel.numberOfLines = 2
@@ -134,7 +134,7 @@ final public class YBPopupTypeViewController: YBPopupViewController {
                 make.width.equalTo(49)
                 make.height.equalTo(56)
             }
-        case .expenseSetting:
+        case .currencySetting:
             break
         }
     }

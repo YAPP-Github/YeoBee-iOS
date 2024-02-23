@@ -45,7 +45,7 @@ public class YBPopupViewController: UIViewController {
                 make.leading.trailing.equalToSuperview().inset(24)
                 make.center.equalToSuperview()
             }
-        case .expenseSetting:
+        case .currencySetting:
             sheetContentView.snp.makeConstraints { make in
                 make.height.equalTo(236)
                 make.leading.trailing.equalToSuperview().inset(24)

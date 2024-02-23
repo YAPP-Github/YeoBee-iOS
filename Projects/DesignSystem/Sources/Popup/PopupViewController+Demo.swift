@@ -133,7 +133,7 @@ public class PopupViewController: DesignSystemBaseViewController {
     
     @objc
     func expenseSettingButtonTapped() {
-        let vc = YBPopupTypeViewController(popupType: .expenseSetting)
+        let vc = YBPopupTypeViewController(popupType: .currencySetting)
         vc.delegate = self
         presentPopup(presentedViewController: vc)
     }

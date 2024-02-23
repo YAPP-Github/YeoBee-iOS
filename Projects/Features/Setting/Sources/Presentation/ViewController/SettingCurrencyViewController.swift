@@ -117,7 +117,9 @@ extension SettingCurrencyViewController: View {
         modifyButton.rx.tap
             .observe(on: MainScheduler.instance)
             .bind { [weak self] in
-                self?.reactor.putCurrencyUseCase()
+                let popupViewController = YBPopupTypeViewController(popupType: .currencySetting)
+                popupViewController.delegate = self
+                self?.presentPopup(presentedViewController: popupViewController)
             }
             .disposed(by: disposeBag)
     }
@@ -222,5 +224,15 @@ extension SettingCurrencyViewController: UIGestureRecognizerDelegate {
             return false
         }
         return true
+    }
+}
+
+extension SettingCurrencyViewController: YBPopupViewControllerDelegate {
+    public func cancelButtonTapped() {
+        return
+    }
+    
+    public func actionButtonTapped() {
+        reactor.putCurrencyUseCase()
     }
 }
