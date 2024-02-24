@@ -14,6 +14,8 @@ import SnapKit
 
 class HorizontalCountryView: UIScrollView {
     // MARK: - Properties
+    private let emptyView = UIView()
+    
     lazy var stackView: UIStackView = {
         $0.axis = .horizontal
         $0.alignment = .center
@@ -60,8 +62,8 @@ class HorizontalCountryView: UIScrollView {
     }
     private func setLayout() {
         stackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(13)
-            make.leading.trailing.bottom.equalToSuperview().inset(24)
+            make.top.bottom.centerY.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(24)
         }
     }
     
