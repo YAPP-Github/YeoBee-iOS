@@ -28,25 +28,31 @@ struct TripDateItemView: View {
 extension TripDateItemView {
     var containerView: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            VStack(spacing: 2) {
-                Text(viewStore.week)
-                    .foregroundColor(.ybColor(.gray6))
-                    .font(.ybfont(.body3))
-                    .frame(height: 21)
-                ZStack {
-                    if viewStore.isSelected {
-                        Circle()
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(.ybColor(.mainGreen))
+            if viewStore.index != 0  {
+                VStack(spacing: 2) {
+                    Text(viewStore.week)
+                        .foregroundColor(.ybColor(.gray6))
+                        .font(.ybfont(.body3))
+                        .frame(height: 21)
+                    ZStack {
+                        if viewStore.isSelected {
+                            Circle()
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(.ybColor(.mainGreen))
+                        }
+                        Text("\(viewStore.day)")
+                            .foregroundColor(viewStore.isSelected ? .ybColor(.white) : .ybColor(.gray6))
+                            .font(.ybfont(.body1))
                     }
-                    Text("\(viewStore.day)")
-                        .foregroundColor(viewStore.isSelected ? .ybColor(.white) : .ybColor(.gray6))
-                        .font(.ybfont(.body1))
+                    .frame(width: 30, height: 30)
                 }
-                .frame(width: 30, height: 30)
+                .frame(width: 30, height: 53)
+                .id(viewStore.date)
+            } else {
+                TripReadyView {
+                    store.send(.tappedTripReadyButton)
+                }
             }
-            .frame(width: 30, height: 53)
-            .id(viewStore.date)
         }
     }
 }

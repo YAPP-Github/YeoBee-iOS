@@ -16,35 +16,46 @@ struct TripDateView: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            TripReadyView {
-                store.send(.tappedTripReadyButton)
-            }
             tripDatesView
         }
     }
 
-
     var tripDatesView: some View {
-        WithViewStore(store, observe: \.selectedDate) { viewStore in
-            ScrollViewReader { proxy in
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 14) {
-                        ForEachStore(
-                            store.scope(
-                                state: \.tripDateItems,
-                                action: TripDateReducer.Action.tripDateItem)
-                        ) { store in
-                            TripDateItemView(store: store)
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            VStack(spacing: 26) {
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 14) {
+                            ForEachStore(
+                                store.scope(
+                                    state: \.tripDateItems,
+                                    action: TripDateReducer.Action.tripDateItem)
+                            ) { store in
+                                TripDateItemView(store: store)
+                            }
+                            Spacer()
                         }
-                        Spacer()
+                        .padding(.horizontal, 20)
+                    }
+                    .onChange(of: viewStore.selectedDate, perform: { newValue in
+                        withAnimation {
+                            proxy.scrollTo(newValue, anchor: .center)
+                        }
+                    })
+                }
+                TabView(selection: viewStore[keyPath: \.$selectedDate]) {
+                    ForEachStore(
+                        store.scope(
+                            state: \.expenditureListStates,
+                            action: TripDateReducer.Action.expenditureList)
+                    ) { store in
+                        store.withState { state in
+                            ExpenditureListView(store: store)
+                                .padding(.horizontal, 20)
+                                .tag(state.date)
+                        }
                     }
                 }
-                .padding(.leading, 6)
-                .onChange(of: viewStore.state, perform: { newValue in
-                    withAnimation {
-                        proxy.scrollTo(newValue, anchor: .center)
-                    }
-                })
             }
         }
     }

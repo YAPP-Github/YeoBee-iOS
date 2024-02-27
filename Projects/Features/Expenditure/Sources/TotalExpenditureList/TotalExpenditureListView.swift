@@ -37,13 +37,13 @@ extension TotalExpenditureListView {
             Rectangle()
                 .frame(height: 10)
                 .foregroundColor(YBColor.gray1.swiftUIColor)
-            ExpenditureListView(
-                store: store.scope(
-                    state: \.expenditureList,
-                    action: Action.expenditureList
-                )
-            )
-            .padding(.all, 24)
+//            ExpenditureListView(
+//                store: store.scope(
+//                    state: \.expenditureList,
+//                    action: Action.expenditureList
+//                )
+//            )
+//            .padding(.all, 24)
         }
     }
 }

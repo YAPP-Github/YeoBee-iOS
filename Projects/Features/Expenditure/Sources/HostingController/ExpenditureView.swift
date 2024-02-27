@@ -72,7 +72,7 @@ struct ExpenditureView: View {
         GeometryReader { proxy in
             ZStack(alignment: .bottom) {
                 PaginationScrollView(onPagination: {
-                    store.send(.appendExpenditures)
+                    store.send(.scrollToBottom)
                 }, content: {
                     LazyVStack {
                         TotalPriceView(
@@ -82,8 +82,10 @@ struct ExpenditureView: View {
                             )
                         )
                         .installHeight()
+                        .padding(.horizontal, 20)
                         YBDividerView()
                             .padding(.bottom, 12)
+                            .padding(.horizontal, 20)
                             .installHeight()
                         TripDateView(
                             store: store.scope(
@@ -91,17 +93,9 @@ struct ExpenditureView: View {
                                 action: ExpenditureReducer.Action.tripDate
                             )
                         )
-                        .padding(.bottom, 26)
-                        .installHeight()
-                        ExpenditureListView(
-                            store: store.scope(
-                                state: \.expenditureList,
-                                action: ExpenditureReducer.Action.expenditureList
-                            )
-                        )
-                        .frame(minHeight: proxy.size.height - heightSum - 80)
+                        .frame(minHeight: proxy.size.height - heightSum + 30)
                     }
-                    .padding(20)
+                    .padding(.vertical, 20)
                     .background(YBColor.white.swiftUIColor)
                     .cornerRadius(10)
                     .padding(.top, 10)
