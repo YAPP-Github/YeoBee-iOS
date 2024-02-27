@@ -40,6 +40,7 @@ public final class CountryViewController: UIViewController {
     private let countryTableView = CountryTableView()
     private let horizontalCountryView = HorizontalCountryView()
     private let selectedCountryView = SelectedCountryView()
+    private let topEmptyView = YBDivider(height: 10, color: .white)
     private let topDividerView = YBDivider(height: 0.6, color: .gray3)
     private let bottomDividerView = YBDivider(height: 0.6, color: .gray3)
     private let nextButton = YBTextButton(text: "다음으로", appearance: .defaultDisable, size: .medium)
@@ -75,6 +76,7 @@ public final class CountryViewController: UIViewController {
             horizontalCountryView,
             countryTableView,
             selectedCountryView,
+            topEmptyView,
             topDividerView,
             bottomDividerView,
             nextButton,
@@ -88,14 +90,19 @@ public final class CountryViewController: UIViewController {
         horizontalCountryView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(73)
+            make.height.equalTo(65)
+        }
+        topEmptyView.snp.makeConstraints { make in
+            make.top.equalTo(horizontalCountryView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(10)
         }
         nextButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
             make.leading.trailing.equalToSuperview().inset(24)
         }
         topDividerView.snp.makeConstraints { make in
-            make.top.equalTo(horizontalCountryView.snp.bottom)
+            make.top.equalTo(topEmptyView.snp.bottom)
             make.leading.trailing.equalToSuperview()
         }
         bottomDividerView.snp.makeConstraints { make in
