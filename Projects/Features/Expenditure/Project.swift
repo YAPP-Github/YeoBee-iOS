@@ -16,7 +16,7 @@ let project = Project(
     targets: [
         Project.target(
             name: "Expenditure",
-            product: .framework,
+            product: .staticFramework,
             sources: .sources,
             dependencies: [
                 .RxGesture,

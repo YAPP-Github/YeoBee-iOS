@@ -71,6 +71,11 @@ public extension TargetDependency {
     static let kakaoSDKAuth: TargetDependency = .external(name: "KakaoSDKAuth")
     static let kakaoSDKUser: TargetDependency = .external(name: "KakaoSDKUser")
     static let kingfisher: TargetDependency = .external(name: "Kingfisher")
+    static let firebaseCrashlytics: TargetDependency = .external(name: "FirebaseCrashlytics")
+    static let firebaseMessaging: TargetDependency = .external(name: "FirebaseMessaging")
+    static let firebasePerformance: TargetDependency = .external(name: "FirebasePerformance")
+    static let firebaseRemoteConfig: TargetDependency = .external(name: "FirebaseRemoteConfig")
+    static let firebaseAnalytics: TargetDependency = .external(name: "FirebaseAnalytics")
 }
 
 public extension Package {
@@ -83,6 +88,7 @@ public extension Package {
     static let composableArchitecture: Package = .remote(url: "https://github.com/pointfreeco/swift-composable-architecture", requirement: .exact("1.0.0"))
     static let kakaoLogin: Package = .remote(url: "https://github.com/kakao/kakao-ios-sdk", requirement: .branch("master"))
     static let kingfisher: Package = .remote(url: "https://github.com/onevcat/Kingfisher.git", requirement: .upToNextMajor(from: "7.2.0"))
+    static let firebase: Package = .remote(url: "https://github.com/firebase/firebase-ios-sdk", requirement: .upToNextMajor(from: "10.15.0"))
 }
 
 // MARK: SourceFile

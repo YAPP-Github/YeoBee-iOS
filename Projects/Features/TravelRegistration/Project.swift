@@ -15,7 +15,7 @@ let project = Project(
     targets: [
         Project.target(
             name: "TravelRegistration",
-            product: .framework,
+            product: .staticFramework,
             sources: .sources,
             dependencies: [
                 .designSystem,

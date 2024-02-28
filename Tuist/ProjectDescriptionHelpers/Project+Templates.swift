@@ -1,4 +1,5 @@
 import ProjectDescription
+import Foundation
 
 /// Project helpers are functions that simplify the way you define your project.
 /// Share code to create targets, settings, dependencies,
@@ -9,8 +10,9 @@ extension Project {
     
     public static var infoPlist: [String: InfoPlist.Value] {
         [
-            "CFBundleShortVersionString": "1.0",
+            "CFBundleShortVersionString": "1.0.2",
             "CFBundleIconName": "AppIcon",
+            "CFBundleDisplayName": "여비",
             "CFBundleVersion": "1",
             "UIMainStoryboardFile": "",
             "UILaunchStoryboardName": "LaunchScreen",

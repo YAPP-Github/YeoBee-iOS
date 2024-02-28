@@ -15,7 +15,7 @@ let project = Project(
     targets: [
         Project.target(
             name: "Setting",
-            product: .framework,
+            product: .staticFramework,
             sources: .sources,
             dependencies: [
                 .designSystem,

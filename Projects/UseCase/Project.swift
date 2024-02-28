@@ -12,7 +12,7 @@ let project = Project(
     targets: [
         Project.target(
             name: "UseCase",
-            product: .framework,
+            product: .staticFramework,
             sources: "Sources/**",
             dependencies: [
                 .repository,

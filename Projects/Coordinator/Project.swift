@@ -12,7 +12,7 @@ let project = Project(
     targets: [
         Project.target(
             name: "Coordinator",
-            product: .framework,
+            product: .staticFramework,
             sources: "Sources/**",
             dependencies: [
                 .entity

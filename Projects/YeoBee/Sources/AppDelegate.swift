@@ -5,6 +5,7 @@ import UseCase
 import Repository
 import KakaoSDKCommon
 import KakaoSDKAuth
+import FirebaseCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,7 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let appkey = Bundle.main.object(forInfoDictionaryKey: "KAKAO_NATIVE_APP_KEY") as? String ?? ""
         KakaoSDK.initSDK(appKey: appkey)
-        
+
+        FirebaseApp.configure()
+
         return true
     }
 

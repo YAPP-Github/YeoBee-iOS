@@ -12,20 +12,22 @@ let dependencies = Dependencies(
             .composableArchitecture,
             .SnapKit,
             .kingfisher,
-            .kakaoLogin
+            .kakaoLogin,
+            .firebase
         ],
         productTypes: [
-            "RxSwift": .framework,
-            "RxCocoa": .framework,
-            "Moya": .framework,
-            "ReactorKit": .framework,
-            "FSCalendar": .framework,
-            "RxGesture": .framework,
-            "ComposableArchitecture": .framework,
-            "Snapkit": .framework,
-            "Kingfisher": .framework,
-            "kakaoSDKAuth": .framework,
-            "kakaoSDKUser": .framework
+            "RxSwift": .staticFramework,
+            "RxCocoa": .staticFramework,
+            "Moya": .staticFramework,
+            "ReactorKit": .staticFramework,
+            "FSCalendar": .staticFramework,
+            "RxGesture": .staticFramework,
+            "ComposableArchitecture": .staticFramework,
+            "Snapkit": .staticFramework,
+            "Kingfisher": .staticFramework,
+            "kakaoSDKAuth": .staticFramework,
+            "kakaoSDKUser": .staticFramework,
+            "FirebaseAnalytics" : .staticFramework
         ],
         baseSettings: .settings(
             configurations: [

@@ -12,7 +12,7 @@ let project = Project(
     targets: [
         Project.target(
             name: "YBNetwork",
-            product: .framework,
+            product: .staticFramework,
             sources: "Sources/**",
             dependencies: [
                 .moya

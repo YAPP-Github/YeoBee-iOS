@@ -12,7 +12,7 @@ let project = Project(
     targets: [
         Project.target(
             name: "DesignSystem",
-            product: .framework,
+            product: .staticFramework,
             sources: .sources,
             resources: ResourceFileElements(
                 resources: [

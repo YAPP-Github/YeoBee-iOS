@@ -12,11 +12,12 @@ let project = Project(
     targets: [
         Project.target(
             name: "YBDependency",
-            product: .framework,
+            product: .staticFramework,
             sources: "Sources/**",
             dependencies: [
                 .composableArchitecture,
-                .usecase
+                .usecase,
+                .firebaseAnalytics
             ]
         ),
         Project.target(
