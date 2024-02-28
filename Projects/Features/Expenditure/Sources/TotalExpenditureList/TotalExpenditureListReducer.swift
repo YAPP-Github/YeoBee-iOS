@@ -12,7 +12,7 @@ import Entity
 public struct TotalExpenditureListReducer: Reducer {
     public struct State: Equatable {
         var totalPrice: TotalPriceReducer.State
-//        var expenditureList = ExpenditureListReducer.State()
+        var expenditureList = ExpenditureListReducer.State()
 
         init(expenditureType: ExpenditureTab, totalPriceType: TotalPriceTab) {
             self.totalPrice = .init(
@@ -34,9 +34,9 @@ public struct TotalExpenditureListReducer: Reducer {
             }
         }
 
-//        Scope(state: \.expenditureList, action: /Action.expenditureList) {
-//            ExpenditureListReducer()
-//        }
+        Scope(state: \.expenditureList, action: /Action.expenditureList) {
+            ExpenditureListReducer()
+        }
 
         Scope(state: \.totalPrice, action: /Action.totalPrice) {
             TotalPriceReducer()

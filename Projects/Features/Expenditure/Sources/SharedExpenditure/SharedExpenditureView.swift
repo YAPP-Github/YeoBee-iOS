@@ -35,7 +35,6 @@ struct SharedExpenditureView: View {
                         )
                     )
                     .tag(ExpenditureTab.shared)
-                    .highPriorityGesture(DragGesture())
                     ExpenditureView(
                         store: store.scope(
                             state: \.individualExpenditure,
@@ -43,7 +42,6 @@ struct SharedExpenditureView: View {
                         )
                     )
                     .tag(ExpenditureTab.individual)
-                    .highPriorityGesture(DragGesture())
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
             }
