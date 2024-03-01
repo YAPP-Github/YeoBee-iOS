@@ -107,7 +107,15 @@ public final class SettingReactor: Reactor {
         
         Task {
             let currencyResult = try await currencyUseCase.getTripCurrencies(currentTripItemId)
-            action.onNext(.currencies(currencyResult))
+            var exceptKRWCurrencyResult: [Currency] = []
+            
+            for currency in currencyResult {
+                if !(currency.code == "KRW") {
+                    exceptKRWCurrencyResult.append(currency)
+                }
+            }
+            
+            action.onNext(.currencies(exceptKRWCurrencyResult))
         }
     }
     
