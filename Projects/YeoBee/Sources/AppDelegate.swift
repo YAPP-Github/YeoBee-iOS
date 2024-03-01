@@ -6,6 +6,7 @@ import Repository
 import KakaoSDKCommon
 import KakaoSDKAuth
 import FirebaseCore
+import FirebaseAnalytics
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,7 +19,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let appkey = Bundle.main.object(forInfoDictionaryKey: "KAKAO_NATIVE_APP_KEY") as? String ?? ""
         KakaoSDK.initSDK(appKey: appkey)
 
+
         FirebaseApp.configure()
+
+        Analytics.setConsent([
+          .analyticsStorage: .granted,
+          .adStorage: .granted
+        ])
 
         return true
     }
