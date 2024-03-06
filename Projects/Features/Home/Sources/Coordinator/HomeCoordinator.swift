@@ -43,6 +43,13 @@ extension HomeCoordinator {
         addChild(countryCoordinator)
         countryCoordinator.start(animated: true)
     }
+    
+    public func moreTrip(tripType: TripType) {
+        let moreTripReactor = MoreTripReactor(tripType: tripType)
+        let moreTripViewController = MoreTripViewController(coordinator: self, reactor: moreTripReactor)
+        navigationController.isNavigationBarHidden = false
+        navigationController.pushViewController(moreTripViewController, animated: true)
+    }
 
     public func trip(tripItem: TripItem) {
         let tripCoordinator = TripCoordinator(navigationController: navigationController, tripItem: tripItem)
@@ -67,6 +74,9 @@ extension HomeCoordinator: TravelRegistrationCoordinatorDelegate {
 
 extension HomeCoordinator: TripCoordinatorDelegate {
     public func deletedTrip() {
+        // 스플래시, 홈 포함 뷰 스택 2개
+        let targetViewControllers = Array(navigationController.viewControllers.prefix(2))
+        navigationController.setViewControllers(targetViewControllers, animated: true)
         delegate?.deletedTrip()
     }
 }

@@ -334,12 +334,7 @@ extension HomeViewController: HomeSectionHeaderViewDelegate {
             if let coordinator = coordinator,
                let firstCharacter = tripType.first,
                tripTypeCase.rawValue.first == firstCharacter {
-                
-                let moreTripReactor = MoreTripReactor(tripType: tripTypeCase)
-                let moreTripViewController = MoreTripViewController(coordinator: coordinator, reactor: moreTripReactor)
-                moreTripViewController.delegate = self
-                navigationController?.isNavigationBarHidden = false
-                navigationController?.pushViewController(moreTripViewController, animated: true)
+                coordinator.moreTrip(tripType: tripTypeCase)
             }
         }
     }
@@ -356,15 +351,6 @@ extension HomeViewController: HomeCoordinatorDelegate {
     }
     
     public func deletedTrip() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-            self.reactor.homeTripUseCase()
-        }
-    }
-}
-
-// MARK: - 더보기에서 들어가 삭제된 경우
-extension HomeViewController: MoreTripViewControllerDelegate {
-    func updateHomeTrip() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             self.reactor.homeTripUseCase()
         }
