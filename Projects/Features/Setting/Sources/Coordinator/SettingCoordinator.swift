@@ -36,7 +36,6 @@ final public class SettingCoordinator: SettingCoordinatorInterface {
     }
 
     public func coordinatorDidFinish() {
-        delegate?.didFinishedCoordinator()
         navigationController.popViewController(animated: true)
         navigationController.tabBarController?.tabBar.isHidden = false
         parent?.childDidFinish(self)
