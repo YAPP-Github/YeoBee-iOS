@@ -184,8 +184,8 @@ extension MoreTripViewController: HomeCoordinatorDelegate {
     
     public func deletedTrip() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.navigationController?.popViewController(animated: true)
             self.delegate?.updateHomeTrip()
+            self.navigationController?.popViewController(animated: true)
         }
     }
 }

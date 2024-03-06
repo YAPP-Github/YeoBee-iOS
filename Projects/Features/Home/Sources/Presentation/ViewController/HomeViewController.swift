@@ -53,7 +53,7 @@ public final class HomeViewController: UIViewController {
         setDataSource()
         setCollectionViewDelegate()
         bind(reactor: reactor)
-        reactor.homeTripUseCase()
+        reactor.homeInitUseCase()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -72,7 +72,7 @@ public final class HomeViewController: UIViewController {
     
     private func setLayout() {
         homeCollectionView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.bottom.equalToSuperview()
         }
         emptyTripView.snp.makeConstraints { make in
@@ -203,6 +203,34 @@ public final class HomeViewController: UIViewController {
         
         self.snapshot = snapshot
         self.dataSource?.apply(snapshot, animatingDifferences: false)
+        self.updateSectionHeaders()
+    }
+    
+    private func updateSectionHeaders() {
+        let sectionsToUpdate: [HomeSection] = [.traveling, .coming, .passed]
+        for section in sectionsToUpdate {
+            if let sectionIndex = snapshot.indexOfSection(section), let header = homeCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: sectionIndex)) as? HomeSectionHeaderView {
+                
+                switch section {
+                case .traveling:
+                    header.sectionTitleLabel.text = TripType.traveling.rawValue
+                    header.moreButton.isHidden = reactor.currentState.travelingTrip.count <= 1
+                case .coming:
+                    if let comingTrip = reactor.currentState.comingTrip.first {
+                        if let startDate = dateFormatter.date(from: comingTrip.startDate) {
+                            let daysDiff = Calendar.current.dateComponents([.day], from: Date(), to: startDate).day ?? 0
+                            header.sectionTitleLabel.text = "\(TripType.coming.rawValue), D-\(daysDiff)"
+                            header.moreButton.isHidden = reactor.currentState.comingTrip.count <= 1
+                        }
+                    }
+                case .passed:
+                    header.sectionTitleLabel.text = TripType.passed.rawValue
+                    header.moreButton.isHidden = reactor.currentState.passedTrip.count <= 1
+                default:
+                    break
+                }
+            }
+        }
     }
     
     private func setCollectionViewDelegate() {
