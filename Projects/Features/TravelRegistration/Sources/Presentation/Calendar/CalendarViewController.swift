@@ -333,10 +333,7 @@ extension CalendarViewController: View {
                         countryList: self.reactor.currentState.tripRequest.countryList,
                         tripUserList: [])
                     
-                    let companionReactor = CompanionReactor(tripRequest: tripRequest)
-                    let companionViewController = CompanionViewController(coordinator: self.coordinator,
-                                                                          reactor: companionReactor)
-                    self.navigationController?.pushViewController(companionViewController, animated: true)
+                    self.coordinator.startCompanion(tripRequest: tripRequest)
                 }
             }
             .disposed(by: disposeBag)

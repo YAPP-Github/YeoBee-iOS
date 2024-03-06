@@ -301,10 +301,7 @@ extension CountryViewController: View {
                     countryList: selectedCountries,
                     tripUserList: []
                 )
-                
-                let calendarReactor = CalendarReactor(tripRequest: tripRequest)
-                let calendarViewController = CalendarViewController(coordinator: self.coordinator, reactor: calendarReactor)
-                self.navigationController?.pushViewController(calendarViewController, animated: true)
+                self.coordinator.startCalendar(tripRequest: tripRequest)
             }
             .disposed(by: disposeBag)
     }

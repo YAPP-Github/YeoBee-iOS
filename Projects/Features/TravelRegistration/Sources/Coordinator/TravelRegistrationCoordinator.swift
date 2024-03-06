@@ -51,3 +51,23 @@ final public class TravelRegistrationCoordinator: TravelRegistrationCoordinatorI
         print("TravelRegistrationCoordinator is de-initialized.")
     }
 }
+
+extension TravelRegistrationCoordinator {
+    public func startCalendar(tripRequest: RegistTripRequest) {
+        let calendarReactor = CalendarReactor(tripRequest: tripRequest)
+        let calendarViewController = CalendarViewController(coordinator: self, reactor: calendarReactor)
+        travelRegistrationNavigationController?.pushViewController(calendarViewController, animated: true)
+    }
+    
+    public func startCompanion(tripRequest: RegistTripRequest) {
+        let companionReactor = CompanionReactor(tripRequest: tripRequest)
+        let companionViewController = CompanionViewController(coordinator: self, reactor: companionReactor)
+        travelRegistrationNavigationController?.pushViewController(companionViewController, animated: true)
+    }
+    
+    public func startTravelTitle(tripRequest: RegistTripRequest) {
+        let travelTtitleReactor = TravelTitleReactor(tripRequest: tripRequest)
+        let travelTitleViewController = TravelTitleViewController(coordinator: self, reactor: travelTtitleReactor)
+        travelRegistrationNavigationController?.pushViewController(travelTitleViewController, animated: true)
+    }
+}
