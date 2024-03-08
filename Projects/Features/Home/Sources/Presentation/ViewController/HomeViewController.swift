@@ -158,7 +158,7 @@ public final class HomeViewController: UIViewController {
                             // 현재 날짜와 startDate 차이 계산
                             if let startDate = dateFormatter.date(from: tripItem.startDate) {
                                 if let daysDiff = Calendar.current.dateComponents([.day], from: Date(), to: startDate).day {
-                                    header.sectionTitleLabel.text = "\(TripType.coming.rawValue), D-\(daysDiff)"
+                                    header.sectionTitleLabel.text = "\(TripType.coming.rawValue), D-\(daysDiff + 1)"
                                     if self.reactor.currentState.comingTrip.count > 1 {
                                         header.moreButton.isHidden = false
                                     }
@@ -219,7 +219,7 @@ public final class HomeViewController: UIViewController {
                     if let comingTrip = reactor.currentState.comingTrip.first {
                         if let startDate = dateFormatter.date(from: comingTrip.startDate) {
                             let daysDiff = Calendar.current.dateComponents([.day], from: Date(), to: startDate).day ?? 0
-                            header.sectionTitleLabel.text = "\(TripType.coming.rawValue), D-\(daysDiff)"
+                            header.sectionTitleLabel.text = "\(TripType.coming.rawValue), D-\(daysDiff + 1)"
                             header.moreButton.isHidden = reactor.currentState.comingTrip.count <= 1
                         }
                     }
@@ -342,11 +342,12 @@ extension HomeViewController: HomeSectionHeaderViewDelegate {
 
 // MARK: - 여행 등록 & 삭제 완료 후
 extension HomeViewController: HomeCoordinatorDelegate {
-    public func finishedRegistration() {
+    public func finishedRegistration(tripItem: TripItem) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             let toast = Toast.text(icon: .complete, "새로운 여행이 등록 되었어요!")
             toast.show()
             self.reactor.homeTripUseCase()
+            self.coordinator?.trip(tripItem: tripItem)
         }
     }
     

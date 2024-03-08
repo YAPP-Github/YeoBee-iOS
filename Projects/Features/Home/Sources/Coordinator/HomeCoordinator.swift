@@ -14,7 +14,7 @@ import TravelRegistration
 import Trip
 
 public protocol HomeCoordinatorDelegate: AnyObject {
-    func finishedRegistration()
+    func finishedRegistration(tripItem: TripItem)
     func deletedTrip()
 }
 
@@ -67,8 +67,8 @@ extension HomeCoordinator {
 }
 
 extension HomeCoordinator: TravelRegistrationCoordinatorDelegate {
-    public func finishedRegistration() {
-        delegate?.finishedRegistration()
+    public func finishedRegistration(tripItem: TripItem) {
+        delegate?.finishedRegistration(tripItem: tripItem)
     }
 }
 

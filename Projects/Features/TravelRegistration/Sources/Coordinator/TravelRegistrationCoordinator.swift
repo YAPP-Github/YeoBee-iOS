@@ -12,7 +12,7 @@ import Coordinator
 import Entity
 
 public protocol TravelRegistrationCoordinatorDelegate: AnyObject {
-    func finishedRegistration()
+    func finishedRegistration(tripItem: TripItem)
 }
 
 final public class TravelRegistrationCoordinator: TravelRegistrationCoordinatorInterface {
@@ -42,8 +42,8 @@ final public class TravelRegistrationCoordinator: TravelRegistrationCoordinatorI
         parent?.childDidFinish(self)
     }
     
-    public func finishedRegistration() {
-        delegate?.finishedRegistration()
+    public func finishedRegistration(tripItem: TripItem) {
+        delegate?.finishedRegistration(tripItem: tripItem)
         coordinatorDidFinish()
     }
 
