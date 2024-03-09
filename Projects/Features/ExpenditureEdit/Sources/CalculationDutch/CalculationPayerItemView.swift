@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
+import Kingfisher
 
 struct CalculationPayerItemView: View {
     typealias State = CalculationPayerItemReducer.State
@@ -22,7 +23,8 @@ struct CalculationPayerItemView: View {
             }, label: {
                 HStack(spacing: 12) {
                     if let profileImageUrl = viewStore.user.profileImageUrl {
-                        AsyncImage(url: URL(string: profileImageUrl), scale: 15)
+                        KFImage(URL(string: profileImageUrl))
+                            .resizable()
                             .frame(width: 44, height: 44)
                     } else if viewStore.user.id == 0 {
                         DesignSystemAsset.Icons.sharedBudget.swiftUIImage

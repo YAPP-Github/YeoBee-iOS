@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
+import Kingfisher
 
 struct CalculationUserInputView: View {
     typealias State = CalculationUserInputReducer.State
@@ -19,7 +20,8 @@ struct CalculationUserInputView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             HStack(spacing: 12) {
                 if let profileImageUrl = viewStore.user.profileImageUrl {
-                    AsyncImage(url: URL(string: profileImageUrl), scale: 15)
+                    KFImage(URL(string: profileImageUrl))
+                        .resizable()
                         .frame(width: 44, height: 44)
                 } else {
                     DesignSystemAsset.Icons.face0.swiftUIImage
