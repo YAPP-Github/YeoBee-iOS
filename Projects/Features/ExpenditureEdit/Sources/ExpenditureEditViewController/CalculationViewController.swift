@@ -26,7 +26,8 @@ public final class CalculationViewController: UIViewController {
         expenseType: ExpenditureType,
         tripItem: TripItem,
         expenseDetail: ExpenseDetailItem,
-        hasSharedBudget: Bool
+        hasSharedBudget: Bool,
+        selectCurrency: Currency
     ) {
         self.coordinator = coordinator
         self.calculationHostingController = CalculationHostingController(
@@ -37,7 +38,8 @@ public final class CalculationViewController: UIViewController {
                         tripItem: tripItem,
                         expenseDetail: expenseDetail,
                         selectedPayer: nil,
-                        hasSharedBudget: hasSharedBudget
+                        hasSharedBudget: hasSharedBudget,
+                        selectCurrency: selectCurrency
                     ),
                     reducer: {
                         ExpenditureCalculationReducer(coordinator: coordinator)

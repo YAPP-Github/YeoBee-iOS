@@ -21,13 +21,14 @@ struct ExpenditurePaymentView: View {
 }
 
 extension ExpenditurePaymentView {
-
     var containerView: some View {
         HStack(alignment: .center, spacing: 10) {
             HStack(spacing: 0) {
-                Text("지출형태")
-                    .foregroundColor(.ybColor(.black))
-                    .font(.ybfont(.title1))
+                WithViewStore(store, observe: { $0 }) { viewStore in
+                    Text(viewStore.isExpense ? "지출형태" : viewStore.isShared ? "경비형태" : "예산형태")
+                        .foregroundColor(.ybColor(.black))
+                        .font(.ybfont(.title1))
+                }
                 Text("*")
                     .foregroundColor(.ybColor(.mainGreen))
                     .font(.ybfont(.body3))

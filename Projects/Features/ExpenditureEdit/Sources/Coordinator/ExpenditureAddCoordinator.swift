@@ -98,13 +98,19 @@ final public class ExpenditureAddCoordinator: ExpenditureAddCoordinatorInterface
 
 extension ExpenditureAddCoordinator {
 
-    public func pushCalculation(expenseType: ExpenditureType, tripItem: TripItem,  expenseDetail: ExpenseDetailItem) {
+    public func pushCalculation(
+        expenseType: ExpenditureType,
+        tripItem: TripItem,
+        expenseDetail: ExpenseDetailItem,
+        selectCurrency: Currency
+    ) {
         let calculationViewController = CalculationViewController(
             coordinator: self, 
             expenseType: expenseType,
             tripItem: tripItem,
             expenseDetail: expenseDetail,
-            hasSharedBudget: hasSharedBudget
+            hasSharedBudget: hasSharedBudget,
+            selectCurrency: selectCurrency
         )
         expenditureEditNavigationController?.pushViewController(calculationViewController, animated: true)
     }

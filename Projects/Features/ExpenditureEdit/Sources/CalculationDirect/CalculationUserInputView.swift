@@ -30,7 +30,7 @@ struct CalculationUserInputView: View {
                     .foregroundColor(.ybColor(.gray6))
                     .font(.ybfont(.body2))
                 Spacer()
-                CalculatuionInputView(text: viewStore[keyPath: \.$text], placeholder: "직접입력 (KRW)") {
+                CalculatuionInputView(text: viewStore[keyPath: \.$text], placeholder: "직접입력 (\(viewStore.currency.code))") {
                     let toast = Toast.text(icon: .complete, "최대 10자까지 입력 가능해요.")
                     toast.show()
                 }

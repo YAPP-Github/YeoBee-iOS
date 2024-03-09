@@ -7,13 +7,17 @@
 
 import Foundation
 import ComposableArchitecture
+import Entity
 
 public struct ExpenditureBudgetContentReducer: Reducer {
     public struct State: Equatable {
-        @BindingState var text: String = ""
+        @BindingState var text: String
         var isInvaildText: Bool = false
+        var expenditureTab: ExpenditureTab
 
-        init() {
+        init(expenditureTab: ExpenditureTab) {
+            self.text = expenditureTab == .individual ? "내예산" : "공동경비"
+            self.expenditureTab = expenditureTab
         }
     }
 

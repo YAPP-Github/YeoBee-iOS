@@ -34,7 +34,7 @@ extension ExpenditureAddView {
                 if viewStore.expenseDetail == nil {
                     ExpenditureToggleView(
                         expenditureTab: viewStore.$seletedExpenditureType,
-                        isSharedTrip: viewStore.tripItem.tripUserList.count > 1
+                        isSharedTrip: viewStore.expenditureTab == .shared
                     )
                     .frame(height: 40)
                     .padding(.horizontal, 24)

@@ -28,7 +28,8 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
             tripItem: TripItem,
             expenseDetail: ExpenseDetailItem,
             selectedPayerId: Int?,
-            hasSharedBudget: Bool
+            hasSharedBudget: Bool,
+            selectCurrency: Currency
         ) {
             let calculationType = expenseDetail.calculationType
             self.expenseType = expenseType
@@ -66,12 +67,14 @@ public struct ExpenditureCalculationDirectReducer: Reducer {
                 if calculationType == "CUSTOM" {
                     self.tripUserListItems.updateOrAppend(.init(
                         user: tripUser,
-                        text: expenseDetailItem.payerList.filter({ $0.tripUserId == tripUser.id }).first?.amount.formattedWithSeparator ?? "")
+                        text: expenseDetailItem.payerList.filter({ $0.tripUserId == tripUser.id }).first?.amount.formattedWithSeparator ?? "", 
+                        currency: selectCurrency)
                     )
                 } else {
                     self.tripUserListItems.updateOrAppend(.init(
                         user: tripUser,
-                        text: "")
+                        text: "",
+                        currency: selectCurrency)
                     )
                 }
 
