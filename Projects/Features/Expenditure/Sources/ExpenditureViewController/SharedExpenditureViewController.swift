@@ -20,6 +20,10 @@ public final class SharedExpenditureViewController: UIViewController {
     let store: StoreOf<SharedExpenditureReducer>
     let tripItem: TripItem
 
+    @Dependency(\.tripUseCase) var tripUseCase
+
+    private var getTripItemTask: Task<Void, Never>?
+
     // MARK: View
 
     private let sharedExpenditureHostingController: SharedExpenditureHostingController
@@ -88,6 +92,22 @@ public final class SharedExpenditureViewController: UIViewController {
         store.send(.sharedExpenditure(.getExpenseList(editDate)))
     }
 
+    public func getTripItem() {
+        getTripItemTask = Task {
+            do {
+                let tripItem = try await tripUseCase.getTrip(tripItem.id)
+                title = tripItem.title
+                store.send(.individualExpenditure(.setTripItem(tripItem)))
+                store.send(.sharedExpenditure(.setTripItem(tripItem)))
+                store.send(.individualExpenditure(.refresh))
+                store.send(.sharedExpenditure(.refresh))
+                coordinator.setTripItem(tripItem: tripItem)
+            } catch {
+                print(error)
+            }
+        }
+    }
+
     func setLayouts() {
         view.addSubview(sharedExpenditureHostingController.view)
 
@@ -96,6 +116,10 @@ public final class SharedExpenditureViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.horizontalEdges.equalToSuperview()
         }
+    }
+
+    deinit {
+        getTripItemTask?.cancel()
     }
 }
 

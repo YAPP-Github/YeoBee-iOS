@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ModifiedSettingViewControllerDelegate: AnyObject {
+public protocol ModifiedSettingViewControllerDelegate: AnyObject {
     func modifiedCommon()
     func modifiedCurrency()
 }

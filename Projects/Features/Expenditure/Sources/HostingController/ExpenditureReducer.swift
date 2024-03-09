@@ -22,7 +22,7 @@ public struct ExpenditureReducer: Reducer {
         var totalPrice: TotalPriceReducer.State
         var tripDate: TripDateReducer.State
         var expenditureList = ExpenditureListReducer.State()
-        let tripItem: TripItem
+        var tripItem: TripItem
         var isInitialShow: Bool = true
         var pageIndex: Int = 0
         var isLastPage: Bool = false
@@ -68,16 +68,17 @@ public struct ExpenditureReducer: Reducer {
         case setLastPage(Bool)
         case setExpenseFilter(PaymentMethod?)
         case setSharedBudget(Bool)
+        case setTripItem(TripItem)
     }
 
     @Dependency(\.expenseUseCase) var expenseUseCase
+    @Dependency(\.tripUseCase) var tripUseCase
     @Dependency(\.tripCalculationUseCase) var tripCalculationUseCase
 
     public var body: some ReducerOf<ExpenditureReducer> {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                print("trip data", state.tripItem)
                 let currentDate = Date()
                 if state.isInitialShow {
                     state.isInitialShow = false
@@ -227,6 +228,10 @@ public struct ExpenditureReducer: Reducer {
 
             case let .setSharedBudget(hasSharedBudget):
                 state.hasSharedBudget = hasSharedBudget
+                return .none
+
+            case let .setTripItem(tripItem):
+                state.tripItem = tripItem
                 return .none
 
             default:
