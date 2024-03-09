@@ -12,7 +12,7 @@ import Coordinator
 import Entity
 
 public protocol TravelRegistrationCoordinatorDelegate: AnyObject {
-    func finishedRegistration()
+    func finishedRegistration(tripItem: TripItem)
 }
 
 final public class TravelRegistrationCoordinator: TravelRegistrationCoordinatorInterface {
@@ -42,12 +42,32 @@ final public class TravelRegistrationCoordinator: TravelRegistrationCoordinatorI
         parent?.childDidFinish(self)
     }
     
-    public func finishedRegistration() {
-        delegate?.finishedRegistration()
+    public func finishedRegistration(tripItem: TripItem) {
+        delegate?.finishedRegistration(tripItem: tripItem)
         coordinatorDidFinish()
     }
 
     deinit {
         print("TravelRegistrationCoordinator is de-initialized.")
+    }
+}
+
+extension TravelRegistrationCoordinator {
+    public func startCalendar(tripRequest: RegistTripRequest) {
+        let calendarReactor = CalendarReactor(tripRequest: tripRequest)
+        let calendarViewController = CalendarViewController(coordinator: self, reactor: calendarReactor)
+        travelRegistrationNavigationController?.pushViewController(calendarViewController, animated: true)
+    }
+    
+    public func startCompanion(tripRequest: RegistTripRequest) {
+        let companionReactor = CompanionReactor(tripRequest: tripRequest)
+        let companionViewController = CompanionViewController(coordinator: self, reactor: companionReactor)
+        travelRegistrationNavigationController?.pushViewController(companionViewController, animated: true)
+    }
+    
+    public func startTravelTitle(tripRequest: RegistTripRequest) {
+        let travelTtitleReactor = TravelTitleReactor(tripRequest: tripRequest)
+        let travelTitleViewController = TravelTitleViewController(coordinator: self, reactor: travelTtitleReactor)
+        travelRegistrationNavigationController?.pushViewController(travelTitleViewController, animated: true)
     }
 }

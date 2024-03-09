@@ -53,7 +53,7 @@ public final class HomeViewController: UIViewController {
         setDataSource()
         setCollectionViewDelegate()
         bind(reactor: reactor)
-        reactor.homeTripUseCase()
+        reactor.homeInitUseCase()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -72,7 +72,7 @@ public final class HomeViewController: UIViewController {
     
     private func setLayout() {
         homeCollectionView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.bottom.equalToSuperview()
         }
         emptyTripView.snp.makeConstraints { make in
@@ -158,7 +158,7 @@ public final class HomeViewController: UIViewController {
                             // 현재 날짜와 startDate 차이 계산
                             if let startDate = dateFormatter.date(from: tripItem.startDate) {
                                 if let daysDiff = Calendar.current.dateComponents([.day], from: Date(), to: startDate).day {
-                                    header.sectionTitleLabel.text = "\(TripType.coming.rawValue), D-\(daysDiff)"
+                                    header.sectionTitleLabel.text = "\(TripType.coming.rawValue), D-\(daysDiff + 1)"
                                     if self.reactor.currentState.comingTrip.count > 1 {
                                         header.moreButton.isHidden = false
                                     }
@@ -203,6 +203,34 @@ public final class HomeViewController: UIViewController {
         
         self.snapshot = snapshot
         self.dataSource?.apply(snapshot, animatingDifferences: false)
+        self.updateSectionHeaders()
+    }
+    
+    private func updateSectionHeaders() {
+        let sectionsToUpdate: [HomeSection] = [.traveling, .coming, .passed]
+        for section in sectionsToUpdate {
+            if let sectionIndex = snapshot.indexOfSection(section), let header = homeCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: sectionIndex)) as? HomeSectionHeaderView {
+                
+                switch section {
+                case .traveling:
+                    header.sectionTitleLabel.text = TripType.traveling.rawValue
+                    header.moreButton.isHidden = reactor.currentState.travelingTrip.count <= 1
+                case .coming:
+                    if let comingTrip = reactor.currentState.comingTrip.first {
+                        if let startDate = dateFormatter.date(from: comingTrip.startDate) {
+                            let daysDiff = Calendar.current.dateComponents([.day], from: Date(), to: startDate).day ?? 0
+                            header.sectionTitleLabel.text = "\(TripType.coming.rawValue), D-\(daysDiff + 1)"
+                            header.moreButton.isHidden = reactor.currentState.comingTrip.count <= 1
+                        }
+                    }
+                case .passed:
+                    header.sectionTitleLabel.text = TripType.passed.rawValue
+                    header.moreButton.isHidden = reactor.currentState.passedTrip.count <= 1
+                default:
+                    break
+                }
+            }
+        }
     }
     
     private func setCollectionViewDelegate() {
@@ -306,12 +334,7 @@ extension HomeViewController: HomeSectionHeaderViewDelegate {
             if let coordinator = coordinator,
                let firstCharacter = tripType.first,
                tripTypeCase.rawValue.first == firstCharacter {
-                
-                let moreTripReactor = MoreTripReactor(tripType: tripTypeCase)
-                let moreTripViewController = MoreTripViewController(coordinator: coordinator, reactor: moreTripReactor)
-                moreTripViewController.delegate = self
-                navigationController?.isNavigationBarHidden = false
-                navigationController?.pushViewController(moreTripViewController, animated: true)
+                coordinator.moreTrip(tripType: tripTypeCase)
             }
         }
     }
@@ -319,24 +342,16 @@ extension HomeViewController: HomeSectionHeaderViewDelegate {
 
 // MARK: - 여행 등록 & 삭제 완료 후
 extension HomeViewController: HomeCoordinatorDelegate {
-    public func finishedRegistration() {
+    public func finishedRegistration(tripItem: TripItem) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             let toast = Toast.text(icon: .complete, "새로운 여행이 등록 되었어요!")
             toast.show()
             self.reactor.homeTripUseCase()
+            self.coordinator?.trip(tripItem: tripItem)
         }
     }
     
     public func deletedTrip() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-            self.reactor.homeTripUseCase()
-        }
-    }
-}
-
-// MARK: - 더보기에서 들어가 삭제된 경우
-extension HomeViewController: MoreTripViewControllerDelegate {
-    func updateHomeTrip() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             self.reactor.homeTripUseCase()
         }

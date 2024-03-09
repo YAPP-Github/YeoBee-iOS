@@ -250,10 +250,7 @@ extension CompanionViewController: View {
                         tripUserList: tripUserList
                     )
                     
-                    let travelTtitleReactor = TravelTitleReactor(tripRequest: tripRequest)
-                    let travelTitleViewController = TravelTitleViewController(coordinator: self.coordinator, 
-                                                                              reactor: travelTtitleReactor)
-                    self.navigationController?.pushViewController(travelTitleViewController, animated: true)
+                    self.coordinator.startTravelTitle(tripRequest: tripRequest)
                 case .alone:
                     let currentTripRequest = self.reactor.currentState.tripRequest
                     let tripRequest = RegistTripRequest(
@@ -263,10 +260,8 @@ extension CompanionViewController: View {
                         countryList: currentTripRequest.countryList,
                         tripUserList: []
                     )
-                    let travelTtitleReactor = TravelTitleReactor(tripRequest: tripRequest)
-                    let travelTitleViewController = TravelTitleViewController(coordinator: self.coordinator, 
-                                                                              reactor: travelTtitleReactor)
-                    self.navigationController?.pushViewController(travelTitleViewController, animated: true)
+                    
+                    self.coordinator.startTravelTitle(tripRequest: tripRequest)
                 }
             }
             .disposed(by: disposeBag)

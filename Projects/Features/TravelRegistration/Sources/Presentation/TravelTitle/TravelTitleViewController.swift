@@ -155,10 +155,10 @@ extension TravelTitleViewController: View {
             .disposed(by: disposeBag)
         
         reactor.state
-            .map { $0.postValidation }
-            .bind { [weak self] isSuccess in
-                if isSuccess {
-                    self?.coordinator.finishedRegistration()
+            .map { $0.postResult }
+            .bind { [weak self] tripItem in
+                if let tripItem {
+                    self?.coordinator.finishedRegistration(tripItem: tripItem)
                     self?.navigationController?.dismiss(animated: true)
                 }
             }

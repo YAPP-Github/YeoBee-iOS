@@ -20,19 +20,19 @@ public final class TravelTitleReactor: Reactor {
     public enum Action {
         case titleTextFieldText(text: String)
         case makeTravelButtonTapped(text: String)
-        case postValidation(isSuccess: Bool)
+        case postResult(tripItem: TripItem)
     }
     
     public enum Mutation {
         case titleTextFieldText(text: String)
         case makeTravelButtonTapped(text: String)
-        case postValidation(isSuccess: Bool)
+        case postResult(tripItem: TripItem)
     }
     
     public struct State {
         var isValidTitleText: Bool = false
         var tripRequest: RegistTripRequest
-        var postValidation: Bool = false
+        var postResult: TripItem?
     }
     
     @Dependency(\.tripUseCase) var tripUseCase
@@ -44,14 +44,15 @@ public final class TravelTitleReactor: Reactor {
     
     func postTripUseCase(title: String, tripRequest: RegistTripRequest) {
         Task {
-            try await tripUseCase.postTrip(
+            let postResultTripItem = try await tripUseCase.postTrip(
                 title,
                 tripRequest.startDate,
                 tripRequest.endDate,
                 tripRequest.countryList,
                 tripRequest.tripUserList
             )
-            action.onNext(.postValidation(isSuccess: true))
+            
+            action.onNext(.postResult(tripItem: postResultTripItem))
         }
     }
     
@@ -62,8 +63,8 @@ public final class TravelTitleReactor: Reactor {
             return .just(.titleTextFieldText(text: text))
         case .makeTravelButtonTapped(text: let textFieldText):
             return .just(.makeTravelButtonTapped(text: textFieldText))
-        case .postValidation(isSuccess: let isSuccess):
-            return .just(.postValidation(isSuccess: isSuccess))
+        case .postResult(tripItem: let tripItem):
+            return .just(.postResult(tripItem: tripItem))
         }
     }
     
@@ -77,8 +78,8 @@ public final class TravelTitleReactor: Reactor {
             newState.isValidTitleText = isValidTitleText
         case .makeTravelButtonTapped(text: let textFieldText):
             postTripUseCase(title: textFieldText, tripRequest: newState.tripRequest)
-        case .postValidation(isSuccess: let isSuccess):
-            newState.postValidation = isSuccess
+        case .postResult(tripItem: let tripItem):
+            newState.postResult = tripItem
         }
         
         return newState

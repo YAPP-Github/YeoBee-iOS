@@ -79,8 +79,8 @@ public final class HomeReactor: Reactor {
         return newState
     }
     
-    func homeTripUseCase() {
-        Task {       
+    func homeInitUseCase() {
+        Task {
             let userResult = try await userInfoUseCase.fetchUserInfo()
             self.action.onNext(.userInfo(userResult))
             
@@ -88,7 +88,10 @@ public final class HomeReactor: Reactor {
                 KeychainManager.shared.add(key: KeychainManager.userId, value: "\(userResult.id)")
             }
         }
-        
+        homeTripUseCase()
+    }
+    
+    func homeTripUseCase() {
         Task {
             let pastResult = try await tripUseCase.getPastTrip(0, 3)
             let tripItems = pastResult.content

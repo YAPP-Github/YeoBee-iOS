@@ -23,17 +23,12 @@ enum MoreTripDataItem: Hashable {
     case main(TripItem)
 }
 
-protocol MoreTripViewControllerDelegate: AnyObject {
-    func updateHomeTrip()
-}
-
 public final class MoreTripViewController: UIViewController {
     
     public var disposeBag = DisposeBag()
     private let reactor: MoreTripReactor
     private var dataSource: UICollectionViewDiffableDataSource<MoreTripSection, MoreTripDataItem>?
     let coordinator: HomeCoordinator
-    weak var delegate: MoreTripViewControllerDelegate?
     
     // MARK: - Properties
     lazy var moreTripCollectionView = HomeCollectionView()
@@ -64,7 +59,6 @@ public final class MoreTripViewController: UIViewController {
     // MARK: - Set UI
     private func setView() {
         moreTripCollectionView.delegate = self
-        coordinator.delegate = self
     }
     
     private func addViews() {
@@ -174,18 +168,5 @@ extension MoreTripViewController: View {
                 self?.configureSnapshot(tripItems: tripItems)
             }
             .disposed(by: disposeBag)
-    }
-}
-
-extension MoreTripViewController: HomeCoordinatorDelegate {
-    public func finishedRegistration() {
-        return
-    }
-    
-    public func deletedTrip() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.navigationController?.popViewController(animated: true)
-            self.delegate?.updateHomeTrip()
-        }
     }
 }
