@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import DesignSystem
 import Entity
+import Kingfisher
 
 struct TripCalculationItemView: View {
 
@@ -30,7 +31,8 @@ struct TripCalculationItemView: View {
             YBDividerView()
             HStack(spacing: 12) {
                 if let profileImageUrl = calculation.receiver.profileImageURL {
-                    AsyncImage(url: URL(string: profileImageUrl), scale: 15)
+                    KFImage(URL(string: profileImageUrl))
+                        .resizable()
                         .frame(width: 30, height: 30)
                 } else {
                     DesignSystemAsset.Icons.face0.swiftUIImage

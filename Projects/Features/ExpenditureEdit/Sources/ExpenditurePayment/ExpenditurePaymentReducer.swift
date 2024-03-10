@@ -14,7 +14,13 @@ public enum Payment {
 
 public struct ExpenditurePaymentReducer: Reducer {
     public struct State: Equatable {
+        var isExpense: Bool
+        var isShared: Bool
         var seletedPayment: Payment = .cash
+        init(isExpense: Bool, isShared: Bool) {
+            self.isExpense = isExpense
+            self.isShared = isShared
+        }
     }
 
     public enum Action: Equatable {

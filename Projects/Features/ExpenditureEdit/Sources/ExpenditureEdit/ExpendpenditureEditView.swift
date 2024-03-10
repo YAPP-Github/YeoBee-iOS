@@ -75,13 +75,13 @@ extension ExpendpenditureEditView {
                             viewStore.send(.tappedCalculationButton)
                         }
                         .padding(.horizontal, 24)
-                    } else if let payerName = viewStore.expenseDetail.payerName {
-                        ExpenseCalculationButtonView(text: "동행인과 1/N") {
+                    } else if viewStore.hasSharedBudget {
+                        ExpenseCalculationButtonView(text: "공동경비로 1/N") {
                             viewStore.send(.tappedCalculationButton)
                         }
                         .padding(.horizontal, 24)
                     } else {
-                        ExpenseCalculationButtonView(text: "공동경비로 1/N") {
+                        ExpenseCalculationButtonView(text: "동행인과 1/N") {
                             viewStore.send(.tappedCalculationButton)
                         }
                         .padding(.horizontal, 24)

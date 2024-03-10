@@ -13,6 +13,7 @@ import Entity
 
 public protocol SettingCoordinatorDelegate: AnyObject {
     func didFinishedCoordinator()
+    func didModifiedCoordinator()
 }
 
 final public class SettingCoordinator: SettingCoordinatorInterface {
@@ -40,10 +41,18 @@ final public class SettingCoordinator: SettingCoordinatorInterface {
         navigationController.tabBarController?.tabBar.isHidden = false
         parent?.childDidFinish(self)
     }
-    
+
+    public func modifiedTrip() {
+        delegate?.didModifiedCoordinator()
+        navigationController.popViewController(animated: true)
+        navigationController.tabBarController?.tabBar.isHidden = false
+        parent?.childDidFinish(self)
+    }
+
     public func deletedTrip() {
         delegate?.didFinishedCoordinator()
-        coordinatorDidFinish()
+        navigationController.popViewController(animated: true)
+        navigationController.tabBarController?.tabBar.isHidden = false
         parent?.coordinatorDidFinish()
     }
 

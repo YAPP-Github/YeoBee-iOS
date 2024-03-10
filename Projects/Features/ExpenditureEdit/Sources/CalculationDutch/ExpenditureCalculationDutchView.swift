@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
+import Kingfisher
 
 struct ExpenditureCalculationDutchView: View {
     typealias State = ExpenditureCalculationDutchReducer.State
@@ -85,7 +86,8 @@ extension ExpenditureCalculationDutchView {
                         ForEach(viewStore.tripItem.tripUserList) { tripUser in
                             HStack(spacing: 12) {
                                 if let profileImageUrl = tripUser.profileImageUrl {
-                                    AsyncImage(url: URL(string: profileImageUrl), scale: 15)
+                                    KFImage(URL(string: profileImageUrl))
+                                        .resizable()
                                         .frame(width: 44, height: 44)
                                 } else {
                                     DesignSystemAsset.Icons.face0.swiftUIImage

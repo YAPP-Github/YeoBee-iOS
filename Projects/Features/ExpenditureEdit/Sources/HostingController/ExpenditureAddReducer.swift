@@ -115,7 +115,12 @@ public struct ExpenditureReducer: Reducer {
                     expenseDetail.name = expenseText
                     expenseDetail.currency = currencyCode
                     expenseDetail.amount = amount
-                    cooridinator.pushCalculation(expenseType: .expense, tripItem: state.tripItem, expenseDetail: expenseDetail)
+                    cooridinator.pushCalculation(
+                        expenseType: .expense,
+                        tripItem: state.tripItem,
+                        expenseDetail: expenseDetail
+                        , selectCurrency: state.expenditureEdit.expenditureInput.selectedCurrency
+                    )
                 } else {
                     let toast = Toast.text(icon: .warning, "금액을 입력해주세요.")
                     toast.show()
@@ -131,7 +136,12 @@ public struct ExpenditureReducer: Reducer {
                     expenseDetail.name = expenseText
                     expenseDetail.currency = currencyCode
                     expenseDetail.amount = amount
-                    cooridinator.pushCalculation(expenseType: .budget, tripItem: state.tripItem, expenseDetail: expenseDetail)
+                    cooridinator.pushCalculation(
+                        expenseType: .budget,
+                        tripItem: state.tripItem,
+                        expenseDetail: expenseDetail,
+                        selectCurrency: state.expenditureBudgetEdit.expenditureInput.selectedCurrency
+                    )
                 } else {
                     let toast = Toast.text(icon: .warning, "금액을 입력해주세요.")
                     toast.show()

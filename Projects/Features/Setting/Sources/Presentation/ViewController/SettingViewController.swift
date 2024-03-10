@@ -31,7 +31,8 @@ public final class SettingViewController: UIViewController {
     private let coordinator: SettingCoordinator
     private var dataSource: UITableViewDiffableDataSource<SettingSection, SettingDataItem>?
     private var snapshot = NSDiffableDataSourceSnapshot<SettingSection, SettingDataItem>()
-    
+    private var isModified: Bool = false
+
     // MARK: - Properties
     private let settingHeaderView = SettingTableHeaderView(frame: CGRect(x: 0,
                                                                          y: 0,
@@ -118,17 +119,22 @@ public final class SettingViewController: UIViewController {
     }
     
     private func configureBar() {
-        let deleteImage = DesignSystemAsset.Icons.back.image.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
+        let backImage = DesignSystemAsset.Icons.back.image.withTintColor(YBColor.gray5.color, renderingMode: .alwaysOriginal)
         let trashImage = DesignSystemAsset.Icons.trash.image.withTintColor(YBColor.black.color, renderingMode: .alwaysOriginal)
-        let deleteButton = UIBarButtonItem(image: deleteImage, style: .plain, target: self, action: #selector(deleteButtonTapped))
+        let deleteButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backButtonTapped))
         let trashButton = UIBarButtonItem(image: trashImage, style: .plain, target: self, action: #selector(trashButtonTapped))
         self.navigationController?.navigationBar.barTintColor = .white
         self.navigationItem.leftBarButtonItem = deleteButton
         self.navigationItem.rightBarButtonItem = trashButton
     }
     
-    @objc private func deleteButtonTapped() {
-        coordinator.coordinatorDidFinish()
+    @objc private func backButtonTapped() {
+        if isModified {
+            coordinator.modifiedTrip()
+        } else {
+            coordinator.coordinatorDidFinish()
+        }
+
     }
     
     @objc private func trashButtonTapped() {
@@ -285,14 +291,16 @@ extension SettingViewController: SettingCompanionCellDelegate {
 
 // MARK: - 수정된 이후 trip update
 extension SettingViewController: ModifiedSettingViewControllerDelegate {
-    func modifiedCommon() {
+    public func modifiedCommon() {
+        isModified = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             self.reactor.updateSettingUseCase()
         }
         
     }
 
-    func modifiedCurrency() {
+    public func modifiedCurrency() {
+        isModified = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             self.reactor.updateCurrencyUseCase()
         }

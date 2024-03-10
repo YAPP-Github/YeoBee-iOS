@@ -26,7 +26,8 @@ public struct ExpenditureCalculationReducer: Reducer {
             tripItem: TripItem,
             expenseDetail: ExpenseDetailItem,
             selectedPayer: TripUserItem?,
-            hasSharedBudget: Bool
+            hasSharedBudget: Bool,
+            selectCurrency: Currency
         ) {
             var expenseDetailItem = expenseDetail
             self.seletedCalculationType = expenseDetail.calculationType == "EQUAL" ? .dutch : .direct
@@ -50,7 +51,8 @@ public struct ExpenditureCalculationReducer: Reducer {
                 tripItem: tripItem,
                 expenseDetail: expenseDetailItem,
                 selectedPayerId: expenseDetail.payerId,
-                hasSharedBudget: hasSharedBudget
+                hasSharedBudget: hasSharedBudget,
+                selectCurrency: selectCurrency
             )
         }
     }

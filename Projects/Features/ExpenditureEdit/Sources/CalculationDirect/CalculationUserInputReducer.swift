@@ -14,10 +14,12 @@ public struct CalculationUserInputReducer: Reducer {
         public var id: Int { user.id }
         let user: TripUserItem
         @BindingState var text: String = ""
+        var currency: Currency
 
-        init(user: TripUserItem, text: String) {
+        init(user: TripUserItem, text: String, currency: Currency) {
             self.user = user
             self.text = text
+            self.currency = currency
         }
     }
 

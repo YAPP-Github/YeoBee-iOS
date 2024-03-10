@@ -32,7 +32,7 @@ final public class ExpenditureCoordinator: NSObject, ExpenditureCoordinatorInter
     public var sharedExpenditureViewController: SharedExpenditureViewController?
 
     public var parent: TripCoordinatorInterface?
-    public let tripItem: TripItem
+    public var tripItem: TripItem
     public weak var delegate: ExpenditureCoordinatorDelegate?
 
     public init(navigationController: UINavigationController, tripItem: TripItem) {
@@ -185,6 +185,10 @@ extension ExpenditureCoordinator {
             expenditureViewController?.setRefreshData()
         }
     }
+
+    public func setTripItem(tripItem: TripItem) {
+        self.tripItem = tripItem
+    }
 }
 
 extension ExpenditureCoordinator: ExpenditureAddCoordinatorDelegate {
@@ -204,6 +208,15 @@ extension ExpenditureCoordinator: ExpenditureAddCoordinatorDelegate {
 
 // MARK: - 여행 삭제 후
 extension ExpenditureCoordinator: SettingCoordinatorDelegate {
+    public func didModifiedCoordinator() {
+        if tripItem.tripUserList.count > 1 {
+            sharedExpenditureViewController?.getTripItem()
+        } else {
+            expenditureViewController?.getTripItem()
+        }
+        delegate?.deletedTrip()
+    }
+    
     public func didFinishedCoordinator() {
         delegate?.deletedTrip()
     }

@@ -12,7 +12,7 @@ import Entity
 public struct ExpendpenditureEditReducer: Reducer {
     public struct State: Equatable {
         var expenditureInput = ExpenditureInputReducer.State()
-        var expenditurePayment = ExpenditurePaymentReducer.State()
+        var expenditurePayment: ExpenditurePaymentReducer.State
         var expenditureCategory = ExpenditureCategoryReducer.State()
 
         var isFocused: Bool = false
@@ -66,6 +66,7 @@ public struct ExpendpenditureEditReducer: Reducer {
                 )
                 self.expenseDetail = expenseDetail
             }
+            self.expenditurePayment = .init(isExpense: true, isShared: expenditureTab == .shared)
         }
     }
 

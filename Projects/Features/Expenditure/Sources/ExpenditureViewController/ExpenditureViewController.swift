@@ -25,6 +25,10 @@ public final class ExpenditureViewController: UIViewController {
 
     private let expenditureHostingController: ExpenditureHostingController
 
+    @Dependency(\.tripUseCase) var tripUseCase
+
+    private var getTripItemTask: Task<Void, Never>?
+
     public init(coordinator: ExpenditureCoordinator, tripItem: TripItem) {
         self.coordinator = coordinator
         self.tripItem = tripItem
@@ -103,7 +107,22 @@ public final class ExpenditureViewController: UIViewController {
         store.send(.refresh)
     }
 
+    public func getTripItem() {
+        getTripItemTask = Task {
+            do {
+                let tripItem = try await tripUseCase.getTrip(tripItem.id)
+                title = tripItem.title
+                store.send(.setTripItem(tripItem))
+                store.send(.refresh)
+                coordinator.setTripItem(tripItem: tripItem)
+            } catch {
+                print(error)
+            }
+        }
+    }
+
     deinit {
+        getTripItemTask?.cancel()
         print("ExpenditureViewController is de-initialized.")
     }
 }
