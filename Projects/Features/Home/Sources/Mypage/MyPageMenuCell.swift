@@ -32,7 +32,7 @@ class MyPageMenuCell: UITableViewCell {
     
     private func setupViews() {
       if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-            versionLabel.text = "v\(appVersion)"
+            versionLabel.text = appVersion
         }
         versionLabel.isHidden = true
         contentView.addSubview(titleLabel)
