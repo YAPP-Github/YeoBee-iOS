@@ -309,7 +309,7 @@ extension MyPageViewController: UITableViewDataSource {
         }
         if indexPath.section == 0 {
             cell.titleLabel.text = supportMenus[indexPath.row]
-            if indexPath.row == 3 {
+            if indexPath.row == 2 {
                 cell.nextImageView.isHidden = true
                 cell.versionLabel.isHidden = false
                 cell.isUserInteractionEnabled = false

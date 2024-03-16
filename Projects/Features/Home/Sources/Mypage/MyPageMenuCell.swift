@@ -17,8 +17,9 @@ class MyPageMenuCell: UITableViewCell {
         imageView.image = DesignSystemAsset.Icons.next.image
         return imageView
     }()
-    let versionLabel = YBLabel(text: "1.0.0V", font: .body1, textColor: .gray5)
-    
+    let versionLabel = YBLabel(text: "", font: .body1, textColor: .gray5)
+  
+  
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseableIdentifier)
         setupViews()
@@ -30,6 +31,9 @@ class MyPageMenuCell: UITableViewCell {
     }
     
     private func setupViews() {
+      if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            versionLabel.text = "v\(appVersion)"
+        }
         versionLabel.isHidden = true
         contentView.addSubview(titleLabel)
         contentView.addSubview(nextImageView)
