@@ -19,10 +19,17 @@ public class MyPageViewController: UIViewController, View {
     public var coordinator: MyPageCoordinator?
     private let reactor = MyPageReactor()
     
-    private let supportMenus = ["공지사항", "문의하기", "버전 정보"]
-    private let supportMenuURLs = ["https://m.cafe.naver.com/ca-fe/web/cafes/31153021/menus/7","https://m.cafe.naver.com/ca-fe/web/cafes/31153021/menus/1"]
+    private let supportMenus = ["리뷰 작성하기", "공지사항", "문의하기", "버전 정보"]
+    private let supportMenuURLs = [
+      "itms-apps://itunes.apple.com/app/apple-store/id6475346701?action=write-review ",
+      "https://m.cafe.naver.com/ca-fe/web/cafes/31153021/menus/7",
+      "https://m.cafe.naver.com/ca-fe/web/cafes/31153021/menus/1"
+    ]
     private let termsMenus = ["개인정보 처리방침", "이용약관"]
-    private let termsMenuURLs = ["https://m.cafe.naver.com/ca-fe/web/cafes/yeobee/articles/2?useCafeId=false&tc", "https://m.cafe.naver.com/ca-fe/web/cafes/31153021/articles/6?fromList=true&menuId=10&tc=cafe_article_list"]
+    private let termsMenuURLs = [
+      "https://m.cafe.naver.com/ca-fe/web/cafes/yeobee/articles/2?useCafeId=false&tc",
+      "https://m.cafe.naver.com/ca-fe/web/cafes/31153021/articles/6?fromList=true&menuId=10&tc=cafe_article_list"
+    ]
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -271,7 +278,7 @@ public class MyPageViewController: UIViewController, View {
             make.leading.equalToSuperview().offset(24)
             make.trailing.equalToSuperview().offset(-24)
             make.bottom.equalToSuperview().offset(-20)
-            make.height.equalTo(440)
+            make.height.equalTo(500)
         }
         
         profileImageView.snp.makeConstraints { make in
@@ -284,7 +291,7 @@ public class MyPageViewController: UIViewController, View {
 
 extension MyPageViewController: UITableViewDataSource {
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return 2 // 4개의 섹션
+        return 2
     }
     
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -309,7 +316,7 @@ extension MyPageViewController: UITableViewDataSource {
         }
         if indexPath.section == 0 {
             cell.titleLabel.text = supportMenus[indexPath.row]
-            if indexPath.row == 3 {
+            if indexPath.row == supportMenus.count - 1 {
                 cell.nextImageView.isHidden = true
                 cell.versionLabel.isHidden = false
                 cell.isUserInteractionEnabled = false
@@ -334,20 +341,21 @@ extension MyPageViewController: UITableViewDelegate {
         guard section == 1 else { return nil }
         
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 100))
-        footerView.backgroundColor = .white
         
         let logoutButton = UIButton(type: .system)
-        logoutButton.frame = CGRect(x: 20, y: 10, width: 56, height: 40)
+        logoutButton.frame = CGRect(x: 20, y: 10, width: tableView.bounds.width, height: 40)
         logoutButton.setTitle("로그아웃", for: .normal)
         logoutButton.setTitleColor(YBColor.gray5.color, for: .normal)
         logoutButton.titleLabel?.font = YBFont.body3.font
+        logoutButton.contentHorizontalAlignment = .left
         logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         
         let revokeButton = UIButton(type: .system)
-        revokeButton.frame = CGRect(x: 20, y: 50, width: 56, height: 40)
+        revokeButton.frame = CGRect(x: 20, y: 50, width: tableView.bounds.width, height: 40)
         revokeButton.setTitle("회원탈퇴", for: .normal)
         revokeButton.setTitleColor(YBColor.gray5.color, for: .normal)
         revokeButton.titleLabel?.font = YBFont.body3.font
+        revokeButton.contentHorizontalAlignment = .left
         revokeButton.addTarget(self, action: #selector(revokeButtonTapped), for: .touchUpInside)
         
         footerView.addSubview(logoutButton)
