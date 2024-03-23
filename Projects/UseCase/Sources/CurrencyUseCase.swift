@@ -19,6 +19,8 @@ public struct CurrencyUseCase {
         _ currencyCode: String,
         _ exchangeRate: ExchangeRate
     ) async throws -> Bool
+    public var setCurrentlyCurrency: @Sendable (_ tripId: Int, _ currency: Currency) -> Void
+    public var getCurrentlyCurrency: @Sendable (_ tripId: Int) -> Currency?
 }
 
 extension CurrencyUseCase: TestDependencyKey {
@@ -39,6 +41,13 @@ extension CurrencyUseCase: DependencyKey {
             return try await currencyRepository.getTripCurrency(tripId: tripId).currencyList
         }, putTripCurrencies: { tripId, currencyCode, exchangeRate in
             return try await currencyRepository.putTripCurrency(tripId, currencyCode, exchangeRate)
+        }, setCurrentlyCurrency: { tripId, currency in
+            UserDefaultsRepository.liveValue.setValue([tripId: currency], forKey: .selectedCurrency)
+        }, getCurrentlyCurrency: { tripId in
+            if let selectedCurrencies = UserDefaultsRepository.liveValue.value(forKey: .selectedCurrency) {
+                return selectedCurrencies[tripId]
+            }
+            return nil
         })
     }
 }

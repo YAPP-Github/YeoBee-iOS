@@ -11,7 +11,7 @@ import Entity
 
 public struct ExpenditureBudgetEditReducer: Reducer {
     public struct State: Equatable {
-        var expenditureInput = ExpenditureInputReducer.State()
+        var expenditureInput: ExpenditureInputReducer.State
         var expenditurePayment: ExpenditurePaymentReducer.State
         var expenditureContent: ExpenditureBudgetContentReducer.State
 
@@ -64,6 +64,7 @@ public struct ExpenditureBudgetEditReducer: Reducer {
                 )
                 self.expenseDetail = expenseDetail
             }
+            self.expenditureInput = .init(tripId: tripItem.id)
             self.expenditurePayment = .init(isExpense: false, isShared: expenditureTab == .shared)
             self.expenditureContent = .init(expenditureTab: expenditureTab)
         }
@@ -108,7 +109,7 @@ public struct ExpenditureBudgetEditReducer: Reducer {
 
             case let .setCurrencies(currencyList):
                 state.currencies = currencyList
-                return .none
+                return .send(.expenditureInput(.setCurrencies(currencyList)))
 
             case .expenditureInput(.binding(\.$text)):
                 state.isEnableRegisterButton = isEnableRegisterBurron(state: &state)
