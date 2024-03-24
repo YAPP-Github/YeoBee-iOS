@@ -12,6 +12,7 @@ import Coordinator
 import Entity
 import TravelRegistration
 import Trip
+import Repository
 
 public protocol HomeCoordinatorDelegate: AnyObject {
     func finishedRegistration(tripItem: TripItem)
@@ -23,6 +24,7 @@ final public class HomeCoordinator: HomeCoordinatorInterface {
     public var viewControllerRef: UIViewController?
     public var childCoordinators = [Coordinator]()
     public weak var delegate: HomeCoordinatorDelegate?
+    public var homeViewController: HomeViewController?
 
     public init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -31,7 +33,14 @@ final public class HomeCoordinator: HomeCoordinatorInterface {
     public func start(animated: Bool = false) {
         let homeViewController = HomeViewController()
         homeViewController.coordinator = self
-        navigationController.pushViewController(homeViewController, animated: animated)
+        self.homeViewController = homeViewController
+
+        if let tripItem = UserDefaultsRepository.liveValue.value(forKey: .lastShowingTrip),
+           let tripItem = tripItem {
+            lasttrip(tripItem: tripItem)
+        } else {
+            navigationController.pushViewController(homeViewController, animated: animated)
+        }
     }
 }
 
@@ -51,14 +60,25 @@ extension HomeCoordinator {
         navigationController.pushViewController(moreTripViewController, animated: true)
     }
 
-    public func trip(tripItem: TripItem) {
+    public func trip(tripItem: TripItem, animated: Bool = true) {
         let tripCoordinator = TripCoordinator(navigationController: navigationController, tripItem: tripItem)
         tripCoordinator.delegate = self
         tripCoordinator.parent = self
         addChild(tripCoordinator)
-        tripCoordinator.start(animated: true)
+        tripCoordinator.start(animated: animated)
     }
-    
+
+    public func lasttrip(tripItem: TripItem, animated: Bool = true) {
+        if let homeViewController {
+            let tripCoordinator = TripCoordinator(navigationController: navigationController, tripItem: tripItem)
+            tripCoordinator.delegate = self
+            tripCoordinator.parent = self
+            addChild(tripCoordinator)
+            navigationController.pushViewController(homeViewController, animated: animated)
+            tripCoordinator.start(animated: false)
+        }
+    }
+
     public func myPage() {
         let myPageCoordinator = MyPageCoordinator(navigationController: navigationController)
           addChild(self)

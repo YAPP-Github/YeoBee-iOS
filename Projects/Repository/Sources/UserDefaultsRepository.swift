@@ -81,13 +81,13 @@ public struct UserDefaultsKey<Value: UserDefaultsKeyType> {
     }
 }
 
-extension TripItem: UserDefaultsKeyType {}
+extension TripItem?: UserDefaultsKeyType {}
 
 extension [Int: Currency]: UserDefaultsKeyType {}
 
 public protocol UserDefaultsData: Codable {}
 
-extension UserDefaultsKey where Value == TripItem {
+extension UserDefaultsKey where Value == TripItem? {
     public static let lastShowingTrip: UserDefaultsKey<Value> = .init(
         name: "lastShowingTrip"
     )

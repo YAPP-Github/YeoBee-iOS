@@ -11,6 +11,7 @@ import Coordinator
 import Entity
 import Expenditure
 import DesignSystem
+import Repository
 
 public protocol TripCoordinatorDelegate: AnyObject {
     func deletedTrip()
@@ -58,13 +59,15 @@ final public class TripCoordinator: TripCoordinatorInterface {
         UITabBar.appearance().tintColor = .black
         UITabBar.appearance().unselectedItemTintColor = YBColor.gray5.color
         UITabBar.appearance().backgroundColor = .white
-        navigationController.present(tabBarController!, animated: true)
+        navigationController.present(tabBarController!, animated: animated)
+        UserDefaultsRepository.liveValue.setValue(tripItem, forKey: .lastShowingTrip)
     }
 
     public func coordinatorDidFinish() {
         tabBarController?.dismiss(animated: true)
         tabBarController = nil
         parent?.childDidFinish(self)
+        UserDefaultsRepository.liveValue.setValue(nil, forKey: .lastShowingTrip)
     }
 
     deinit {
@@ -75,5 +78,6 @@ final public class TripCoordinator: TripCoordinatorInterface {
 extension TripCoordinator: ExpenditureCoordinatorDelegate {
     public func deletedTrip() {
         delegate?.deletedTrip()
+        UserDefaultsRepository.liveValue.setValue(nil, forKey: .lastShowingTrip)
     }
 }
