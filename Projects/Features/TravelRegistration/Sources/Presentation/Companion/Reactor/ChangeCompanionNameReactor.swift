@@ -49,14 +49,13 @@ public final class ChangeCompanionNameReactor: Reactor {
             
         switch mutation {
         case .nameTextFieldText(text: let text):
-            let limitedString = textFieldLimitedString(text: text)
-            newState.limitedString = limitedString
+            newState.limitedString = text
             
-            if containsSpecialCharacters(limitedString) {
+            if containsSpecialCharacters(text) {
                 newState.effectivenessType = .containSpecialCharacters
-            } else if !isValidName(limitedString) {
+            } else if !isValidName(text) {
                 newState.effectivenessType = .notValid
-            } else if limitedString.isEmpty {
+            } else if text.isEmpty {
                 newState.effectivenessType = .none
             } else {
                 newState.effectivenessType = .valid
@@ -77,13 +76,5 @@ public final class ChangeCompanionNameReactor: Reactor {
         // 특수 문자 포함 확인
         let specialCharacterSet = CharacterSet(charactersIn: "!@#$%^&*()_-+=[]{}|;:'\",.<>?/~`")
         return text.rangeOfCharacter(from: specialCharacterSet) != nil
-    }
-    
-    private func textFieldLimitedString(text: String) -> String {
-        if text.count > 5 {
-            return String(text.prefix(5))
-        } else {
-            return text
-        }
     }
 }
